@@ -10,6 +10,11 @@ models/weights/*.pt
 
 # Data output (generated)
 data/output/
+# Data input (images - large files)
+data/input/
+# Nhưng giữ lại .gitkeep
+!data/input/.gitkeep
+!data/output/.gitkeep
 
 # Python
 __pycache__/

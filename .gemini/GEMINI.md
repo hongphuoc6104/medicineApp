@@ -1,4 +1,4 @@
-# Project Rules - newApp
+# Project Rules - Medicine App
 
 ---
 
@@ -13,8 +13,8 @@
 | Thông tin | Chi tiết |
 |-----------|----------|
 | **Vai trò** | Sinh viên IT đang làm dự án cá nhân |
-| **Tên dự án** | newApp |
-| **Mục tiêu** | Hoàn thành dự án cá nhân |
+| **Tên dự án** | Medicine App (Ứng dụng nhắc nhở uống thuốc) |
+| **Mục tiêu** | Xây dựng ứng dụng nhắc nhở uống thuốc với YOLO segmentation |
 
 ---
 
@@ -105,9 +105,22 @@ Khi có lỗi, AI phải:
 4. Viết code + giải thích
    ↓
 5. Hướng dẫn test / chạy thử
+   ↓
+6. Nếu KHÔNG có lỗi → Push lên GitHub
 ```
+
+---
+
+## 10. Quy tắc Git
+
+| Quy tắc | Mô tả |
+|---------|-------|
+| **Auto push** | Sau khi update code, nếu không có lỗi → tự động commit và push lên GitHub |
+| **Commit message** | Viết rõ ràng bằng tiếng Anh, mô tả thay đổi |
+| **Kiểm tra trước push** | Chạy `git status` để xác nhận file cần commit |
 
 ---
 
 *File tạo: 24/01/2026*
 *Cập nhật lần cuối: 24/01/2026*
+*Thư mục dự án: /home/hongphuoc/Desktop/medicineApp*
