@@ -59,7 +59,13 @@ class YOLOSegmentation:
                         Chỉ áp dụng khi model_path=None.
             device: Device chạy model ("auto", "cpu", "cuda", "0", "1", ...).
         """
-        self.device = device
+        # Auto-detect device: nếu có CUDA thì dùng, không thì CPU
+        if device == "auto":
+            import torch
+            self.device = "cuda" if torch.cuda.is_available() else "cpu"
+            print(f"🖥️  Device: {self.device} (auto-detected)")
+        else:
+            self.device = device
         
         if model_path:
             # Sử dụng custom trained model
