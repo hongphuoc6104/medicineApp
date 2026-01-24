@@ -3,6 +3,14 @@ venv/
 .venv/
 ENV/
 
+# YOLO Model weights (large files)
+*.pt
+best/
+models/weights/*.pt
+
+# Data output (generated)
+data/output/
+
 # Python
 __pycache__/
 *.py[cod]
