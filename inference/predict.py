@@ -56,7 +56,10 @@ def run_inference(
         conf=conf,
         save=save,
         save_dir=output_dir,
-        show=show
+        show=show,
+        project=output_dir,
+        name="predict",
+        exist_ok=True
     )
     
     # In kết quả
