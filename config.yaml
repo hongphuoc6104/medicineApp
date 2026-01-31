@@ -1,34 +1,73 @@
 # Medicine App Configuration
-# ---------------------------
+# ==========================
 
-# YOLO Model Settings
-model:
-  # Model size: nano, small, medium, large, xlarge
-  size: "nano"
-  # Custom model path (để trống nếu dùng pretrained)
-  custom_path: ""
-  # Confidence threshold (0.0 - 1.0)
-  confidence: 0.25
-  # IoU threshold for NMS
-  iou: 0.7
-  # Device: auto, cpu, cuda, 0, 1, ...
+# Detection Settings (S2)
+detection:
+  # Path to YOLO model (.pt file)
+  model_path: "models/weights/best.pt"
+  # Model input size
+  input_size: 640
+  # Device: "auto", "cpu", "cuda", "0", "1", ...
   device: "auto"
+  # Confidence threshold (0.0 - 1.0)
+  confidence_threshold: 0.5
+  # Maximum area ratio - filter detections larger than this
+  max_area_ratio: 0.40
+  # Number of top detections to keep
+  top_n_detections: 1
 
-# Data paths
+# Preprocessing Settings (S3)
+preprocessing:
+  enabled: true
+  # Force landscape orientation
+  force_landscape: true
+  # Use AI for 180° orientation fix (not yet implemented)
+  ai_orientation_fix: false
+  # Padding around crop (pixels)
+  padding: 5
+
+# Enhancement Settings (S4)
+# NOTE: Disabled based on test results (2026-01-31)
+#       Test showed S4 reduces OCR accuracy by -2.6%
+#       See: run/test_final2/enhancement_impact_report.txt
+enhancement:
+  enabled: false
+  brightness:
+    enabled: true
+    # CLAHE clip limit (higher = more contrast)
+    clip_limit: 2.5
+    # CLAHE tile grid size
+    tile_size: 8
+  sharpness:
+    enabled: true
+    # Gaussian sigma for unsharp masking
+    sigma: 1.0
+    # Sharpen amount (1.0 = original, >1 = sharper)
+    amount: 1.5
+
+# OCR Settings (S5)
+ocr:
+  enabled: true
+  # Language: "vi" (Vietnamese), "en" (English), "latin"
+  # Use "vi" for Vietnamese prescriptions
+  lang: "vi"
+  # Use GPU for OCR (requires paddlepaddle-gpu)
+  use_gpu: false
+  # Minimum confidence for text recognition
+  confidence_threshold: 0.5
+
+# Data Paths
 data:
   input_dir: "data/input"
   output_dir: "data/output"
+  run_dir: "run"
 
-# Inference settings
-inference:
-  # Lưu kết quả visualization
-  save_results: true
-  # Hiển thị kết quả trên màn hình
-  show_results: false
-  # Định dạng ảnh output
-  output_format: "jpg"
+# Debug Settings
+debug:
+  enabled: false
+  output_dir: "output/debug"
 
 # Logging
 logging:
   level: "INFO"  # DEBUG, INFO, WARNING, ERROR
-  file: "logs/app.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
