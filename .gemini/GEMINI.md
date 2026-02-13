@@ -24,7 +24,7 @@
 |---------|-------|
 | **Ngôn ngữ** | Luôn trả lời bằng **tiếng Việt** |
 | **Thuật ngữ kỹ thuật** | Giữ nguyên bằng **tiếng Anh** (ví dụ: API, Component, State, Props...) |
-| **Cách giải thích** | Giải thích **đơn giản**, có **ví dụ cụ thể** theo ngôn ngữ đang dùng |
+| **Cách giải thích** | Giải thích **đơn giản**, có **ví dụ cụ thể** theo ngôn ngữ đang dùng python|
 
 ---
 
@@ -54,10 +54,12 @@
 
 | Loại | Công nghệ | Mô tả |
 |------|-----------|-------|
-| **Models/AI** | Python | Xử lý models, machine learning |
-| **Backend** | Node.js | REST API, server-side logic |
-| **Database** | MongoDB | NoSQL database |
-| **Mobile** | Flutter | Android application |
+| **AI/ML** | YOLOv11 (Ultralytics) | Segmentation model cho nhận diện thuốc |
+| **Python** | Python 3.12+ | Ngôn ngữ chính cho AI/ML |
+| **Environment** | venv (bắt buộc) | Virtual environment để cách ly dependencies |
+| **Backend** | Node.js (planned) | REST API, server-side logic |
+| **Database** | MongoDB (planned) | NoSQL database |
+| **Mobile** | Flutter (planned) | Android application |
 | **Ngôn ngữ** | Python, JavaScript, Dart | |
 
 ---
@@ -121,6 +123,17 @@ Khi có lỗi, AI phải:
 
 ---
 
+## 11. Quy tắc Môi trường (Environment)
+
+| Quy tắc | Mô tả |
+|---------|-------|
+| **Bắt buộc dùng venv** | Do `externally-managed-environment` trên Linux, PHẢI dùng `python3 -m venv venv` |
+| **Activate trước khi code** | `source venv/bin/activate` (Linux/Mac) hoặc `venv\Scripts\activate` (Windows) |
+| **Dependencies** | Cài qua `pip install -r requirements.txt` trong venv |
+| **Không commit file lớn** | Không commit `.pt` (model weights), dataset, hay file output vào Git |
+
+---
+
 *File tạo: 24/01/2026*
-*Cập nhật lần cuối: 24/01/2026*
+*Cập nhật lần cuối: 14/02/2026*
 *Thư mục dự án: /home/hongphuoc/Desktop/medicineApp*
