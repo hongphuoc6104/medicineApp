@@ -1,5 +1,5 @@
 # YOLOv8 Segmentation
-ultralytics>=8.0.0
+ultralytics>=8.3.0
 
 # Image processing
 opencv-python>=4.8.0
