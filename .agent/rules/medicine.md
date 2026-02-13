@@ -51,6 +51,21 @@ trigger: always_on
 - Ưu tiên viết code theo hướng **module hóa**
 - **Tách biệt** logic và giao diện (UI)
 - Mỗi file/module chỉ làm **một nhiệm vụ** (Single Responsibility)
+- Mỗi file Python **không quá 200 dòng**, nếu dài hơn phải tách module
+
+### 4.4. Cấu trúc Module (Ví dụ)
+```
+module_name/
+├── __init__.py          # Export public API
+├── core.py              # Logic chính của module
+├── utils.py             # Hàm tiện ích
+├── config.py            # Cấu hình riêng của module
+└── tests/
+    └── test_core.py     # Unit test
+```
+- Mỗi **module** = 1 bước lớn của dự án
+- Bên trong module chia thành **các file nhỏ** theo chức năng
+- Cây thư mục phải **rõ ràng**, dễ hiểu ngay khi nhìn vào
 
 ---
 
@@ -85,6 +100,8 @@ Khi có lỗi, AI phải:
 - Cung cấp code chạy được
 - Chỉ ra lỗi và cách sửa chi tiết
 - Hỏi lại nếu yêu cầu không rõ ràng
+- **Sau mỗi bước**, hỏi lại: *"Bạn đã hiểu chưa? Tiếp tục bước tiếp?"*
+- Chủ động **gợi ý** giải pháp/tính năng mà người dùng có thể chưa nghĩ tới
 
 ---
 
@@ -96,14 +113,26 @@ Khi có lỗi, AI phải:
 - Bỏ qua lỗi mà không giải thích
 - Dùng thuật ngữ phức tạp không cần thiết
 - Cung cấp thông tin không chắc chắn mà không cảnh báo
+- **Đưa hết code 1 lần** mà không giải thích từng phần
+- Bỏ qua bước thảo luận khi task là **task quan trọng**
 
 ---
 
-## 9. Workflow làm việc
+## 9. Phân loại Task
+
+| Loại | Định nghĩa | Quy trình |
+|------|-----------|----------|
+| **Task đơn giản** | Sửa bug, thêm comment, rename, format code | Làm ngay, không cần thảo luận |
+| **Task quan trọng** | Tính năng mới, thay đổi kiến trúc, tích hợp thư viện/API mới, xây dựng module mới | **BẮT BUỘC** đi qua 6 bước Workflow bên dưới |
+
+---
+
+## 10. Workflow làm việc (Cho Task Quan Trọng)
 
 1. **Thảo luận & Làm rõ yêu cầu (BẮT BUỘC)**
-   - Đặt câu hỏi để hiểu rõ mục tiêu.
-   - Hỏi về thông tin còn thiếu.
+   - Đặt các **câu hỏi chính** để đi vào trọng tâm vấn đề.
+   - Hỏi rõ: Muốn gì? Mục tiêu cụ thể là gì?
+   - Hỏi về thông tin còn thiếu/mập mờ.
    - Yêu cầu người dùng cung cấp từ khóa/tài liệu tham khảo.
 
 2. **Nghiên cứu & Tìm kiếm thông tin**
@@ -124,7 +153,8 @@ Khi có lỗi, AI phải:
 
 5. **Review & Tối ưu**
    - Đảm bảo Clean Code.
-   - Kiểm tra file không quá dài/nặng.
+   - Kiểm tra file không quá 200 dòng.
+   - **Hỏi lại**: "Bạn đã hiểu chưa? Có câu hỏi gì không? Tiếp tục bước tiếp?"
    - Xác nhận người dùng đã hiểu và làm được trước khi sang bước tiếp theo.
 
 6. **Hoàn thiện & Push Git**
@@ -132,7 +162,7 @@ Khi có lỗi, AI phải:
 
 ---
 
-## 10. Quy tắc Git
+## 11. Quy tắc Git
 
 | Quy tắc | Mô tả |
 |---------|-------|
@@ -142,7 +172,7 @@ Khi có lỗi, AI phải:
 
 ---
 
-## 11. Quy tắc Môi trường (Environment)
+## 12. Quy tắc Môi trường (Environment)
 
 | Quy tắc | Mô tả |
 |---------|-------|
