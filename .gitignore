@@ -63,3 +63,10 @@ htmlcov/
 .tox/
 .pytest_cache/
 runs/
+
+# Research reference code (has its own git repo)
+Zero-PIMA/
+
+# Debug output & generated images — never commit these
+debug/
+output/
