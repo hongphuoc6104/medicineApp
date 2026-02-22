@@ -67,6 +67,7 @@ def test_extract_polygon_with_mask():
 
 def test_crop_by_bbox_no_boxes():
     """Edge Case: YOLO không tìm thấy hộp nào (boxes=None)"""
+    
     fake_image = np.zeros((100, 100, 3), dtype=np.uint8) 
     fake_result = MockResult(boxes=None)                
     
@@ -76,9 +77,8 @@ def test_crop_by_bbox_no_boxes():
 
 def test_crop_by_bbox_with_detection():
     """Happy Path: Cắt khung chữ nhật cơ bản"""
+
     fake_image = np.zeros((100, 100, 3), dtype=np.uint8)
-    
-    # Arrange a fake bounding box at x1=10, y1=20, x2=60, y2=80
     fake_boxes = MockBoxes(xyxy=[10, 20, 60, 80])
     fake_result = MockResult(boxes=fake_boxes)
     
@@ -99,19 +99,44 @@ def test_crop_by_mask_with_detection():
     """Happy Path: Phủ mask thành màu đen 2 bên và cắt có padding = 20"""
     fake_image = np.zeros((100, 100, 3), dtype=np.uint8)
     
-    # 1. Fake the mask (a 100x100 matrix of zeros)
     fake_mask_data = np.zeros((100, 100))
-    # 2. Fake the points (YOLO found polygon)
     fake_masks = MockMasks(xy_points=[[0,0]], mask_data=fake_mask_data)
-    # 3. Fake the bounding box around this mask (x1=30, y1=40, x2=60, y2=70)
     fake_boxes = MockBoxes(xyxy=[30, 40, 60, 70])
     
-    # Arrange final Result box
     fake_result = MockResult(masks=fake_masks, boxes=fake_boxes)
     
     crop = crop_by_mask(fake_image, fake_result)         # Act
     
-    # Assert: PADDING is 20. 
-    # y changes from [40:70] -> [20:90]. Height = 70.
-    # x changes from [30:60] -> [10:80]. Width = 70.
     assert crop.shape == (70, 70, 3), "Kích thước ảnh crop theo Mask + Padding bị sai!"
+
+
+def test_crop_by_bbox_empty_boxes():
+    """Edge Case: boxes tồn tại nhưng có 0 phần tử (len == 0)"""
+    fake_image = np.zeros((100, 100, 3), dtype=np.uint8)
+    
+    # Boxes tồn tại nhưng rỗng
+    fake_boxes = MockBoxes(xyxy=[10, 20, 60, 80])
+    fake_boxes.xyxy = np.array([])          # Ghi đè thành mảng rỗng
+    
+    fake_result = MockResult(boxes=fake_boxes)
+    crop = crop_by_bbox(fake_image, fake_result)
+    
+    assert crop is None, "Phải trả về None khi boxes rỗng"
+
+
+def test_crop_by_mask_padding_clamp():
+    """Edge Case: bbox gần góc ảnh → padding phải bị giới hạn (clamped)"""
+    fake_image = np.zeros((100, 100, 3), dtype=np.uint8)
+    fake_mask_data = np.zeros((100, 100))
+    fake_masks = MockMasks(xy_points=[[0, 0]], mask_data=fake_mask_data)
+    
+    # Bbox sát góc trên-trái: x1=5, y1=5. Padding 20 sẽ âm → phải clamp thành 0
+    fake_boxes = MockBoxes(xyxy=[5, 5, 50, 50])
+    fake_result = MockResult(masks=fake_masks, boxes=fake_boxes)
+    
+    crop = crop_by_mask(fake_image, fake_result)
+    
+    # x1 = max(0, 5-20) = 0. y1 = max(0, 5-20) = 0
+    # x2 = min(100, 50+20) = 70. y2 = min(100, 50+20) = 70
+    # Shape = (y2-y1, x2-x1, 3) = (70, 70, 3)
+    assert crop.shape == (70, 70, 3), "Clamping logic bị bỏ qua, padding vượt biên ảnh!"
