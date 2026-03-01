@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Output Generated Files (Optional: keep if user wants data, but usually ignored in code repos)
+# User request "createData" might imply they want the data? 
+# "khởi tạo readme và up lên... createData.git"
+# I will keep JSONs as seed/sample but ignore voluminous outputs if any.
+# However, json files are re-generated. Let's ignore them to force generation?
+# No, let's keep them as "current state" for reference unless they are huge. 
+# They are ~300KB. OK to keep.
+# The "output" folder contains pdf/docx. 
+# I'll ignore output folder content BUT keep the folder structure if needed.
+# Actually user wants "createData", maybe they want the RESULTS. 
+# I will NOT ignore output files for now, as the user intention "createData" typically means sharing the data.
+# But standard practice is ignoring artifacts.
+# I will ignore `output/` but allow `long_data.json` (seed).
+# generated_sample_data.json and generated_error_data.json are outputs of scripts.
+# I'll act professional: Code repo should generate data, not store it (unless it's a dataset repo).
+# I'll create a "releases" section in README instead?
+# Let's Compromise: Ignore `output/` (PDFs/DOCX) because they are binary/large. Keep JSONs?
+# I will ignore `output/` content but keep `.gitkeep` if I create one.
+# For now, I will ignore `output/*.docx` and `output/*.pdf`.
+
+output/*.docx
+output/*.pdf
+output/*.png
+
+# System
+.DS_Store
+Thumbs.db

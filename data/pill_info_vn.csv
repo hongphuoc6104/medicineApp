@@ -1,0 +1,126 @@
+brand_name,generic_name,dosage,category,color,shape
+tanakan,ginkgo biloba extract,40mg,tuần hoàn não,green,round
+calcium corbiere,calcium d3,10ml,bổ sung canxi,white,ampoule
+upsa c,vitamin c,1000mg,vitamin,orange,effervescent
+magne-b6,magnesium b6,tab,khoáng chất,white,oblong
+refresh tears,artificial tears,15ml,nhỏ mắt,clear,liquid
+paracetamol,acetaminophen,500mg,giảm đau hạ sốt,white,oblong
+efferalgan,paracetamol,500mg,giảm đau hạ sốt,white,effervescent
+hapacol,paracetamol,500mg,giảm đau hạ sốt,white,oblong
+tylenol,paracetamol,500mg,giảm đau hạ sốt,red and white,capsule
+ibuprofen,ibuprofen,400mg,giảm đau kháng viêm,orange,round
+amoxicillin,amoxicillin,500mg,kháng sinh,yellow and red,capsule
+augmentin,amoxicillin clavulanate,1g,kháng sinh,white,oblong
+zinnat,cefuroxime,500mg,kháng sinh,white,oblong
+cefixime,cefixime,200mg,kháng sinh,white,capsule
+azithromycin,azithromycin,500mg,kháng sinh,white,oblong
+clarithromycin,clarithromycin,500mg,kháng sinh,yellow,oblong
+ciprofloxacin,ciprofloxacin,500mg,kháng sinh,white,oblong
+levofloxacin,levofloxacin,500mg,kháng sinh,white and orange,oblong
+metronidazole,metronidazole,250mg,kháng sinh,white,round
+doxycycline,doxycycline,100mg,kháng sinh,white and orange,capsule
+cephalexin,cephalexin,500mg,kháng sinh,white and green,capsule
+lincomycin,lincomycin,500mg,kháng sinh,white,capsule
+erythromycin,erythromycin,500mg,kháng sinh,white,round
+amlodipine,amlodipine,5mg,huyết áp,white,round
+losartan,losartan,50mg,huyết áp,white,oval
+lisinopril,lisinopril,10mg,huyết áp,white,round
+enalapril,enalapril,10mg,huyết áp,white,round
+perindopril,perindopril,5mg,huyết áp,white,round
+coversyl,perindopril,5mg,huyết áp,white,round
+coveram,perindopril amlodipine,5/5mg,huyết áp,white,oblong
+valsartan,valsartan,80mg,huyết áp,gray,oval
+irbesartan,irbesartan,150mg,huyết áp,white,oval
+telmisartan,telmisartan,40mg,huyết áp,white,oblong
+micardis,telmisartan,40mg,huyết áp,white and fawn,oblong
+exforge,amlodipine valsartan,5/160mg,huyết áp,yellow,oval
+captopril,captopril,25mg,huyết áp,white,round
+nifedipine,nifedipine,20mg,huyết áp,brown,capsule
+atorvastatin,atorvastatin,20mg,mỡ máu,white,oval
+lipitor,atorvastatin,20mg,mỡ máu,white,oval
+rosuvastatin,rosuvastatin,10mg,mỡ máu,pink,round
+crestor,rosuvastatin,10mg,mỡ máu,pink,round
+simvastatin,simvastatin,20mg,mỡ máu,white,oval
+fenofibrate,fenofibrate,160mg,mỡ máu,orange,oblong
+lipanthyl,fenofibrate,160mg,mỡ máu,orange,oblong
+metformin,metformin,850mg,tiểu đường,white,oblong
+glucophage,metformin,850mg,tiểu đường,white,oblong
+glimepiride,glimepiride,2mg,tiểu đường,pink,round
+amaryl,glimepiride,2mg,tiểu đường,pink,round
+gliclazide,gliclazide,60mg,tiểu đường,white,oblong
+diamicron,gliclazide,60mg,tiểu đường,white,oblong
+acarbose,acarbose,50mg,tiểu đường,white,round
+januvia,sitagliptin,100mg,tiểu đường,beige,round
+galvus,vildagliptin,50mg,tiểu đường,white,oblong
+jardiance,empagliflozin,10mg,tiểu đường,yellow,oval
+forxiga,dapagliflozin,10mg,tiểu đường,yellow,round
+omeprazole,omeprazole,20mg,dạ dày,purple,capsule
+nexium,esomeprazole,40mg,dạ dày,purple,capsule
+esomeprazole,esomeprazole,40mg,dạ dày,purple,capsule
+pantoprazole,pantoprazole,40mg,dạ dày,yellow,oblong
+rabeprazole,rabeprazole,20mg,dạ dày,pink,oblong
+lansoprazole,lansoprazole,30mg,dạ dày,pink and white,capsule
+sucralfate,sucralfate,1g,dạ dày,white,oblong
+domperidone,domperidone,10mg,dạ dày,white,round
+motilium,domperidone,10mg,dạ dày,white,round
+metoclopramide,metoclopramide,10mg,dạ dày,white,round
+aspirin,aspirin,81mg,tim mạch,yellow,round
+plavix,clopidogrel,75mg,tim mạch,pink,round
+clopidogrel,clopidogrel,75mg,tim mạch,pink,round
+warfarin,warfarin,2mg,tim mạch,peach,round
+rivaroxaban,rivaroxaban,10mg,tim mạch,light red,round
+bisoprolol,bisoprolol,5mg,tim mạch,white,heart shaped
+concor,bisoprolol,5mg,tim mạch,yellow,heart shaped
+metoprolol,metoprolol,50mg,tim mạch,white,round
+atenolol,atenolol,50mg,tim mạch,white,round
+propranolol,propranolol,40mg,tim mạch,white,round
+digoxin,digoxin,0.25mg,tim mạch,white,round
+trimetazidine,trimetazidine,35mg,tim mạch,pink,round
+vastarel,trimetazidine,35mg,tim mạch,pink,round
+furosemide,furosemide,40mg,lợi tiểu,yellow,round
+lasix,furosemide,40mg,lợi tiểu,yellow,round
+hydrochlorothiazide,hydrochlorothiazide,25mg,lợi tiểu,white,round
+spironolactone,spironolactone,25mg,lợi tiểu,white,round
+indapamide,indapamide,1.5mg,lợi tiểu,white,oblong
+cetirizine,cetirizine,10mg,dị ứng,white,oblong
+loratadine,loratadine,10mg,dị ứng,white,round
+fexofenadine,fexofenadine,180mg,dị ứng,orange,oblong
+desloratadine,desloratadine,5mg,dị ứng,light blue,round
+chlorpheniramine,chlorpheniramine,4mg,dị ứng,yellow,oblong
+prednisolone,prednisolone,5mg,corticoid,white,round
+methylprednisolone,methylprednisolone,16mg,corticoid,white,oval
+medrol,methylprednisolone,16mg,corticoid,white,oval
+dexamethasone,dexamethasone,0.5mg,corticoid,white,round
+diclofenac,diclofenac,50mg,kháng viêm,brown,round
+meloxicam,meloxicam,7.5mg,kháng viêm,yellow,round
+celecoxib,celecoxib,200mg,kháng viêm,white and blue,capsule
+naproxen,naproxen,500mg,kháng viêm,white,oblong
+gabapentin,gabapentin,300mg,thần kinh,white and yellow,capsule
+pregabalin,pregabalin,75mg,thần kinh,white and orange,capsule
+carbamazepine,carbamazepine,200mg,thần kinh,white,round
+valproic acid,valproic acid,500mg,thần kinh,white,oblong
+levetiracetam,levetiracetam,500mg,thần kinh,blue,oblong
+sertraline,sertraline,50mg,thần kinh,white,oblong
+fluoxetine,fluoxetine,20mg,thần kinh,green and white,capsule
+escitalopram,escitalopram,10mg,thần kinh,white,oval
+alprazolam,alprazolam,0.5mg,an thần,white,oval
+diazepam,diazepam,5mg,an thần,yellow,round
+zolpidem,zolpidem,10mg,an thần,white,oblong
+vitamin b1,thiamine,250mg,vitamin,white,round
+vitamin b6,pyridoxine,250mg,vitamin,white,round
+vitamin b12,cyanocobalamin,1000mcg,vitamin,pink,round
+vitamin d3,cholecalciferol,1000IU,vitamin,white,capsule
+folic acid,folic acid,5mg,vitamin,yellow,round
+glucosamine,glucosamine,500mg,xương khớp,white,oblong
+allopurinol,allopurinol,300mg,gout,white,round
+colchicine,colchicine,1mg,gout,yellow,round
+salbutamol,salbutamol,2mg,hô hấp,white,round
+bromhexine,bromhexine,8mg,hô hấp,white,round
+ambroxol,ambroxol,30mg,hô hấp,white,round
+acetylcysteine,acetylcysteine,200mg,hô hấp,white,round
+loperamide,loperamide,2mg,tiêu hóa,white,capsule
+berberin,berberin,100mg,tiêu hóa,yellow,round
+silymarin,silymarin,70mg,gan mật,black,oval
+acyclovir,acyclovir,800mg,kháng virus,white,oblong
+fluconazole,fluconazole,150mg,kháng nấm,white,capsule
+levothyroxine,levothyroxine,100mcg,tuyến giáp,white,round

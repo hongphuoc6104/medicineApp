@@ -1,12 +1,30 @@
-# Virtual environment
+# ============================================
+# Virtual environments
+# ============================================
 venv/
 .venv/
 ENV/
+createPrescription/prescription_generator/venv/
 
-# YOLO Model weights (large files)
+# ============================================
+# Model weights (very large files)
+# ============================================
 *.pt
+*.pth
+*.onnx
+*.h5
+*.pb
+*.tflite
+models/weights/
 best/
-models/weights/*.pt
+
+# ============================================
+# Datasets & large data directories
+# ============================================
+VAIPE_Full/
+data/pills/
+data/pres/
+data/synthetic_train/
 
 # Data output (generated)
 data/output/
@@ -16,7 +34,56 @@ data/input/
 !data/input/.gitkeep
 !data/output/.gitkeep
 
+# ============================================
+# Archives & large binary files
+# ============================================
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+
+# ============================================
+# Research papers & PDFs
+# ============================================
+*.pdf
+
+# ============================================
+# Jupyter Notebooks (contain large output cells)
+# ============================================
+*.ipynb
+
+# ============================================
+# Sub-projects with their own repos
+# ============================================
+Zero-PIMA/
+YOLO11-Seg-Label-Detector-main/
+
+# ============================================
+# Generated output & debug
+# ============================================
+output/
+debug/
+createPrescription/prescription_generator/output/
+
+# ============================================
+# XML schema (not needed in repo)
+# ============================================
+drugbank.xsd
+
+# ============================================
+# IDE & Editor configs
+# ============================================
+.idea/
+.vscode/
+.gemini/
+*.swp
+*.swo
+*~
+
+# ============================================
 # Python
+# ============================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -38,35 +105,29 @@ wheels/
 .installed.cfg
 *.egg
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# OS
+# ============================================
+# OS files
+# ============================================
 .DS_Store
 Thumbs.db
 
+# ============================================
 # Environment variables
+# ============================================
 .env
 .env.local
 
+# ============================================
 # Logs
+# ============================================
 *.log
 logs/
 
+# ============================================
 # Testing
+# ============================================
 .coverage
 htmlcov/
 .tox/
 .pytest_cache/
 runs/
-
-# Research reference code (has its own git repo)
-Zero-PIMA/
-
-# Debug output & generated images — never commit these
-debug/
-output/

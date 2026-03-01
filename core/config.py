@@ -1,18 +1,22 @@
 # path
 INPUT_DIR = "data/input"
 OUTPUT_DIR = "data/output"
-MODEL_PATH = 'models/weights/best.pt'
 
-# debug 
+# Model weights
+YOLO_WEIGHTS = 'models/weights/best.pt'
+MODEL_PATH = YOLO_WEIGHTS  # backward compat
+ZERO_PIMA_WEIGHTS = 'models/weights/zero_pima_best.pth'
+
+# debug
 DEBUG_DIR = "debug/YOLO"
 
-# YOLO 
+# YOLO
 CONF_THRESHOLD = 0.90
 
-# camera 
+# camera
 CAMERA_INDEX = 0
 
-# crop 
+# crop
 CROP_PADDING = 20
 
 
