@@ -44,7 +44,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("pipeline")
 
-MAX_DIM = 1600
+MAX_DIM = 1200
 OUTPUT_DIR = os.path.join(ROOT, "output", "pipeline")
 
 
@@ -126,7 +126,9 @@ def run_phase_a(img_path, out_dir, shared=None):
     ocr_module = shared.get("ocr") if shared else None
     if ocr_module is None:
         from core.ocr.ocr_engine import HybridOcrModule
-        ocr_module = HybridOcrModule(device="cpu")
+        import torch
+        _ocr_device = "gpu" if torch.cuda.is_available() else "cpu"
+        ocr_module = HybridOcrModule(device=_ocr_device)
         if shared is not None:
             shared["ocr"] = ocr_module
 
@@ -214,6 +216,28 @@ def run_phase_a(img_path, out_dir, shared=None):
                     "bbox": b.get("bbox", []),
                 })
 
+    # Post-GCN filter: dosage/instruction text → force "other"
+    import re as _re
+    _DOSAGE_RE = _re.compile(
+        r"(uống|ngày\s+\d|lần\s*,|sau\s*ăn|trước\s*ăn|"
+        r"sáng\s+uống|trưa\s+uống|tối\s+uống|"
+        r"mỗi\s+lần|hòa\s+tan|nhỏ\s+mắt)",
+        _re.IGNORECASE,
+    )
+    _PURE_NUM_RE = _re.compile(r"^[\d\s.,]+$")
+    _UNIT_ONLY_RE = _re.compile(
+        r"^[\d\s]*(viên|ống|lọ|tab|gói|viên\s+sủi)\s*$",
+        _re.IGNORECASE,
+    )
+    for r in gcn_results:
+        if r["label"] == "drugname":
+            txt = r["text"]
+            if (_DOSAGE_RE.search(txt) or
+                    _PURE_NUM_RE.match(txt) or
+                    _UNIT_ONLY_RE.match(txt)):
+                r["label"] = "other"
+                r["confidence"] = 0.0
+
     # Separate drugnames
     drug_names = [r for r in gcn_results if r["label"] == "drugname"]
 
@@ -256,11 +280,22 @@ def run_phase_a(img_path, out_dir, shared=None):
 
     drug_results = []
     matched_drugs = []
+    seen_drugs = set()  # dedup
 
-    # Search from GCN-classified drugnames (or all blocks if no GCN)
-    search_blocks = drug_names if drug_names else grouped
-    for b in search_blocks:
-        text = b.get("text", "").strip()
+    # Two-pass detection:
+    # Pass 1: Drug Search on ALL blocks (catch what GCN missed)
+    # Pass 2: Drug Search on GCN drugnames (higher priority)
+    all_search_blocks = []
+    for b in grouped:
+        all_search_blocks.append(
+            (b.get("text", "").strip(), "all")
+        )
+    for b in drug_names:
+        all_search_blocks.append(
+            (b.get("text", "").strip(), "gcn")
+        )
+
+    for text, source_pass in all_search_blocks:
         if not text or len(text) < 5:
             continue
         if any(kw in text.lower() for kw in SKIP_PATTERNS):
@@ -268,6 +303,12 @@ def run_phase_a(img_path, out_dir, shared=None):
 
         r = drug_lookup.lookup(text)
         is_match = r["name"] and r["score"] >= MIN_DRUG_SCORE
+        drug_name_lower = (r["name"] or "").lower()
+
+        # Dedup: skip if already matched
+        if drug_name_lower in seen_drugs:
+            continue
+
         drug_results.append({
             "ocr_text": text,
             "matched_drug": r["name"],
@@ -279,6 +320,7 @@ def run_phase_a(img_path, out_dir, shared=None):
         })
         if is_match:
             matched_drugs.append(r["name"])
+            seen_drugs.add(drug_name_lower)
 
     with open(os.path.join(out_dir, "step-6_drug_search.json"), "w", encoding="utf-8") as f:
         json.dump(drug_results, f, ensure_ascii=False, indent=2)
@@ -318,15 +360,24 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description="MedicineApp Pipeline")
     parser.add_argument("--image", type=str, help="Single image path")
+    parser.add_argument("--dir", type=str, help="Directory of images to process")
     parser.add_argument("--all", action="store_true", help="Process all images in data/input/")
     parser.add_argument("--pill", type=str, default=None, help="Pill image for Phase B")
     parser.add_argument("--gpu", action="store_true", help="Use GPU")
     parser.add_argument("--no-gcn", action="store_true", help="Skip GCN, use DrugLookup only")
+    parser.add_argument("--limit", type=int, default=0, help="Limit number of images to process")
     args = parser.parse_args()
 
     # Determine images to process
     if args.image:
         images = [args.image]
+    elif args.dir:
+        img_dir = Path(args.dir)
+        exts = {".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".webp"}
+        images = sorted([
+            str(p) for p in img_dir.iterdir()
+            if p.suffix.lower() in exts
+        ])
     elif args.all:
         input_dir = os.path.join(ROOT, "data", "input")
         images = sorted([str(p) for p in Path(input_dir).glob("*.jpg")])
@@ -334,6 +385,9 @@ def main():
         # Default: first image
         input_dir = os.path.join(ROOT, "data", "input")
         images = sorted([str(p) for p in Path(input_dir).glob("*.jpg")])[:1]
+
+    if args.limit and args.limit > 0:
+        images = images[:args.limit]
 
     if not images:
         logger.error("No images found!")

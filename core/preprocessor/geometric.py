@@ -37,34 +37,42 @@ def deskew(
         (deskewed_image, angle_corrected)
         angle_corrected = 0.0 nếu không xử lý.
     """
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # Lấy tọa độ các pixel tối (text)
+    h, w = image.shape[:2]
+    # Downsample for fast angle detection
+    MAX_SIDE = 800
+    if max(h, w) > MAX_SIDE:
+        scale = MAX_SIDE / max(h, w)
+        small = cv2.resize(
+            image, (int(w * scale), int(h * scale)),
+            interpolation=cv2.INTER_AREA,
+        )
+    else:
+        small = image
+
+    gray = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
     dark_mask = gray < 180
     coords = np.column_stack(np.where(dark_mask))
 
-    if len(coords) < 100:  # Quá ít điểm → không đủ thông tin
+    if len(coords) < 100:
         return image, 0.0
 
     rect = cv2.minAreaRect(coords)
     angle = rect[-1]
 
-    # cv2.minAreaRect trả về góc trong [-90, 0)
-    # Chuẩn hóa về [-45, 45)
     if angle < -45:
         angle = 90 + angle
 
-    # Chỉ xử lý nếu góc đáng kể và trong phạm vi hợp lý
     if abs(angle) < 0.5 or abs(angle) > max_angle:
         return image, 0.0
 
-    h, w = image.shape[:2]
+    # Apply rotation to full-size image
     center = (w // 2, h // 2)
     M = cv2.getRotationMatrix2D(center, angle, 1.0)
     deskewed = cv2.warpAffine(
         image, M, (w, h),
         flags=cv2.INTER_LINEAR,
         borderMode=cv2.BORDER_CONSTANT,
-        borderValue=(255, 255, 255),  # Nền trắng
+        borderValue=(255, 255, 255),
     )
     logger.debug(f"Deskew: angle={angle:.2f}°")
     return deskewed, angle

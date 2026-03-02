@@ -85,7 +85,7 @@ class OcrToPimaConverter:
 
     @staticmethod
     def merge_same_line_blocks(
-        blocks: list, y_tol: int = 15, x_gap_max: int = 40
+        blocks: list, y_tol: int = 15, x_gap_max: int = 20
     ) -> list:
         """
         Merge text blocks that are on the same line into one block.

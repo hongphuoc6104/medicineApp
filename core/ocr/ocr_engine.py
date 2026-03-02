@@ -1,18 +1,18 @@
 """
-ocr_engine.py — Hybrid OCR: PaddleOCR detect + VietOCR recognize.
+ocr_engine.py — Hybrid OCR: EasyOCR CRAFT detect + VietOCR recognize.
 
 Hybrid approach được chọn vì:
-- PaddleOCR: detect vùng text rất nhanh và chính xác
-- VietOCR: nhận diện tiếng Việt có dấu chính xác hơn PaddleOCR rec
+- EasyOCR CRAFT: detect vùng text trên GPU (PyTorch CUDA)
+- VietOCR: nhận diện tiếng Việt có dấu chính xác
 
 Pipeline:
-1. PaddleOCR detect → lấy bbox polygons
+1. EasyOCR CRAFT detect → lấy bbox polygons (GPU ~1s)
 2. Crop từng vùng text
 3. VietOCR recognize (batch) → text tiếng Việt chính xác
 
-Optimizations (v2):
-- PaddleOCR chỉ load detection model (skip rec/cls)
-- VietOCR dùng predict_batch thay vì predict từng region
+Optimizations (v3):
+- EasyOCR CRAFT chạy GPU (từ PaddleOCR CPU 9s → 1s)
+- VietOCR dùng predict_batch trên GPU
 - Cả 2 engine đều lazy-load singleton
 """
 
@@ -28,9 +28,6 @@ import numpy as np
 from core.ocr.base import BaseOCR, OcrResult, TextBlock
 
 logger = logging.getLogger(__name__)
-
-# Fix PaddlePaddle 3.3.0 MKLDNN bug
-os.environ.setdefault("FLAGS_enable_pir_api", "0")
 
 
 def _crop_polygon(
@@ -54,7 +51,7 @@ def _crop_polygon(
 
 class HybridOcrModule(BaseOCR):
     """
-    Hybrid OCR: PaddleOCR detect + VietOCR recognize (batch).
+    Hybrid OCR: EasyOCR CRAFT detect + VietOCR recognize (batch).
 
     Args:
         device:  'cpu', 'gpu', hoặc 'cuda'
@@ -66,29 +63,23 @@ class HybridOcrModule(BaseOCR):
         self,
         vietocr_model: str = "vgg_transformer",
         device: str = "cpu",
-        det_thresh: float = 0.3,
-        det_box_thresh: float = 0.3,
-        det_limit_side_len: int = 960,
-        cpu_threads: int = 4,
         batch_size: int = 32,
     ):
-        # Normalize device
+        import torch
         if device in ("cuda", "gpu"):
-            self._device = "gpu"
-            self._torch_device = "cuda"
+            self._use_gpu = torch.cuda.is_available()
+            self._torch_device = (
+                "cuda" if self._use_gpu else "cpu"
+            )
         else:
-            self._device = "cpu"
+            self._use_gpu = False
             self._torch_device = "cpu"
+        self._device = "gpu" if self._use_gpu else "cpu"
 
         self._vietocr_model_name = vietocr_model
-        self._det_thresh = det_thresh
-        self._det_box_thresh = det_box_thresh
-        self._det_limit_side_len = det_limit_side_len
-        self._cpu_threads = cpu_threads
         self._batch_size = batch_size
         self._rec_engine = None   # VietOCR (lazy)
-        self._det_engine = None   # PaddleOCR (lazy)
-        self._det_inner = None    # _OCRPipeline internals (det bypass)
+        self._det_engine = None   # EasyOCR (lazy)
         logger.info(
             f"HybridOcrModule init: "
             f"vietocr={vietocr_model}, device={self._device}, "
@@ -96,37 +87,32 @@ class HybridOcrModule(BaseOCR):
         )
 
     def _ensure_detector(self):
-        """Lazy load PaddleOCR detection engine."""
+        """Lazy load EasyOCR CRAFT detection engine."""
         if self._det_engine is not None:
             return
-        from paddleocr import PaddleOCR
+        import easyocr
         logger.info(
-            f"Loading PaddleOCR detector device={self._device}"
+            f"Loading EasyOCR CRAFT detector "
+            f"gpu={self._use_gpu}"
         )
-        self._det_engine = PaddleOCR(
-            lang="vi",
-            use_doc_orientation_classify=False,
-            use_doc_unwarping=False,
-            use_textline_orientation=False,
-            text_det_thresh=self._det_thresh,
-            text_det_box_thresh=self._det_box_thresh,
-            text_rec_score_thresh=0.0,
-            text_det_limit_type="max",
-            text_det_limit_side_len=self._det_limit_side_len,
-            enable_mkldnn=False,
-            device=self._device,
-            cpu_threads=self._cpu_threads,
+        self._det_engine = easyocr.Reader(
+            ['vi', 'en'],
+            gpu=self._use_gpu,
         )
-        # Cache internal det model for direct calls (saves ~5s rec time)
-        try:
-            self._det_inner = (
-                self._det_engine.paddlex_pipeline._pipeline
-            )
-            logger.info("PaddleOCR: direct det bypass enabled.")
-        except Exception:
-            self._det_inner = None
-            logger.warning("PaddleOCR: det bypass unavailable.")
-        logger.info("PaddleOCR detector ready.")
+        logger.info("EasyOCR CRAFT detector ready.")
+
+    # EasyOCR CRAFT detection parameters
+    # link_threshold: higher → CRAFT links chars tighter → fewer, larger boxes
+    # text_threshold: higher → skip low-confidence noise blocks
+    _CRAFT_PARAMS = dict(
+        text_threshold=0.75,   # default 0.7
+        link_threshold=0.6,    # default 0.4 — key: links chars into words
+        low_text=0.4,
+        detail=1,
+        # paragraph=False: let merge_same_line handle line merging
+        # so GCN graph structure is preserved
+        paragraph=False,
+    )
 
     def _ensure_recognizer(self):
         """Lazy load VietOCR recognition engine."""
@@ -155,49 +141,25 @@ class HybridOcrModule(BaseOCR):
         )
 
     def _detect_polys(self, image: np.ndarray) -> list:
-        """Run PaddleOCR detection → list of bbox polygons.
+        """Run EasyOCR CRAFT detection → list of bbox polygons.
 
-        Uses internal text_det_model directly to skip recognition
-        (~5s saved vs full predict on each image).
+        Uses CUDA GPU if available (~1s vs PaddleOCR CPU ~9s).
         """
         self._ensure_detector()
         polys = []
         try:
-            if self._det_inner is not None:
-                # Direct det call — no rec overhead
-                det_results = list(self._det_inner.text_det_model(
-                    [image],
-                    limit_side_len=self._det_limit_side_len,
-                    limit_type="max",
-                    thresh=self._det_thresh,
-                    max_side_limit=4000,
-                    box_thresh=self._det_box_thresh,
-                    unclip_ratio=2.0,
-                ))
-                if det_results:
-                    for poly in det_results[0].get(
-                        "dt_polys", []
-                    ):
-                        pts = (
-                            poly.tolist()
-                            if hasattr(poly, "tolist") else poly
-                        )
-                        polys.append(pts)
-            else:
-                # Fallback: full predict()
-                raw = self._det_engine.predict(image)
-                if raw:
-                    for res in raw:
-                        if isinstance(res, dict):
-                            for poly in res.get("dt_polys", []):
-                                pts = (
-                                    poly.tolist()
-                                    if hasattr(poly, "tolist")
-                                    else poly
-                                )
-                                polys.append(pts)
+            # Convert BGR → RGB for EasyOCR
+            rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            results = self._det_engine.readtext(
+                rgb, **self._CRAFT_PARAMS
+            )
+            for item in results:
+                bbox = item[0]
+                polys.append(
+                    [[int(p[0]), int(p[1])] for p in bbox]
+                )
         except Exception as e:
-            logger.error(f"PaddleOCR detect error: {e}")
+            logger.error(f"EasyOCR detect error: {e}")
         logger.info(f"Detected {len(polys)} text regions")
         return polys
 
@@ -263,7 +225,7 @@ class HybridOcrModule(BaseOCR):
         paddle_json_path: Optional[str] = None,
     ) -> OcrResult:
         """
-        Nhận diện text: PaddleOCR detect → VietOCR recognize (batch).
+        Nhận diện text: EasyOCR CRAFT detect → VietOCR recognize.
 
         Args:
             image:            Ảnh BGR numpy array.
@@ -280,13 +242,19 @@ class HybridOcrModule(BaseOCR):
             t_det = time.time()
             polys = self._detect_polys(image)
             det_ms = (time.time() - t_det) * 1000
-            logger.info(f"Detection: {len(polys)} regions in {det_ms:.0f}ms")
+            logger.info(
+                f"Detection: {len(polys)} regions "
+                f"in {det_ms:.0f}ms"
+            )
 
         # Step 2: Batch recognize
         t_rec = time.time()
         text_blocks = self._recognize_batch(image, polys)
         rec_ms = (time.time() - t_rec) * 1000
-        logger.info(f"Recognition: {len(text_blocks)} blocks in {rec_ms:.0f}ms")
+        logger.info(
+            f"Recognition: {len(text_blocks)} blocks "
+            f"in {rec_ms:.0f}ms"
+        )
 
         elapsed = (time.time() - t_start) * 1000
         logger.info(

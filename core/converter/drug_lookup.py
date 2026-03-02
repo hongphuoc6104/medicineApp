@@ -62,42 +62,68 @@ class DrugLookup:
     @staticmethod
     def _clean(text: str) -> str:
         """Extract drug name from OCR text."""
-        # Remove content in parentheses
-        t = re.sub(r"\([^)]*\)", " ", text)
-        # Remove standalone numbers and units
+        t = text
+        # Remove standalone numbers and units (keep brand names)
         t = re.sub(
             r"\b\d+\s*(mg|ml|tab|cap|iu|mcg|g|viên|ống|lọ)?\b",
             " ", t, flags=re.IGNORECASE,
         )
+        # Remove STT patterns like "11" at start/end
+        t = re.sub(r"^\d{1,3}\s+", "", t)
+        t = re.sub(r"\s+\d{1,3}$", "", t)
         return " ".join(t.split()).strip().lower()
 
     def lookup(self, text: str) -> dict:
         """
         Lookup drug name from OCR text.
 
-        Returns dict with: original, name, generic, score,
-        category, source.
+        Uses dual-match: tries both raw and cleaned text,
+        returns the best score.
         """
         if not self._search_keys:
             return self._empty(text)
 
-        query = self._clean(text)
-        if not query or len(query) < 3:
+        # Strategy 1: clean text (parens kept)
+        query_clean = self._clean(text)
+        # Strategy 2: just lowercase the raw text
+        query_raw = text.strip().lower()
+        # Strategy 3: extract content in complete parentheses
+        paren_match = re.search(r"\(([^)]+)\)", text)
+        query_paren = paren_match.group(1).strip().lower() \
+            if paren_match else ""
+        # Strategy 4: clean text with parens REMOVED
+        no_paren = re.sub(r"\([^)]*\)", " ", text)
+        query_no_paren = self._clean(no_paren)
+        # Strategy 5: partial open-paren (e.g., "Ginkgo Biloba (Tanakan")
+        # EasyOCR sometimes splits the closing ')' into a separate block
+        partial_match = re.search(r"\(([^)]{3,})\s*$", text)
+        query_partial = partial_match.group(1).strip().lower() \
+            if partial_match else ""
+
+        best_score = 0
+        best_result = None
+
+        candidates = [
+            query_clean, query_raw,
+            query_paren, query_no_paren,
+            query_partial,
+        ]
+        for query in candidates:
+            if not query or len(query) < 3:
+                continue
+            result = process.extractOne(
+                query,
+                self._search_keys,
+                scorer=fuzz.token_sort_ratio,
+            )
+            if result and result[1] > best_score:
+                best_score = result[1]
+                best_result = result
+
+        if not best_result or best_score < MIN_SCORE:
             return self._empty(text)
 
-        # Fuzzy match against all search keys
-        result = process.extractOne(
-            query,
-            self._search_keys,
-            scorer=fuzz.token_sort_ratio,
-        )
-        if not result:
-            return self._empty(text)
-
-        match_key, score, idx = result
-        if score < MIN_SCORE:
-            return self._empty(text)
-
+        match_key, score, idx = best_result
         entry = self._entries[idx]
         return {
             "original": text,

@@ -24,26 +24,32 @@ from core.preprocessor.geometric import deskew  # noqa: F401 (re-exported)
 
 logger = logging.getLogger(__name__)
 
-# Fix PaddlePaddle 3.3.0 MKLDNN/PIR bug
-os.environ.setdefault("FLAGS_enable_pir_api", "0")
-
-# Kiểm tra PaddleOCR có sẵn không
-try:
-    from paddleocr import DocImgOrientationClassification
-    PADDLE_AVAILABLE = True
-except ImportError:
-    PADDLE_AVAILABLE = False
-    logger.warning("PaddleOCR chưa được cài. AI orientation fix bị tắt.")
+# PaddleOCR lazy import (tránh tốn ~2.5s import khi skip AI fix)
+PADDLE_AVAILABLE = None  # None = chưa check
 
 # Singleton classifier — tránh load model mỗi lần gọi (~2-3s/lần)
-_classifier_cache: Optional["DocImgOrientationClassification"] = None
+_classifier_cache = None
 
 
 def _get_classifier(model_path: Optional[str] = None):
-    """Singleton DocImgOrientationClassification."""
-    global _classifier_cache
+    """Singleton DocImgOrientationClassification (lazy import)."""
+    global _classifier_cache, PADDLE_AVAILABLE
     if _classifier_cache is not None:
         return _classifier_cache
+    # Lazy import PaddleOCR
+    if PADDLE_AVAILABLE is None:
+        os.environ.setdefault("FLAGS_enable_pir_api", "0")
+        try:
+            from paddleocr import DocImgOrientationClassification
+            PADDLE_AVAILABLE = True
+        except ImportError:
+            PADDLE_AVAILABLE = False
+            logger.warning(
+                "PaddleOCR not installed. AI orientation disabled."
+            )
+    if not PADDLE_AVAILABLE:
+        return None
+    from paddleocr import DocImgOrientationClassification
     if model_path and os.path.exists(model_path):
         _classifier_cache = DocImgOrientationClassification(
             model_dir=model_path
@@ -181,6 +187,7 @@ def preprocess_image(
     image: np.ndarray,
     stem: str = "image",
     save_dir: Optional[str] = None,
+    skip_ai_fix: bool = True,
 ) -> Tuple[np.ndarray, dict]:
     """
     Pipeline tiền xử lý đầy đủ — dùng cho cả camera lẫn upload.
@@ -189,11 +196,13 @@ def preprocess_image(
       1. Deskew      — Nắn thẳng nghiêng ±15°
       2. Portrait    — Xoay 90° nếu nằm ngang
       3. AI fix 180° — Phát hiện lộn ngược bằng PP-LCNet
+                       (skip mặc định, tốn ~4s trên CPU)
 
     Args:
         image: Ảnh BGR gốc.
         stem: Tên dùng khi lưu intermediate files.
-        save_dir: Nếu không None, lưu ảnh sau mỗi bước vào thư mục này.
+        save_dir: Nếu không None, lưu ảnh sau mỗi bước.
+        skip_ai_fix: Bỏ qua AI orientation (mặc định True).
 
     Returns:
         (processed_image, info_dict)
@@ -218,8 +227,13 @@ def preprocess_image(
     image, rotated = force_portrait(image)
     info["portrait_rotated"] = rotated
 
-    # Bước 3: AI fix 180°
-    image, ai_status = fix_orientation_ai(image, save_path=save_dir, stem=stem)
+    # Bước 3: AI fix 180° (skip nếu không cần, tiết kiệm ~4s)
+    if skip_ai_fix:
+        ai_status = "Skipped (fast mode)"
+    else:
+        image, ai_status = fix_orientation_ai(
+            image, save_path=save_dir, stem=stem
+        )
     info["ai_status"] = ai_status
 
     logger.info(
