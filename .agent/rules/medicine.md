@@ -1,6 +1,6 @@
-# Project Rules - Medicine App
+# Project Rules — MedicineApp
 
-## Tech Stack & Versions (KHÔNG ĐƯỢC THAY ĐỔI trừ khi user yêu cầu)
+## Tech Stack (KHÔNG THAY ĐỔI trừ khi user yêu cầu)
 
 - Python 3.12.3
 - PyTorch 2.10.0 / torchvision 0.25.0
@@ -8,95 +8,89 @@
 - VietOCR 0.3.13
 - FastAPI 0.134.0 / Uvicorn 0.41.0
 - Ultralytics (YOLO) 8.4.14
-- torch-geometric 2.7.0
 - transformers 5.2.0
 - OpenCV 4.10.0
-- NumPy 2.4.2
-- GPU: NVIDIA GeForce RTX 3050 Laptop
+- GPU: NVIDIA GeForce RTX 3050 4GB
 
 ---
 
-## Ràng buộc quan trọng (PHẢI TUÂN THỦ)
+## Quy tắc Bắt buộc
 
-### 1. OCR Pipeline
-- **Text Detection**: PaddleOCR 3.4.0 (chỉ dùng detect, KHÔNG dùng recognize)
-- **Text Recognition**: VietOCR 0.3.13 (đọc chữ Việt chính xác hơn)
-- Pipeline: `PaddleOCR detect → VietOCR recognize`
-- Module chính: `core/ocr/ocr_engine.py` → `HybridOcrModule`
-- KHÔNG dùng PaddleOCR thuần cho cả detect + recognize
+### 1. Pipeline Phase A = 4 bước
+```
+YOLO detect → Preprocess → Hybrid OCR → PhoBERT NER
+```
+- ❌ KHÔNG đề xuất dùng GCN cho Phase A (đã bỏ, archive ở `archive/deprecated_gcn/`)
+- ❌ KHÔNG tạo lại module `s4_grouping` (đã bỏ, NER xử lý trực tiếp OCR output)
+- ❌ KHÔNG import `GcnClassifier` — đã thay hoàn toàn bằng `NerExtractor`
 
-### 2. PaddleOCR 3.4.0 API (ĐÃ THAY ĐỔI so với v2)
-- ❌ `use_gpu` → Tự động detect, dùng `device='gpu'/'cpu'`
-- ❌ `show_log` → Không còn tồn tại
-- ❌ `use_angle_cls` → Đổi thành `use_textline_orientation`
-- ❌ `ocr(img, cls=True)` → Dùng `ocr(img)` hoặc `predict(img)`
-- ✅ Params hợp lệ: `lang`, `device`, `use_textline_orientation`, `text_det_thresh`, `text_det_box_thresh`, `text_det_limit_side_len`
+### 2. Đường dẫn CHÍNH XÁC (đã refactor)
+```
+core/phase_a/s1_detect/          # YOLO crop
+core/phase_a/s2_preprocess/      # Deskew
+core/phase_a/s3_ocr/ocr_engine.py  # HybridOcrModule
+core/phase_a/s5_classify/ner_extractor.py  # NerExtractor
+core/phase_a/s6_drug_search/     # Drug fuzzy lookup
+core/config.py                   # CONF_THRESHOLD=0.90, paths
+core/pipeline.py                 # API orchestrator
+scripts/run_pipeline.py          # CLI chính
+```
 
 ### 3. Model Weights
-- YOLO: `models/weights/best.pt` (5.8MB)
-- Zero-PIMA: `models/weights/zero_pima_best.pth` (~654MB)
-- Checkpoint keys (Colab training): `model_loc`, `model_match`, `epoch`, `best_loss`
-
-### 4. Zero-PIMA Training (Colab)
-- Checkpoint upload HuggingFace mỗi epoch
-- Best model chỉ lưu khi loss < best_loss cũ
-- `zero_pima_checkpoint.pth` = checkpoint mới nhất (luôn có trên HF)
-- Resume: load checkpoint → `START_EPOCH = ckpt['epoch'] + 1`
-
-### 5. Drug Data Sources
-- Local: `data/drug_db.json` (107 thuốc VAIPE, có color + shape)
-- DDI Lab VN API: `ddi.lab.io.vn` (1,854 thuốc VN, có shape 85%)
-- Online: OpenFDA, RxNorm, DailyMed (tra real-time)
-
----
-
-## Các lỗi đã gặp (TRÁNH LẶP LẠI)
-
-### Lỗi 1: PaddleOCR API changed
-- **Nguyên nhân**: PaddleOCR v3.4+ thay đổi API hoàn toàn so với v2
-- **Biểu hiện**: `ValueError: Unknown argument: use_gpu/show_log`
-- **Fix**: Dùng HybridOcrModule trong `core/ocr/ocr_engine.py`
-
-### Lỗi 2: Checkpoint key mismatch
-- **Nguyên nhân**: Colab notebook lưu `model_loc`/`model_match`, matcher.py expect khác
-- **Fix**: Auto-detect keys trong `core/matcher.py`
-
-### Lỗi 3: PaddlePaddle MKLDNN bug
-- **Nguyên nhân**: PaddlePaddle 3.3.0
-- **Fix**: `os.environ.setdefault("FLAGS_enable_pir_api", "0")`
-
-### Lỗi 4: Port 8000 already in use
-- **Fix**: `fuser -k 8000/tcp` trước khi restart server
-
-### Lỗi 5: Colab disconnect mất dữ liệu
-- **Fix**: Upload checkpoint lên HuggingFace Hub mỗi epoch
-
----
-
-## Cấu trúc Project
-
 ```
-medicineApp/
-├── core/                  # Core logic
-│   ├── pipeline.py        # Main pipeline orchestrator
-│   ├── matcher.py         # Zero-PIMA wrapper
-│   ├── detector.py        # YOLO prescription detector
-│   ├── pill_detector.py   # FRCNN pill detector
-│   ├── ocr/
-│   │   ├── ocr_engine.py  # HybridOCR (PaddleOCR det + VietOCR rec)
-│   │   └── base.py        # Base OCR classes
-│   └── converter/
-│       └── drug_lookup.py # Drug name mapper
-├── server/
-│   ├── main.py            # FastAPI server
-│   └── services/
-│       └── drug_service.py # Drug info API
-├── models/weights/         # Model weights
-├── Zero-PIMA/              # Training code
-├── data/                   # Input images & drug DB
-└── scripts/                # Utility scripts
+models/yolo/best.pt              # 6MB — YOLO detect
+models/phobert_ner_model/        # ~500MB — PhoBERT NER
+models/zero_pima/zero_pima_best.pth  # 521MB — Phase B only
 ```
 
+### 4. OCR Pipeline
+- **Detection**: PaddleOCR 3.4.0 (`device='gpu'`) — chỉ dùng detect
+- **Recognition**: VietOCR 0.3.13 (`device='cuda'`) — đọc chữ Việt
+- KHÔNG dùng PaddleOCR cho cả detect + recognize
+
+### 5. PaddleOCR 3.4.0 API (khác v2)
+- ❌ `use_gpu` → dùng `device='gpu'/'cpu'`
+- ❌ `show_log` → không còn
+- ❌ `use_angle_cls` → dùng `use_textline_orientation`
+- ❌ `ocr(img, cls=True)` → dùng `ocr(img)` hoặc `predict(img)`
+
+### 6. Phase B — KHÔNG SỬA
+- `core/phase_b/` và `Zero-PIMA/` đang HOLD
+- Trừ khi user bảo "làm Phase B", bỏ qua hoàn toàn
+
+### 7. Data
+- Drug DB: `data/drug_db_vn.csv` (KHÔNG phải `drug_db.json`)
+- Input: `data/input/` (7 folders, 51 ảnh)
+- Output: `data/output/phase_a/<tên_ảnh>/`
+
+### 8. BẮT BUỘC CHO MỌI AI AGENT MỚI
+- ⚠️ Nếu bạn là một AI mới tinh, bạn **PHẢI** đọc file `AGENTS.md` ở thư mục gốc trước khi viết bất kỳ dòng code nào. File đó chứa ngữ cảnh, roadmap và giải thích lý do các thành phần bị xóa.
+
+### 9. Python Coding Convention
+- Tuân thủ PEP8, dùng Type hints (typing) cho mọi hàm.
+- Luôn viết Docstring (mô tả hàm, args, returns).
+- Dùng **absolute imports** cho nội bộ dự án (VD: `from core.phase_a.s1_detect.detector import Detector` thay vì `from .detector import Detector`).
+
+### 10. Git Safety Rules
+- ❌ KHÔNG commit thư mục `models/` (file weights >500MB — đã có trong `.gitignore`)
+- ❌ KHÔNG commit thư mục `data/output/` hay `venv/`
+- ❌ KHÔNG push thẳng vào nhánh `main` — tạo branch mới nếu cần
+- ✅ Trước khi commit: chạy `git status` để kiểm tra file sẽ được stage
+- ✅ Kiểm tra `.gitignore` tại root nếu nghi ngờ file có bị track không
+
 ---
 
-*Cập nhật: 01/03/2026*
+## Lỗi Đã Gặp (TRÁNH LẶP LẠI)
+
+### PaddleOCR API changed (v3.4 vs v2)
+- Fix: Dùng `HybridOcrModule` trong `core/phase_a/s3_ocr/ocr_engine.py`
+
+### PaddlePaddle MKLDNN bug
+- Fix: `os.environ.setdefault("FLAGS_enable_pir_api", "0")`
+
+### Port 8000 in use
+- Fix: `fuser -k 8000/tcp`
+
+---
+
+*Cập nhật: 08/03/2026*

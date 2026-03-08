@@ -2,12 +2,8 @@
 core/pipeline.py — Full end-to-end MedicineApp pipeline.
 
 Orchestrates all modules:
-    1. YOLO11-seg: detect & crop prescription from photo
-    2. PaddleOCR: read text + bbox from cropped image
-    3. Zero-PIMA GCN: classify drugname / other
-    4. Drug mapper: map OCR text → standard drug names
-    5. Pill detector (FRCNN): detect pills in pill image
-    6. Zero-PIMA matching: match pill features ↔ drug names
+    Phase A: prescription scan → drug extraction
+    Phase B: pill detection → prescription matching
 
 Usage:
     from core.pipeline import MedicinePipeline
@@ -23,8 +19,6 @@ Usage:
 """
 
 import logging
-import os
-import sys
 from pathlib import Path
 from typing import Optional
 
@@ -57,11 +51,12 @@ class MedicinePipeline:
         self._device = device
 
         # Lazy-loaded modules
-        self._detector = None      # YOLO prescription detector
-        self._ocr = None           # PaddleOCR engine
-        self._matcher = None       # Zero-PIMA GCN + matching
-        self._pill_det = None      # Faster R-CNN pill detector
-        self._drug_mapper = None   # Fuzzy drug name mapper
+        self._detector = None
+        self._ocr = None
+        self._classifier = None
+        self._pill_det = None
+        self._drug_mapper = None
+        self._matcher = None
 
         logger.info("MedicinePipeline initialized")
 
@@ -69,48 +64,62 @@ class MedicinePipeline:
 
     def _get_detector(self):
         if self._detector is None:
-            from core.detector import PrescriptionDetector
+            from core.phase_a.s1_detect.detector import (
+                PrescriptionDetector,
+            )
             self._detector = PrescriptionDetector(self._yolo_path)
             logger.info("YOLO detector loaded")
         return self._detector
 
     def _get_ocr(self):
         if self._ocr is None:
-            from core.ocr.ocr_engine import HybridOcrModule
+            from core.phase_a.s3_ocr.ocr_engine import HybridOcrModule
             device = "gpu" if self._device is None else self._device
             import torch
             if device is None:
-                device = "gpu" if torch.cuda.is_available() else "cpu"
+                device = (
+                    "gpu" if torch.cuda.is_available() else "cpu"
+                )
             self._ocr = HybridOcrModule(device=device)
-            logger.info("HybridOCR (PaddleOCR det + VietOCR rec) loaded")
+            logger.info("HybridOCR loaded")
         return self._ocr
 
-    def _get_matcher(self):
-        if self._matcher is None:
-            from core.matcher import ZeroPimaMatcher
-            self._matcher = ZeroPimaMatcher(
-                weights_path=self._zpima_path,
-                device=self._device
+    def _get_classifier(self):
+        if self._classifier is None:
+            from core.phase_a.s5_classify.ner_extractor import (
+                NerExtractor,
             )
-            logger.info("Zero-PIMA matcher loaded")
-        return self._matcher
+            self._classifier = NerExtractor()
+            logger.info("PhoBERT NER extractor loaded")
+        return self._classifier
 
     def _get_pill_detector(self):
         if self._pill_det is None:
-            from core.pill_detector import PillDetector
+            from core.phase_b.s1_pill_detect.pill_detector import (
+                PillDetector,
+            )
             self._pill_det = PillDetector(
                 weights_path=self._zpima_path,
-                device=self._device
+                device=self._device,
             )
             logger.info("Pill detector loaded")
         return self._pill_det
 
     def _get_drug_mapper(self):
         if self._drug_mapper is None:
-            from core.converter.drug_lookup import DrugLookup
+            from core.phase_a.s6_drug_search.drug_lookup import (
+                DrugLookup,
+            )
             self._drug_mapper = DrugLookup()
             logger.info("Drug mapper loaded")
         return self._drug_mapper
+
+    def _get_matcher(self):
+        if self._matcher is None:
+            from core.phase_b.s2_match.gcn_matcher import GcnMatcher
+            self._matcher = GcnMatcher()
+            logger.info("GCN matcher loaded")
+        return self._matcher
 
     # ── Phase A: Scan Prescription ───────────────────────
 
@@ -120,17 +129,11 @@ class MedicinePipeline:
 
         Args:
             image: str path, numpy array (BGR), or PIL Image
-            skip_yolo: If True, skip YOLO crop (image is already
-                       a cropped prescription)
+            skip_yolo: If True, skip YOLO crop
 
         Returns:
-            dict:
-                medications: list of detected drugs with names
-                ocr_blocks: raw OCR blocks for Phase B
-                gcn_results: GCN classification details
-                image_size: (width, height)
+            dict: medications, ocr_blocks, image_size, stats
         """
-        # Load image
         if isinstance(image, str):
             img = cv2.imread(image)
             if img is None:
@@ -140,40 +143,42 @@ class MedicinePipeline:
         else:
             img = np.array(image)
 
-        # Step 1: YOLO detect & crop prescription
+        # Step 1: YOLO detect & crop
         if not skip_yolo:
             img = self._crop_prescription(img)
             if img is None:
-                return {"error": "No prescription detected in image"}
+                return {"error": "No prescription detected"}
 
         h, w = img.shape[:2]
 
-        # Step 2: OCR (Hybrid: PaddleOCR detect + VietOCR recognize)
+        # Step 2: OCR
         ocr_blocks = self._run_ocr(img)
         if not ocr_blocks:
             return {"error": "OCR found no text",
                     "image_size": (w, h)}
 
-        # Step 3: GCN classify drugname/other
-        gcn_results = self._classify_blocks(ocr_blocks, w, h)
+        # Step 3: NER classify
+        ner_results = self._classify_blocks(ocr_blocks)
 
         # Step 4: Map drug names
-        medications = self._extract_medications(gcn_results)
+        medications = self._extract_medications(ner_results)
 
         return {
             "medications": medications,
-            "ocr_blocks": gcn_results,
+            "ocr_blocks": ner_results,
             "image_size": (w, h),
             "stats": {
                 "total_blocks": len(ocr_blocks),
                 "drugnames": len(medications),
                 "others": len(ocr_blocks) - len(medications),
-            }
+            },
         }
 
     def _crop_prescription(self, img):
         """Use YOLO to detect and crop prescription area."""
-        from core.segmentation import crop_by_mask, crop_by_bbox
+        from core.phase_a.s1_detect.segmentation import (
+            crop_by_mask, crop_by_bbox,
+        )
         detector = self._get_detector()
         results = detector.predict(img)
         if not results or len(results[0].boxes) == 0:
@@ -193,11 +198,9 @@ class MedicinePipeline:
 
         blocks = []
         for tb in result.text_blocks:
-            # Convert polygon bbox → [xmin, ymin, xmax, ymax]
             bbox = tb.bbox
             if isinstance(bbox, list) and len(bbox) == 4:
                 if isinstance(bbox[0], list):
-                    # 4-point polygon
                     xs = [p[0] for p in bbox]
                     ys = [p[1] for p in bbox]
                     bbox = [int(min(xs)), int(min(ys)),
@@ -209,28 +212,29 @@ class MedicinePipeline:
             })
         return blocks
 
-    def _classify_blocks(self, ocr_blocks, img_w, img_h):
-        """Use GCN to classify each block as drugname/other."""
-        matcher = self._get_matcher()
-        results = matcher.classify_prescription(
-            ocr_blocks, img_w=img_w, img_h=img_h)
+    def _classify_blocks(self, ocr_blocks):
+        """Use PhoBERT NER to classify each block as drugname/other."""
+        classifier = self._get_classifier()
+        results = classifier.classify(ocr_blocks)
         return results
 
-    def _extract_medications(self, gcn_results):
+    def _extract_medications(self, ner_results):
         """Extract drugname blocks and map to standard names."""
         mapper = self._get_drug_mapper()
         medications = []
 
-        for block in gcn_results:
+        for block in ner_results:
             if block.get("label") == "drugname":
                 text = block["text"]
                 match = mapper.lookup(text)
                 medications.append({
                     "ocr_text": text,
-                    "drug_name": match.get("name", text)
-                        if match else text,
-                    "match_score": match.get("score", 0)
-                        if match else 0,
+                    "drug_name": (
+                        match.get("name", text) if match else text
+                    ),
+                    "match_score": (
+                        match.get("score", 0) if match else 0
+                    ),
                     "confidence": block.get("confidence", 0),
                     "bbox": block.get("bbox"),
                 })
@@ -250,12 +254,8 @@ class MedicinePipeline:
             img_w, img_h: prescription image dimensions
 
         Returns:
-            dict:
-                matches: list of {pill_idx, drug_name, confidence}
-                detections: raw pill detections
-                n_pills: number of pills detected
+            dict: matches, detections, n_pills
         """
-        # Load pill image
         if isinstance(pill_image, str):
             pimg = cv2.imread(pill_image)
         else:
@@ -264,7 +264,6 @@ class MedicinePipeline:
         if pimg is None:
             return {"error": "Cannot read pill image"}
 
-        # Detect pills
         pill_det = self._get_pill_detector()
         detections = pill_det.detect(pimg)
 
@@ -273,14 +272,13 @@ class MedicinePipeline:
                 "matches": [],
                 "detections": [],
                 "n_pills": 0,
-                "warning": "No pills detected"
+                "warning": "No pills detected",
             }
 
-        # Match pills to prescription drugs
         matcher = self._get_matcher()
-        matches = matcher.verify_pills(
+        matches = matcher.match(
             pimg, prescription_blocks,
-            img_w=img_w, img_h=img_h
+            img_w=img_w, img_h=img_h,
         )
 
         return {
@@ -298,9 +296,9 @@ class MedicinePipeline:
             "zero_pima_weights": self._zpima_path,
             "yolo_loaded": self._detector is not None,
             "ocr_loaded": self._ocr is not None,
-            "matcher_loaded": self._matcher is not None,
+            "classifier_loaded": self._classifier is not None,
             "pill_detector_loaded": self._pill_det is not None,
         }
-        if self._matcher is not None:
-            info["checkpoint"] = self._matcher.checkpoint_info()
+        if self._classifier is not None:
+            info["checkpoint"] = self._classifier.checkpoint_info
         return info

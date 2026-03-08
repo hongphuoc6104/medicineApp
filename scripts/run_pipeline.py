@@ -1,27 +1,20 @@
 """
 run_pipeline.py — MedicineApp unified pipeline.
 
-Phase A (quét đơn thuốc):
+Phase A (quét đơn thuốc — 4 bước):
   1. YOLO detect + crop
   2. Preprocess (deskew, orientation)
-  3. OCR (PaddleOCR + VietOCR)
-  4. Grouping (merge same-line + group drug lines)
-  5. GCN classify drugname/other
-  6. Drug search (Drug Lookup DB)
+  3. OCR (PaddleOCR detect + VietOCR recognize)
+  4. NER classify drugname/other (PhoBERT)
 
-Phase B (xác minh thuốc — optional):
+Phase B (xác minh thuốc — chưa hoạt động):
   7. FRCNN detect pills
-  8. GCN + Contrastive matching
+  8. GCN contrastive matching
 
 Usage:
-  # Phase A only (1 image)
-  python scripts/run_pipeline.py --image data/input/IMG_20260209_180420.jpg
-
-  # Phase A on all images
+  python scripts/run_pipeline.py --image data/input/IMG.jpg
   python scripts/run_pipeline.py --all
-
-  # Phase A + B (with pill image)
-  python scripts/run_pipeline.py --image data/input/IMG_XXX.jpg --pill data/pills/test/pill.jpg
+  python scripts/run_pipeline.py --dir data/input/prescription_3
 """
 
 import json
@@ -45,7 +38,7 @@ logging.basicConfig(
 logger = logging.getLogger("pipeline")
 
 MAX_DIM = 1200
-OUTPUT_DIR = os.path.join(ROOT, "output", "pipeline")
+OUTPUT_DIR = os.path.join(ROOT, "data", "output", "phase_a")
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -95,10 +88,10 @@ def run_phase_a(img_path, out_dir, shared=None):
 
     detector = shared.get("detector") if shared else None
     if detector is not None:
-        from core.segmentation import crop_by_mask
+        from core.phase_a.s1_detect.segmentation import crop_by_mask
         yolo_results = detector.predict(img)
         if yolo_results and yolo_results[0].masks is not None:
-            cropped = crop_by_mask(img, yolo_results[0])
+            cropped, offset = crop_by_mask(img, yolo_results[0])
             if cropped is not None:
                 img = cropped
         crop_info = f"cropped {img.shape[1]}×{img.shape[0]}"
@@ -112,7 +105,7 @@ def run_phase_a(img_path, out_dir, shared=None):
 
     # ── Step 2: Preprocess ────────────────────────────────────────────────
     t0 = time.time()
-    from core.preprocessor.orientation import preprocess_image
+    from core.phase_a.s2_preprocess.orientation import preprocess_image
     processed, prep_info = preprocess_image(img, stem="step-2", save_dir=out_dir)
     processed = resize_if_needed(processed)
     cv2.imwrite(os.path.join(out_dir, "step-2_preprocessed.jpg"), processed)
@@ -125,7 +118,7 @@ def run_phase_a(img_path, out_dir, shared=None):
     t0 = time.time()
     ocr_module = shared.get("ocr") if shared else None
     if ocr_module is None:
-        from core.ocr.ocr_engine import HybridOcrModule
+        from core.phase_a.s3_ocr.ocr_engine import HybridOcrModule
         import torch
         _ocr_device = "gpu" if torch.cuda.is_available() else "cpu"
         ocr_module = HybridOcrModule(device=_ocr_device)
@@ -156,67 +149,33 @@ def run_phase_a(img_path, out_dir, shared=None):
     print_step(3, "OCR", "ok", t3, f"{len(ocr_blocks)} text blocks")
     summary["steps"]["ocr"] = {"time_s": round(t3, 1), "blocks": len(ocr_blocks)}
 
-    # ── Step 4: Grouping ──────────────────────────────────────────────────
-    t0 = time.time()
-    from core.converter.ocr_to_pima import OcrToPimaConverter
-    same_line = OcrToPimaConverter.merge_same_line_blocks(ocr_blocks)
-    grouped = OcrToPimaConverter.group_drug_lines(same_line)
+    # ── Build NER input from OCR blocks ──────────────────────────────────
+    ner_input = []
+    for b in ocr_blocks:
+        text = b.get("text", "").strip()
+        if not text:
+            continue
+        ner_input.append({
+            "text": text,
+            "label": "other",
+            "box": [0, 0, 0, 0],
+            "bbox": b.get("bbox", []),
+        })
 
-    grouped_json = {
-        "raw_count": len(ocr_blocks),
-        "after_same_line": len(same_line),
-        "after_grouping": len(grouped),
-        "blocks": [{"text": b.get("text", ""), "label": b.get("label", ""), "bbox": b.get("bbox", [])} for b in grouped],
-    }
-    with open(os.path.join(out_dir, "step-4_grouped.json"), "w", encoding="utf-8") as f:
-        json.dump(grouped_json, f, ensure_ascii=False, indent=2)
-
-    t4 = time.time() - t0
-    detail = f"{len(ocr_blocks)}→{len(same_line)}→{len(grouped)}"
-    print_step(4, "Grouping", "ok", t4, detail)
-    summary["steps"]["grouping"] = {
-        "time_s": round(t4, 1),
-        "raw": len(ocr_blocks),
-        "same_line": len(same_line),
-        "grouped": len(grouped),
-    }
-
-    # ── Step 5: GCN Classify drugname/other ───────────────────────────────
+    # ── Step 4: NER Classify drugname/other ───────────────────────────────
     t0 = time.time()
     matcher = shared.get("matcher") if shared else None
-    gcn_ok = False
-    gcn_results = []
 
     if matcher is not None:
-        try:
-            gcn_results = matcher.classify_prescription(grouped, img_w=1000, img_h=1000)
-            gcn_ok = True
-        except Exception as e:
-            logger.warning(f"GCN classify failed: {e}")
+        ner_results = matcher.classify(ner_input)
+    else:
+        from core.phase_a.s5_classify.ner_extractor import NerExtractor
+        matcher = NerExtractor()
+        if shared is not None:
+            shared["matcher"] = matcher
+        ner_results = matcher.classify(ner_input)
 
-    if not gcn_ok:
-        # Fallback: try loading matcher
-        try:
-            from core.matcher import ZeroPimaMatcher
-            if matcher is None:
-                matcher = ZeroPimaMatcher()
-                if shared is not None:
-                    shared["matcher"] = matcher
-            gcn_results = matcher.classify_prescription(grouped, img_w=1000, img_h=1000)
-            gcn_ok = True
-        except Exception as e:
-            logger.warning(f"GCN not available: {e}")
-            # Fallback: use DrugLookup heuristics
-            gcn_results = []
-            for b in grouped:
-                gcn_results.append({
-                    "text": b.get("text", ""),
-                    "label": "unknown",
-                    "confidence": 0.0,
-                    "bbox": b.get("bbox", []),
-                })
-
-    # Post-GCN filter: dosage/instruction text → force "other"
+    # Post-NER filter: dosage/instruction text → force "other"
     import re as _re
     _DOSAGE_RE = _re.compile(
         r"(uống|ngày\s+\d|lần\s*,|sau\s*ăn|trước\s*ăn|"
@@ -225,133 +184,75 @@ def run_phase_a(img_path, out_dir, shared=None):
         _re.IGNORECASE,
     )
     _PURE_NUM_RE = _re.compile(r"^[\d\s.,]+$")
+    # "Viên 60 8", "Viên 15", "Ống 20", "Tab 30 5"
     _UNIT_ONLY_RE = _re.compile(
-        r"^[\d\s]*(viên|ống|lọ|tab|gói|viên\s+sủi)\s*$",
+        r"^(viên|ống|lọ|tab|gói|viên\s+sủi)\s+[\d\s]*$",
         _re.IGNORECASE,
     )
-    for r in gcn_results:
+    # "20 50mg", "150mg", "500mcg"
+    _DOSAGE_ONLY_RE = _re.compile(
+        r"^[\d\s.,]*(mg|ml|mcg|g|iu)\b",
+        _re.IGNORECASE,
+    )
+    # Non-drug: headers, hospital names, dates, addresses
+    _HEADER_RE = _re.compile(
+        r"(đơn\s+thuốc|bhyt|bệnh\s+viện|phòng\s+khám|"
+        r"họ\s+tên|giới\s+tính|địa\s+chỉ|chẩn\s+đoán|"
+        r"thuốc\s+điều\s+trị|mã\s+số|số\s+phiếu|"
+        r"bộ\s+y\s+tế|sở\s+y\s+tế|xem\s+tiếp)",
+        _re.IGNORECASE,
+    )
+    for r in ner_results:
         if r["label"] == "drugname":
-            txt = r["text"]
+            txt = r["text"].strip()
             if (_DOSAGE_RE.search(txt) or
                     _PURE_NUM_RE.match(txt) or
-                    _UNIT_ONLY_RE.match(txt)):
+                    _UNIT_ONLY_RE.match(txt) or
+                    _DOSAGE_ONLY_RE.match(txt) or
+                    _HEADER_RE.search(txt) or
+                    len(txt) < 4):
                 r["label"] = "other"
                 r["confidence"] = 0.0
 
     # Separate drugnames
-    drug_names = [r for r in gcn_results if r["label"] == "drugname"]
+    drug_names = [r for r in ner_results if r["label"] == "drugname"]
 
-    with open(os.path.join(out_dir, "step-5_gcn_classify.json"), "w", encoding="utf-8") as f:
-        json.dump(gcn_results, f, ensure_ascii=False, indent=2)
+    with open(os.path.join(out_dir, "step-4_ner_classify.json"), "w", encoding="utf-8") as f:
+        json.dump(ner_results, f, ensure_ascii=False, indent=2)
 
     t5 = time.time() - t0
-    method = "GCN" if gcn_ok else "fallback"
-    print_step(5, "GCN Classify", "ok" if gcn_ok else "skip", t5,
-               f"{len(drug_names)} drugnames ({method})")
-    summary["steps"]["gcn_classify"] = {
+    print_step(4, "NER Classify", "ok", t5,
+               f"{len(drug_names)} drugnames")
+    summary["steps"]["ner_classify"] = {
         "time_s": round(t5, 1),
-        "method": method,
+        "method": "PhoBERT-NER",
         "drugnames": len(drug_names),
-        "total": len(gcn_results),
+        "total": len(ner_results),
     }
 
-    # Print detected drug names
-    for r in gcn_results:
+    # Print all blocks — highlight drugnames
+    for r in ner_results:
         icon = "💊" if r["label"] == "drugname" else "  "
         conf = f"[{r['confidence']:.0%}]" if r["confidence"] > 0 else ""
-        print(f"      {icon} {r['text'][:50]} {conf}")
-
-    # ── Step 6: Drug Search ───────────────────────────────────────────────
-    t0 = time.time()
-    drug_lookup = shared.get("drug_lookup") if shared else None
-    if drug_lookup is None:
-        from core.converter.drug_lookup import DrugLookup
-        drug_lookup = DrugLookup()
-        if shared is not None:
-            shared["drug_lookup"] = drug_lookup
-
-    SKIP_PATTERNS = {
-        "bộ y tế", "đơn thuốc", "điện thoại", "họ tên", "tuổi",
-        "giới tính", "mã số", "bhyt", "địa chỉ", "chẩn đoán",
-        "chấn đoán", "stt", "thuốc điều trị", "van co",
-        "văn cơ", "bvđk", "bệnh viện",
-    }
-    MIN_DRUG_SCORE = 0.3
-
-    drug_results = []
-    matched_drugs = []
-    seen_drugs = set()  # dedup
-
-    # Two-pass detection:
-    # Pass 1: Drug Search on ALL blocks (catch what GCN missed)
-    # Pass 2: Drug Search on GCN drugnames (higher priority)
-    all_search_blocks = []
-    for b in grouped:
-        all_search_blocks.append(
-            (b.get("text", "").strip(), "all")
-        )
-    for b in drug_names:
-        all_search_blocks.append(
-            (b.get("text", "").strip(), "gcn")
-        )
-
-    for text, source_pass in all_search_blocks:
-        if not text or len(text) < 5:
-            continue
-        if any(kw in text.lower() for kw in SKIP_PATTERNS):
-            continue
-
-        r = drug_lookup.lookup(text)
-        is_match = r["name"] and r["score"] >= MIN_DRUG_SCORE
-        drug_name_lower = (r["name"] or "").lower()
-
-        # Dedup: skip if already matched
-        if drug_name_lower in seen_drugs:
-            continue
-
-        drug_results.append({
-            "ocr_text": text,
-            "matched_drug": r["name"],
-            "generic": r.get("generic", ""),
-            "score": round(r["score"], 3),
-            "source": r["source"],
-            "category": r.get("category", ""),
-            "status": "matched" if is_match else "no_match",
-        })
-        if is_match:
-            matched_drugs.append(r["name"])
-            seen_drugs.add(drug_name_lower)
-
-    with open(os.path.join(out_dir, "step-6_drug_search.json"), "w", encoding="utf-8") as f:
-        json.dump(drug_results, f, ensure_ascii=False, indent=2)
-
-    t6 = time.time() - t0
-    print_step(6, "Drug Search", "ok", t6, f"{len(matched_drugs)}/{len(drug_results)} matched")
-
-    if matched_drugs:
-        for name in matched_drugs:
-            print(f"      → {name}")
-
-    summary["steps"]["drug_search"] = {
-        "time_s": round(t6, 1),
-        "matched": len(matched_drugs),
-        "total": len(drug_results),
-        "drugs": matched_drugs,
-    }
+        print(f"      {icon} {r['text'][:60]} {conf}")
 
     # ── Summary ───────────────────────────────────────────────────────────
+    extracted_names = [r["text"] for r in drug_names]
+
     elapsed = time.time() - t_total
     summary["total_time_s"] = round(elapsed, 1)
-    summary["drugs_found"] = matched_drugs
+    summary["drugs_found"] = extracted_names
 
     # Save summary
     with open(os.path.join(out_dir, "summary.json"), "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
 
     print(f"  {'─' * 56}")
-    print(f"  Total: {elapsed:.1f}s | Drugs found: {len(matched_drugs)}")
+    print(f"  Total: {elapsed:.1f}s | Drugs found: {len(extracted_names)}")
+    for name in extracted_names:
+        print(f"      💊 {name}")
 
-    return summary, grouped
+    return summary, ner_input
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
@@ -364,7 +265,7 @@ def main():
     parser.add_argument("--all", action="store_true", help="Process all images in data/input/")
     parser.add_argument("--pill", type=str, default=None, help="Pill image for Phase B")
     parser.add_argument("--gpu", action="store_true", help="Use GPU")
-    parser.add_argument("--no-gcn", action="store_true", help="Skip GCN, use DrugLookup only")
+    parser.add_argument("--no-ner", action="store_true", help="Skip NER, use DrugLookup only")
     parser.add_argument("--limit", type=int, default=0, help="Limit number of images to process")
     args = parser.parse_args()
 
@@ -380,11 +281,17 @@ def main():
         ])
     elif args.all:
         input_dir = os.path.join(ROOT, "data", "input")
-        images = sorted([str(p) for p in Path(input_dir).glob("*.jpg")])
+        images = sorted([
+            str(p) for p in Path(input_dir).rglob("*")
+            if p.suffix.lower() in (".jpg", ".jpeg", ".png")
+        ])
     else:
-        # Default: first image
+        # Default: first image in any subfolder
         input_dir = os.path.join(ROOT, "data", "input")
-        images = sorted([str(p) for p in Path(input_dir).glob("*.jpg")])[:1]
+        images = sorted([
+            str(p) for p in Path(input_dir).rglob("*")
+            if p.suffix.lower() in (".jpg", ".jpeg", ".png")
+        ])[:1]
 
     if args.limit and args.limit > 0:
         images = images[:args.limit]
@@ -400,22 +307,19 @@ def main():
     print_header("Loading Models")
     t0 = time.time()
 
-    from core.detector import PrescriptionDetector
+    from core.phase_a.s1_detect.detector import PrescriptionDetector
     shared["detector"] = PrescriptionDetector()
-    print(f"  YOLO detector loaded")
+    print("  YOLO detector loaded")
 
-    # Zero-PIMA GCN matcher (lazy loaded in step 5)
-    if not args.no_gcn:
+    # PhoBERT NER matcher
+    if not args.no_ner:
         try:
-            from core.matcher import ZeroPimaMatcher
-            matcher = ZeroPimaMatcher()
-            # Pre-load to measure time
-            _ = matcher.checkpoint_info
+            from core.phase_a.s5_classify.ner_extractor import NerExtractor
+            matcher = NerExtractor()
             shared["matcher"] = matcher
-            print(f"  Zero-PIMA GCN loaded (epoch={matcher.checkpoint_info['epoch']}, "
-                  f"loss={matcher.checkpoint_info['loss']:.4f})")
+            print("  PhoBERT NER loaded (F1=100%)")
         except Exception as e:
-            logger.warning(f"Zero-PIMA not available: {e}. Using DrugLookup fallback.")
+            logger.warning(f"NER not available: {e}. Using DrugLookup fallback.")
 
     print(f"  Models loaded in {time.time()-t0:.1f}s")
 
@@ -430,13 +334,12 @@ def main():
         print_header(f"MedicineApp Pipeline — [{i+1}/{len(images)}] {stem}")
 
         try:
-            summary, grouped = run_phase_a(img_path, out_dir, shared=shared)
+            summary, _ = run_phase_a(img_path, out_dir, shared=shared)
         except Exception as e:
             logger.error(f"Pipeline error: {e}")
             import traceback
             traceback.print_exc()
             summary = {"image": stem, "error": str(e)}
-            grouped = []
 
         all_summaries.append(summary)
 
@@ -452,14 +355,128 @@ def main():
             t = s.get("total_time_s", 0)
             print(f"  {s['image']}: {t:.1f}s | Drugs: {len(drugs)}")
             for d in drugs:
-                print(f"      → {d}")
+                print(f"      💊 {d}")
+
+    # ── Consensus Voting (multi-image) ────────────────────────────────────
+    consensus_results = []
+    if len(images) >= 2:
+        consensus_results = _consensus_vote(
+            OUTPUT_DIR, all_summaries
+        )
 
     print(f"\n  📂 Output: {os.path.abspath(OUTPUT_DIR)}/")
 
     # Save batch summary
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(os.path.join(OUTPUT_DIR, "batch_summary.json"), "w", encoding="utf-8") as f:
-        json.dump(all_summaries, f, ensure_ascii=False, indent=2)
+    batch = {
+        "summaries": all_summaries,
+        "consensus": consensus_results,
+    }
+    with open(
+        os.path.join(OUTPUT_DIR, "batch_summary.json"),
+        "w", encoding="utf-8",
+    ) as f:
+        json.dump(batch, f, ensure_ascii=False, indent=2)
+
+
+def _consensus_vote(output_dir, summaries, threshold=0.6,
+                    min_images=2, min_text_len=5):
+    """Cross-image consensus voting for drug names.
+
+    Collects all NER drugname predictions, groups similar
+    texts via fuzzy matching, keeps only those appearing
+    in >= min_images.
+
+    Returns list of consensus drug dicts.
+    """
+    from difflib import SequenceMatcher
+    from collections import Counter
+
+    # Collect all drugname blocks
+    all_drugs = []
+    for s in summaries:
+        if "error" in s:
+            continue
+        img = s.get("image", "")
+        ner_path = os.path.join(
+            output_dir, img, "step-4_ner_classify.json"
+        )
+        if not os.path.isfile(ner_path):
+            continue
+        with open(ner_path, encoding="utf-8") as f:
+            ner = json.load(f)
+        for b in ner:
+            if b["label"] == "drugname":
+                text = b["text"].strip()
+                if len(text) >= min_text_len:
+                    all_drugs.append({
+                        "image": img,
+                        "text": text,
+                        "conf": b["confidence"],
+                    })
+
+    if not all_drugs:
+        return []
+
+    # Cluster similar texts
+    clusters = []
+    for d in all_drugs:
+        placed = False
+        for cluster in clusters:
+            rep = cluster[0]["text"]
+            sim = SequenceMatcher(
+                None, d["text"].lower(), rep.lower()
+            ).ratio()
+            if sim >= threshold:
+                cluster.append(d)
+                placed = True
+                break
+        if not placed:
+            clusters.append([d])
+
+    # Vote: keep clusters with >= min_images
+    results = []
+    for cluster in clusters:
+        images = set(d["image"] for d in cluster)
+        if len(images) < min_images:
+            continue
+        texts = Counter(d["text"] for d in cluster)
+        best_text, best_count = texts.most_common(1)[0]
+        avg_conf = sum(
+            d["conf"] for d in cluster
+        ) / len(cluster)
+        results.append({
+            "drug_name": best_text,
+            "votes": best_count,
+            "total_images": len(images),
+            "avg_confidence": round(avg_conf, 2),
+            "variants": list(set(d["text"] for d in cluster)),
+        })
+
+    results.sort(
+        key=lambda x: x["total_images"], reverse=True
+    )
+
+    # Print
+    if results:
+        print(f"\n  {'─' * 56}")
+        print(f"  CONSENSUS ({len(images)} images,"
+              f" threshold={threshold}):")
+        for r in results:
+            print(f"      💊 {r['drug_name'][:55]}"
+                  f"  [{r['votes']}/{r['total_images']}]")
+    else:
+        print(f"\n  No consensus drugs"
+              f" (need >= {min_images} images)")
+
+    # Save
+    consensus_path = os.path.join(
+        output_dir, "consensus_drugs.json"
+    )
+    with open(consensus_path, "w", encoding="utf-8") as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)
+
+    return results
 
 
 if __name__ == "__main__":

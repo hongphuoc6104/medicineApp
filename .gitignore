@@ -16,6 +16,8 @@ createPrescription/prescription_generator/venv/
 *.pb
 *.tflite
 models/weights/
+models/phobert_ner_model/
+models/zero_pima/
 best/
 
 # ============================================
@@ -25,6 +27,7 @@ VAIPE_Full/
 data/pills/
 data/pres/
 data/synthetic_train/
+data/createPrescription/
 
 # Data output (generated)
 data/output/
@@ -58,6 +61,7 @@ data/input/
 # ============================================
 Zero-PIMA/
 YOLO11-Seg-Label-Detector-main/
+archive/
 
 # ============================================
 # Generated output & debug

@@ -1,17 +1,17 @@
-# MedicineApp Pipeline Status
+# MedicineApp Pipeline — Tài Liệu Kỹ Thuật
 
-> Last updated: 2026-02-27 22:25
+> Last updated: 2026-03-08
 
-## Architecture — 2-Phase Pipeline
+## Kiến Trúc Tổng Quan
 
 ```
- PHASE A: QUÉT ĐƠN THUỐC
- ────────────────────────
+ PHASE A: QUÉT ĐƠN THUỐC (4 bước)
+ ───────────────────────────────────
    📷 Ảnh đơn thuốc
      │
      ▼
    ┌──────────────────┐
-   │ 1. YOLO Detect   │  best.pt (6MB)
+   │ 1. YOLO Detect   │  models/yolo/best.pt (6MB)
    │    crop vùng đơn  │
    └──────┬───────────┘
           ▼
@@ -20,89 +20,92 @@
    └──────┬───────────┘
           ▼
    ┌──────────────────┐
-   │ 3. OCR           │  PaddleOCR + VietOCR
+   │ 3. OCR           │  PaddleOCR detect + VietOCR recognize
    │    → text blocks  │
    └──────┬───────────┘
           ▼
    ┌──────────────────┐
-   │ 4. Grouping      │  merge + group drug lines
-   └──────┬───────────┘
-          ▼
-   ┌──────────────────┐
-   │ 5. GCN Classify  │  zero_pima_best.pth (model_match)
+   │ 4. NER Classify  │  models/phobert_ner_model/ (PhoBERT)
    │    drugname/other │
-   └──────┬───────────┘
-          ▼
-   ┌──────────────────┐
-   │ 6. Drug Search   │  fuzzy match drug_db_vn.csv
-   │    → drug info    │
    └──────────────────┘
           ▼
-   📋 Lập lịch uống thuốc
+   📋 Danh sách thuốc
 
- PHASE B: XÁC MINH THUỐC (khi uống)
- ────────────────────────────────────
-   📷 Ảnh viên thuốc + đơn đã quét
-     │
-     ▼
-   ┌──────────────────┐
-   │ 7. FRCNN Detect  │  zero_pima_best.pth (model_loc)
-   │    → pill bboxes  │
-   └──────┬───────────┘
-          ▼
-   ┌──────────────────┐
-   │ 8. GCN Match     │  zero_pima_best.pth (full)
-   │    pill ↔ drug    │
-   └──────────────────┘
-          ▼
-   ✅/❌ Đúng thuốc hay không
+ PHASE B: XÁC MINH THUỐC (chưa hoạt động)
+ ──────────────────────────────────────────
+   ⚠️ Code có sẵn nhưng chưa functional.
+   Dùng Zero-PIMA: FRCNN detect pills + GCN match.
+   Cần patched roi_heads.py để chạy contrastive matching.
 ```
+
+## Code Mapping
+
+| Step | Module | Code Path | Status |
+|------|--------|-----------|--------|
+| 1 | YOLO Detect | `core/phase_a/s1_detect/` | ✅ |
+| 2 | Preprocess | `core/phase_a/s2_preprocess/` | ✅ |
+| 3 | OCR | `core/phase_a/s3_ocr/` | ✅ |
+| 4 | NER Classify | `core/phase_a/s5_classify/ner_extractor.py` | ✅ |
+| — | Drug Search | `core/phase_a/s6_drug_search/` | ✅ (available) |
 
 ## Model Weights
 
-| File | Size | Chứa gì |
-|------|------|---------|
-| `models/weights/best.pt` | 6MB | YOLO11n-seg (detect vùng đơn thuốc) |
-| `models/weights/zero_pima_best.pth` | 521MB | FRCNN (model_loc) + GCN (model_match) |
+| File | Size | Mô tả |
+|------|------|-------|
+| `models/yolo/best.pt` | 6MB | YOLO11n-seg — detect vùng đơn thuốc |
+| `models/phobert_ner_model/` | ~500MB | PhoBERT NER — classify drugname/other |
+| `models/zero_pima/zero_pima_best.pth` | 521MB | Phase B only — FRCNN + GCN match |
 
-## Zero-PIMA Training (Completed ✅)
+## Hiệu Suất (Phase A)
 
-| Epoch | Loss | Ghi chú |
-|-------|------|---------|
-| 19 | 1.9643 | Start of final training run |
-| 25 | 1.8507 | |
-| 30 | 1.7986 | |
-| 35 | 1.7528 | |
-| 40 | 1.7275 | |
-| 45 | 1.7145 | |
-| 50 | **1.6923** | 💾 **Final best** — `zero_pima_best.pth` |
-
-> Training: 50 epochs, ~7m18s/epoch, Colab Pro L4 GPU.
-
-## Performance (Phase A)
-
-| Stage | Time (CPU) | Note |
-|---|---|---|
+| Stage | Thời gian | Ghi chú |
+|-------|-----------|---------|
 | YOLO detect+crop | ~1s | best.pt (6MB) |
-| Preprocess | ~7s | Singleton classifier |
-| OCR (Hybrid) | ~25s | PaddleOCR + VietOCR |
-| Grouping | <0.1s | — |
-| GCN classify | ~2s | GPU, first load ~5s |
-| Drug search | <0.1s | Local VN DB |
-| **Total** | **~35s** | |
+| Preprocess | <1s | Orientation AI |
+| OCR (Hybrid) | ~10s | PaddleOCR + VietOCR |
+| NER classify | ~2s | PhoBERT model |
+| **Tổng** | **~13s** | |
 
-## Scripts
+### Kết quả test trên prescription_3:
+- **5/5 thuốc** nhận diện đúng (97% confidence)
+- **0 false positives**
+- Celecoxib, Eperisone, Mecobalamin, Loratadine, Paracetamol
+
+## CLI Commands
 
 ```bash
-# Unified pipeline (Phase A)
+# Chạy 1 ảnh
 python scripts/run_pipeline.py --image data/input/IMG_XXX.jpg
 
-# Batch all images
+# Chạy 1 folder ảnh
+python scripts/run_pipeline.py --dir data/input/prescription_3
+
+# Chạy tất cả
 python scripts/run_pipeline.py --all
 
-# Legacy: debug pipeline
-python scripts/run_debug_pipeline.py
+# Giới hạn số ảnh
+python scripts/run_pipeline.py --all --limit 5
 
-# Legacy: batch pipeline (step 1-5 only)
-python scripts/run_batch_pipeline.py
+# Bỏ qua NER (fallback)
+python scripts/run_pipeline.py --all --no-ner
 ```
+
+## Output Structure
+
+```
+data/output/phase_a/<tên_ảnh>/
+├── summary.json               ← Tổng hợp kết quả + danh sách thuốc
+├── step-0_raw.jpg             ← Ảnh gốc
+├── step-1_cropped.jpg         ← Ảnh sau YOLO crop
+├── step-2_preprocessed.jpg    ← Ảnh sau preprocess
+├── step-3_ocr.json            ← Kết quả OCR (text blocks)
+├── step-3.txt                 ← OCR text thuần
+└── step-4_ner_classify.json   ← Kết quả NER (drugname/other)
+```
+
+## Archived (không còn sử dụng)
+
+Đã chuyển vào `archive/deprecated_gcn/`:
+- `gcn_classifier.py` — GCN classify cũ (thay bằng PhoBERT NER)
+- `evaluate.py` — Script đánh giá GCN
+- `s4_grouping/` — Module merge text blocks (NER xử lý trực tiếp OCR output)
