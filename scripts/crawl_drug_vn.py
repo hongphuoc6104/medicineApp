@@ -4,7 +4,7 @@ Crawl toàn bộ thuốc VN từ ddi.lab.io.vn API.
 
 Tính năng:
 - Crawl /api/drugs/search-detailed?q=&page=X&limit=50
-- Anti-bot: Random delay 1.5-3.5s + User-Agent rotation
+- Anti-bot: Random delay 1.0-2.5s + User-Agent rotation
 - Retry: 3 lần với exponential backoff
 - HTTP 429: chờ 30s
 - Checkpoint: lưu mỗi 50 trang (resume từ checkpoint)
@@ -228,7 +228,7 @@ def crawl(
     """
     drugs = list(existing_drugs or [])
 
-    # Fetch page 1 để biết totalPages
+    # Fetch page 1 để lấy totalPages (luôn cần dù có resume hay không)
     logger.info("Fetching page 1 to check total...")
     first = fetch_page(1, limit=PAGE_LIMIT)
     total_pages = first.get("totalPages", 0)
@@ -242,13 +242,15 @@ def crawl(
         f"(limit={PAGE_LIMIT})"
     )
 
+    # Chỉ xử lý drugs từ page 1 khi bắt đầu mới (không phải resume)
     if start_page == 1:
-        # Process page 1
         for raw in first.get("drugs", []):
             cleaned = clean_drug(raw)
             if cleaned["tenThuoc"]:
                 drugs.append(cleaned)
         start_page = 2
+    # Nếu resume (start_page > 1): bỏ qua data từ page 1,
+    # chỉ dùng first để lấy totalPages
 
     t_start = time.time()
     errors = []

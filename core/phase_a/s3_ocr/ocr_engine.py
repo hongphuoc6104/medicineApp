@@ -3,13 +3,14 @@ ocr_engine.py — Hybrid OCR: PaddleOCR detect + VietOCR recognize.
 
 Pipeline:
 1. PaddleOCR PP-OCRv5 detect → line-level bbox polygons (GPU)
-2. Crop từng vùng text (với padding ±5px)
-3. VietOCR recognize (batch, beamsearch) → text tiếng Việt
+2. Crop từng vùng text bằng Perspective Transform (±5px padding)
+3. VietOCR recognize (batch, greedy) → text tiếng Việt
 
-Improvements v4:
+Improvements v5:
+- VĐ1: Perspective Transform thay boundingRect (crop chính xác chữ nghiêng)
 - C3: PaddleOCR PP-OCRv5 thay CRAFT (line-level, tách STT riêng)
 - C2: Crop padding ±5px (giữ nét biên chữ)
-- C1: VietOCR beamsearch=True (chính xác hơn greedy)
+- C1: VietOCR beamsearch=False (tránh hallucination)
 """
 
 import json

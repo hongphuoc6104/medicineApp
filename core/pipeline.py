@@ -74,9 +74,11 @@ class MedicinePipeline:
     def _get_ocr(self):
         if self._ocr is None:
             from core.phase_a.s3_ocr.ocr_engine import HybridOcrModule
-            device = "gpu" if self._device is None else self._device
             import torch
-            if device is None:
+            # Ưu tiên device được truyền vào, fallback theo CUDA
+            if self._device is not None:
+                device = self._device
+            else:
                 device = (
                     "gpu" if torch.cuda.is_available() else "cpu"
                 )
