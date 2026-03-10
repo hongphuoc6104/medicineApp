@@ -15,6 +15,7 @@ import { env } from './config/env.js';
 import { requestLogger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import healthRoutes from './routes/health.routes.js';
+import authRoutes from './routes/auth.routes.js';
 import logger from './middleware/logger.js';
 
 const app = express();
@@ -38,9 +39,9 @@ app.use(requestLogger);
 
 // ── Routes ──
 app.use('/api', healthRoutes);
+app.use('/api/auth', authRoutes);
 
-// Placeholder for future routes (3b-3e)
-// app.use('/api/auth', authRoutes);
+// Placeholder for future routes (3c-3e)
 // app.use('/api/drugs', drugRoutes);
 // app.use('/api/scan', scanRoutes);
 // app.use('/api/plans', planRoutes);
