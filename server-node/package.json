@@ -4,11 +4,11 @@
   "description": "MedicineApp Node.js API server",
   "main": "src/app.js",
   "scripts": {
-    "dev": "node --watch src/app.js",
-    "start": "node src/app.js",
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
     "migrate": "node src/config/migrate.js",
     "seed": "node src/config/seed.js",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --forceExit",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --forceExit --runInBand",
     "test:watch": "npm test -- --watch"
   },
   "type": "module",

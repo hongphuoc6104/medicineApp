@@ -20,7 +20,6 @@ import authRoutes from './routes/auth.routes.js';
 import drugRoutes from './routes/drug.routes.js';
 import scanRoutes from './routes/scan.routes.js';
 import planRoutes from './routes/plan.routes.js';
-import logger from './middleware/logger.js';
 
 const app = express();
 
@@ -65,13 +64,5 @@ app.use((req, res) => {
 
 // ── Error Handler (must be last) ──
 app.use(errorHandler);
-
-// ── Start Server ──
-const PORT = env.PORT;
-app.listen(PORT, () => {
-  logger.info(`🚀 Server running on http://localhost:${PORT}`);
-  logger.info(`📋 Health: http://localhost:${PORT}/api/health`);
-  logger.info(`🌍 Environment: ${env.NODE_ENV}`);
-});
 
 export default app;
