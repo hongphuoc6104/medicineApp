@@ -14,6 +14,7 @@ import helmet from 'helmet';
 import { env } from './config/env.js';
 import { requestLogger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { generalLimiter, authLimiter } from './middleware/rateLimiter.js';
 import healthRoutes from './routes/health.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import drugRoutes from './routes/drug.routes.js';
@@ -39,6 +40,10 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ── Logging ──
 app.use(requestLogger);
+
+// ── Rate Limiting ──
+app.use('/api', generalLimiter);
+app.use('/api/auth', authLimiter);
 
 // ── Routes ──
 app.use('/api', healthRoutes);
