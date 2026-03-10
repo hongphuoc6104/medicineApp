@@ -143,11 +143,33 @@ class MedicinePipeline:
         else:
             img = np.array(image)
 
-        # Step 1: YOLO detect & crop
+        # Step 1: YOLO detect & crop (VĐ2: fallback to full image)
         if not skip_yolo:
-            img = self._crop_prescription(img)
-            if img is None:
-                return {"error": "No prescription detected"}
+            try:
+                cropped = self._crop_prescription(img)
+                if cropped is not None:
+                    img = cropped
+                    logger.info("YOLO crop successful")
+                else:
+                    logger.warning(
+                        "YOLO detection failed, using full image as fallback"
+                    )
+            except Exception as e:
+                logger.error(
+                    f"YOLO detection error: {e}, using full image"
+                )
+
+        # Step 1.5: Preprocess — deskew & orientation (VĐ3)
+        try:
+            from core.phase_a.s2_preprocess.orientation import (
+                preprocess_image,
+            )
+            img, prep_info = preprocess_image(img, stem="api")
+            logger.info(f"Preprocess: {prep_info}")
+        except Exception as e:
+            logger.warning(
+                f"Preprocess failed: {e}, continuing with original image"
+            )
 
         h, w = img.shape[:2]
 
@@ -184,10 +206,16 @@ class MedicinePipeline:
         if not results or len(results[0].boxes) == 0:
             return None
 
-        cropped = crop_by_mask(img, results[0])
-        if cropped is None:
-            cropped = crop_by_bbox(img, results[0])
-        return cropped
+        r0 = results[0]
+
+        # crop_by_mask returns (image, (x1, y1)) tuple — unpack it
+        mask_result, _ = crop_by_mask(img, r0)
+        if mask_result is not None and mask_result.size > 0:
+            return mask_result
+
+        # Fallback to bbox
+        bbox_result = crop_by_bbox(img, r0)
+        return bbox_result
 
     def _run_ocr(self, img):
         """Run Hybrid OCR and return normalized blocks."""
@@ -227,6 +255,8 @@ class MedicinePipeline:
             if block.get("label") == "drugname":
                 text = block["text"]
                 match = mapper.lookup(text)
+                # VĐ4: NER trả key "box", cần đọc cả "bbox" lẫn "box"
+                bbox = block.get("bbox") or block.get("box")
                 medications.append({
                     "ocr_text": text,
                     "drug_name": (
@@ -236,7 +266,7 @@ class MedicinePipeline:
                         match.get("score", 0) if match else 0
                     ),
                     "confidence": block.get("confidence", 0),
-                    "bbox": block.get("bbox"),
+                    "bbox": bbox,
                 })
 
         return medications

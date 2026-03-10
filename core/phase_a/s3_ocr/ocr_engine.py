@@ -29,24 +29,79 @@ logger = logging.getLogger(__name__)
 CROP_PADDING = 5
 
 
+def _order_points(pts: np.ndarray) -> np.ndarray:
+    """Order 4 points: top-left, top-right, bottom-right, bottom-left."""
+    rect = np.zeros((4, 2), dtype=np.float32)
+    s = pts.sum(axis=1)
+    rect[0] = pts[np.argmin(s)]   # top-left
+    rect[2] = pts[np.argmax(s)]   # bottom-right
+    d = np.diff(pts, axis=1)
+    rect[1] = pts[np.argmin(d)]   # top-right
+    rect[3] = pts[np.argmax(d)]   # bottom-left
+    return rect
+
+
 def _crop_polygon(
     image: np.ndarray, poly_pts: list
 ) -> Optional[np.ndarray]:
-    """Crop vùng text theo bbox polygon với padding."""
+    """Crop vùng text theo bbox polygon.
+
+    - 4 điểm: dùng Perspective Transform (chính xác cho chữ nghiêng).
+    - Khác 4 điểm: fallback về boundingRect.
+    - Có padding ±CROP_PADDING px.
+    """
     try:
-        pts = np.array(poly_pts, dtype=np.int32)
-        x, y, w, h = cv2.boundingRect(pts)
+        pts = np.array(poly_pts, dtype=np.float32)
         pad = CROP_PADDING
-        x = max(0, x - pad)
-        y = max(0, y - pad)
-        x2 = min(image.shape[1], x + w + pad * 2)
-        y2 = min(image.shape[0], y + h + pad * 2)
-        if x2 - x < 4 or y2 - y < 4:
-            return None
-        return image[y:y2, x:x2]
+
+        if len(pts) == 4:
+            # ── Perspective Transform (VĐ1 fix) ──
+            ordered = _order_points(pts)
+            width = int(max(
+                np.linalg.norm(ordered[1] - ordered[0]),
+                np.linalg.norm(ordered[2] - ordered[3]),
+            ))
+            height = int(max(
+                np.linalg.norm(ordered[3] - ordered[0]),
+                np.linalg.norm(ordered[2] - ordered[1]),
+            ))
+            # Thêm padding vào kích thước đích
+            width = width + pad * 2
+            height = height + pad * 2
+            if width <= 4 or height <= 4:
+                return None
+
+            # Dịch nguồn để tạo padding
+            dst = np.array([
+                [pad, pad],
+                [width - pad, pad],
+                [width - pad, height - pad],
+                [pad, height - pad],
+            ], dtype=np.float32)
+            M = cv2.getPerspectiveTransform(ordered, dst)
+            return cv2.warpPerspective(image, M, (width, height))
+        else:
+            # ── Fallback: boundingRect cho polygon != 4 điểm ──
+            pts_int = pts.astype(np.int32)
+            x, y, w, h = cv2.boundingRect(pts_int)
+            x = max(0, x - pad)
+            y = max(0, y - pad)
+            x2 = min(image.shape[1], x + w + pad * 2)
+            y2 = min(image.shape[0], y + h + pad * 2)
+            if x2 - x < 4 or y2 - y < 4:
+                return None
+            return image[y:y2, x:x2]
     except Exception as e:
-        logger.debug(f"_crop_polygon error: {e}")
-        return None
+        # ── Ultimate fallback: boundingRect nếu perspective lỗi ──
+        logger.warning(f"_crop_polygon error: {e}, falling back to boundingRect")
+        try:
+            pts_int = np.array(poly_pts, dtype=np.int32)
+            x, y, w, h = cv2.boundingRect(pts_int)
+            h = max(h, 1)
+            w = max(w, 1)
+            return image[y:y+h, x:x+w]
+        except Exception:
+            return None
 
 
 class HybridOcrModule(BaseOCR):
@@ -171,7 +226,7 @@ class HybridOcrModule(BaseOCR):
         self._rec_engine = Predictor(config)
         logger.info(
             f"VietOCR loaded: {self._vietocr_model_name}"
-            f" on {self._torch_device} (beamsearch=True)"
+            f" on {self._torch_device} (beamsearch=False)"
         )
 
     def _recognize_batch(

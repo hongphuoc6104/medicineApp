@@ -129,10 +129,12 @@ class NerExtractor:
         for block in ocr_blocks:
             text = block.get("text", "")
             is_drug, conf = self._classify_single_block(text)
+            # VĐ4: trả "bbox" thay vì "box" để thống nhất với pipeline
+            bbox = block.get("bbox") or block.get("box", [0, 0, 0, 0])
             results.append({
                 "text": text,
                 "label": "drugname" if is_drug else "other",
                 "confidence": round(conf, 4),
-                "box": block.get("box", [0, 0, 0, 0]),
+                "bbox": bbox,
             })
         return results

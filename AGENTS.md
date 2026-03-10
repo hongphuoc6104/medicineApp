@@ -24,11 +24,12 @@ medicineApp/
 │   │   └── s6_drug_search/  #     Bước 5 (optional): fuzzy-match tên chuẩn
 │   ├── phase_b/             #   [HOLD] Xác minh viên thuốc
 │   ├── shared/              #   zero_pima_loader (Phase B only)
-│   ├── config.py            #   ⚠️ Cấu hình: CONF_THRESHOLD=0.90, paths
+│   ├── config.py            #   Cấu hình: CONF_THRESHOLD=0.50, paths
 │   └── pipeline.py          #   API orchestrator cho FastAPI
 │
 ├── scripts/                 # ★ SCRIPTS CHẠY
 │   ├── run_pipeline.py      #   CLI chính — chạy Phase A
+│   ├── benchmark_pipeline.py #   Benchmark: chạy tất cả ảnh → JSON report
 │   ├── train_ner.py         #   Train PhoBERT NER model
 │   ├── prepare_ner_data.py  #   Chuẩn bị data NER từ VAIPE
 │   ├── build_drug_db.py     #   Build drug database CSV
@@ -144,10 +145,16 @@ archive/
 
 | # | Vấn đề | Trạng thái | Chi tiết |
 |---|--------|------------|----------|
-| 1 | **Chữ cong bị cắt lẹm** | ⏳ Chờ fix | `_crop_polygon()` dùng `cv2.boundingRect()` → cần đổi sang perspective transform |
-| 2 | **Bug 0 drugs** (IMG_180633) | ⏳ Chưa điều tra | Ảnh chạy 2.7s, 0 thuốc. YOLO có thể crop trượt |
+| 1 | ~~Chữ cong bị cắt lẹm~~ | ✅ Đã fix | `_crop_polygon()` đã đổi sang Perspective Transform |
+| 2 | ~~Bug 0 drugs (IMG_180633)~~ | ✅ Đã fix | Hạ CONF_THRESHOLD + YOLO fallback → giờ detect 1 drug |
 | 3 | **PaddleOCR load rec model thừa** | ⚠️ Giới hạn API | Không tắt được, tốn thêm 2-3s cold start |
 | 4 | **Phase B không hoạt động** | 🔒 Hold | Thiếu contrastive matching. KHÔNG SỬA trừ khi user yêu cầu |
+| 5 | ~~YOLO fail → error~~ | ✅ Đã fix | Pipeline giờ fallback dùng full image |
+| 6 | ~~Pipeline bỏ qua preprocess~~ | ✅ Đã fix | Đã thêm deskew + orientation vào pipeline |
+| 7 | ~~NER trả key "box" vs "bbox"~~ | ✅ Đã fix | Thống nhất dùng "bbox" |
+| 8 | ~~Server cold start 13s~~ | ✅ Đã fix | Warm-up models trong lifespan() + Semaphore(1) chống OOM |
+
+> **Benchmark sau fix (2026-03-10):** 50/50 ảnh thành công, 338 drugs, avg 6.8/ảnh, 0 errors.
 
 ---
 
@@ -191,7 +198,8 @@ python -m server.main
 | OCR Recognize | VietOCR vgg_transformer (`device=cuda`) |
 | NER | PhoBERT-base-v2 fine-tuned (BIO tagging) |
 | Object Detection | YOLOv11n-seg |
-| Server | FastAPI |
+| Server | FastAPI + Semaphore(1) GPU concurrency limit |
 | GPU | RTX 3050 4GB (hoặc CPU fallback) |
-| Cold start | ~13s/ảnh đầu (model loading) |
-| Warm | ~6-7s/ảnh (inference only) |
+| Cold start | ~17s/ảnh đầu (warm-up + model loading) |
+| Warm | ~7s/ảnh (inference only) |
+| Benchmark | 50/50 ảnh, 338 drugs, avg 6.8/ảnh, 0 errors |

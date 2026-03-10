@@ -14,8 +14,11 @@ Run:
 import os
 # PaddlePaddle 3.3.0 fixes — MUST be set before any paddle import
 os.environ.setdefault("FLAGS_enable_pir_api", "0")
-os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
+os.environ.setdefault(
+    "PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True"
+)
 
+import asyncio
 import json
 import logging
 from pathlib import Path
@@ -35,6 +38,10 @@ DRUG_DB_PATH = ROOT / "server" / "data" / "drug_db.json"
 _drug_service = None
 _pipeline = None
 
+# VĐ7: Semaphore giới hạn GPU concurrent (RTX 3050 4GB)
+# Chỉ cho phép 1 scan chạy đồng thời để tránh OOM
+scan_semaphore = asyncio.Semaphore(1)
+
 
 def _get_drug_service():
     global _drug_service
@@ -53,13 +60,36 @@ def _get_pipeline():
             _pipeline = MedicinePipeline()
             logger.info("AI pipeline loaded")
         except Exception as e:
-            logger.warning(f"AI pipeline not available: {e}")
+            logger.warning(
+                f"AI pipeline not available: {e}"
+            )
     return _pipeline
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # VĐ7: Pre-load services + warm-up AI pipeline
     _get_drug_service()
+
+    pipeline = _get_pipeline()
+    if pipeline:
+        try:
+            import numpy as np
+            dummy = np.zeros(
+                (100, 100, 3), dtype=np.uint8
+            )
+            pipeline.scan_prescription(
+                dummy, skip_yolo=True
+            )
+            logger.info(
+                "✅ Pipeline warmed up successfully"
+            )
+        except Exception as e:
+            logger.warning(
+                f"⚠️ Warm-up failed: {e} — "
+                f"pipeline will lazy-load on first request"
+            )
+
     logger.info("MedicineApp server started")
     yield
     logger.info("MedicineApp server stopped")
@@ -67,7 +97,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="MedicineApp API",
-    description="AI-powered prescription scanning & pill verification",
+    description=(
+        "AI-powered prescription scanning "
+        "& pill verification"
+    ),
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -252,7 +285,6 @@ async def scan_prescription(file: UploadFile = File(...)):
     Upload a photo of a prescription and get back
     a list of detected medications.
     """
-    import tempfile
     import cv2
     import numpy as np
 
@@ -277,11 +309,15 @@ async def scan_prescription(file: UploadFile = File(...)):
                 }
             ],
             "mock": True,
-            "message": "AI models not loaded. "
-                       "Download checkpoint to models/weights/",
+            "message": (
+                "AI models not loaded. "
+                "Download checkpoint to models/weights/"
+            ),
         }
 
-    result = pipeline.scan_prescription(img)
+    # VĐ7: Semaphore — chỉ 1 scan đồng thời trên GPU
+    async with scan_semaphore:
+        result = pipeline.scan_prescription(img)
     return result
 
 

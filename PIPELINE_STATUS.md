@@ -1,6 +1,6 @@
 # MedicineApp Pipeline — Tài Liệu Kỹ Thuật
 
-> Last updated: 2026-03-08
+> Last updated: 2026-03-10
 
 ## Kiến Trúc Tổng Quan
 
@@ -60,11 +60,23 @@
 
 | Stage | Thời gian | Ghi chú |
 |-------|-----------|---------|
-| YOLO detect+crop | ~1s | best.pt (6MB) |
-| Preprocess | <1s | Orientation AI |
-| OCR (Hybrid) | ~10s | PaddleOCR + VietOCR |
-| NER classify | ~2s | PhoBERT model |
-| **Tổng** | **~13s** | |
+| YOLO detect+crop | ~2s | best.pt (6MB), fallback to full image nếu fail |
+| Preprocess | <1s | Deskew + Portrait rotation (AI orientation skipped) |
+| OCR (Hybrid) | ~5s | PaddleOCR detect + VietOCR recognize (perspective crop) |
+| NER classify | ~1s | PhoBERT model |
+| **Tổng (warm)** | **~7s** | Sau warm-up |
+| **Tổng (cold)** | **~17s** | Ảnh đầu tiên (model loading) |
+
+### Benchmark toàn bộ (2026-03-10)
+
+| Chỉ số | Kết quả |
+|--------|---------|
+| Tổng ảnh | 50/50 ✅ |
+| Tổng drugs detected | 338 |
+| Avg drugs/ảnh | 6.8 |
+| Errors | 0 |
+| Ảnh 0 drugs | 0 |
+| IMG_180633 (bug cũ 0 drugs) | 1 drug |
 
 ### Kết quả test trên prescription_3:
 - **5/5 thuốc** nhận diện đúng (97% confidence)
