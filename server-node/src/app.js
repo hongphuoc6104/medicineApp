@@ -17,6 +17,8 @@ import { errorHandler } from './middleware/errorHandler.js';
 import healthRoutes from './routes/health.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import drugRoutes from './routes/drug.routes.js';
+import scanRoutes from './routes/scan.routes.js';
+import planRoutes from './routes/plan.routes.js';
 import logger from './middleware/logger.js';
 
 const app = express();
@@ -42,10 +44,8 @@ app.use(requestLogger);
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/drugs', drugRoutes);
-
-// Placeholder for future routes (3d-3e)
-// app.use('/api/scan', scanRoutes);
-// app.use('/api/plans', planRoutes);
+app.use('/api/scan', scanRoutes);
+app.use('/api/plans', planRoutes);
 
 // ── 404 ──
 app.use((req, res) => {
