@@ -15,7 +15,7 @@
 
 ```
 medicineApp/
-├── core/                    # ★ SOURCE CODE CHÍNH
+├── core/                    # ★ SOURCE CODE CHÍNH (Python AI Pipeline)
 │   ├── phase_a/             #   Pipeline quét đơn thuốc (4 bước)
 │   │   ├── s1_detect/       #     Bước 1: YOLO crop
 │   │   ├── s2_preprocess/   #     Bước 2: Deskew + orientation
@@ -36,11 +36,25 @@ medicineApp/
 │   ├── build_drug_db.py     #   Build drug database CSV
 │   └── build_full_drug_db.py
 │
-├── server/                  # ★ FASTAPI SERVER
+├── server/                  # ★ FASTAPI SERVER (Python — AI proxy)
 │   ├── main.py              #   Entry point, routes
 │   ├── routers/             #   API endpoints
 │   ├── schemas/             #   Pydantic models
 │   └── services/            #   Business logic
+│
+├── server-node/             # ★ NODE.JS API SERVER (Express — Main backend)
+│   ├── src/
+│   │   ├── config/          #   env.js, database.js, migrate.js, seed.js
+│   │   ├── middleware/      #   auth.js, rateLimiter.js, errorHandler.js, logger.js, validator.js
+│   │   ├── routes/          #   health, auth, drug, scan, plan routes
+│   │   ├── services/        #   auth, drug, scan, plan services
+│   │   ├── utils/           #   errors.js, response.js
+│   │   ├── app.js           #   Express app (no listen)
+│   │   └── server.js        #   HTTP listener entry point
+│   ├── tests/               #   55 tests (3 unit + 3 integration)
+│   ├── docker-compose.yml   #   PostgreSQL 16
+│   ├── package.json
+│   └── .env.example
 │
 ├── models/                  # ★ MODEL WEIGHTS (KHÔNG COMMIT GIT)
 │   ├── yolo/best.pt         #   6MB  — YOLO detect
@@ -56,11 +70,12 @@ medicineApp/
 │   ├── vaipe_drugs_kb.json  #   Knowledge base thuốc VAIPE
 │   └── createPrescription/  #   Script tạo đơn thuốc giả
 │
+├── docker-compose.yml       # PostgreSQL 16 Alpine (development)
 ├── docs/                    # Tài liệu chi tiết
 ├── archive/                 # Code cũ đã bỏ (KHÔNG DÙNG)
 ├── Zero-PIMA/               # [KHÔNG SỬA] Dependency Phase B
 ├── VAIPE_Full/              # [KHÔNG SỬA] Dataset VAIPE gốc (21.9GB)
-├── tests/                   # Unit tests (chưa đầy đủ)
+├── tests/                   # Unit tests Python (16 tests)
 ├── AGENTS.md                # ← BẠN ĐANG ĐỌC FILE NÀY
 ├── PIPELINE_STATUS.md       # Tài liệu kỹ thuật pipeline
 └── README.md                # README gốc (83KB, CÓ THỂ LỖI THỜI)
@@ -188,8 +203,20 @@ python scripts/run_pipeline.py --dir data/input/prescription_3
 # Phase A — tất cả 51 ảnh
 python scripts/run_pipeline.py --all
 
-# FastAPI server
+# FastAPI server (Python AI proxy)
 python -m server.main
+
+# Node.js server (Main backend)
+cd server-node && npm run dev
+
+# Node.js tests (55 tests)
+cd server-node && npm test
+
+# PostgreSQL Docker
+docker compose up -d postgres
+
+# Seed drug data
+cd server-node && npm run seed
 ```
 
 ## 10. Tech Stack
@@ -197,12 +224,17 @@ python -m server.main
 | Component | Chi tiết |
 |-----------|---------|
 | Python | 3.12 |
+| Node.js | 20 (Express 4, ES modules) |
+| PostgreSQL | 16 Alpine (Docker) |
 | OCR Detect | PaddleOCR PP-OCRv5 mobile (`device=gpu`) |
 | OCR Recognize | VietOCR vgg_transformer (`device=cuda`) |
 | NER | PhoBERT-base-v2 fine-tuned (BIO tagging) |
 | Object Detection | YOLOv11n-seg |
-| Server | FastAPI + Semaphore(1) GPU concurrency limit |
+| Python Server | FastAPI + Semaphore(1) GPU concurrency limit |
+| Node Server | Express + JWT + Zod + Helmet + Rate Limit |
+| Database | PostgreSQL 16 (6 tables, pg_trgm fuzzy search) |
 | GPU | RTX 3050 4GB (hoặc CPU fallback) |
 | Cold start | ~17s/ảnh đầu (warm-up + model loading) |
 | Warm | ~7s/ảnh (inference only) |
 | Benchmark | 50/50 ảnh, 338 drugs, avg 6.8/ảnh, 0 errors |
+| Node Tests  | 55/55 pass (26 unit + 29 integration) |
