@@ -29,20 +29,20 @@ export async function createPlan(userId, data) {
  */
 export async function getUserPlans(userId, { page = 1, limit = 20, activeOnly = true } = {}) {
   const offset = (page - 1) * limit;
-  const activeFilter = activeOnly ? 'AND is_active = true' : '';
 
+  // Use parameterized query — no string interpolation to avoid SQL injection risk
   const result = await query(
     `SELECT * FROM medication_plans
-     WHERE user_id = $1 ${activeFilter}
+     WHERE user_id = $1 AND ($2::boolean IS FALSE OR is_active = true)
      ORDER BY created_at DESC
-     LIMIT $2 OFFSET $3`,
-    [userId, limit, offset]
+     LIMIT $3 OFFSET $4`,
+    [userId, activeOnly, limit, offset]
   );
 
   const countResult = await query(
     `SELECT COUNT(*) FROM medication_plans
-     WHERE user_id = $1 ${activeFilter}`,
-    [userId]
+     WHERE user_id = $1 AND ($2::boolean IS FALSE OR is_active = true)`,
+    [userId, activeOnly]
   );
 
   return {
@@ -76,9 +76,6 @@ export async function updatePlan(userId, planId, data) {
   const values = [];
   let idx = 1;
 
-  const allowed = ['drug_name', 'dosage', 'frequency', 'times',
-    'pills_per_dose', 'total_days', 'start_date', 'end_date',
-    'is_active', 'notes'];
   const mapping = {
     drugName: 'drug_name', dosage: 'dosage', frequency: 'frequency',
     times: 'times', pillsPerDose: 'pills_per_dose',
@@ -153,13 +150,14 @@ export async function logMedication(planId, userId, data) {
  * Get medication logs for a plan.
  */
 export async function getPlanLogs(planId, userId, { page = 1, limit = 50 } = {}) {
-  // Verify ownership
-  await query(
+  // Verify ownership with proper await
+  const planCheck = await query(
     'SELECT id FROM medication_plans WHERE id = $1 AND user_id = $2',
     [planId, userId]
-  ).then(r => {
-    if (r.rows.length === 0) throw new AppError('Plan not found', 404, 'PLAN_NOT_FOUND');
-  });
+  );
+  if (planCheck.rows.length === 0) {
+    throw new AppError('Plan not found', 404, 'PLAN_NOT_FOUND');
+  }
 
   const offset = (page - 1) * limit;
   const result = await query(

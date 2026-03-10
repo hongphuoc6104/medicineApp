@@ -14,7 +14,7 @@ export function requireAuth(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new AppError('Authentication required', 401, 'AUTH_REQUIRED');
+    return next(new AppError('Authentication required', 401, 'AUTH_REQUIRED'));
   }
 
   const token = authHeader.split(' ')[1];
@@ -25,8 +25,8 @@ export function requireAuth(req, res, next) {
     next();
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
-      throw new AppError('Token expired', 401, 'TOKEN_EXPIRED');
+      return next(new AppError('Token expired', 401, 'TOKEN_EXPIRED'));
     }
-    throw new AppError('Invalid token', 401, 'INVALID_TOKEN');
+    return next(new AppError('Invalid token', 401, 'INVALID_TOKEN'));
   }
 }

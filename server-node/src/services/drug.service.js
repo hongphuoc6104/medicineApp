@@ -70,10 +70,10 @@ export async function getDrugDetails(name) {
 
   const trimmed = name.trim();
 
-  // 1. Check local cache
+  // 1. Check local cache (non-expired)
   const cached = await query(
     `SELECT data, source, cached_at, expires_at FROM drug_cache
-     WHERE drug_name ILIKE $1 LIMIT 1`,
+     WHERE drug_name ILIKE $1 AND expires_at > NOW() LIMIT 1`,
     [trimmed]
   );
 
@@ -87,7 +87,7 @@ export async function getDrugDetails(name) {
     };
   }
 
-  // 2. Not in cache → call ddi.lab.io.vn API
+  // 2. Not in cache or expired → call ddi.lab.io.vn API
   return await fetchFromDdi(trimmed);
 }
 
@@ -118,6 +118,10 @@ export async function getInteractions(ingredientName) {
 
     return await resp.json();
   } catch (err) {
+    if (err instanceof AppError) throw err;
+    if (err.name === 'AbortError') {
+      throw new AppError('Drug interaction service timed out', 504, 'INTERACTION_TIMEOUT');
+    }
     logger.warn(`DDI interactions API error: ${err.message}`);
     throw new AppError(
       'Drug interaction service unavailable',

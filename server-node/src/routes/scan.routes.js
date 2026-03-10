@@ -49,7 +49,8 @@ router.post(
     const result = await scanService.scanPrescription(
       req.file.buffer,
       req.user.sub,
-      req.file.originalname
+      req.file.originalname,
+      detected.mime  // pass verified MIME type
     );
 
     success(res, result);

@@ -13,13 +13,14 @@ import logger from '../middleware/logger.js';
  * @param {string} originalName - Original filename
  * @returns {Promise<object>} Scan result
  */
-export async function scanPrescription(imageBuffer, userId, originalName) {
+export async function scanPrescription(imageBuffer, userId, originalName, detectedMime = 'image/jpeg') {
   let result;
 
   try {
     // Build multipart form for Python API
     const formData = new FormData();
-    const blob = new Blob([imageBuffer], { type: 'image/jpeg' });
+    // Use the actual detected MIME type (not hardcoded)
+    const blob = new Blob([imageBuffer], { type: detectedMime });
     formData.append('file', blob, originalName || 'prescription.jpg');
 
     const ctrl = new AbortController();
