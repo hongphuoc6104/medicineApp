@@ -180,7 +180,7 @@ curl -X POST http://localhost:8000/api/scan-prescription -F "file=@data/input/pr
 
 ## Giai đoạn 2: Thu thập Dữ liệu Thuốc VN
 
-**Thời gian:** ~1-2 ngày | **Trạng thái:** [ ] Chưa bắt đầu
+**Thời gian:** ~1-2 ngày | **Trạng thái:** [✅] Hoàn thành (2026-03-10)
 
 ### 2.1 Thu thập từ ddi.lab.io.vn
 

@@ -30,6 +30,7 @@ medicineApp/
 ├── scripts/                 # ★ SCRIPTS CHẠY
 │   ├── run_pipeline.py      #   CLI chính — chạy Phase A
 │   ├── benchmark_pipeline.py #   Benchmark: chạy tất cả ảnh → JSON report
+│   ├── crawl_drug_vn.py     #   ★ Crawl 9,284 thuốc VN từ ddi.lab.io.vn
 │   ├── train_ner.py         #   Train PhoBERT NER model
 │   ├── prepare_ner_data.py  #   Chuẩn bị data NER từ VAIPE
 │   ├── build_drug_db.py     #   Build drug database CSV
@@ -47,10 +48,11 @@ medicineApp/
 │   └── zero_pima/           #   521MB — Phase B only
 │
 ├── data/                    # ★ DATA
-│   ├── input/               #   51 ảnh test (7 folders prescription_1..7)
+│   ├── input/               #   50 ảnh test (7 folders prescription_1..7)
 │   ├── output/phase_a/      #   Output pipeline (JSON + ảnh)
 │   ├── ner_dataset/         #   Dataset đã xử lý cho train NER
-│   ├── drug_db_vn.csv       #   DB thuốc Việt Nam (drug lookup)
+│   ├── drug_db_vn.csv       #   DB thuốc (316 thuốc, cũ)
+│   ├── drug_db_vn_full.json #   ★ DB thuốc đầy đủ (9,284 thuốc, crawl từ ddi.lab.io.vn)
 │   ├── vaipe_drugs_kb.json  #   Knowledge base thuốc VAIPE
 │   └── createPrescription/  #   Script tạo đơn thuốc giả
 │
@@ -116,9 +118,10 @@ archive/
 | `data/output/phase_a/<img>/` | Output pipeline mỗi ảnh | Có thể xóa để chạy lại |
 | `data/output/phase_a/<img>/summary.json` | **Kết quả cuối** — list thuốc, timing | Schema chính để đọc |
 | `data/output/phase_a/<img>/step-3_ocr.json` | OCR text blocks thô | `[{text, bbox, confidence}]` |
-| `data/output/phase_a/<img>/step-4_ner_classify.json` | NER label từng block | `[{text, label, confidence}]` |
+| `data/output/phase_a/<img>/step-4_ner_classify.json` | NER label từng block | `[{text, label, confidence, bbox}]` |
 | `data/ner_dataset/` | Dataset train PhoBERT NER | Đã xử lý sẵn |
-| `data/drug_db_vn.csv` | Database thuốc VN cho fuzzy lookup | Dùng bởi `s6_drug_search/` |
+| `data/drug_db_vn_full.json` | **★ Database thuốc VN đầy đủ** (9,284 thuốc) | Crawl từ ddi.lab.io.vn, 2026-03-10 |
+| `data/drug_db_vn.csv` | Database thuốc cũ (316 thuốc) | Phụ | 
 | `data/vaipe_drugs_kb.json` | Knowledge base thuốc VAIPE | Reference |
 | `data/pres/` | Test dataset đơn thuốc (118 đơn BVĐK) | Dùng để evaluate model |
 | `data/pills/` | Ảnh viên thuốc | Cho Phase B (chưa dùng) |
