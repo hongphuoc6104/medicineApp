@@ -135,3 +135,5 @@ htmlcov/
 .tox/
 .pytest_cache/
 runs/
+server-node/node_modules/
+server-node/.env
