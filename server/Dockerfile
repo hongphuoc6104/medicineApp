@@ -8,20 +8,22 @@ FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 
-# Install Python 3.12 + system deps
+# Install Python 3.10 + system deps
+# NOTE: Using Python 3.10, NOT 3.12 — gdown/VietOCR uses pkg_resources.ImpImporter
+# which was REMOVED in Python 3.12
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update && apt-get install -y --no-install-recommends \
-    python3.12 python3.12-venv python3.12-dev python3-pip \
+    python3.10 python3.10-venv python3.10-dev \
     libgl1-mesa-glx libglib2.0-0 libgomp1 wget curl && \
-    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1 && \
-    ln -sf /usr/bin/python3.12 /usr/bin/python && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1 && \
+    ln -sf /usr/bin/python3.10 /usr/bin/python && \
     rm -rf /var/lib/apt/lists/*
 
-# Install pip for Python 3.12
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12
+# Install pip for Python 3.10
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
 WORKDIR /app
 

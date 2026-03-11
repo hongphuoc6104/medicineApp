@@ -1,13 +1,14 @@
 # ============================================
-# MedicineApp — Docker Compose Fullstack
-# PostgreSQL + Node.js API + Python AI (GPU)
+# MedicineApp — Docker Compose
+# PostgreSQL + Node.js API
+# NOTE: Python AI must run via local venv (not Docker)
+#       PaddlePaddle 3.x OneDNN is incompatible in Docker containers
 # ============================================
 # Usage:
-#   docker compose up -d              # Start all services
-#   docker compose up -d --build      # Rebuild and start
-#   docker compose logs -f node-api   # Follow Node.js logs
-#   docker compose logs -f python-ai  # Follow Python AI logs
-#   docker compose down               # Stop all
+#   bash dev.sh                    # ← Recommended: auto-detect IP + start all
+#   docker compose up -d postgres node-api  # Docker only
+#   docker compose logs -f node-api         # Node.js logs
+#   docker compose down                     # Stop Docker services
 # ============================================
 
 services:
@@ -66,9 +67,17 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
+    environment:
+      # Disable PaddlePaddle OneDNN/PIR to avoid ConvertPirAttribute error in Docker
+      FLAGS_use_mkldnn: "0"
+      FLAGS_enable_pir_api: "0"
+      PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK: "True"
+      # Force CPU for PaddleOCR inside Docker (GPU passthrough from NVIDIA CTK)
+      CUDA_VISIBLE_DEVICES: "0"
     volumes:
       - ./models:/app/models:ro
       - ./data:/app/data:ro
+      - vietocr_cache:/root/.cache    # Cache VietOCR weights (no re-download on restart)
     deploy:
       resources:
         reservations:
@@ -79,3 +88,4 @@ services:
 
 volumes:
   pgdata:
+  vietocr_cache:
