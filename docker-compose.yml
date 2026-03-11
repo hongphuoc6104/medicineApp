@@ -1,6 +1,17 @@
-version: "3.9"
+# ============================================
+# MedicineApp — Docker Compose Fullstack
+# PostgreSQL + Node.js API + Python AI (GPU)
+# ============================================
+# Usage:
+#   docker compose up -d              # Start all services
+#   docker compose up -d --build      # Rebuild and start
+#   docker compose logs -f node-api   # Follow Node.js logs
+#   docker compose logs -f python-ai  # Follow Python AI logs
+#   docker compose down               # Stop all
+# ============================================
 
 services:
+  # ── PostgreSQL 16 ──
   postgres:
     image: postgres:16-alpine
     container_name: medicineapp_db
@@ -18,6 +29,53 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+
+  # ── Node.js API Server ──
+  node-api:
+    build:
+      context: ./server-node
+      dockerfile: Dockerfile
+    container_name: medicineapp_node
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      DATABASE_URL: postgresql://medicineapp:medicineapp_dev_2026@postgres:5432/medicineapp
+      JWT_SECRET: your-super-secret-key-change-in-production-2026
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      PYTHON_API_URL: http://python-ai:8000
+      DDI_API_BASE: https://ddi.lab.io.vn/api
+      RATE_LIMIT_WINDOW_MS: 900000
+      RATE_LIMIT_MAX: 300
+      AUTH_RATE_LIMIT_MAX: 20
+      MAX_FILE_SIZE_MB: 10
+      LOG_LEVEL: info
+
+  # ── Python AI Server (GPU) ──
+  python-ai:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    container_name: medicineapp_ai
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models:ro
+      - ./data:/app/data:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
 volumes:
   pgdata:
