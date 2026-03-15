@@ -115,7 +115,7 @@ def run_phase_a(img_path, out_dir, shared=None):
     summary["steps"]["preprocess"] = {"time_s": round(t2, 1), "info": prep_info}
 
     # ── Step 3: OCR ───────────────────────────────────────────────────────
-    t0 = time.time()
+    t0_ocr = time.time()
     ocr_module = shared.get("ocr") if shared else None
     if ocr_module is None:
         from core.phase_a.s3_ocr.ocr_engine import HybridOcrModule
@@ -129,23 +129,13 @@ def run_phase_a(img_path, out_dir, shared=None):
     ocr_module.save_results(result, processed, "step-3", out_dir, out_dir, out_dir)
 
     ocr_blocks = [
-        {
-            "text": b.text,
-            "confidence": round(b.confidence, 4),
-            "bbox": b.bbox,
-        }
+        {"text": b.text, "confidence": round(b.confidence, 4), "bbox": b.bbox}
         for b in result.text_blocks
     ]
-    ocr_json = {
-        "module": result.module_name,
-        "elapsed_ms": result.elapsed_ms,
-        "block_count": len(ocr_blocks),
-        "blocks": ocr_blocks,
-    }
     with open(os.path.join(out_dir, "step-3_ocr.json"), "w", encoding="utf-8") as f:
-        json.dump(ocr_json, f, ensure_ascii=False, indent=2)
+        json.dump(ocr_blocks, f, ensure_ascii=False, indent=2)
 
-    t3 = time.time() - t0
+    t3 = time.time() - t0_ocr
     print_step(3, "OCR", "ok", t3, f"{len(ocr_blocks)} text blocks")
     summary["steps"]["ocr"] = {"time_s": round(t3, 1), "blocks": len(ocr_blocks)}
 
@@ -161,6 +151,16 @@ def run_phase_a(img_path, out_dir, shared=None):
             "box": [0, 0, 0, 0],
             "bbox": b.get("bbox", []),
         })
+
+
+    # Calculate final OCR timing/summary
+    t_total_ocr = time.time() - t0_ocr
+    summary["steps"]["ocr"] = {
+        "time_s": round(t_total_ocr, 1),
+        "raw_blocks": len(ocr_blocks)
+    }
+
+
 
     # ── Step 4: NER Classify drugname/other ───────────────────────────────
     t0 = time.time()
@@ -236,12 +236,58 @@ def run_phase_a(img_path, out_dir, shared=None):
         conf = f"[{r['confidence']:.0%}]" if r["confidence"] > 0 else ""
         print(f"      {icon} {r['text'][:60]} {conf}")
 
+    # ── Step 5: Drug Lookup ───────────────────────────────────────────────
+    t0 = time.time()
+    drug_lookup = shared.get("drug_lookup") if shared else None
+    lookup_results = []
+
+    if drug_lookup is not None and drug_names:
+        drug_texts = [r["text"] for r in drug_names]
+        lookup_results = drug_lookup.lookup_batch(drug_texts)
+
+        # Gắn kết quả lookup vào ner_results
+        lookup_map = {r["original"]: r for r in lookup_results if r.get("name")}
+        for r in drug_names:
+            match = lookup_map.get(r["text"])
+            if match:
+                r["drug_db"] = {
+                    "name":       match["name"],
+                    "generic":    match["generic"],
+                    "score":      match["score"],
+                    "so_dang_ky": match["so_dang_ky"],
+                    "nong_do":    match["nong_do"],
+                }
+
+        with open(os.path.join(out_dir, "step-5_drug_lookup.json"), "w", encoding="utf-8") as f:
+            json.dump(lookup_results, f, ensure_ascii=False, indent=2)
+
+        matched = [r for r in lookup_results if r.get("name")]
+        t6 = time.time() - t0
+        print_step(5, "Drug Lookup", "ok", t6,
+                   f"{len(matched)}/{len(drug_names)} matched in DB")
+        summary["steps"]["drug_lookup"] = {
+            "time_s": round(t6, 1),
+            "matched": len(matched),
+            "total": len(drug_names),
+        }
+
+        # In kết quả lookup
+        for r in lookup_results:
+            if r.get("name"):
+                print(f"      🔍 {r['original'][:40]:40s} → {r['name']} [{r['score']:.0%}]")
+            else:
+                print(f"      ❓ {r['original'][:40]:40s} → không tìm thấy trong DB")
+    else:
+        print_step(5, "Drug Lookup", "skip", detail="DrugLookup not loaded")
+        summary["steps"]["drug_lookup"] = {"skipped": True}
+
     # ── Summary ───────────────────────────────────────────────────────────
     extracted_names = [r["text"] for r in drug_names]
 
     elapsed = time.time() - t_total
     summary["total_time_s"] = round(elapsed, 1)
     summary["drugs_found"] = extracted_names
+    summary["drug_lookup_results"] = lookup_results
 
     # Save summary
     with open(os.path.join(out_dir, "summary.json"), "w", encoding="utf-8") as f:
@@ -249,9 +295,8 @@ def run_phase_a(img_path, out_dir, shared=None):
 
     print(f"  {'─' * 56}")
     print(f"  Total: {elapsed:.1f}s | Drugs found: {len(extracted_names)}")
-    for name in extracted_names:
-        print(f"      💊 {name}")
-
+    # Đã in chi tiết thuốc trong quá trình chạy, không in lại ở đây để tránh trùng lặp
+    
     return summary, ner_input
 
 
@@ -267,6 +312,8 @@ def main():
     parser.add_argument("--gpu", action="store_true", help="Use GPU")
     parser.add_argument("--no-ner", action="store_true", help="Skip NER, use DrugLookup only")
     parser.add_argument("--limit", type=int, default=0, help="Limit number of images to process")
+    parser.add_argument("--no-drug-lookup", action="store_true", help="Skip Drug Lookup step (step 5)")
+    parser.add_argument("--stt-grouping", action="store_true", help="Enable STT Grouping (Step 3.3) for NER input")
     args = parser.parse_args()
 
     # Determine images to process
@@ -301,7 +348,9 @@ def main():
         sys.exit(1)
 
     # ── Load shared modules (singleton) ────────────────────────────────────
-    shared = {}
+    shared = {
+        "stt_grouping": args.stt_grouping
+    }
 
     # YOLO detector
     print_header("Loading Models")
@@ -320,6 +369,15 @@ def main():
             print("  PhoBERT NER loaded (F1=100%)")
         except Exception as e:
             logger.warning(f"NER not available: {e}. Using DrugLookup fallback.")
+
+    # DrugLookup — 9,284 thuốc VN
+    if not args.no_drug_lookup:
+        try:
+            from core.phase_a.s6_drug_search.drug_lookup import DrugLookup
+            shared["drug_lookup"] = DrugLookup()
+            print(f"  DrugLookup loaded ({shared['drug_lookup'].db_size:,} thuốc)")
+        except Exception as e:
+            logger.warning(f"DrugLookup không load được: {e}")
 
     print(f"  Models loaded in {time.time()-t0:.1f}s")
 

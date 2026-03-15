@@ -1,5 +1,13 @@
 # MedicineApp — Master Plan
 
+> [!WARNING]
+> Tài liệu này là bản kế hoạch cũ để tham khảo lịch sử kiến trúc.
+> Không dùng làm nguồn trạng thái hiện tại.
+> Nguồn ưu tiên hiện tại: `AGENTS.md` → `PIPELINE_STATUS.md` → `docs/MASTER_PLAN.md`.
+
+> [!IMPORTANT]
+> Trạng thái hiện tại của dự án tập trung Phase A. Phase B đang hold và chưa active trong luồng vận hành chính.
+
 ## 1. Tổng Quan Dự Án
 
 ### 1.1 Mô tả

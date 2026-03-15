@@ -371,3 +371,120 @@ class HybridOcrModule(BaseOCR):
             return []
 
     # Use BaseOCR.save_results() — no longer a stub
+
+
+# ── Group by STT (thay thế merge_into_lines) ─────────────────────────────────
+
+def group_by_stt(blocks: list) -> list:
+    """
+    Gộp các TextBlock bằng cách định vị số STT làm phân vùng (Band) theo Y-axis.
+
+    Thuật toán:
+    1. Tìm Anchor: các block bắt đầu bằng số, nằm sát lề trái.
+    2. Kẻ Boundary: điểm giữa Y của 2 Anchor liên tiếp.
+    3. Gộp: mọi block lọt vào band nào → gộp thành 1 TextBlock.
+
+    Args:
+        blocks: Danh sách TextBlock từ OCR.
+    Returns:
+        Danh sách TextBlock đã gộp theo STT.
+    """
+    import re
+    from core.phase_a.s3_ocr.base import TextBlock
+
+    if not blocks:
+        return []
+
+    def _bbox_bounds(bbox):
+        xs = [pt[0] for pt in bbox]
+        ys = [pt[1] for pt in bbox]
+        return min(xs), min(ys), max(xs), max(ys)
+
+    def _y_center(bbox):
+        ys = [pt[1] for pt in bbox]
+        return (min(ys) + max(ys)) / 2.0
+
+    def _x_center(bbox):
+        xs = [pt[0] for pt in bbox]
+        return (min(xs) + max(xs)) / 2.0
+
+    # Chiều rộng bảng
+    all_x = []
+    for b in blocks:
+        all_x.extend([pt[0] for pt in b.bbox])
+    min_x_board = min(all_x)
+    max_x_board = max(all_x)
+    board_width = max(max_x_board - min_x_board, 1)
+
+    # 1. Tìm Anchor STT
+    anchors = []
+    stt_pattern = re.compile(r"^\d+")
+    for b in blocks:
+        xc = _x_center(b.bbox)
+        if (xc - min_x_board) / board_width <= 0.35:
+            if stt_pattern.match(b.text.strip()):
+                anchors.append(b)
+    anchors.sort(key=lambda b: _y_center(b.bbox))
+
+    if not anchors:
+        logger.warning("group_by_stt: No STT anchors found, fallback to original blocks.")
+        return blocks
+
+    # 2. Xây dựng Boundaries
+    boundaries = []
+    for i in range(len(anchors) - 1):
+        mid_y = (_y_center(anchors[i].bbox) + _y_center(anchors[i+1].bbox)) / 2.0
+        boundaries.append(mid_y)
+
+    # 3. Phân vùng bands
+    bands = [[] for _ in range(len(anchors))]
+    headers = []
+
+    for b in blocks:
+        yc = _y_center(b.bbox)
+        if yc < _y_center(anchors[0].bbox) - 20:
+            headers.append(b)
+            continue
+        assigned = False
+        for i, bound in enumerate(boundaries):
+            if yc <= bound:
+                bands[i].append(b)
+                assigned = True
+                break
+        if not assigned:
+            bands[-1].append(b)
+
+    # 4. Gộp text trong mỗi band
+    merged = []
+
+    headers.sort(key=lambda b: _y_center(b.bbox))
+    merged.extend(headers)
+
+    for band in bands:
+        if not band:
+            continue
+        band.sort(key=lambda b: (_y_center(b.bbox) * 0.1) + _x_center(b.bbox))
+        merged_text = " ".join(b.text.strip() for b in band)
+        avg_conf = sum(b.confidence for b in band) / len(band)
+
+        all_pts = []
+        for b in band:
+            all_pts.extend(b.bbox)
+        xs = [pt[0] for pt in all_pts]
+        ys = [pt[1] for pt in all_pts]
+        merged_bbox = [
+            [min(xs), min(ys)],
+            [max(xs), min(ys)],
+            [max(xs), max(ys)],
+            [min(xs), max(ys)],
+        ]
+        merged.append(TextBlock(
+            text=merged_text.strip(),
+            confidence=round(avg_conf, 4),
+            bbox=merged_bbox,
+        ))
+
+    logger.info(
+        f"group_by_stt: {len(blocks)} blocks → {len(merged)} lines (Found {len(anchors)} STTs)"
+    )
+    return merged

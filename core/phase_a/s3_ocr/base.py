@@ -70,18 +70,66 @@ class BaseOCR(ABC):
         for d in [det_dir, txt_dir, json_dir]:
             os.makedirs(d, exist_ok=True)
 
-        # --- 1. Ảnh detection: vẽ bbox lên ảnh ---
-        det_img = image.copy()
+        # --- 1. Ảnh detection: vẽ bbox và text ---
+        from PIL import Image, ImageDraw, ImageFont
+        
+        # Chuyển từ BGR (OpenCV) sang RGB (PIL)
+        image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        pil_img = Image.fromarray(image_rgb)
+        draw = ImageDraw.Draw(pil_img)
+        
+        # Tìm font hỗ trợ tiếng Việt
+        font_paths = [
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+            "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+            "Arial.ttf" # Fallback
+        ]
+        font = None
+        for path in font_paths:
+            if os.path.exists(path):
+                try:
+                    font = ImageFont.truetype(path, 20) # Font size 20 tương ứng font_scale~0.7
+                    break
+                except:
+                    continue
+        if font is None:
+            font = ImageFont.load_default()
+
+        # Vẽ từng block
         for block in result.text_blocks:
             if block.bbox:
                 pts = np.array(block.bbox, dtype=np.int32)
-                cv2.polylines(det_img, [pts], isClosed=True, color=(0, 255, 0), thickness=2)
-                # Ghi text nhỏ phía trên bbox
-                x, y = pts[0]
-                label = f"{block.text[:20]} ({block.confidence:.2f})"
-                cv2.putText(det_img, label, (x, max(y - 5, 10)),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 0), 1)
-        cv2.imwrite(os.path.join(det_dir, f"{stem}_det.png"), det_img)
+                # OpenCV dùng để vẽ polyline cho nhanh và nét
+                # Ta vẫn có thể vẽ bằng PIL nhưng draw.polygon yêu cầu list phẳng
+                # Để giữ các nét vẽ cũ, ta sẽ vẽ bbox bằng cv2 trước rồi mới đưa qua PIL ghi chữ
+                # Hoặc vẽ thẳng bằng PIL ở đây:
+                flat_pts = [tuple(p) for p in block.bbox]
+                draw.polygon(flat_pts, outline=(255, 0, 0), width=3)
+                
+                # Ghi text tiếng Việt
+                x, y = block.bbox[0]
+                label = f"{block.text[:30]}"
+                
+                # Tính toán kích thước nền text
+                try:
+                    # PIL mới dùng getbbox, PIL cũ dùng textsize
+                    if hasattr(draw, 'textbbox'):
+                        left, top, right, bottom = draw.textbbox((x, y), label, font=font)
+                        w_text = right - left
+                        h_text = bottom - top
+                    else:
+                        w_text, h_text = draw.textsize(label, font=font)
+                except:
+                    w_text, h_text = len(label)*12, 20
+                
+                # Vẽ nền đỏ cho chữ
+                draw.rectangle([x, y - h_text - 5, x + w_text + 4, y], fill=(255, 0, 0))
+                # Ghi chữ trắng
+                draw.text((x + 2, y - h_text - 4), label, font=font, fill=(255, 255, 255))
+
+        # Chuyển ngược lại BGR để cv2.imwrite
+        final_img = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
+        cv2.imwrite(os.path.join(det_dir, f"{stem}_det.png"), final_img)
 
         # --- 2. Raw text file ---
         with open(os.path.join(txt_dir, f"{stem}.txt"), "w", encoding="utf-8") as f:

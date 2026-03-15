@@ -42,23 +42,47 @@ def _get_classifier(model_path: Optional[str] = None):
         try:
             from paddleocr import DocImgOrientationClassification
             PADDLE_AVAILABLE = True
-        except ImportError:
+        except Exception as e:
             PADDLE_AVAILABLE = False
             logger.warning(
-                "PaddleOCR not installed. AI orientation disabled."
+                f"PaddleOCR orientation load fail: {e}. AI orientation disabled."
             )
     if not PADDLE_AVAILABLE:
         return None
+    import paddle
     from paddleocr import DocImgOrientationClassification
-    if model_path and os.path.exists(model_path):
-        _classifier_cache = DocImgOrientationClassification(
-            model_dir=model_path
-        )
-    else:
-        _classifier_cache = DocImgOrientationClassification(
-            model_name="PP-LCNet_x1_0_doc_ori"
-        )
-    logger.info("DocImgOrientationClassification loaded (singleton).")
+    
+    # Cỗ máy ưu tiên GPU: Thiết lập thiết bị ở mức hệ thống
+    try:
+        # Kiểm tra xem có thể dùng GPU không
+        if paddle.device.is_compiled_with_cuda():
+            paddle.set_device('gpu')
+            device_status = "GPU"
+        else:
+            paddle.set_device('cpu')
+            device_status = "CPU (No CUDA)"
+        
+        if model_path and os.path.exists(model_path):
+            _classifier_cache = DocImgOrientationClassification(
+                model_dir=model_path
+            )
+        else:
+            _classifier_cache = DocImgOrientationClassification(
+                model_name="PP-LCNet_x1_0_doc_ori"
+            )
+        logger.info(f"Mô hình AI: PP-LCNet — Đã nạp thành công [{device_status}]")
+    except Exception as e:
+        logger.warning(f"Device load lỗi ({e}), lùi về [CPU] mặc định...")
+        paddle.set_device('cpu')
+        if model_path and os.path.exists(model_path):
+            _classifier_cache = DocImgOrientationClassification(
+                model_dir=model_path
+            )
+        else:
+            _classifier_cache = DocImgOrientationClassification(
+                model_name="PP-LCNet_x1_0_doc_ori"
+            )
+
     return _classifier_cache
 
 
@@ -101,6 +125,43 @@ def force_portrait(
     return image, rotated
 
 
+def _ai_get_score(
+    image: np.ndarray,
+    max_width: int = 1000,
+    model_path: Optional[str] = None,
+) -> Tuple[str, float]:
+    """
+    Chỉ đo nhãn + điểm tự tin của AI classifier mà KHÔNG xoay ảnh.
+    Dùng để so sánh confidence giữa nhiều phương án xoay.
+    Returns: (label_str, score)
+    """
+    classifier = _get_classifier(model_path)
+    if not PADDLE_AVAILABLE or classifier is None:
+        return "0", 0.0
+    try:
+        h, w = image.shape[:2]
+        if w > max_width:
+            scale = max_width / float(w)
+            check_img = cv2.resize(image, (0, 0), fx=scale, fy=scale,
+                                   interpolation=cv2.INTER_LINEAR)
+        else:
+            check_img = image
+        results = classifier.predict(check_img)
+        if not results:
+            return "0", 0.0
+        res = results[0]
+        if isinstance(res, dict) and 'label_names' in res:
+            label = str(res['label_names'][0])
+            score = float(res['scores'][0])
+        else:
+            label = str(getattr(res, 'label_names', ['0'])[0])
+            score = float(getattr(res, 'scores', [0.0])[0])
+        return label, score
+    except Exception as e:
+        logger.error(f"_ai_get_score error: {e}")
+        return "0", 0.0
+
+
 def fix_orientation_ai(
     image: np.ndarray,
     confidence_threshold: float = 0.6,
@@ -126,11 +187,14 @@ def fix_orientation_ai(
     Returns:
         (image, status_message)
     """
-    if not PADDLE_AVAILABLE:
+    # Khởi tạo classifier nếu chưa có
+    classifier = _get_classifier(model_path)
+    
+    if not PADDLE_AVAILABLE or classifier is None:
         if save_path:
             os.makedirs(save_path, exist_ok=True)
             cv2.imwrite(os.path.join(save_path, f"{stem}_fixed.png"), image)
-        return image, "PaddleOCR không có sẵn, bỏ qua AI fix"
+        return image, "PaddleOCR không có sẵn hoặc lỗi load model"
 
     try:
         # Singleton classifier (tránh tạo mới mỗi lần)
@@ -159,13 +223,27 @@ def fix_orientation_ai(
                 label = str(getattr(res, 'label_names', ['0'])[0])
                 score = float(getattr(res, 'scores', [0.0])[0])
 
-        logger.debug(f"AI orientation {stem}: label={label}, score={score:.3f}")
+        logger.info(f"AI orientation raw: label={label}, score={score:.3f}")
 
-        # Xoay 180° nếu cần
-        if '180' in str(label) and score > confidence_threshold:
-            image = cv2.rotate(image, cv2.ROTATE_180)
-            status = f"Xoay 180° (conf={score:.2f})"
-            logger.info(f"fix_orientation_ai {stem}: {status}")
+        # Xoay theo góc được phát hiện (0°/90°/180°/270°)
+        label_str = str(label)
+        if score > confidence_threshold:
+            if '180' in label_str:
+                image = cv2.rotate(image, cv2.ROTATE_180)
+                status = f"Xoay 180° (conf={score:.2f})"
+                logger.info(f"fix_orientation_ai {stem}: {status}")
+            elif '90' in label_str and '270' not in label_str:
+                # Ảnh đang nằm ngang (90°) -> Xoay CCW để về đứng thẳng
+                image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                status = f"Xoay 90° CCW (conf={score:.2f})"
+                logger.info(f"fix_orientation_ai {stem}: {status}")
+            elif '270' in label_str:
+                # Ảnh đang nằm ngang (270°) -> Xoay CW để về đứng thẳng
+                image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+                status = f"Xoay 270° CW (conf={score:.2f})"
+                logger.info(f"fix_orientation_ai {stem}: {status}")
+            else:
+                status = f"Giữ nguyên 0° (conf={score:.2f})"
         else:
             status = f"Giữ nguyên (label={label}, conf={score:.2f})"
 
@@ -187,49 +265,62 @@ def preprocess_image(
     image: np.ndarray,
     stem: str = "image",
     save_dir: Optional[str] = None,
-    skip_ai_fix: bool = True,
+    skip_ai_fix: bool = False,
 ) -> Tuple[np.ndarray, dict]:
     """
-    Pipeline tiền xử lý đầy đủ — dùng cho cả camera lẫn upload.
+    Pipeline tiền xử lý — dùng cho cả camera lẫn upload.
 
     Thứ tự:
       1. Deskew      — Nắn thẳng nghiêng ±15°
-      2. Portrait    — Xoay 90° nếu nằm ngang
-      3. AI fix 180° — Phát hiện lộn ngược bằng PP-LCNet
-                       (skip mặc định, tốn ~4s trên CPU)
+      2. AI orientation — PP-LCNet phân loại 0°/90°/180°/270° và xoay đúng
+
+    LƯU Ý: force_portrait() đã bị BỎ vì gây bug xoay sai ảnh YOLO-crop
+    landscape (ảnh bảng thuốc nằm ngang bị xoay 90° → OCR chết).
+    PP-LCNet tự detect đúng hướng chữ dù ảnh portrait hay landscape.
 
     Args:
         image: Ảnh BGR gốc.
         stem: Tên dùng khi lưu intermediate files.
         save_dir: Nếu không None, lưu ảnh sau mỗi bước.
-        skip_ai_fix: Bỏ qua AI orientation (mặc định True).
+        skip_ai_fix: Bỏ qua AI orientation (mặc định False — BẬT AI).
 
     Returns:
         (processed_image, info_dict)
         info_dict = {
           "deskew_angle": float,
-          "portrait_rotated": bool,
+          "portrait_rotated": bool,  # luôn False (force_portrait đã bỏ)
           "ai_status": str
         }
     """
     info: dict = {}
 
-    # Bước 1: Deskew
-    image, angle = deskew(image)
+    # Bước 1: Tiền xử lý Deskew "Siêu Tự Động"
+    # Nhờ thuật toán Modulo 90, tất cả hình ảnh bất kể bị xoay và nghiêng 
+    # với bất cứ góc độ nào trên 360°, hệ thống sẽ tìm phương xoay TỐI ƯU NHẤT
+    # để nắn tất cả các đường thẳng trong hình ảnh trở nên hoàn toàn vuông góc (thẳng đứng/nằm ngang).
+    # Khắc phục hoàn toàn lỗi sai số > 15° và hiện tượng triệt tiêu nhau
+    image_deskewed, angle = deskew(image)
     info["deskew_angle"] = round(angle, 2)
-    if save_dir and angle != 0.0:
-        os.makedirs(save_dir, exist_ok=True)
-        cv2.imwrite(
-            os.path.join(save_dir, f"{stem}_deskewed.png"), image
-        )
 
-    # Bước 2: Portrait
-    image, rotated = force_portrait(image)
-    info["portrait_rotated"] = rotated
+    if angle != 0.0:
+        image = image_deskewed
+        info["deskew_method"] = "hough_modulo_90_snap"
+        if save_dir:
+            os.makedirs(save_dir, exist_ok=True)
+            cv2.imwrite(
+                os.path.join(save_dir, f"{stem}_deskewed.png"), image
+            )
+    else:
+        info["deskew_method"] = "skipped"
 
-    # Bước 3: AI fix 180° (skip nếu không cần, tiết kiệm ~4s)
+    # force_portrait() ĐÃ BỎ
+    info["portrait_rotated"] = False
+
+    # Bước 2: AI orientation (PP-LCNet — 0°/90°/180°/270°)
+    # Vì Bước 1 đã ĐẢM BẢO hình ảnh nằm dọc hoặc ngang tuyệt đối.
+    # Nên giờ AI chỉ cần xoay 90/180/270 để đưa về 0° một cách cực kỳ tự tin và chuẩn xác.
     if skip_ai_fix:
-        ai_status = "Skipped (fast mode)"
+        ai_status = "Skipped"
     else:
         image, ai_status = fix_orientation_ai(
             image, save_path=save_dir, stem=stem
@@ -237,7 +328,7 @@ def preprocess_image(
     info["ai_status"] = ai_status
 
     logger.info(
-        f"preprocess_image: deskew={angle:.1f}°, "
-        f"portrait={rotated}, ai={ai_status}"
+        f"preprocess_image: method={info.get('deskew_method')}, "
+        f"deskew={info.get('deskew_angle')}°, ai={ai_status}"
     )
     return image, info

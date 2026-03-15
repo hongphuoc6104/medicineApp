@@ -1,18 +1,19 @@
 """
-drug_lookup.py — Drug name lookup using local Vietnamese DB.
+drug_lookup.py — Drug name lookup using Vietnamese drug database (9,284 drugs).
 
 Priority: Local fuzzy match only (no API calls).
-Database: data/drug_db_vn.csv (190+ thuốc phổ biến VN).
+Database: data/drug_db_vn_full.json (9,284 thuốc từ ddi.lab.io.vn)
+Fallback:  data/drug_db_vn.csv        (316 thuốc cũ)
 
 Usage:
-    from core.converter.drug_lookup import DrugLookup
+    from core.phase_a.s6_drug_search.drug_lookup import DrugLookup
     lu = DrugLookup()
-    result = lu.lookup("Tanakan 40mg")
-    # {'name': 'tanakan', 'generic': 'ginkgo biloba extract',
-    #  'score': 0.95, 'category': 'tuần hoàn não'}
+    result = lu.lookup("Celecoxib 200mg")
+    # {'name': 'Celecoxib', 'generic': 'celecoxib', 'score': 0.97, ...}
 """
 
 import csv
+import json
 import logging
 import os
 import re
@@ -24,128 +25,193 @@ logger = logging.getLogger(__name__)
 
 MIN_SCORE = 65   # Minimum fuzzy score to accept match
 
-# Default DB path (project_root/data/drug_db_vn.csv)
-# __file__ is core/phase_a/s6_drug_search/drug_lookup.py
-# → 3 levels up = project root
-_DEFAULT_DB = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
-    "data", "drug_db_vn.csv",
-)
+# Paths relative to project root (3 levels up from this file)
+_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+_DEFAULT_JSON_DB = os.path.join(_ROOT, "data", "drug_db_vn_full.json")
+_DEFAULT_CSV_DB  = os.path.join(_ROOT, "data", "drug_db_vn.csv")
 
 
 class DrugLookup:
-    """Local Vietnamese drug name lookup via fuzzy matching."""
+    """
+    Local Vietnamese drug name lookup via fuzzy matching.
+    Ưu tiên drug_db_vn_full.json (9,284 thuốc), fallback sang CSV cũ.
+    """
 
     def __init__(self, db_path: Optional[str] = None):
-        self._entries: list[dict] = []
-        self._search_keys: list[str] = []
-        self._load(db_path or _DEFAULT_DB)
+        self._entries: list = []
+        self._search_keys: list = []
+        # Thử JSON đầy đủ trước, fallback CSV
+        json_path = db_path or _DEFAULT_JSON_DB
+        if os.path.exists(json_path) and json_path.endswith(".json"):
+            self._load_json(json_path)
+        else:
+            self._load_csv(_DEFAULT_CSV_DB)
 
-    def _load(self, path: str) -> None:
+    # ── Loaders ──────────────────────────────────────────────────────────────
+
+    def _load_json(self, path: str) -> None:
+        """Load drug_db_vn_full.json — 9,284 thuốc VN."""
+        try:
+            with open(path, encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception as e:
+            logger.error(f"DrugLookup: lỗi đọc JSON {path}: {e}")
+            return
+
+        drugs = data.get("drugs", []) if isinstance(data, dict) else data
+        for drug in drugs:
+            ten_thuoc = drug.get("tenThuoc", "").strip()
+            if not ten_thuoc:
+                continue
+
+            hoat_chats = drug.get("hoatChat", [])
+            if isinstance(hoat_chats, list):
+                generic_names = [
+                    hc.get("tenHoatChat", "") for hc in hoat_chats
+                    if isinstance(hc, dict) and hc.get("tenHoatChat")
+                ]
+                nong_do = ", ".join(
+                    hc.get("nongDo", "") for hc in hoat_chats
+                    if isinstance(hc, dict) and hc.get("nongDo")
+                )
+            else:
+                generic_names = []
+                nong_do = ""
+
+            entry = {
+                "brand_name":  ten_thuoc,
+                "generic_name": ", ".join(generic_names),
+                "so_dang_ky":  drug.get("soDangKy", ""),
+                "nong_do":     nong_do,
+                "source":      "drug_db_vn_full",
+            }
+
+            self._entries.append(entry)
+            self._search_keys.append(ten_thuoc.lower())
+
+            for g in generic_names:
+                g_lo = g.strip().lower()
+                if g_lo and g_lo != ten_thuoc.lower():
+                    self._entries.append(entry)
+                    self._search_keys.append(g_lo)
+
+        logger.info(
+            f"DrugLookup (JSON): {len(self._entries)} search keys "
+            f"từ {len(drugs)} thuốc"
+        )
+
+    def _load_csv(self, path: str) -> None:
+        """Fallback: load drug_db_vn.csv."""
         if not os.path.exists(path):
-            logger.warning(f"Drug DB not found: {path}")
+            logger.warning(f"Drug DB không tìm thấy: {path}")
             return
         with open(path, encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for row in reader:
-                brand = row.get("brand_name", "").strip().lower()
-                generic = row.get("generic_name", "").strip().lower()
+                brand   = row.get("brand_name", "").strip()
+                generic = row.get("generic_name", "").strip()
+                if not brand:
+                    continue
+                row["source"] = "drug_db_vn_csv"
+                row["so_dang_ky"] = ""
+                row["nong_do"] = ""
                 self._entries.append(row)
-                # Search against both brand and generic name
-                self._search_keys.append(brand)
-                if generic and generic != brand:
+                self._search_keys.append(brand.lower())
+                if generic and generic.lower() != brand.lower():
                     self._entries.append(row)
-                    self._search_keys.append(generic)
+                    self._search_keys.append(generic.lower())
         logger.info(
-            f"DrugLookup: {len(self._entries)} search keys "
-            f"from {path}"
+            f"DrugLookup (CSV fallback): {len(self._entries)} search keys"
         )
+
+    # ── Helpers ───────────────────────────────────────────────────────────────
 
     @staticmethod
     def _clean(text: str) -> str:
-        """Extract drug name from OCR text."""
-        t = text
-        # Remove standalone numbers and units (keep brand names)
+        """Làm sạch OCR text trước khi fuzzy search."""
         t = re.sub(
             r"\b\d+\s*(mg|ml|tab|cap|iu|mcg|g|viên|ống|lọ)?\b",
-            " ", t, flags=re.IGNORECASE,
+            " ", text, flags=re.IGNORECASE,
         )
-        # Remove STT patterns like "11" at start/end
         t = re.sub(r"^\d{1,3}\s+", "", t)
         t = re.sub(r"\s+\d{1,3}$", "", t)
         return " ".join(t.split()).strip().lower()
 
-    def lookup(self, text: str) -> dict:
-        """
-        Lookup drug name from OCR text.
+    @staticmethod
+    def _has_root_overlap(query: str, candidate: str) -> bool:
+        """Yêu cầu ít nhất 1 token có nghĩa chung."""
+        stop = {
+            "", "mg", "ml", "mcg", "g", "iu", "tab", "cap",
+            "viên", "ống", "lọ", "chai", "gói", "sủi",
+            "thuốc", "và", "the", "for",
+        }
+        q_words = {w for w in re.split(r"\W+", query.lower()) if w not in stop and len(w) >= 3}
+        c_words = {w for w in re.split(r"\W+", candidate.lower()) if w not in stop and len(w) >= 3}
+        return bool(q_words & c_words)
 
-        Uses dual-match: tries both raw and cleaned text,
-        returns the best score.
-        """
+    # ── Public API ────────────────────────────────────────────────────────────
+
+    def lookup(self, text: str) -> dict:
+        """Fuzzy match tên thuốc OCR → tên chuẩn trong DB."""
         if not self._search_keys:
             return self._empty(text)
 
-        # Strategy 1: clean text (parens kept)
-        query_clean = self._clean(text)
-        # Strategy 2: just lowercase the raw text
-        query_raw = text.strip().lower()
-        # Strategy 3: extract content in complete parentheses
-        paren_match = re.search(r"\(([^)]+)\)", text)
-        query_paren = paren_match.group(1).strip().lower() \
-            if paren_match else ""
-        # Strategy 4: clean text with parens REMOVED
-        no_paren = re.sub(r"\([^)]*\)", " ", text)
-        query_no_paren = self._clean(no_paren)
-        # Strategy 5: partial open-paren (e.g., "Ginkgo Biloba (Tanakan")
-        # EasyOCR sometimes splits the closing ')' into a separate block
-        partial_match = re.search(r"\(([^)]{3,})\s*$", text)
-        query_partial = partial_match.group(1).strip().lower() \
-            if partial_match else ""
+        query_clean  = self._clean(text)
+        query_raw    = text.strip().lower()
+        paren_m      = re.search(r"\(([^)]+)\)", text)
+        query_paren  = paren_m.group(1).strip().lower() if paren_m else ""
+        no_paren     = re.sub(r"\([^)]*\)", " ", text)
+        query_no_par = self._clean(no_paren)
 
-        best_score = 0
+        best_score  = 0
         best_result = None
 
-        candidates = [
-            query_clean, query_raw,
-            query_paren, query_no_paren,
-            query_partial,
-        ]
-        for query in candidates:
+        for query in [query_clean, query_raw, query_paren, query_no_par]:
             if not query or len(query) < 3:
                 continue
-            result = process.extractOne(
+            r = process.extractOne(
                 query,
                 self._search_keys,
                 scorer=fuzz.token_sort_ratio,
             )
-            if result and result[1] > best_score:
-                best_score = result[1]
-                best_result = result
+            if r and r[1] > best_score:
+                best_score  = r[1]
+                best_result = r
 
         if not best_result or best_score < MIN_SCORE:
             return self._empty(text)
 
         match_key, score, idx = best_result
+        if not self._has_root_overlap(query_clean or query_raw, match_key):
+            return self._empty(text)
+
         entry = self._entries[idx]
         return {
-            "original": text,
-            "name": entry.get("brand_name", "").strip(),
-            "generic": entry.get("generic_name", "").strip(),
-            "score": round(score / 100.0, 3),
-            "category": entry.get("category", ""),
-            "source": "local_vn",
+            "original":    text,
+            "name":        entry.get("brand_name", "").strip(),
+            "generic":     entry.get("generic_name", "").strip(),
+            "score":       round(score / 100.0, 3),
+            "so_dang_ky":  entry.get("so_dang_ky", ""),
+            "nong_do":     entry.get("nong_do", ""),
+            "source":      entry.get("source", ""),
         }
 
-    def lookup_batch(self, texts: list[str]) -> list[dict]:
+    def lookup_batch(self, texts: list) -> list:
         return [self.lookup(t) for t in texts]
 
     @staticmethod
     def _empty(original: str) -> dict:
         return {
-            "original": original,
-            "name": None,
-            "generic": None,
-            "score": 0.0,
-            "category": None,
-            "source": None,
+            "original":   original,
+            "name":       None,
+            "generic":    None,
+            "score":      0.0,
+            "so_dang_ky": "",
+            "nong_do":    "",
+            "source":     None,
         }
+
+    @property
+    def db_size(self) -> int:
+        """Số lượng thuốc unique trong DB."""
+        return len(set(e.get("brand_name", "") for e in self._entries))

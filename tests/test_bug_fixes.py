@@ -10,6 +10,39 @@ import numpy as np
 import pytest
 
 
+class _FakeTextBlock:
+    def __init__(self, text, bbox, confidence):
+        self.text = text
+        self.bbox = bbox
+        self.confidence = confidence
+
+
+class _FakeOcrResult:
+    def __init__(self, text_blocks):
+        self.text_blocks = text_blocks
+
+
+class _FakeOcr:
+    def __init__(self, text_blocks):
+        self._text_blocks = text_blocks
+
+    def extract(self, _img):
+        return _FakeOcrResult(self._text_blocks)
+
+
+class _FakeMapper:
+    def lookup(self, text):
+        if "para" in text.lower():
+            return {
+                "name": "Paracetamol",
+                "score": 0.94,
+            }
+        return {
+            "name": None,
+            "score": 0.0,
+        }
+
+
 # ── VĐ1: test _crop_polygon perspective transform ──
 
 class TestCropPolygon:
@@ -80,6 +113,56 @@ class TestPipelineFallback:
         assert isinstance(result, dict)
         # Có thể trả error "OCR found no text" — đó là OK
         assert "error" in result or "medications" in result
+
+
+class TestPipelineResolution:
+    def test_run_ocr_remaps_bbox_with_roi_offset(self):
+        from core.pipeline import MedicinePipeline
+
+        pipe = MedicinePipeline()
+        pipe._ocr = _FakeOcr([
+            _FakeTextBlock("Paracetamol", [1, 2, 11, 12], 0.91),
+        ])
+
+        blocks = pipe._run_ocr(np.zeros((10, 10, 3), dtype=np.uint8), bbox_offset=(100, 200))
+
+        assert blocks[0]["bbox"] == [101, 202, 111, 212]
+
+    def test_extract_medications_keeps_unmapped_candidates(self):
+        from core.pipeline import MedicinePipeline
+
+        pipe = MedicinePipeline()
+        pipe._drug_mapper = _FakeMapper()
+
+        ner_results = [
+            {
+                "label": "drugname",
+                "text": "Paracetamol 500mg",
+                "confidence": 0.95,
+                "bbox": [1, 2, 3, 4],
+            },
+            {
+                "label": "drugname",
+                "text": "Mystery Capsule",
+                "confidence": 0.88,
+                "bbox": [5, 6, 7, 8],
+            },
+            {
+                "label": "drugname",
+                "text": "10ml",
+                "confidence": 0.8,
+                "bbox": [9, 10, 11, 12],
+            },
+        ]
+
+        medications, candidates = pipe._extract_medications(ner_results)
+
+        assert [item["mapping_status"] for item in medications] == [
+            "confirmed",
+            "unmapped_candidate",
+        ]
+        assert candidates[2]["mapping_status"] == "rejected_noise"
+        assert medications[1]["drug_name"] == "Mystery Capsule"
 
 
 # ── VĐ4: NER key consistency ──

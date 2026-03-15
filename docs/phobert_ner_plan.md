@@ -1,5 +1,10 @@
 # Kế Hoạch PhoBERT NER — Đã Kiểm Chứng Kỹ Thuật
 
+> [!NOTE]
+> Tài liệu này là technical deep-dive cho quá trình huấn luyện PhoBERT NER.
+> Dùng làm reference/history cho NER, không dùng làm roadmap trạng thái tổng thể của dự án.
+> Trạng thái hiện tại của dự án xem tại `AGENTS.md` và `docs/MASTER_PLAN.md`.
+
 ## ⚠️ 3 Lỗi Kỹ Thuật Phát Hiện Trong Plan Cũ (Đã Sửa)
 
 > [!CAUTION]

@@ -58,6 +58,85 @@ router.post(
 );
 
 /**
+ * POST /api/scan/session/start
+ * Start adaptive multi-shot scan session.
+ */
+router.post(
+  '/session/start',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const result = await scanService.startScanSession(req.user.sub);
+    success(res, result, 201);
+  })
+);
+
+/**
+ * POST /api/scan/session/:sessionId/add-image
+ * Add a captured image into an active session.
+ */
+router.post(
+  '/session/:sessionId/add-image',
+  requireAuth,
+  upload.single('file'),
+  asyncHandler(async (req, res) => {
+    if (!req.file) {
+      throw new AppError('No file uploaded', 400, 'NO_FILE');
+    }
+
+    const { fileTypeFromBuffer } = await import('file-type');
+    const detected = await fileTypeFromBuffer(req.file.buffer);
+    if (!detected || !ALLOWED_MIMES.includes(detected.mime)) {
+      throw new AppError(
+        `Invalid file type. Allowed: ${ALLOWED_MIMES.join(', ')}`,
+        400,
+        'INVALID_FILE_TYPE'
+      );
+    }
+
+    const result = await scanService.addImageToSession(
+      req.params.sessionId,
+      req.user.sub,
+      req.file.buffer,
+      req.file.originalname,
+      detected.mime
+    );
+    success(res, result);
+  })
+);
+
+/**
+ * GET /api/scan/session/:sessionId
+ * Get current adaptive session state.
+ */
+router.get(
+  '/session/:sessionId',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const result = await scanService.getScanSession(
+      req.params.sessionId,
+      req.user.sub
+    );
+    success(res, result);
+  })
+);
+
+/**
+ * POST /api/scan/session/:sessionId/stop
+ * Stop adaptive session and return merged result.
+ */
+router.post(
+  '/session/:sessionId/stop',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const result = await scanService.stopScanSession(
+      req.params.sessionId,
+      req.user.sub
+    );
+    success(res, result);
+  })
+);
+
+/**
  * GET /api/scan/history?page=1&limit=20
  * Get scan history for current user.
  */

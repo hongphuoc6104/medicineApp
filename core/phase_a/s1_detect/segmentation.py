@@ -18,7 +18,10 @@ def extract_polygon(result: Results) -> list[float]:
     
 def crop_by_mask(image: np.ndarray, result: Results):
     """
-    Crop prescription using segmentation mask. Background = black.
+    Crop prescription using convex hull of segmentation mask.
+    - Tính convex hull (đa giác lồi nhỏ nhất) từ polygon YOLO
+    - Tô đen CHỈ phần nằm NGOÀI convex hull
+    - Giữ nguyên 100% pixel bên trong, không bị lõm/xóa đen nội dung
     Args:
         image: Original BGR frame from camera/file.
         result: A single YOLO Result object. 
@@ -30,19 +33,36 @@ def crop_by_mask(image: np.ndarray, result: Results):
     if result.masks is None:
         return None, (0, 0)
 
-    mask = result.masks.data[0].cpu().numpy()
-    mask_resize = cv2.resize(mask, (image.shape[1], image.shape[0]))
-    mask_3ch = np.stack([mask_resize]*3, axis=-1)
-    masked_image = (image * mask_3ch).astype(np.uint8)
-    x1, y1, x2, y2 = map(int, result.boxes.xyxy[0])
+    # Lấy polygon gốc từ YOLO (tọa độ pixel thực trên ảnh gốc)
+    polygon_xy = result.masks.xy[0]  # shape: (N, 2)
+    if len(polygon_xy) < 3:
+        return None, (0, 0)
 
+    # Tính convex hull → đa giác lồi nhỏ nhất bao quanh tất cả điểm
+    # Loại bỏ hoàn toàn các phần lõm/khuyết bên trong
+    pts = polygon_xy.astype(np.float32).reshape(-1, 1, 2)
+    hull = cv2.convexHull(pts)
+    hull_int = hull.astype(np.int32)
+
+    # Copy ảnh gốc để không làm thay đổi ảnh đầu vào
+    output = image.copy()
+
+    # Tạo mask từ convex hull trên kích thước ảnh gốc (full resolution)
+    hull_mask = np.zeros(image.shape[:2], dtype=np.uint8)
+    cv2.fillPoly(hull_mask, [hull_int.reshape(-1, 2)], 255)
+
+    # Tô đen phần NGOÀI convex hull
+    output[hull_mask == 0] = 0
+
+    # Tính bounding box từ convex hull + padding
+    hx, hy, hw, hh = cv2.boundingRect(hull_int.reshape(-1, 2))
     padding = CROP_PADDING
-    x1 = max(0, x1 - padding)
-    y1 = max(0, y1 - padding)
-    x2 = min(image.shape[1], x2 + padding)
-    y2 = min(image.shape[0], y2 + padding)
+    x1 = max(0, hx - padding)
+    y1 = max(0, hy - padding)
+    x2 = min(image.shape[1], hx + hw + padding)
+    y2 = min(image.shape[0], hy + hh + padding)
 
-    return masked_image[y1:y2, x1:x2], (x1, y1)
+    return output[y1:y2, x1:x2], (x1, y1)
 
 def crop_by_bbox(image: np.ndarray, result: Results) -> np.ndarray:
     """

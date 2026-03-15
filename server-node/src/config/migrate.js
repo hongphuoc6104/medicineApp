@@ -52,13 +52,38 @@ const MIGRATIONS = [
   `CREATE TABLE IF NOT EXISTS scans (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    session_id UUID,
     image_url TEXT,
     result JSONB NOT NULL,
     drug_count INTEGER DEFAULT 0,
+    quality_state VARCHAR(20) DEFAULT 'GOOD',
+    reject_reason VARCHAR(80),
+    quality_score NUMERIC(6,3),
     scanned_at TIMESTAMPTZ DEFAULT NOW()
   );`,
+  `ALTER TABLE scans ADD COLUMN IF NOT EXISTS session_id UUID;`,
+  `ALTER TABLE scans ADD COLUMN IF NOT EXISTS quality_state VARCHAR(20) DEFAULT 'GOOD';`,
+  `ALTER TABLE scans ADD COLUMN IF NOT EXISTS reject_reason VARCHAR(80);`,
+  `ALTER TABLE scans ADD COLUMN IF NOT EXISTS quality_score NUMERIC(6,3);`,
   `CREATE INDEX IF NOT EXISTS idx_scans_user
    ON scans(user_id, scanned_at DESC);`,
+  `CREATE INDEX IF NOT EXISTS idx_scans_session
+   ON scans(session_id, scanned_at DESC);`,
+
+  // 005b: Scan Sessions
+  `CREATE TABLE IF NOT EXISTS scan_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    status VARCHAR(20) NOT NULL DEFAULT 'active',
+    converged BOOLEAN DEFAULT false,
+    convergence_reason VARCHAR(80),
+    merged_result JSONB DEFAULT '[]'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    closed_at TIMESTAMPTZ
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_scan_sessions_user
+   ON scan_sessions(user_id, created_at DESC);`,
 
   // 006: Medication Plans
   `CREATE TABLE IF NOT EXISTS medication_plans (

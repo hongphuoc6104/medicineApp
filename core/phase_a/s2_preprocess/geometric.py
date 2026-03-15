@@ -23,59 +23,70 @@ def deskew(
     max_angle: float = 15.0,
 ) -> Tuple[np.ndarray, float]:
     """
-    Nắn thẳng ảnh bị nghiêng ±max_angle độ.
-
-    Dùng minAreaRect trên các điểm ảnh tối để tìm góc nghiêng.
-    Nếu góc < 0.5° → bỏ qua (ảnh đã thẳng).
-
-    Args:
-        image: Ảnh BGR để nắn.
-        max_angle: Góc nghiêng tối đa để xử lý (default ±15°).
-                   Nếu góc lớn hơn → không nắn (tránh xoay sai).
-
-    Returns:
-        (deskewed_image, angle_corrected)
-        angle_corrected = 0.0 nếu không xử lý.
+    Nắn thẳng ảnh bị nghiêng dùng Hough Line Transform (mạnh mẽ hơn minAreaRect).
+    Xác định hướng của các dòng kẻ hoặc dòng chữ để nắn.
     """
     h, w = image.shape[:2]
-    # Downsample for fast angle detection
-    MAX_SIDE = 800
+    
+    # 1. Resize để xử lý nhanh
+    MAX_SIDE = 1000
+    scale = 1.0
     if max(h, w) > MAX_SIDE:
         scale = MAX_SIDE / max(h, w)
-        small = cv2.resize(
-            image, (int(w * scale), int(h * scale)),
-            interpolation=cv2.INTER_AREA,
-        )
+        small = cv2.resize(image, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
     else:
         small = image
 
     gray = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
-    dark_mask = gray < 180
-    coords = np.column_stack(np.where(dark_mask))
-
-    if len(coords) < 100:
+    
+    # 2. Tìm cạnh
+    edges = cv2.Canny(gray, 50, 150, apertureSize=3)
+    
+    # 3. Hough Line Transform để tìm các đoạn thẳng
+    lines = cv2.HoughLinesP(
+        edges, 1, np.pi/180, 
+        threshold=100, 
+        minLineLength=w//10, 
+        maxLineGap=20
+    )
+    
+    if lines is None:
         return image, 0.0
 
-    rect = cv2.minAreaRect(coords)
-    angle = rect[-1]
+    angles = []
+    for line in lines:
+        x1, y1, x2, y2 = line[0]
+        # Tính góc của đoạn thẳng (radian -> độ)
+        angle = np.degrees(np.arctan2(y2 - y1, x2 - x1))
+        
+        # Modulo 90: Đưa mọi đường thẳng (dù ngang hay dọc) về khoảng [-45, 45).
+        # Ví dụ: Đường dọc 80° -> (80+45)%90-45 = 125%90-45 = +35°
+        # Nếu áp +35°, đường dọc thành ngang?
+        # Đợi chút, nếu ta muốn mọi đường thẳng tự do, ta để thuật toán hội tụ
+        angle_mod = (angle + 45) % 90 - 45
+        angles.append(angle_mod)
 
-    if angle < -45:
-        angle = 90 + angle
-
-    if abs(angle) < 0.5 or abs(angle) > max_angle:
+    if not angles:
         return image, 0.0
 
-    # Apply rotation to full-size image
-    center = (w // 2, h // 2)
-    M = cv2.getRotationMatrix2D(center, angle, 1.0)
+    # 4. Lấy trung vị (median) để tránh nhiễu
+    median_angle = np.median(angles)
+
+    if abs(median_angle) < 0.2: # Ngưỡng quá nhỏ thì bỏ qua
+        return image, 0.0
+
+    # 5. Xoay ảnh gốc (full size)
+    center_f = (w // 2, h // 2)
+    M = cv2.getRotationMatrix2D(center_f, median_angle, 1.0)
     deskewed = cv2.warpAffine(
         image, M, (w, h),
-        flags=cv2.INTER_LINEAR,
+        flags=cv2.INTER_CUBIC,
         borderMode=cv2.BORDER_CONSTANT,
-        borderValue=(255, 255, 255),
+        borderValue=(255, 255, 255)
     )
-    logger.debug(f"Deskew: angle={angle:.2f}°")
-    return deskewed, angle
+    
+    logger.info(f"Deskew (Hough): Detected angle {median_angle:.2f}° -> Correcting.")
+    return deskewed, median_angle
 
 
 def _order_points(pts: np.ndarray) -> np.ndarray:

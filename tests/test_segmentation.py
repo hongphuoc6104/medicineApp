@@ -1,6 +1,10 @@
 import numpy as np
 import pytest
-from core.segmentation import extract_polygon, crop_by_mask, crop_by_bbox
+from core.phase_a.s1_detect.segmentation import (
+    extract_polygon,
+    crop_by_mask,
+    crop_by_bbox,
+)
 
 # ==========================================
 # 1. MOCK OBJECTS (Fake YOLO Results)
@@ -92,8 +96,9 @@ def test_crop_by_mask_no_mask():
     fake_image = np.zeros((100, 100, 3), dtype=np.uint8)
     fake_result = MockResult(masks=None)
     
-    crop = crop_by_mask(fake_image, fake_result)
+    crop, offset = crop_by_mask(fake_image, fake_result)
     assert crop is None
+    assert offset == (0, 0)
 
 def test_crop_by_mask_with_detection():
     """Happy Path: Phủ mask thành màu đen 2 bên và cắt có padding = 20"""
@@ -105,7 +110,7 @@ def test_crop_by_mask_with_detection():
     
     fake_result = MockResult(masks=fake_masks, boxes=fake_boxes)
     
-    crop = crop_by_mask(fake_image, fake_result)         # Act
+    crop, _ = crop_by_mask(fake_image, fake_result)      # Act
     
     assert crop.shape == (70, 70, 3), "Kích thước ảnh crop theo Mask + Padding bị sai!"
 
@@ -134,7 +139,7 @@ def test_crop_by_mask_padding_clamp():
     fake_boxes = MockBoxes(xyxy=[5, 5, 50, 50])
     fake_result = MockResult(masks=fake_masks, boxes=fake_boxes)
     
-    crop = crop_by_mask(fake_image, fake_result)
+    crop, _ = crop_by_mask(fake_image, fake_result)
     
     # x1 = max(0, 5-20) = 0. y1 = max(0, 5-20) = 0
     # x2 = min(100, 50+20) = 70. y2 = min(100, 50+20) = 70

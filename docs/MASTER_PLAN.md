@@ -4,6 +4,13 @@
 > **Trạng thái:** Đang thực hiện  
 > **Nguyên tắc:** Mỗi phần phải có xử lý ngoại lệ, bảo mật, và tests trước khi chuyển sang phần tiếp.
 
+> **Cập nhật 2026-03-14 (Adaptive Scan P0):**
+> - Đã triển khai 2 YOLO trong Phase A: detect đơn thuốc lớn + detect bảng thuốc ROI trước OCR (optional fallback).
+> - Đã thêm quality gate Python + precheck cục bộ Flutter trước upload.
+> - Đã chuyển scan session state từ in-memory sang DB (`scan_sessions`).
+> - Đã chuẩn hóa trạng thái medication: `confirmed` / `unmapped_candidate` / `rejected_noise`.
+> - Đang ở bước validate benchmark lợi ích thực tế (accuracy/stability/time) trước khi chốt P1/P2.
+
 ---
 
 ## Mục lục
@@ -274,7 +281,7 @@ server-node/
 │   │   └── interaction.routes.js # GET /interactions/:drug
 │   ├── services/
 │   │   ├── auth.service.js      # JWT + bcrypt logic
-│   │   ├── drug.service.js      # ddi.lab.io.vn + DailyMed + OpenFDA
+│   │   ├── drug.service.js      # ddi.lab.io.vn (chính) + nguồn khác (future)
 │   │   ├── scan.service.js      # Forward to Python FastAPI
 │   │   ├── plan.service.js      # Medication plan CRUD
 │   │   ├── interaction.service.js # Drug interaction check
@@ -324,8 +331,9 @@ if (!detected || !ALLOWED.includes(detected.mime))
   throw new AppError('Invalid file type', 400, 'INVALID_FILE_TYPE');
 ```
 
-**Circuit Breaker cho external API (ddi.lab.io.vn):**
+**Circuit Breaker cho external API (ddi.lab.io.vn) — kế hoạch tăng cường:**
 ```javascript
+// Đây là hướng triển khai production trong tương lai.
 // Nếu ddi.lab.io.vn lỗi 3 lần liên tiếp → dừng gọi 60s → fallback PostgreSQL cache
 // Thư viện đề xuất: 'opossum' (node circuit breaker)
 const breaker = new CircuitBreaker(callDdiApi, {
@@ -382,7 +390,7 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm;
 CREATE TABLE drug_cache (
   id SERIAL PRIMARY KEY,
   drug_name VARCHAR(255) NOT NULL,
-  source VARCHAR(50) NOT NULL,  -- 'ddi', 'dailymed', 'openfda'
+  source VARCHAR(50) NOT NULL,  -- 'ddi' (active), 'dailymed'/'openfda' (future)
   data JSONB NOT NULL,
   cached_at TIMESTAMPTZ DEFAULT NOW(),
   expires_at TIMESTAMPTZ DEFAULT NOW() + INTERVAL '7 days',
@@ -396,7 +404,7 @@ CREATE TABLE scans (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   image_url TEXT,
-  -- Result JSONB NÊN ĐƯỢC MÃ HÓA (Encyption At Rest) bằng thuật toán AES-256 từ Node.js (Bảo vệ tính riêng tư Y tế)
+  -- Encryption at rest (AES-256) là mục tiêu bảo mật tương lai; hiện chưa bật mặc định trong codebase.
   result JSONB NOT NULL,
   drug_count INTEGER DEFAULT 0,
   scanned_at TIMESTAMPTZ DEFAULT NOW()
@@ -627,8 +635,8 @@ GET /health/ready → 503 nếu DB hoặc Python chưa sẵn sàng
 | Nguồn | URL | Ghi chú |
 |-------|-----|---------|
 | ddi.lab.io.vn | https://ddi.lab.io.vn/drugs | API thuốc VN (9,284 thuốc + tương tác) |
-| DailyMed | https://dailymed.nlm.nih.gov/ | Ảnh thuốc + SPL label (thuốc Mỹ) |
-| OpenFDA | https://api.fda.gov/ | Drug labels (thuốc Mỹ) |
+| DailyMed | https://dailymed.nlm.nih.gov/ | Nguồn tham khảo mở rộng (future) |
+| OpenFDA | https://api.fda.gov/ | Nguồn tham khảo mở rộng (future) |
 | RxNorm | https://rxnav.nlm.nih.gov/ | Chuẩn hóa tên thuốc quốc tế |
 | go.drugbank.com | https://go.drugbank.com/ | Database quốc tế (academic download) |
 | drugs.com | https://www.drugs.com/imprints.php | Pill Identifier |
