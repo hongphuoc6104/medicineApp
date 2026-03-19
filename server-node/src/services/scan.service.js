@@ -463,7 +463,7 @@ export async function getScanHistory(userId, { page = 1, limit = 20 } = {}) {
   const offset = (page - 1) * limit;
 
   const result = await query(
-    `SELECT id, drug_count, scanned_at, result
+    `SELECT id, drug_count, scanned_at, result, quality_state, reject_reason
      FROM scans
      WHERE user_id = $1
      ORDER BY scanned_at DESC
@@ -479,5 +479,41 @@ export async function getScanHistory(userId, { page = 1, limit = 20 } = {}) {
   return {
     scans: result.rows,
     total: parseInt(countResult.rows[0].count),
+  };
+}
+
+export async function getScanHistoryItem(userId, scanId) {
+  const result = await query(
+    `SELECT id, drug_count, scanned_at, result, quality_state, reject_reason, quality_score
+     FROM scans
+     WHERE user_id = $1 AND id = $2
+     LIMIT 1`,
+    [userId, scanId]
+  );
+
+  const row = result.rows[0];
+  if (!row) {
+    throw new AppError('Scan history item not found', 404, 'SCAN_NOT_FOUND');
+  }
+
+  const rawResult = typeof row.result === 'string'
+    ? JSON.parse(row.result)
+    : row.result;
+  const normalized = normalizeScanResult(rawResult || {});
+
+  return {
+    id: row.id,
+    drugCount: row.drug_count,
+    scannedAt: row.scanned_at,
+    qualityState: row.quality_state || normalized.qualityState,
+    rejectReason: row.reject_reason || normalized.rejectReason,
+    qualityScore: Number(row.quality_score || 0),
+    guidance: normalized.guidance,
+    qualityMetrics: normalized.qualityMetrics,
+    roiMode: normalized.roiMode,
+    rejected: normalized.rejected,
+    unresolvedCount: normalized.unresolvedCount,
+    drugs: normalized.drugs,
+    candidates: normalized.candidates,
   };
 }

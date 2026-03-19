@@ -45,8 +45,15 @@ async function ensureScanSessionSchema() {
   );`);
 }
 
+async function ensureMedicationLogOccurrenceSchema() {
+  await query('ALTER TABLE medication_logs ADD COLUMN IF NOT EXISTS occurrence_id VARCHAR(120)');
+  await query('DROP INDEX IF EXISTS uq_logs_plan_occurrence');
+  await query('CREATE UNIQUE INDEX IF NOT EXISTS uq_logs_plan_occurrence_all ON medication_logs(plan_id, occurrence_id)');
+}
+
 beforeAll(async () => {
   await ensureScanSessionSchema();
+  await ensureMedicationLogOccurrenceSchema();
   await cleanTestUsers(PREFIX);
   const user = await authService.register({
     email: EMAIL,

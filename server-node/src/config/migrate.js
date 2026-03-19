@@ -111,13 +111,50 @@ const MIGRATIONS = [
     scheduled_time TIMESTAMPTZ NOT NULL,
     taken_at TIMESTAMPTZ,
     status VARCHAR(20) DEFAULT 'pending',
-    note TEXT
+    note TEXT,
+    occurrence_id VARCHAR(120)
   );`,
+  `ALTER TABLE medication_logs ADD COLUMN IF NOT EXISTS occurrence_id VARCHAR(120);`,
   `CREATE INDEX IF NOT EXISTS idx_logs_plan
    ON medication_logs(plan_id, scheduled_time DESC);`,
+  `DROP INDEX IF EXISTS uq_logs_plan_occurrence;`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS uq_logs_plan_occurrence_all
+   ON medication_logs(plan_id, occurrence_id);`,
   `CREATE INDEX IF NOT EXISTS idx_logs_status
    ON medication_logs(plan_id, status)
    WHERE status IN ('taken', 'missed');`,
+
+  // 008: Pill Verification Sessions
+  `CREATE TABLE IF NOT EXISTS pill_verification_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    occurrence_id VARCHAR(120) NOT NULL,
+    dose_payload JSONB NOT NULL,
+    result JSONB DEFAULT '{}'::jsonb,
+    status VARCHAR(20) NOT NULL DEFAULT 'draft',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    confirmed_at TIMESTAMPTZ
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_pill_verification_sessions_user
+   ON pill_verification_sessions(user_id, created_at DESC);`,
+  `CREATE INDEX IF NOT EXISTS idx_pill_verification_sessions_occurrence
+   ON pill_verification_sessions(occurrence_id, status);`,
+
+  // 009: Pill Verification Assignments
+  `CREATE TABLE IF NOT EXISTS pill_verification_assignments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID REFERENCES pill_verification_sessions(id) ON DELETE CASCADE,
+    detection_idx INTEGER NOT NULL,
+    assigned_drug_name VARCHAR(255),
+    status VARCHAR(30) NOT NULL DEFAULT 'assigned',
+    note TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(session_id, detection_idx)
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_pill_verification_assignments_session
+   ON pill_verification_assignments(session_id, detection_idx);`,
 ];
 
 async function migrate() {

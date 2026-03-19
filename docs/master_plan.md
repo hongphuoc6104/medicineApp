@@ -8,6 +8,140 @@
 > [!IMPORTANT]
 > Trạng thái hiện tại của dự án tập trung Phase A. Phase B đang hold và chưa active trong luồng vận hành chính.
 
+## 0. Kế hoạch thực thi hiện tại (Hybrid 2 bước)
+
+> Cập nhật: 2026-03-18
+>
+> Mục tiêu thực tế hiện tại: test full flow từ UI -> Phase A -> tạo lịch -> nhắc uống -> xác nhận uống -> xem lịch sử.
+
+### 0.1 Phạm vi đã chốt
+
+- **Bước 1 (ưu tiên):** Offline-first + Sync server để hỗ trợ đổi máy.
+- **Bước 2 (sau ổn định):** Push server-driven làm lớp tăng cường, không thay local notifications.
+
+### 0.2 Trạng thái triển khai Bước 1
+
+- [x] Home flow tách nhánh: chưa có lịch -> CTA scan/tạo thủ công/lịch sử; có lịch -> hiển thị kế hoạch hôm nay.
+- [x] API kế hoạch hôm nay: `GET /api/plans/today/summary`.
+- [x] API log toàn cục: `GET /api/plans/logs/all`.
+- [x] Log idempotent theo `occurrenceId` để chống ghi trùng khi retry/đổi máy.
+- [x] UI xác nhận liều uống hôm nay (Đã uống/Bỏ qua) gọi `POST /api/plans/:id/log`.
+- [x] UI lịch sử quét dùng dữ liệu thật từ `GET /api/scan/history`.
+- [x] UI lịch sử uống thuốc dùng dữ liệu thật từ `GET /api/plans/logs/all`.
+- [x] UI tra cứu thuốc dùng dữ liệu thật từ `GET /api/drugs/search` + `GET /api/drugs/:name`.
+- [x] Local notification service tích hợp vào mobile (schedule sau khi tạo plan, reschedule khi tải plans).
+- [x] Test backend mở rộng cho plan routes/service (idempotent log + today summary + logs all).
+- [x] Offline queue cho log uống thuốc khi mất mạng (lưu local + auto flush khi online).
+- [x] Integration tests riêng cho `scan.routes`.
+- [x] Bắt đầu redesign UX: thêm tab `Ke hoach`, quản lý plan, review kết quả scan trước khi lập lịch.
+- [x] Bật/tắt nhắc uống hoạt động thật trong Settings.
+- [x] Chi tiết lần quét + tạo lại kế hoạch từ lịch sử quét.
+- [x] Kích hoạt lại kế hoạch đã kết thúc từ UI.
+- [x] Review scan nâng cao: lọc thuốc cần kiểm tra + tìm thuốc đúng từ DB.
+- [x] Khởi động Phase B MVP-lite: session backend + màn hình kiểm tra viên thuốc + gán thủ công.
+
+### 0.3 Bước 2 (chưa triển khai, sẽ làm sau khi Bước 1 ổn định)
+
+- [ ] Quản lý device token (đa thiết bị).
+- [ ] Reminder jobs + worker scheduler + retry.
+- [ ] Push nhắc lại sau 15 phút nếu chưa xác nhận (để tránh trùng local đúng giờ).
+- [ ] Dedupe end-to-end theo `occurrenceId` giữa push/local/log.
+- [ ] Metrics vận hành: sent/delivered/opened/confirmed.
+
+### 0.4 File đã được cập nhật trong đợt triển khai này
+
+- Backend Node:
+  - `server-node/src/config/migrate.js`
+  - `server-node/src/services/plan.service.js`
+  - `server-node/src/services/scan.service.js`
+  - `server-node/src/routes/plan.routes.js`
+  - `server-node/tests/unit/plan.service.test.js`
+  - `server-node/tests/integration/plan.routes.test.js`
+  - `server-node/tests/unit/scan.service.test.js`
+- Mobile Flutter:
+  - `mobile/lib/features/home/presentation/home_screen.dart`
+  - `mobile/lib/features/home/data/plan_notifier.dart`
+  - `mobile/lib/features/home/data/today_schedule_notifier.dart`
+  - `mobile/lib/features/home/domain/today_schedule.dart`
+  - `mobile/lib/features/create_plan/data/plan_repository.dart`
+  - `mobile/lib/features/create_plan/data/offline_dose_queue.dart`
+  - `mobile/lib/features/create_plan/domain/medication_log.dart`
+  - `mobile/lib/features/create_plan/presentation/set_schedule_screen.dart`
+  - `mobile/lib/features/history/presentation/history_screen.dart`
+  - `mobile/lib/features/history/data/scan_history_repository.dart`
+  - `mobile/lib/features/history/data/scan_history_notifier.dart`
+  - `mobile/lib/features/history/data/medication_logs_notifier.dart`
+  - `mobile/lib/features/drug/data/drug_repository.dart`
+  - `mobile/lib/features/drug/data/drug_search_notifier.dart`
+  - `mobile/lib/features/drug/presentation/drug_search_screen.dart`
+  - `mobile/lib/core/notifications/notification_service.dart`
+  - `mobile/lib/main.dart`
+  - `mobile/android/app/build.gradle.kts`
+  - `mobile/pubspec.yaml`
+
+### 0.5 Checklist demo nhanh (USB, ổn định nhất)
+
+- Chạy backend:
+  - PostgreSQL: `docker compose up -d postgres`
+  - Python API: `source venv/bin/activate && uvicorn server.main:app --host 0.0.0.0 --port 8000`
+  - Node API: `cd server-node && PORT=3001 PYTHON_API_URL=http://127.0.0.1:8000 npm run dev`
+- Cấu hình mobile qua USB reverse:
+  - `adb reverse tcp:3001 tcp:3001`
+  - `adb reverse tcp:8000 tcp:8000`
+  - `mobile/.env` dùng `API_BASE_URL=http://127.0.0.1:3001/api`
+- Chạy app:
+  - `cd mobile && flutter run -d <device_id> --dart-define=API_BASE_URL=http://127.0.0.1:3001/api`
+- Kịch bản xác nhận tính năng mới:
+  - Home có lịch -> thấy “Kế hoạch hôm nay” + nút `Đã uống/Bỏ qua`
+  - Bấm `Đã uống/Bỏ qua` khi online -> cập nhật ngay và ghi log server
+  - Tắt mạng rồi bấm lại -> app lưu offline (không mất thao tác)
+  - Bật mạng + refresh Home -> auto flush queue, hiện snackbar đã đồng bộ
+  - History tab hiển thị lịch sử quét + lịch sử uống từ API thật
+  - Drug tab search + mở chi tiết thuốc hoạt động
+
+### 0.6 Việc đang triển khai tiếp theo
+
+- UX/UI redesign theo hướng healthcare-friendly:
+  - `Home` ưu tiên `Hom nay`
+  - `Quet` tách review trước khi lưu plan
+  - `Ke hoach` trở thành khu vực CRUD chính cho medication plans
+- Khai thác thêm dữ liệu từ Phase A:
+  - `qualityState`
+  - `guidance`
+  - `mappingStatus`
+  - `matchScore`
+  - `frequency`
+  - `unresolvedCount`
+- Khởi động Phase B theo hướng MVP-lite: detector + review thủ công + lưu feedback thay vì full auto matching ngay.
+
+### 0.7 File cập nhật thêm trong đợt hoàn thiện UX + Phase B kickoff
+
+- Backend Node:
+  - `server-node/src/routes/scan.routes.js`
+  - `server-node/src/routes/pillVerification.routes.js`
+  - `server-node/src/services/scan.service.js`
+  - `server-node/src/services/pillVerification.service.js`
+  - `server-node/src/config/migrate.js`
+  - `server-node/tests/integration/scan.routes.test.js`
+  - `server-node/tests/integration/pillVerification.routes.test.js`
+- Mobile Flutter:
+  - `mobile/lib/features/history/presentation/scan_history_detail_screen.dart`
+  - `mobile/lib/features/plan/presentation/plan_list_screen.dart`
+  - `mobile/lib/features/plan/presentation/plan_detail_screen.dart`
+  - `mobile/lib/features/create_plan/presentation/scan_review_screen.dart`
+  - `mobile/lib/features/pill_verification/domain/pill_verification.dart`
+  - `mobile/lib/features/pill_verification/data/pill_verification_repository.dart`
+  - `mobile/lib/features/pill_verification/presentation/pill_verification_screen.dart`
+  - `mobile/lib/features/settings/data/settings_repository.dart`
+  - `mobile/lib/features/settings/data/settings_notifier.dart`
+  - `mobile/lib/features/create_plan/domain/scan_result.dart`
+  - `mobile/lib/features/create_plan/domain/plan.dart`
+  - `mobile/lib/features/history/data/scan_history_repository.dart`
+  - `mobile/lib/features/history/presentation/history_screen.dart`
+  - `mobile/lib/features/home/presentation/home_screen.dart`
+  - `mobile/lib/core/router/app_router.dart`
+  - `mobile/lib/shared/widgets/main_shell.dart`
+
 ## 1. Tổng Quan Dự Án
 
 ### 1.1 Mô tả

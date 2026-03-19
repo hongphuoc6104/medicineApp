@@ -20,6 +20,7 @@ import authRoutes from './routes/auth.routes.js';
 import drugRoutes from './routes/drug.routes.js';
 import scanRoutes from './routes/scan.routes.js';
 import planRoutes from './routes/plan.routes.js';
+import pillVerificationRoutes from './routes/pillVerification.routes.js';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/drugs', drugRoutes);
 app.use('/api/scan', scanRoutes);
 app.use('/api/plans', planRoutes);
+app.use('/api/pill-verifications', pillVerificationRoutes);
 
 // ── 404 ──
 app.use((req, res) => {

@@ -3,7 +3,7 @@
  */
 import request from 'supertest';
 import app from '../../src/app.js';
-import { cleanTestUsers, pool } from '../helpers/db.js';
+import { cleanTestUsers, pool, query } from '../helpers/db.js';
 import * as authService from '../../src/services/auth.service.js';
 
 const PREFIX = 'test_ci_route_plan_';
@@ -12,7 +12,14 @@ const EMAIL = `${PREFIX}user@example.com`;
 let accessToken;
 let planId;
 
+async function ensureMedicationLogOccurrenceSchema() {
+  await query('ALTER TABLE medication_logs ADD COLUMN IF NOT EXISTS occurrence_id VARCHAR(120)');
+  await query('DROP INDEX IF EXISTS uq_logs_plan_occurrence');
+  await query('CREATE UNIQUE INDEX IF NOT EXISTS uq_logs_plan_occurrence_all ON medication_logs(plan_id, occurrence_id)');
+}
+
 beforeAll(async () => {
+  await ensureMedicationLogOccurrenceSchema();
   await cleanTestUsers(PREFIX);
   await authService.register({ email: EMAIL, password: 'Test1234!', name: 'Plan Route Test' });
   const tokens = await authService.login({ email: EMAIL, password: 'Test1234!' });
@@ -133,6 +140,33 @@ describe('POST /api/plans/:id/log', () => {
     expect(res.body.data.taken_at).not.toBeNull();
   });
 
+  test('201 + idempotent: same occurrenceId updates existing log', async () => {
+    const occurrenceId = `${planId}:2026-03-10:20:00`;
+
+    const first = await request(app)
+      .post(`/api/plans/${planId}/log`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        scheduledTime: '2026-03-10T20:00:00.000Z',
+        status: 'skipped',
+        occurrenceId,
+      });
+    expect(first.status).toBe(201);
+    expect(first.body.data.status).toBe('skipped');
+
+    const second = await request(app)
+      .post(`/api/plans/${planId}/log`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        scheduledTime: '2026-03-10T20:00:00.000Z',
+        status: 'taken',
+        occurrenceId,
+      });
+    expect(second.status).toBe(201);
+    expect(second.body.data.id).toBe(first.body.data.id);
+    expect(second.body.data.status).toBe('taken');
+  });
+
   test('400: invalid status', async () => {
     const res = await request(app)
       .post(`/api/plans/${planId}/log`)
@@ -158,5 +192,31 @@ describe('DELETE /api/plans/:id', () => {
       .set('Authorization', `Bearer ${accessToken}`);
     const ids = listRes.body.data.map(p => p.id);
     expect(ids).not.toContain(planId);
+  });
+});
+
+describe('GET /api/plans/today/summary', () => {
+  test('200: returns expanded dose list for a date', async () => {
+    const res = await request(app)
+      .get('/api/plans/today/summary?date=2026-03-10')
+      .set('Authorization', `Bearer ${accessToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.date).toBe('2026-03-10');
+    expect(Array.isArray(res.body.data.doses)).toBe(true);
+  });
+});
+
+describe('GET /api/plans/logs/all', () => {
+  test('200: returns logs across all plans', async () => {
+    const res = await request(app)
+      .get('/api/plans/logs/all?page=1&limit=20')
+      .set('Authorization', `Bearer ${accessToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(Array.isArray(res.body.data)).toBe(true);
+    expect(res.body.pagination).toBeDefined();
   });
 });

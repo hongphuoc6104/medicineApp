@@ -157,4 +157,17 @@ router.get(
   })
 );
 
+/**
+ * GET /api/scan/history/:id
+ * Get detail of a single scan history item.
+ */
+router.get(
+  '/history/:id',
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const result = await scanService.getScanHistoryItem(req.user.sub, req.params.id);
+    success(res, result);
+  })
+);
+
 export default router;

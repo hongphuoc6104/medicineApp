@@ -25,12 +25,21 @@ const createPlanSchema = z.object({
   notes: z.string().max(500).optional(),
 });
 
-const updatePlanSchema = createPlanSchema.partial();
+const updatePlanSchema = createPlanSchema.partial().extend({
+  isActive: z.boolean().optional(),
+});
 
 const logSchema = z.object({
   scheduledTime: z.string().datetime(),
   status: z.enum(['taken', 'missed', 'skipped']),
+  occurrenceId: z.string().min(3).max(120).optional(),
   note: z.string().max(500).optional(),
+});
+
+const logsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 });
 
 // ── Routes ──
@@ -137,6 +146,48 @@ router.get(
       req.params.id, req.user.sub
     );
     success(res, logs);
+  })
+);
+
+/**
+ * GET /api/plans/logs?date=YYYY-MM-DD&page=1&limit=20
+ * Get medication logs across all plans for current user.
+ */
+router.get(
+  '/logs/all',
+  requireAuth,
+  validateQuery(logsQuerySchema),
+  asyncHandler(async (req, res) => {
+    const { page, limit, date } = req.query;
+    const result = await planService.getUserMedicationLogs(req.user.sub, {
+      page,
+      limit,
+      date: date || null,
+    });
+
+    paginated(res, {
+      items: result.logs,
+      total: result.total,
+      page,
+      limit,
+    });
+  })
+);
+
+/**
+ * GET /api/plans/today?date=YYYY-MM-DD
+ * Get expanded doses for today's schedule.
+ */
+router.get(
+  '/today/summary',
+  requireAuth,
+  validateQuery(z.object({
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  })),
+  asyncHandler(async (req, res) => {
+    const date = typeof req.query.date === 'string' ? req.query.date : null;
+    const result = await planService.getTodaySchedule(req.user.sub, { date });
+    success(res, result);
   })
 );
 
