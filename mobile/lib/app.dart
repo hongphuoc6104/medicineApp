@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/data/auth_notifier.dart';
 
 /// Root app widget with Riverpod + GoRouter + healthcare light theme.
 class MedicineApp extends ConsumerWidget {
@@ -10,6 +11,7 @@ class MedicineApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(authNotifierProvider);
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
