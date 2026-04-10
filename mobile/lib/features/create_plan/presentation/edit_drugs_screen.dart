@@ -4,10 +4,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../domain/plan.dart';
+import 'widgets/drug_entry_sheet.dart';
 
-/// Screen: edit drug list after scan/manual → next step: set schedule.
+/// Screen: Nhập tay hoặc chỉnh sửa nâng cao danh sách thuốc → lập lịch.
+/// Vai trò còn lại: nhập tay từ đầu (từ /create/edit không có initial drugs)
+/// hoặc chỉnh sửa nâng cao trước khi lập lịch.
 class EditDrugsScreen extends ConsumerStatefulWidget {
-  /// Pre-filled drugs from OCR or empty for manual input.
+  /// Pre-filled drugs từ OCR hoặc trống cho nhập tay.
   final List<PlanDrugItem> initialDrugs;
 
   const EditDrugsScreen({super.key, this.initialDrugs = const []});
@@ -18,7 +21,6 @@ class EditDrugsScreen extends ConsumerStatefulWidget {
 
 class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
   late List<PlanDrugItem> _drugs;
-  final _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -26,115 +28,35 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
     _drugs = List.from(widget.initialDrugs);
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
+  // -------------------------------------------------------------------------
+  // Add drug — with DB search suggestion
+  // -------------------------------------------------------------------------
+
+  Future<void> _addDrug() async {
+    final result = await showModalBottomSheet<PlanDrugItem?>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => DrugEntrySheet(ref: ref),
+    );
+    if (result != null) {
+      setState(() => _drugs.add(result));
+    }
   }
 
-  void _addDrug() {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        final nameCtrl = TextEditingController();
-        final dosageCtrl = TextEditingController();
-        return AlertDialog(
-          title: const Text('Thêm thuốc'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameCtrl,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Tên thuốc *',
-                  prefixIcon: Icon(Icons.medication),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: dosageCtrl,
-                decoration: const InputDecoration(
-                  hintText: 'Liều (VD: 500mg)',
-                  prefixIcon: Icon(Icons.scale),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Hủy'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final name = nameCtrl.text.trim();
-                if (name.isEmpty) return;
-                setState(() {
-                  _drugs.add(PlanDrugItem(
-                    name: name,
-                    dosage: dosageCtrl.text.trim(),
-                  ));
-                });
-                Navigator.pop(ctx);
-              },
-              child: const Text('Thêm'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // -------------------------------------------------------------------------
+  // Edit drug — with DB search suggestion
+  // -------------------------------------------------------------------------
 
-  void _editDrug(int index) {
-    final drug = _drugs[index];
-    final nameCtrl = TextEditingController(text: drug.name);
-    final dosageCtrl = TextEditingController(text: drug.dosage);
-
-    showDialog(
+  Future<void> _editDrug(int index) async {
+    final current = _drugs[index];
+    final result = await showModalBottomSheet<PlanDrugItem?>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Sửa thuốc'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameCtrl,
-              decoration: const InputDecoration(
-                hintText: 'Tên thuốc',
-                prefixIcon: Icon(Icons.medication),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: dosageCtrl,
-              decoration: const InputDecoration(
-                hintText: 'Liều (VD: 500mg)',
-                prefixIcon: Icon(Icons.scale),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Hủy'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final name = nameCtrl.text.trim();
-              if (name.isEmpty) return;
-              setState(() {
-                _drugs[index].name = name;
-                _drugs[index].dosage = dosageCtrl.text.trim();
-              });
-              Navigator.pop(ctx);
-            },
-            child: const Text('Lưu'),
-          ),
-        ],
-      ),
+      isScrollControlled: true,
+      builder: (ctx) => DrugEntrySheet(ref: ref, initial: current),
     );
+    if (result != null) {
+      setState(() => _drugs[index] = result);
+    }
   }
 
   void _removeDrug(int index) {
@@ -154,6 +76,7 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addDrug,
         backgroundColor: AppColors.primary,
+        tooltip: 'Thêm thuốc',
         child: const Icon(Icons.add),
       ),
       body: Column(
@@ -176,6 +99,9 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
               onPressed: _drugs.isEmpty
                   ? null
                   : () => context.go('/create/schedule', extra: _drugs),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(50),
+              ),
               child: Text('Tiếp tục — ${_drugs.length} thuốc'),
             ),
           ),
@@ -197,7 +123,7 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Bấm + để thêm thuốc thủ công',
+            'Bấm + để thêm thuốc',
             style: TextStyle(color: AppColors.textMuted, fontSize: 13),
           ),
         ],
@@ -215,9 +141,15 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
           backgroundColor: AppColors.primary.withValues(alpha: 0.15),
           child: Icon(Icons.medication, color: AppColors.primary, size: 20),
         ),
-        title: Text(drug.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(
+          drug.name,
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
         subtitle: drug.dosage.isNotEmpty
-            ? Text(drug.dosage, style: TextStyle(color: AppColors.textSecondary))
+            ? Text(
+                drug.dosage,
+                style: TextStyle(color: AppColors.textSecondary),
+              )
             : null,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -227,7 +159,11 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
               onPressed: () => _editDrug(index),
             ),
             IconButton(
-              icon: Icon(Icons.delete_outline, size: 20, color: AppColors.error),
+              icon: Icon(
+                Icons.delete_outline,
+                size: 20,
+                color: AppColors.error,
+              ),
               onPressed: () => _removeDrug(index),
             ),
           ],

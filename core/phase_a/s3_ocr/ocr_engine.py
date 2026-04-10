@@ -373,32 +373,88 @@ class HybridOcrModule(BaseOCR):
     # Use BaseOCR.save_results() — no longer a stub
 
 
-# ── Group by STT (thay thế merge_into_lines) ─────────────────────────────────
+# ── Group by STT: Gộp theo cột rồi theo dòng (Dynamic Columns) ─────────────────
+
+def _detect_dynamic_col_bounds(blocks, num_cols=4):
+    """
+    Tự động tìm (num_cols - 1) ranh giới cột dựa trên khoảng trống (gap)
+    lớn nhất theo trục X. (Khắc phục việc hardcode tỉ lệ cứng).
+    """
+    import logging
+    logger = logging.getLogger(__name__)
+
+    if len(blocks) < num_cols:
+        return None
+
+    # Thu thập tất cả hộp bao (bounding boxes)
+    all_x_bounds = []
+    for b in blocks:
+        xs = [pt[0] for pt in b.bbox]
+        min_x = min(xs)
+        max_x = max(xs)
+        # Chỉ xét block ngắn (ví dụ <500px) để dò gap tốt hơn
+        if max_x - min_x < 500:
+            all_x_bounds.append((min_x, max_x))
+
+    if len(all_x_bounds) < num_cols:
+        return None
+
+    # Sắp xếp các đoạn X theo điểm bắt đầu
+    all_x_bounds.sort(key=lambda x: x[0])
+
+    gaps = []
+    current_max_x = all_x_bounds[0][1]
+
+    for i in range(1, len(all_x_bounds)):
+        next_min_x, next_max_x = all_x_bounds[i]
+
+        # Có khoảng trống
+        if next_min_x > current_max_x:
+            gap_size = next_min_x - current_max_x
+            gap_center = (next_min_x + current_max_x) / 2.0
+            gaps.append((gap_size, gap_center))
+
+        current_max_x = max(current_max_x, next_max_x)
+
+    # Lấy top N gaps
+    gaps.sort(key=lambda x: x[0], reverse=True)
+    if len(gaps) < num_cols - 1:
+        return None
+
+    top_gaps = [g[1] for g in gaps[:num_cols - 1]]
+    top_gaps.sort()
+    logger.debug(f"Dynamic Column Bounds (Absolute X): {top_gaps}")
+    return top_gaps
+
 
 def group_by_stt(blocks: list) -> list:
     """
-    Gộp các TextBlock bằng cách định vị số STT làm phân vùng (Band) theo Y-axis.
+    Gộp TextBlock thành các dòng hoàn chỉnh với thứ tự ngữ nghĩa đúng.
 
-    Thuật toán:
-    1. Tìm Anchor: các block bắt đầu bằng số, nằm sát lề trái.
-    2. Kẻ Boundary: điểm giữa Y của 2 Anchor liên tiếp.
-    3. Gộp: mọi block lọt vào band nào → gộp thành 1 TextBlock.
+    Thứ tự đầu ra mỗi ô thuốc:
+        STT | [Tên thuốc ↓ Hướng dẫn dùng] | Số lượng | Đơn vị
+
+    Thuật toán (Dynamic):
+        1. Tìm ranh giới cột bằng cách nhận diện các khoảng trống lớn trên trục X.
+           (Nếu thất bại do ảnh mờ/lộn xộn, fallback về tỉ lệ tương đối 0.13, 0.75, 0.88).
+        2. Tìm Anchor STT (cột 1 trái cùng, là số nguyên thuần).
+        3. Phân vùng bands theo Y-midpoint giữa các Anchor.
+        4. Trong mỗi band: phân block vào từng cột.
+        5. Trong mỗi cột: sort từ trên xuống dưới (Y).
+        6. Ghép các cột từ trái sang phải, phân cách bằng " | ".
 
     Args:
         blocks: Danh sách TextBlock từ OCR.
     Returns:
-        Danh sách TextBlock đã gộp theo STT.
+        Danh sách TextBlock đã gộp theo thứ tự ngữ nghĩa đúng.
     """
     import re
     from core.phase_a.s3_ocr.base import TextBlock
+    import logging
+    logger = logging.getLogger(__name__)
 
     if not blocks:
         return []
-
-    def _bbox_bounds(bbox):
-        xs = [pt[0] for pt in bbox]
-        ys = [pt[1] for pt in bbox]
-        return min(xs), min(ys), max(xs), max(ys)
 
     def _y_center(bbox):
         ys = [pt[1] for pt in bbox]
@@ -408,36 +464,48 @@ def group_by_stt(blocks: list) -> list:
         xs = [pt[0] for pt in bbox]
         return (min(xs) + max(xs)) / 2.0
 
-    # Chiều rộng bảng
-    all_x = []
-    for b in blocks:
-        all_x.extend([pt[0] for pt in b.bbox])
-    min_x_board = min(all_x)
-    max_x_board = max(all_x)
-    board_width = max(max_x_board - min_x_board, 1)
+    all_x = [pt[0] for b in blocks for pt in b.bbox]
+    min_x = min(all_x)
+    max_x = max(all_x)
+    board_width = max(max_x - min_x, 1)
+
+    # Thử lấy Absolute Column Bounds động
+    abs_col_bounds = _detect_dynamic_col_bounds(blocks, num_cols=4)
+
+    def _col_idx(block):
+        if abs_col_bounds:
+            xc = _x_center(block.bbox)
+            for i, bound in enumerate(abs_col_bounds):
+                if xc <= bound:
+                    return i
+            return len(abs_col_bounds)
+        else:
+            # Fallback tương đối (v2 cũ)
+            rx = (_x_center(block.bbox) - min_x) / board_width
+            FALLBACK_BOUNDS = [0.13, 0.75, 0.88]
+            for i, bnd in enumerate(FALLBACK_BOUNDS):
+                if rx <= bnd:
+                    return i
+            return len(FALLBACK_BOUNDS)
 
     # 1. Tìm Anchor STT
-    anchors = []
-    stt_pattern = re.compile(r"^\d+")
-    for b in blocks:
-        xc = _x_center(b.bbox)
-        if (xc - min_x_board) / board_width <= 0.35:
-            if stt_pattern.match(b.text.strip()):
-                anchors.append(b)
+    stt_re = re.compile(r"^\d+$")
+    anchors = [
+        b for b in blocks
+        if _col_idx(b) == 0 and stt_re.match(b.text.strip())
+    ]
     anchors.sort(key=lambda b: _y_center(b.bbox))
 
     if not anchors:
-        logger.warning("group_by_stt: No STT anchors found, fallback to original blocks.")
+        logger.warning("group_by_stt: Không tìm thấy STT anchor → trả về blocks gốc.")
         return blocks
 
-    # 2. Xây dựng Boundaries
-    boundaries = []
-    for i in range(len(anchors) - 1):
-        mid_y = (_y_center(anchors[i].bbox) + _y_center(anchors[i+1].bbox)) / 2.0
-        boundaries.append(mid_y)
-
-    # 3. Phân vùng bands
-    bands = [[] for _ in range(len(anchors))]
+    # 2. Xây Boundaries và Bands
+    boundaries = [
+        (_y_center(anchors[i].bbox) + _y_center(anchors[i + 1].bbox)) / 2.0
+        for i in range(len(anchors) - 1)
+    ]
+    bands: list[list] = [[] for _ in range(len(anchors))]
     headers = []
 
     for b in blocks:
@@ -454,22 +522,32 @@ def group_by_stt(blocks: list) -> list:
         if not assigned:
             bands[-1].append(b)
 
-    # 4. Gộp text trong mỗi band
+    # 3-5. Gộp
     merged = []
-
     headers.sort(key=lambda b: _y_center(b.bbox))
     merged.extend(headers)
 
+    num_cols = len(abs_col_bounds) + 1 if abs_col_bounds else 4
     for band in bands:
         if not band:
             continue
-        band.sort(key=lambda b: (_y_center(b.bbox) * 0.1) + _x_center(b.bbox))
-        merged_text = " ".join(b.text.strip() for b in band)
-        avg_conf = sum(b.confidence for b in band) / len(band)
 
-        all_pts = []
+        col_groups: dict[int, list] = {i: [] for i in range(num_cols)}
         for b in band:
-            all_pts.extend(b.bbox)
+            col_groups[_col_idx(b)].append(b)
+
+        for cg in col_groups.values():
+            cg.sort(key=lambda b: _y_center(b.bbox))
+
+        parts = []
+        for col_i in sorted(col_groups.keys()):
+            col_texts = [b.text.strip() for b in col_groups[col_i] if b.text.strip()]
+            if col_texts:
+                parts.append(" ".join(col_texts))
+
+        merged_text = " | ".join(parts)
+
+        all_pts = [pt for b in band for pt in b.bbox]
         xs = [pt[0] for pt in all_pts]
         ys = [pt[1] for pt in all_pts]
         merged_bbox = [
@@ -478,13 +556,16 @@ def group_by_stt(blocks: list) -> list:
             [max(xs), max(ys)],
             [min(xs), max(ys)],
         ]
+        avg_conf = sum(b.confidence for b in band) / len(band)
         merged.append(TextBlock(
             text=merged_text.strip(),
             confidence=round(avg_conf, 4),
             bbox=merged_bbox,
         ))
 
+    mode = "Dynamic" if abs_col_bounds else "StaticFallback"
     logger.info(
-        f"group_by_stt: {len(blocks)} blocks → {len(merged)} lines (Found {len(anchors)} STTs)"
+        f"group_by_stt [{mode}]: {len(blocks)} blocks → {len(merged)} lines "
+        f"(Found {len(anchors)} STTs)"
     )
     return merged

@@ -68,6 +68,11 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
               notes: d.notes,
               takenAt: d.takenAt,
               note: d.note,
+              hasReferenceProfile: d.hasReferenceProfile,
+              referenceProfileStatus: d.referenceProfileStatus,
+              verificationReady: d.verificationReady,
+              expectedMedications: d.expectedMedications,
+              missingReferenceDrugNames: d.missingReferenceDrugNames,
             );
           }
           return d;

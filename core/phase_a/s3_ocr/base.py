@@ -70,25 +70,29 @@ class BaseOCR(ABC):
         for d in [det_dir, txt_dir, json_dir]:
             os.makedirs(d, exist_ok=True)
 
-        # --- 1. Ảnh detection: vẽ bbox và text ---
+        # --- 1. Ảnh detection: vẽ bbox và text tiếng Việt nổi bật ---
         from PIL import Image, ImageDraw, ImageFont
         
-        # Chuyển từ BGR (OpenCV) sang RGB (PIL)
+        # Chuyển BGR sang RGB cho PIL
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         pil_img = Image.fromarray(image_rgb)
-        draw = ImageDraw.Draw(pil_img)
+        draw = ImageDraw.Draw(pil_img, "RGBA") # Hỗ trợ nền trong suốt (alpha)
         
-        # Tìm font hỗ trợ tiếng Việt
+        # Tự động tính kích thước chữ dựa trên chiều cao ảnh để dễ đọc (to hơn mức cũ một chút)
+        h, w = image.shape[:2]
+        font_size = max(16, int(h / 35)) # Giới hạn min là 16px, tỉ lệ 1/35 ảnh
+        
+        # Tìm font tiếng Việt
         font_paths = [
             "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
             "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
-            "Arial.ttf" # Fallback
+            "Arial.ttf"
         ]
         font = None
         for path in font_paths:
             if os.path.exists(path):
                 try:
-                    font = ImageFont.truetype(path, 20) # Font size 20 tương ứng font_scale~0.7
+                    font = ImageFont.truetype(path, font_size)
                     break
                 except:
                     continue
@@ -98,21 +102,16 @@ class BaseOCR(ABC):
         # Vẽ từng block
         for block in result.text_blocks:
             if block.bbox:
-                pts = np.array(block.bbox, dtype=np.int32)
-                # OpenCV dùng để vẽ polyline cho nhanh và nét
-                # Ta vẫn có thể vẽ bằng PIL nhưng draw.polygon yêu cầu list phẳng
-                # Để giữ các nét vẽ cũ, ta sẽ vẽ bbox bằng cv2 trước rồi mới đưa qua PIL ghi chữ
-                # Hoặc vẽ thẳng bằng PIL ở đây:
+                # Vẽ khung viền bbox màu xanh mạ tươi (0, 255, 100) cho nổi bật trên tài liệu
                 flat_pts = [tuple(p) for p in block.bbox]
-                draw.polygon(flat_pts, outline=(255, 0, 0), width=3)
+                draw.polygon(flat_pts, outline=(0, 255, 100), width=3)
                 
-                # Ghi text tiếng Việt
+                # Hiển thị toàn bộ chuỗi text được đọc ra (không cắt bớt)
+                label = f"{block.text}"
                 x, y = block.bbox[0]
-                label = f"{block.text[:30]}"
                 
-                # Tính toán kích thước nền text
+                # Lấy kích thước đoạn text
                 try:
-                    # PIL mới dùng getbbox, PIL cũ dùng textsize
                     if hasattr(draw, 'textbbox'):
                         left, top, right, bottom = draw.textbbox((x, y), label, font=font)
                         w_text = right - left
@@ -120,14 +119,18 @@ class BaseOCR(ABC):
                     else:
                         w_text, h_text = draw.textsize(label, font=font)
                 except:
-                    w_text, h_text = len(label)*12, 20
+                    w_text, h_text = len(label) * (font_size // 2), font_size
+                    
+                # Vẽ khối nền cho chữ: Nền đen bán trong suốt để nổi bật trên mọi màu giấy trắng/xám
+                # RGB: 0, 0, 0, Alpha: 180 (Khoảng 70% opacity)
+                padding = 4
+                bg_box = [x, y - h_text - padding*2, x + w_text + padding*2, y]
+                draw.rectangle(bg_box, fill=(0, 0, 0, 180))
                 
-                # Vẽ nền đỏ cho chữ
-                draw.rectangle([x, y - h_text - 5, x + w_text + 4, y], fill=(255, 0, 0))
-                # Ghi chữ trắng
-                draw.text((x + 2, y - h_text - 4), label, font=font, fill=(255, 255, 255))
+                # Viết chữ tiếng Việt màu Trắng viền siêu nhẹ 
+                draw.text((x + padding, y - h_text - padding), label, font=font, fill=(255, 255, 255, 255))
 
-        # Chuyển ngược lại BGR để cv2.imwrite
+        # Chuyển ngược lại BGR để thiết lập lưu file
         final_img = cv2.cvtColor(np.array(pil_img), cv2.COLOR_RGB2BGR)
         cv2.imwrite(os.path.join(det_dir, f"{stem}_det.png"), final_img)
 

@@ -41,6 +41,19 @@ def test_ocr_detailed(image_path, out_dir):
     t_det = time.time() - t1
     print(f"    ✅ Done in {t_det:.1f}s | Found {len(polys)} regions")
     
+    # Visualization: Chỉ vẽ polygons (Detections)
+    det_img = img.copy()
+    for i, poly in enumerate(polys):
+        pts = np.array(poly, np.int32).reshape((-1, 1, 2))
+        cv2.polylines(det_img, [pts], isClosed=True, color=(0, 255, 0), thickness=2)
+        # Ghi số thứ tự vùng
+        x, y = int(poly[0][0]), int(poly[0][1])
+        cv2.putText(det_img, str(i+1), (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+    
+    det_vis_path = os.path.join(out_dir, "step-3_only_detection.png")
+    cv2.imwrite(det_vis_path, det_img)
+    print(f"    ✅ Saved detection visualization: {det_vis_path}")
+
     for i, poly in enumerate(polys[:5]):
         coords = ",".join([f"{int(p[0])},{int(p[1])}" for p in poly])
         print(f"      [D] Region {i+1:02d}: [{coords}]")

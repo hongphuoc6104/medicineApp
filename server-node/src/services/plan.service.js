@@ -324,6 +324,7 @@ export async function getTodaySchedule(userId, { date = null } = {}) {
 
   const doses = [];
   const occurrenceIds = [];
+  const planIds = [];
 
   for (const plan of plans) {
     const times = Array.isArray(plan.times) ? plan.times : [];
@@ -335,6 +336,7 @@ export async function getTodaySchedule(userId, { date = null } = {}) {
       const scheduledTime = `${dateKey}T${hhmm}:00.000Z`;
       const occurrenceId = `${plan.id}:${dateKey}:${hhmm}`;
       occurrenceIds.push(occurrenceId);
+      planIds.push(plan.id);
       doses.push({
         occurrenceId,
         planId: plan.id,
@@ -349,6 +351,85 @@ export async function getTodaySchedule(userId, { date = null } = {}) {
         takenAt: null,
         note: null,
       });
+    }
+  }
+
+  let referenceRows = { rows: [] };
+  if (planIds.length > 0) {
+    try {
+      referenceRows = await query(
+        `SELECT prs.plan_id,
+                prs.status,
+                COUNT(pri.id) AS image_count,
+                COUNT(pri.id) FILTER (WHERE pri.confirmed_by_user = true) AS confirmed_count
+         FROM pill_reference_sets prs
+         LEFT JOIN pill_reference_images pri
+           ON pri.reference_set_id = prs.id
+         WHERE prs.user_id = $1
+           AND prs.plan_id = ANY($2::uuid[])
+         GROUP BY prs.plan_id, prs.status`,
+        [userId, Array.from(new Set(planIds))]
+      );
+    } catch (err) {
+      if (err?.code !== '42P01') {
+        throw err;
+      }
+      referenceRows = { rows: [] };
+    }
+  }
+
+  const referenceByPlan = new Map(
+    referenceRows.rows.map((row) => [
+      row.plan_id,
+      {
+        status: row.status,
+        imageCount: Number.parseInt(row.image_count || 0, 10),
+        confirmedCount: Number.parseInt(row.confirmed_count || 0, 10),
+      },
+    ])
+  );
+
+  const dosesBySlot = new Map();
+  for (const dose of doses) {
+    const slotKey = dose.scheduledTime;
+    if (!dosesBySlot.has(slotKey)) {
+      dosesBySlot.set(slotKey, []);
+    }
+    dosesBySlot.get(slotKey).push(dose);
+  }
+
+  for (const slotDoses of dosesBySlot.values()) {
+    const expectedMedications = slotDoses.map((dose) => ({
+      planId: dose.planId,
+      drugName: dose.drugName,
+      dosage: dose.dosage,
+      pillsPerDose: dose.pillsPerDose,
+      occurrenceId: dose.occurrenceId,
+    }));
+
+    const missingReferenceDrugNames = expectedMedications
+      .filter((med) => {
+        const ref = referenceByPlan.get(med.planId);
+        return !ref || ref.confirmedCount <= 0;
+      })
+      .map((med) => med.drugName);
+
+    const totalExpected = expectedMedications.length;
+    const withReference = totalExpected - missingReferenceDrugNames.length;
+    const slotReferenceStatus = withReference === 0
+      ? 'missing'
+      : withReference === totalExpected
+        ? 'ready'
+        : 'partial';
+    const verificationReady = missingReferenceDrugNames.length === 0;
+
+    for (const dose of slotDoses) {
+      const selfReference = referenceByPlan.get(dose.planId);
+      dose.hasReferenceProfile = Boolean(selfReference && selfReference.confirmedCount > 0);
+      dose.referenceProfileStatus = slotReferenceStatus;
+      dose.verificationReady = verificationReady;
+      dose.expectedMedications = expectedMedications;
+      dose.missingReferenceDrugNames = missingReferenceDrugNames;
     }
   }
 

@@ -1,3 +1,28 @@
+class DoseExpectedMedication {
+  const DoseExpectedMedication({
+    required this.planId,
+    required this.drugName,
+    this.occurrenceId,
+    this.dosage,
+    this.pillsPerDose,
+  });
+
+  final String planId;
+  final String drugName;
+  final String? occurrenceId;
+  final String? dosage;
+  final int? pillsPerDose;
+
+  factory DoseExpectedMedication.fromJson(Map<String, dynamic> json) =>
+      DoseExpectedMedication(
+        planId: json['planId'] as String? ?? '',
+        drugName: json['drugName'] as String? ?? '',
+        occurrenceId: json['occurrenceId'] as String?,
+        dosage: json['dosage'] as String?,
+        pillsPerDose: json['pillsPerDose'] as int?,
+      );
+}
+
 class TodayDose {
   const TodayDose({
     required this.occurrenceId,
@@ -11,6 +36,11 @@ class TodayDose {
     this.notes,
     this.takenAt,
     this.note,
+    this.hasReferenceProfile = false,
+    this.referenceProfileStatus,
+    this.verificationReady = false,
+    this.expectedMedications = const [],
+    this.missingReferenceDrugNames = const [],
   });
 
   final String occurrenceId;
@@ -24,6 +54,11 @@ class TodayDose {
   final String? notes;
   final String? takenAt;
   final String? note;
+  final bool hasReferenceProfile;
+  final String? referenceProfileStatus;
+  final bool verificationReady;
+  final List<DoseExpectedMedication> expectedMedications;
+  final List<String> missingReferenceDrugNames;
 
   factory TodayDose.fromJson(Map<String, dynamic> json) => TodayDose(
     occurrenceId: json['occurrenceId'] as String? ?? '',
@@ -37,6 +72,19 @@ class TodayDose {
     notes: json['notes'] as String?,
     takenAt: json['takenAt'] as String?,
     note: json['note'] as String?,
+    hasReferenceProfile: json['hasReferenceProfile'] as bool? ?? false,
+    referenceProfileStatus: json['referenceProfileStatus'] as String?,
+    verificationReady: json['verificationReady'] as bool? ?? false,
+    expectedMedications:
+        (json['expectedMedications'] as List<dynamic>? ?? const [])
+            .map(
+              (e) => DoseExpectedMedication.fromJson(e as Map<String, dynamic>),
+            )
+            .toList(),
+    missingReferenceDrugNames:
+        (json['missingReferenceDrugNames'] as List<dynamic>? ?? const [])
+            .map((e) => e.toString())
+            .toList(),
   );
 }
 

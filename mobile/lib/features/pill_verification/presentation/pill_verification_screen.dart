@@ -99,19 +99,41 @@ class _PillVerificationScreenState
 
   Future<void> _assign(PillDetectionItem item, String value) async {
     if (_session == null) return;
-    setState(() => _isSubmitting = true);
+
+    setState(() {
+      _isSubmitting = true;
+      _error = null;
+    });
+
     try {
       final repo = ref.read(pillVerificationRepositoryProvider);
-      final status = value == '__unknown__'
+      final status = value == '__uncertain__'
+          ? 'uncertain'
+          : value == '__unknown__'
           ? 'unknown'
           : value == '__extra__'
           ? 'extra'
           : 'assigned';
+
+      String? assignedDrugName;
+      String? assignedPlanId;
+      if (status == 'assigned') {
+        final expected = _session!.expectedMedications.firstWhere(
+          (med) => med.drugName == value,
+          orElse: () => const ExpectedMedication(planId: '', drugName: ''),
+        );
+        assignedDrugName = expected.drugName.isNotEmpty
+            ? expected.drugName
+            : value;
+        assignedPlanId = expected.planId.isNotEmpty ? expected.planId : null;
+      }
+
       final session = await repo.assignDetection(
         sessionId: _session!.sessionId,
         detectionIdx: item.detectionIdx,
         status: status,
-        assignedDrugName: status == 'assigned' ? value : null,
+        assignedPlanId: assignedPlanId,
+        assignedDrugName: assignedDrugName,
       );
       setState(() {
         _session = session;
@@ -143,13 +165,13 @@ class _PillVerificationScreenState
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Da kiem tra vien thuoc va danh dau da uong'),
+          content: Text('Đã xác minh viên thuốc và đánh dấu đã uống'),
         ),
       );
       context.go('/home');
     } on DioException catch (e) {
       setState(() {
-        _error = e.message ?? 'Khong the xac nhan';
+        _error = e.message ?? 'Không thể xác nhận';
         _isSubmitting = false;
       });
     } catch (e) {
@@ -160,6 +182,44 @@ class _PillVerificationScreenState
     }
   }
 
+  String _detectionTitle(PillDetectionItem item) {
+    if (item.assignedDrugName != null && item.assignedDrugName!.isNotEmpty) {
+      return item.assignedDrugName!;
+    }
+    return 'Viên ${item.detectionIdx + 1}';
+  }
+
+  List<DropdownMenuItem<String>> _buildAssignmentItems(
+    PillDetectionItem item,
+    List<ExpectedMedication> expected,
+  ) {
+    final fromSuggestions = item.suggestions
+        .map((s) => s['drugName']?.toString() ?? '')
+        .where((name) => name.isNotEmpty)
+        .toSet();
+
+    final expectedNames = expected.map((med) => med.drugName).toSet();
+    final mergedNames = <String>{...fromSuggestions, ...expectedNames};
+
+    return [
+      ...mergedNames.map(
+        (name) => DropdownMenuItem<String>(value: name, child: Text(name)),
+      ),
+      const DropdownMenuItem<String>(
+        value: '__uncertain__',
+        child: Text('Không chắc viên này là thuốc nào'),
+      ),
+      const DropdownMenuItem<String>(
+        value: '__unknown__',
+        child: Text('Viên lạ'),
+      ),
+      const DropdownMenuItem<String>(
+        value: '__extra__',
+        child: Text('Viên dư so với liều này'),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -168,9 +228,9 @@ class _PillVerificationScreenState
 
     if (_session == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Kiem tra vien thuoc')),
+        appBar: AppBar(title: const Text('Xác minh viên thuốc')),
         body: Center(
-          child: Text(_error ?? 'Khong khoi tao duoc phien kiem tra'),
+          child: Text(_error ?? 'Không khởi tạo được phiên xác minh'),
         ),
       );
     }
@@ -179,7 +239,7 @@ class _PillVerificationScreenState
     final detections = _session!.detections;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Anh vien thuoc')),
+      appBar: AppBar(title: const Text('Ảnh viên thuốc')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
         children: [
@@ -202,7 +262,7 @@ class _PillVerificationScreenState
                 ),
                 const SizedBox(height: 6),
                 const Text(
-                  'Xac nhan loai thuoc va so luong ban dang uong cho lan nay.',
+                  'Xác minh đúng loại thuốc và số viên bạn chuẩn bị uống cho khung giờ này.',
                   style: TextStyle(color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: 14),
@@ -211,19 +271,38 @@ class _PillVerificationScreenState
                   runSpacing: 8,
                   children: [
                     _SummaryChip(
-                      label: 'Detections',
+                      label: 'Đã phát hiện',
                       value: '${_session!.summary.totalDetections}',
                     ),
                     _SummaryChip(
-                      label: 'Assigned',
+                      label: 'Đã gán',
                       value: '${_session!.summary.assigned}',
                     ),
                     _SummaryChip(
-                      label: 'Missing',
+                      label: 'Không chắc',
+                      value: '${_session!.summary.uncertain}',
+                    ),
+                    _SummaryChip(
+                      label: 'Thiếu',
                       value: '${_session!.summary.missingExpected}',
                     ),
                   ],
                 ),
+                if (_session!.referenceCoverage.hasMissing) ...[
+                  const SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.warning.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'Thiếu ảnh mẫu cho: ${_session!.referenceCoverage.missingDrugNames.join(', ')}',
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -244,7 +323,7 @@ class _PillVerificationScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Xac nhan loai thuoc va so luong ban dang uong',
+                  'Rà soát kết quả xác minh',
                   style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
                 ),
                 const SizedBox(height: 14),
@@ -254,18 +333,21 @@ class _PillVerificationScreenState
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 18),
                     child: Text(
-                      'Chua co vien nao duoc detect. Hay chup anh de bat dau.',
+                      'Chưa có viên nào được phát hiện. Hãy chụp ảnh để bắt đầu.',
                     ),
                   )
                 else
                   ...detections.map((item) {
                     final currentValue = item.assignmentStatus == 'assigned'
                         ? item.assignedDrugName
+                        : item.assignmentStatus == 'uncertain'
+                        ? '__uncertain__'
                         : item.assignmentStatus == 'unknown'
                         ? '__unknown__'
                         : item.assignmentStatus == 'extra'
                         ? '__extra__'
                         : null;
+
                     return Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       padding: const EdgeInsets.all(12),
@@ -280,10 +362,7 @@ class _PillVerificationScreenState
                             children: [
                               Expanded(
                                 child: Text(
-                                  currentValue != null &&
-                                          !currentValue.startsWith('__')
-                                      ? currentValue
-                                      : 'Vien ${item.detectionIdx + 1}',
+                                  _detectionTitle(item),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w800,
                                   ),
@@ -294,8 +373,8 @@ class _PillVerificationScreenState
                                 child: Text(
                                   expected.isNotEmpty &&
                                           expected.first.pillsPerDose != null
-                                      ? '${expected.first.pillsPerDose} vien'
-                                      : '1 vien',
+                                      ? '${expected.first.pillsPerDose} viên'
+                                      : '1 viên',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: AppColors.textSecondary,
@@ -310,7 +389,7 @@ class _PillVerificationScreenState
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 alignment: Alignment.center,
-                                child: Text('${item.detectionIdx + 1}'),
+                                child: Text(item.confidence.toStringAsFixed(2)),
                               ),
                               IconButton(
                                 onPressed: _isSubmitting
@@ -326,25 +405,8 @@ class _PillVerificationScreenState
                           const SizedBox(height: 10),
                           DropdownButtonFormField<String>(
                             initialValue: currentValue,
-                            items: [
-                              ...expected.map(
-                                (med) => DropdownMenuItem<String>(
-                                  value: med.drugName,
-                                  child: Text(med.drugName),
-                                ),
-                              ),
-                              const DropdownMenuItem<String>(
-                                value: '__unknown__',
-                                child: Text('Khong chac'),
-                              ),
-                              const DropdownMenuItem<String>(
-                                value: '__extra__',
-                                child: Text(
-                                  'Vien thua / khong thuoc trong lieu nay',
-                                ),
-                              ),
-                            ],
-                            hint: const Text('Gan vien nay'),
+                            items: _buildAssignmentItems(item, expected),
+                            hint: const Text('Gán viên này'),
                             onChanged: _isSubmitting
                                 ? null
                                 : (value) {
@@ -364,7 +426,7 @@ class _PillVerificationScreenState
                             ? null
                             : () => _pickAndUpload(ImageSource.camera),
                         icon: const Icon(Icons.camera_alt_outlined),
-                        label: const Text('Chup lai'),
+                        label: const Text('Chụp lại ảnh'),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -383,7 +445,7 @@ class _PillVerificationScreenState
                                 ),
                               )
                             : const Icon(Icons.verified_outlined),
-                        label: const Text('Xac nhan'),
+                        label: const Text('Xác nhận đã uống'),
                       ),
                     ),
                   ],
@@ -433,7 +495,7 @@ class _PillVerificationScreenState
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 24),
                       child: Text(
-                        'Chup anh vien thuoc cho lan uong nay',
+                        'Chụp ảnh viên thuốc cho lần uống này',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white70,
@@ -478,7 +540,7 @@ class _PillVerificationScreenState
                       ? null
                       : () => _pickAndUpload(ImageSource.gallery),
                   icon: const Icon(Icons.upload_file_rounded),
-                  label: const Text('Tai len'),
+                  label: const Text('Tải lên'),
                 ),
               ),
               const SizedBox(width: 14),
@@ -509,13 +571,13 @@ class _PillVerificationScreenState
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                          'Giup giu cac vien thuoc tach nhau va du anh sang.',
+                          'Giữ các viên thuốc tách nhau và chụp ở nơi đủ ánh sáng.',
                         ),
                       ),
                     );
                   },
                   icon: const Icon(Icons.help_outline_rounded),
-                  label: const Text('Huong dan'),
+                  label: const Text('Hướng dẫn'),
                 ),
               ),
             ],
@@ -553,7 +615,7 @@ class _HeaderRow extends StatelessWidget {
         Expanded(
           flex: 4,
           child: Text(
-            'Ten thuoc',
+            'Tên thuốc',
             style: TextStyle(
               color: AppColors.textSecondary,
               fontWeight: FontWeight.w800,
@@ -564,7 +626,7 @@ class _HeaderRow extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Text(
-            'Lieu dung',
+            'Liều dùng',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.textSecondary,
@@ -576,7 +638,7 @@ class _HeaderRow extends StatelessWidget {
         SizedBox(
           width: 58,
           child: Text(
-            'Anh',
+            'Độ tin cậy',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.textSecondary,
@@ -588,7 +650,7 @@ class _HeaderRow extends StatelessWidget {
         SizedBox(
           width: 40,
           child: Text(
-            'Xoa',
+            'Xóa',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.textSecondary,

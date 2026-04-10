@@ -35,7 +35,7 @@ Map<String, Object?> _assessLocalImageQuality(Uint8List bytes) {
     return {
       'state': 'REJECT',
       'rejectReason': 'INVALID_IMAGE',
-      'guidance': 'Không đọc được ảnh. Vui lòng chọn lại ảnh khác.',
+      'guidance': 'Không đọc được ảnh. Hãy chọn ảnh khác.',
       'metrics': <String, num>{},
     };
   }
@@ -88,7 +88,11 @@ Map<String, Object?> _assessLocalImageQuality(Uint8List bytes) {
   final glareRatio = brightPixels / totalPixels;
   final edgeScore = edgeSum / totalPixels;
   final margin = (math.min(width, height) * 0.02).round();
-  final cutoff = minX <= margin || minY <= margin || maxX >= (width - margin) || maxY >= (height - margin);
+  final cutoff =
+      minX <= margin ||
+      minY <= margin ||
+      maxX >= (width - margin) ||
+      maxY >= (height - margin);
 
   final metrics = <String, num>{
     'edgeScore': double.parse(edgeScore.toStringAsFixed(2)),
@@ -101,7 +105,7 @@ Map<String, Object?> _assessLocalImageQuality(Uint8List bytes) {
     return {
       'state': 'REJECT',
       'rejectReason': 'BLURRY_IMAGE',
-      'guidance': 'Ảnh có vẻ bị mờ. Giữ máy ổn định và chụp gần hơn.',
+      'guidance': 'Ảnh mờ quá. Cố gắng giữ chắc tay nhé.',
       'metrics': metrics,
     };
   }
@@ -110,25 +114,30 @@ Map<String, Object?> _assessLocalImageQuality(Uint8List bytes) {
     return {
       'state': 'REJECT',
       'rejectReason': 'GLARE_IMAGE',
-      'guidance': 'Ảnh bị chói sáng. Hãy đổi góc chụp hoặc giảm phản chiếu.',
+      'guidance': 'Ảnh bị chói sáng. Đổi góc một chút cho rõ chữ.',
       'metrics': metrics,
     };
   }
 
-  if (cutoff) {
+  // Chấp nhận bị cắt góc nếu vùng ảnh bên trong nét căng (>14 edgeScore).
+  // Chỉ cảnh báo nếu ảnh chỉ tàm tạm nét.
+  if (cutoff && edgeScore < 14) {
     return {
       'state': 'WARNING',
       'rejectReason': 'CONTENT_CUTOFF',
-      'guidance': 'Có thể bị cắt thiếu nội dung. Nên lùi camera để lấy trọn đơn thuốc.',
+      'guidance': 'Có vẻ ảnh bị cắt mất chữ. Thử lùi ra xa một chút.',
       'metrics': metrics,
     };
   }
 
-  if (edgeScore < 16 || glareRatio > 0.1 || decoded.width < 1200 || decoded.height < 1200) {
+  if (edgeScore < 16 ||
+      glareRatio > 0.1 ||
+      decoded.width < 1000 ||
+      decoded.height < 1000) {
     return {
       'state': 'WARNING',
       'rejectReason': null,
-      'guidance': 'Ảnh dùng được nhưng nên cải thiện thêm để kết quả ổn định hơn.',
+      'guidance': 'Chữ hơi mờ, kết quả quét có thể không chính xác 100%.',
       'metrics': metrics,
     };
   }
@@ -136,7 +145,7 @@ Map<String, Object?> _assessLocalImageQuality(Uint8List bytes) {
   return {
     'state': 'GOOD',
     'rejectReason': null,
-    'guidance': 'Ảnh đạt kiểm tra nhanh trên thiết bị.',
+    'guidance': 'Ảnh rất nét! Đang gửi đi xử lý...',
     'metrics': metrics,
   };
 }

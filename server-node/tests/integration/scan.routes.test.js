@@ -119,6 +119,14 @@ describe('POST /api/scan', () => {
     expect(Array.isArray(res.body.data.drugs)).toBe(true);
     expect(res.body.data.drugs.length).toBeGreaterThan(0);
     expect(res.body.data.qualityState).toBe('GOOD');
+    
+    // Verify required contract alignment fields
+    const drug0 = res.body.data.drugs[0];
+    expect(drug0.ocrText).toBe('Paracetamol 500mg');
+    expect(drug0.mappedDrugName).toBe('Paracetamol');
+    expect(drug0.mappingStatus).toBe('confirmed');
+    expect(drug0.matchScore).toBeDefined();
+    expect(res.body.data.unresolvedCount).toBeDefined();
   });
 
   test('400: rejects non-image payload', async () => {

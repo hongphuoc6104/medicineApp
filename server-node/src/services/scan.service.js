@@ -18,15 +18,18 @@ function toDrugItem(med) {
     || med.mappingStatus
     || (med.mapped_drug_name || med.mappedDrugName ? 'confirmed' : 'unmapped_candidate');
   const mappedDrugName = med.mapped_drug_name || med.mappedDrugName || null;
-  const displayName = mappedDrugName || med.drug_name || med.drugName || med.ocr_text || med.ocrText || '';
+
+  // Plan §9.2: primary name is ALWAYS extracted/OCR text — DB match must not override display
+  const rawText = med.drug_name_raw || med.drug_name || med.drugName || med.ocr_text || med.ocrText || '';
+  const displayName = rawText; // never use mappedDrugName as the primary display name
 
   return {
     name: displayName,
     dosage: null,
     confidence: Number(med.confidence || 0),
     matchScore: Number(med.match_score || 0),
-    ocrText: med.ocr_text || med.ocrText || '',
-    mappedDrugName,
+    ocrText: med.ocr_text || med.ocrText || rawText,
+    mappedDrugName,   // kept as optional secondary metadata
     mappingStatus,
     bbox: med.bbox || null,
   };

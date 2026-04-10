@@ -155,6 +155,87 @@ const MIGRATIONS = [
   );`,
   `CREATE INDEX IF NOT EXISTS idx_pill_verification_assignments_session
    ON pill_verification_assignments(session_id, detection_idx);`,
+
+  // 010: Pill Reference Sets (per user-plan)
+  `CREATE TABLE IF NOT EXISTS pill_reference_sets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    plan_id UUID REFERENCES medication_plans(id) ON DELETE CASCADE,
+    drug_name_snapshot VARCHAR(255) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'draft',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, plan_id)
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_pill_reference_sets_user
+   ON pill_reference_sets(user_id, updated_at DESC);`,
+  `CREATE INDEX IF NOT EXISTS idx_pill_reference_sets_plan
+   ON pill_reference_sets(plan_id, status);`,
+
+  // 011: Pill Reference Images
+  `CREATE TABLE IF NOT EXISTS pill_reference_images (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    reference_set_id UUID REFERENCES pill_reference_sets(id) ON DELETE CASCADE,
+    image_path TEXT NOT NULL,
+    side VARCHAR(20) DEFAULT 'front',
+    quality_score NUMERIC(6,3),
+    embedding JSONB,
+    confirmed_by_user BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_pill_reference_images_set
+   ON pill_reference_images(reference_set_id, created_at DESC);`,
+
+  // 012: Dose Verification Sessions (occurrence-centric)
+  `CREATE TABLE IF NOT EXISTS dose_verification_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    occurrence_id VARCHAR(120) NOT NULL,
+    scheduled_time TIMESTAMPTZ,
+    expected_medications JSONB NOT NULL DEFAULT '[]'::jsonb,
+    status VARCHAR(20) NOT NULL DEFAULT 'draft',
+    result JSONB DEFAULT '{}'::jsonb,
+    confirmed_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_dose_verification_sessions_user
+   ON dose_verification_sessions(user_id, created_at DESC);`,
+  `CREATE INDEX IF NOT EXISTS idx_dose_verification_sessions_occurrence
+   ON dose_verification_sessions(occurrence_id, status);`,
+
+  // 013: Dose Verification Detections
+  `CREATE TABLE IF NOT EXISTS dose_verification_detections (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID REFERENCES dose_verification_sessions(id) ON DELETE CASCADE,
+    detection_idx INTEGER NOT NULL,
+    bbox JSONB,
+    score NUMERIC(8,4),
+    assigned_plan_id VARCHAR(120),
+    assigned_drug_name VARCHAR(255),
+    confidence NUMERIC(8,4),
+    status VARCHAR(20) NOT NULL DEFAULT 'unassigned',
+    note TEXT,
+    suggestions JSONB DEFAULT '[]'::jsonb,
+    source VARCHAR(20) DEFAULT 'auto',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(session_id, detection_idx)
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_dose_verification_detections_session
+   ON dose_verification_detections(session_id, detection_idx);`,
+
+  // 014: Dose Verification Feedback Events
+  `CREATE TABLE IF NOT EXISTS dose_verification_feedback_events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID REFERENCES dose_verification_sessions(id) ON DELETE CASCADE,
+    detection_idx INTEGER,
+    action VARCHAR(50) NOT NULL,
+    payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_dose_verification_feedback_events_session
+   ON dose_verification_feedback_events(session_id, created_at DESC);`,
 ];
 
 async function migrate() {

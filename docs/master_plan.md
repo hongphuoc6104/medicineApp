@@ -114,6 +114,14 @@
   - `unresolvedCount`
 - Khởi động Phase B theo hướng MVP-lite: detector + review thủ công + lưu feedback thay vì full auto matching ngay.
 
+### 0.6.1 Handoff plans
+
+- Plan đã hoàn thành và đã dọn vào docs:
+  - `docs/phase_a_app_scan_alignment_completed.md`
+- Plan đang active ở thư mục gốc:
+  - `PHASE_A_APP_SCAN_ALIGNMENT_PLAN.md`
+  - Phạm vi mới: camera preview thật trong app + giữ upload/gallery/multi-image + không bắt buộc match DB để hiển thị tên thuốc khi quét đơn.
+
 ### 0.7 File cập nhật thêm trong đợt hoàn thiện UX + Phase B kickoff
 
 - Backend Node:

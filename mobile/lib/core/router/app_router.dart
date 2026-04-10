@@ -21,6 +21,7 @@ import '../../features/history/presentation/scan_history_detail_screen.dart';
 import '../../features/plan/presentation/plan_detail_screen.dart';
 import '../../features/plan/presentation/plan_list_screen.dart';
 import '../../features/pill_verification/presentation/pill_verification_screen.dart';
+import '../../features/pill_verification/presentation/pill_reference_enrollment_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/home/domain/today_schedule.dart';
 
@@ -143,6 +144,24 @@ final routerProvider = Provider<GoRouter>((ref) {
             },
           ),
           GoRoute(
+            path: '/pill-reference/enroll',
+            builder: (context, state) {
+              final dose = state.extra as TodayDose?;
+              return PillReferenceEnrollmentScreen(
+                dose:
+                    dose ??
+                    const TodayDose(
+                      occurrenceId: '',
+                      planId: '',
+                      drugName: '',
+                      time: '',
+                      scheduledTime: '',
+                      status: 'pending',
+                    ),
+              );
+            },
+          ),
+          GoRoute(
             path: '/drugs',
             pageBuilder: (context, state) =>
                 const NoTransitionPage(child: DrugSearchScreen()),
@@ -155,7 +174,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               return DrugDetailScreen(
                 details: details is DrugDetails
                     ? details
-                    : const DrugDetails(name: 'Thong tin thuoc'),
+                    : const DrugDetails(name: 'Thông tin thuốc'),
                 activeIngredient: extra?['activeIngredient'] as String?,
               );
             },

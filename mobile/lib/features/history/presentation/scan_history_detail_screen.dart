@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../create_plan/domain/plan.dart';
+import '../../create_plan/domain/scan_result.dart';
 import '../data/scan_history_repository.dart';
 
 class ScanHistoryDetailScreen extends ConsumerStatefulWidget {
@@ -52,19 +52,17 @@ class _ScanHistoryDetailScreenState
   void _recreatePlan() {
     final detail = _detail;
     if (detail == null) return;
-    final items = detail.drugs
-        .map(
-          (drug) => PlanDrugItem(
-            name:
-                drug['name']?.toString() ??
-                drug['ocrText']?.toString() ??
-                'Thuoc',
-            dosage: drug['dosage']?.toString() ?? '',
-          ),
-        )
-        .where((item) => item.name.trim().isNotEmpty)
-        .toList();
-    context.go('/create/edit', extra: items);
+    
+    final scanResult = ScanResult(
+      scanId: detail.id,
+      drugs: detail.drugs.map((d) => DetectedDrug.fromJson(d)).toList(),
+      qualityState: detail.qualityState,
+      rejectReason: detail.rejectReason,
+      guidance: detail.guidance,
+      rejected: false,
+    );
+        
+    context.go('/create/review', extra: scanResult);
   }
 
   @override
@@ -75,8 +73,8 @@ class _ScanHistoryDetailScreenState
 
     if (_detail == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Chi tiet lan quet')),
-        body: Center(child: Text(_error ?? 'Khong tai duoc chi tiet lan quet')),
+        appBar: AppBar(title: const Text('Chi tiết lần quét')),
+        body: Center(child: Text(_error ?? 'Không tải được chi tiết lần quét')),
       );
     }
 
@@ -84,7 +82,7 @@ class _ScanHistoryDetailScreenState
     final df = DateFormat('dd/MM/yyyy HH:mm');
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Chi tiet lan quet')),
+      appBar: AppBar(title: const Text('Chi tiết lần quét')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -99,7 +97,7 @@ class _ScanHistoryDetailScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Lan quet ${detail.id.substring(0, 8)}',
+                  'Lần quét ${detail.id.substring(0, 8)}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -113,18 +111,19 @@ class _ScanHistoryDetailScreenState
                   runSpacing: 8,
                   children: [
                     _Chip(
-                      label: 'Chat luong ${detail.qualityState}',
+                      label:
+                          'Chất lượng: ${detail.qualityState == 'GOOD' ? 'Tốt' : detail.qualityState}',
                       color: detail.qualityState == 'GOOD'
                           ? AppColors.success
                           : AppColors.warning,
                     ),
                     _Chip(
-                      label: '${detail.drugCount} thuoc',
+                      label: '${detail.drugCount} thuốc',
                       color: AppColors.primary,
                     ),
                     if (detail.unresolvedCount > 0)
                       _Chip(
-                        label: '${detail.unresolvedCount} can review',
+                        label: '${detail.unresolvedCount} cần kiểm tra',
                         color: AppColors.warning,
                       ),
                   ],
@@ -140,7 +139,7 @@ class _ScanHistoryDetailScreenState
                     detail.rejectReason!.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Text(
-                    'Ly do: ${detail.rejectReason}',
+                    'Lý do: ${detail.rejectReason}',
                     style: const TextStyle(color: AppColors.error),
                   ),
                 ],
@@ -149,7 +148,7 @@ class _ScanHistoryDetailScreenState
           ),
           const SizedBox(height: 16),
           const Text(
-            'Danh sach thuoc',
+            'Danh sách thuốc',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 10),
@@ -173,40 +172,26 @@ class _ScanHistoryDetailScreenState
                     children: [
                       Expanded(
                         child: Text(
-                          drug['name']?.toString() ?? 'Khong ro ten',
+                          drug['name']?.toString() ?? 'Không rõ tên',
                           style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
                       ),
                       Text(
-                        status,
+                        _mappingStatusLabel(status),
                         style: TextStyle(color: statusColor, fontSize: 12),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
-                  if ((drug['ocrText']?.toString() ?? '').isNotEmpty)
+                  const SizedBox(height: 4),
+                  if ((drug['dosage']?.toString() ?? '').isNotEmpty)
                     Text(
-                      'OCR: ${drug['ocrText']}',
+                      'Liều lượng: ${drug['dosage']}',
                       style: const TextStyle(
                         color: AppColors.textSecondary,
-                        fontSize: 12,
+                        fontSize: 13,
                       ),
                     ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      _PlainChip(
-                        label:
-                            'Conf ${(double.tryParse('${drug['confidence'] ?? 0}') ?? 0).toStringAsFixed(2)}',
-                      ),
-                      _PlainChip(
-                        label:
-                            'Match ${(double.tryParse('${drug['matchScore'] ?? 0}') ?? 0).toStringAsFixed(2)}',
-                      ),
-                    ],
-                  ),
+                  // §3.3 — no raw Conf/Match numbers for end user
                 ],
               ),
             );
@@ -214,18 +199,25 @@ class _ScanHistoryDetailScreenState
           const SizedBox(height: 8),
           ElevatedButton.icon(
             onPressed: detail.drugs.isEmpty ? null : _recreatePlan,
-            icon: const Icon(Icons.restart_alt),
-            label: const Text('Tao lai ke hoach tu lan quet nay'),
+            icon: const Icon(Icons.refresh_rounded),
+            label: const Text('Tạo lại kế hoạch từ lần quét này'),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
             onPressed: () => context.go('/create/scan'),
             icon: const Icon(Icons.document_scanner_outlined),
-            label: const Text('Quet don moi'),
+            label: const Text('Quét đơn mới'),
           ),
         ],
       ),
     );
+  }
+
+  static String _mappingStatusLabel(String status) {
+    if (status == 'confirmed') return 'Đã xác nhận';
+    if (status == 'unmapped_candidate') return 'Cần kiểm tra lại';
+    if (status == 'rejected_noise') return 'Không rõ ràng';
+    return status;
   }
 }
 
@@ -244,24 +236,6 @@ class _Chip extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(label, style: TextStyle(color: color, fontSize: 12)),
-    );
-  }
-}
-
-class _PlainChip extends StatelessWidget {
-  const _PlainChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceHigh,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Text(label, style: const TextStyle(fontSize: 11)),
     );
   }
 }

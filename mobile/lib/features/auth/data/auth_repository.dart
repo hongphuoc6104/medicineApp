@@ -18,11 +18,14 @@ class AuthRepository {
     required String password,
     String? name,
   }) async {
-    final response = await _dio.post('/auth/register', data: {
-      'email': email,
-      'password': password,
-      if (name != null && name.isNotEmpty) 'name': name,
-    });
+    final response = await _dio.post(
+      '/auth/register',
+      data: {
+        'email': email,
+        'password': password,
+        if (name != null && name.isNotEmpty) 'name': name,
+      },
+    );
 
     return User.fromJson(response.data['data']['user'] as Map<String, dynamic>);
   }
@@ -32,10 +35,10 @@ class AuthRepository {
     required String email,
     required String password,
   }) async {
-    final response = await _dio.post('/auth/login', data: {
-      'email': email,
-      'password': password,
-    });
+    final response = await _dio.post(
+      '/auth/login',
+      data: {'email': email, 'password': password},
+    );
 
     final data = response.data['data'] as Map<String, dynamic>;
     final user = User.fromJson(data['user'] as Map<String, dynamic>);
@@ -44,8 +47,14 @@ class AuthRepository {
 
     // Save tokens + user to secure storage (sequentially to avoid partial writes)
     await _storage.write(key: AppConstants.accessTokenKey, value: accessToken);
-    await _storage.write(key: AppConstants.refreshTokenKey, value: refreshToken);
-    await _storage.write(key: AppConstants.userKey, value: jsonEncode(user.toJson()));
+    await _storage.write(
+      key: AppConstants.refreshTokenKey,
+      value: refreshToken,
+    );
+    await _storage.write(
+      key: AppConstants.userKey,
+      value: jsonEncode(user.toJson()),
+    );
 
     return (user: user, accessToken: accessToken, refreshToken: refreshToken);
   }

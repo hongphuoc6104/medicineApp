@@ -56,7 +56,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       return;
     }
 
-    final success = await ref.read(authNotifierProvider.notifier).register(
+    final success = await ref
+        .read(authNotifierProvider.notifier)
+        .register(
           email: email,
           password: password,
           name: name.isNotEmpty ? name : null,
@@ -97,8 +99,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 'Tạo tài khoản',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -181,7 +183,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               // Login link
               TextButton(
-                onPressed: authState.isLoading ? null : () => context.go('/login'),
+                onPressed: authState.isLoading
+                    ? null
+                    : () => context.go('/login'),
                 child: Text.rich(
                   TextSpan(
                     text: 'Đã có tài khoản? ',

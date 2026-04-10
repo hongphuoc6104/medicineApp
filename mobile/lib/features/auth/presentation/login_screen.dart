@@ -35,10 +35,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       return;
     }
 
-    final success = await ref.read(authNotifierProvider.notifier).login(
-          email: email,
-          password: password,
-        );
+    final success = await ref
+        .read(authNotifierProvider.notifier)
+        .login(email: email, password: password);
 
     if (!success && mounted) {
       final error = ref.read(authNotifierProvider).error;
@@ -75,17 +74,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 'MedicineApp',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Quản lý đơn thuốc thông minh',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                  color: AppColors.textSecondary,
+                ),
               ),
               const SizedBox(height: 48),
 
@@ -139,7 +138,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               // Register link
               TextButton(
-                onPressed: authState.isLoading ? null : () => context.go('/register'),
+                onPressed: authState.isLoading
+                    ? null
+                    : () => context.go('/register'),
                 child: Text.rich(
                   TextSpan(
                     text: 'Chưa có tài khoản? ',

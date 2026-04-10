@@ -19,10 +19,10 @@ const ALLOWED_MIMES = ['image/jpeg', 'image/png', 'image/webp'];
 
 const startSchema = z.object({
   occurrenceId: z.string().min(3).max(120),
-  planId: z.string().min(3),
+  planId: z.string().uuid().optional(),
   scheduledTime: z.string().datetime(),
   expectedMedications: z.array(z.object({
-    planId: z.string().min(3).optional(),
+    planId: z.string().uuid().optional(),
     drugName: z.string().min(1),
     dosage: z.string().optional(),
     pillsPerDose: z.number().int().min(1).optional(),
@@ -31,8 +31,9 @@ const startSchema = z.object({
 
 const assignSchema = z.object({
   detectionIdx: z.number().int().min(0),
+  assignedPlanId: z.string().max(120).nullable().optional(),
   assignedDrugName: z.string().max(255).nullable().optional(),
-  status: z.enum(['assigned', 'unknown', 'extra']),
+  status: z.enum(['assigned', 'uncertain', 'unknown', 'extra', 'unassigned']),
   note: z.string().max(500).optional(),
 });
 

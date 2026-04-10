@@ -3,6 +3,7 @@
 | Script | Lệnh chạy | Mô tả |
 |--------|----------|-------|
 | `run_pipeline.py` | `python scripts/run_pipeline.py --image data/input/IMG.jpg` | Chạy Phase A cho 1 ảnh |
+| `debug_phase_a_checks.sh` | `bash scripts/debug_phase_a_checks.sh --quick` | Chạy bộ kiểm tra nhanh cho flow Phase A |
 | `build_drug_db.py` | `python scripts/build_drug_db.py` | Build drug database CSV |
 | `train_ner.py` | `python scripts/train_ner.py` | Train PhoBERT NER model |
 | `prepare_ner_data.py` | `python scripts/prepare_ner_data.py` | Chuẩn bị data NER từ VAIPE |

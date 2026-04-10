@@ -29,7 +29,7 @@ class HomeScreen extends ConsumerWidget {
         if (synced > 0 && context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Da dong bo $synced thao tac offline'),
+              content: Text('Đã đồng bộ $synced thao tác offline'),
               backgroundColor: AppColors.success,
             ),
           );
@@ -85,7 +85,7 @@ class _ErrorView extends StatelessWidget {
         Icon(Icons.cloud_off_rounded, size: 54, color: AppColors.textMuted),
         const SizedBox(height: 18),
         Text(
-          'Khong tai duoc du lieu hom nay',
+          'Không tải được dữ liệu hôm nay',
           textAlign: TextAlign.center,
           style: Theme.of(
             context,
@@ -101,7 +101,7 @@ class _ErrorView extends StatelessWidget {
         ElevatedButton.icon(
           onPressed: onRetry,
           icon: const Icon(Icons.refresh),
-          label: const Text('Thu lai'),
+          label: const Text('Thử lại'),
         ),
       ],
     );
@@ -147,21 +147,21 @@ class _OnboardingView extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Text(
-                'Bat dau quan ly thuoc mot cach de hieu',
+                'Bắt đầu quản lý thuốc một cách dễ hiểu',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(height: 8),
               const Text(
-                'Quet don thuoc de tao lich nhac, hoac nhap thu cong neu ban muon bat dau ngay.',
+                'Quét đơn thuốc để tạo lịch nhắc, hoặc nhập thủ công nếu bạn muốn bắt đầu ngay.',
                 style: TextStyle(color: AppColors.textSecondary, height: 1.45),
               ),
               const SizedBox(height: 18),
               ElevatedButton.icon(
                 onPressed: () => context.go('/create/scan'),
                 icon: const Icon(Icons.document_scanner_outlined),
-                label: const Text('Quet don thuoc moi'),
+                label: const Text('Quét đơn thuốc mới'),
               ),
               const SizedBox(height: 10),
               Row(
@@ -170,7 +170,7 @@ class _OnboardingView extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/create/edit'),
                       icon: const Icon(Icons.edit_note),
-                      label: const Text('Nhap tay'),
+                      label: const Text('Nhập tay'),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -178,7 +178,7 @@ class _OnboardingView extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/history'),
                       icon: const Icon(Icons.history_outlined),
-                      label: const Text('Lich su'),
+                      label: const Text('Lịch sử'),
                     ),
                   ),
                 ],
@@ -190,14 +190,14 @@ class _OnboardingView extends StatelessWidget {
         _QuickActionGrid(
           actions: [
             _QuickActionItem(
-              title: 'Tra cuu thuoc',
-              subtitle: 'Xem thong tin thuoc va hoat chat',
+              title: 'Tra cứu thuốc',
+              subtitle: 'Xem thông tin thuốc và hoạt chất',
               icon: Icons.search_rounded,
               onTap: () => context.go('/drugs'),
             ),
             _QuickActionItem(
-              title: 'Ke hoach',
-              subtitle: 'Xem cac lich da tao',
+              title: 'Kế hoạch',
+              subtitle: 'Xem các lịch đã tạo',
               icon: Icons.calendar_month_rounded,
               onTap: () => context.go('/plans'),
             ),
@@ -247,7 +247,7 @@ class _DashboardView extends ConsumerWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      '$count thao tac dang cho dong bo. Keo xuong de dong bo lai.',
+                      '$count thao tác đang chờ đồng bộ. Kéo xuống để đồng bộ lại.',
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -270,8 +270,8 @@ class _DashboardView extends ConsumerWidget {
                 _HeroTodayCard(today: today),
                 const SizedBox(height: 16),
                 _SectionLabel(
-                  title: 'Thuoc hom nay',
-                  actionLabel: 'Ke hoach',
+                  title: 'Thuốc hôm nay',
+                  actionLabel: 'Kế hoạch',
                   onAction: () => context.go('/plans'),
                 ),
                 const SizedBox(height: 10),
@@ -282,6 +282,8 @@ class _DashboardView extends ConsumerWidget {
                     (dose) => _TodayDoseTile(
                       dose: dose,
                       canMark: canMark,
+                      onEnrollReference: () =>
+                          context.push('/pill-reference/enroll', extra: dose),
                       onVerify: () => context.go('/pill-verify', extra: dose),
                       onTaken: () async {
                         final ok = await ref
@@ -292,8 +294,8 @@ class _DashboardView extends ConsumerWidget {
                           SnackBar(
                             content: Text(
                               ok
-                                  ? 'Da uong: ${dose.drugName}'
-                                  : 'Da luu tam offline',
+                                  ? 'Đã uống: ${dose.drugName}'
+                                  : 'Đã lưu tạm offline',
                             ),
                             backgroundColor: ok
                                 ? AppColors.success
@@ -310,8 +312,8 @@ class _DashboardView extends ConsumerWidget {
                           SnackBar(
                             content: Text(
                               ok
-                                  ? 'Da bo qua: ${dose.drugName}'
-                                  : 'Da luu tam offline',
+                                  ? 'Đã bỏ qua: ${dose.drugName}'
+                                  : 'Đã lưu tạm offline',
                             ),
                             backgroundColor: ok
                                 ? AppColors.warning
@@ -322,7 +324,7 @@ class _DashboardView extends ConsumerWidget {
                     ),
                   ),
                 const SizedBox(height: 18),
-                const _SectionLabel(title: 'Dang su dung'),
+                const _SectionLabel(title: 'Đang sử dụng'),
                 const SizedBox(height: 10),
                 ...plans.take(3).map((plan) => _PlanCard(plan: plan)),
                 if (plans.length > 3) ...[
@@ -330,7 +332,7 @@ class _DashboardView extends ConsumerWidget {
                   TextButton.icon(
                     onPressed: () => context.go('/plans'),
                     icon: const Icon(Icons.open_in_new),
-                    label: Text('Xem ${plans.length} ke hoach'),
+                    label: Text('Xem ${plans.length} kế hoạch'),
                   ),
                 ],
               ],
@@ -352,7 +354,7 @@ class _DateHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final dateLabel = DateFormat('d MMMM, yyyy', 'vi_VN').format(now);
+    final dateLabel = DateFormat('d MMMM, yyyy').format(now);
     return Row(
       children: [
         Expanded(
@@ -360,7 +362,7 @@ class _DateHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Hom nay',
+                'Hôm nay',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
@@ -389,7 +391,7 @@ class _DateHeader extends StatelessWidget {
                 color: AppColors.primaryDark,
               ),
               SizedBox(width: 6),
-              Text('Thuoc hom nay'),
+              Text('Thuốc hôm nay'),
             ],
           ),
         ),
@@ -479,7 +481,7 @@ class _HeroTodayCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Theo doi lieu uong hom nay',
+            'Theo dõi liều uống hôm nay',
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,
@@ -488,7 +490,7 @@ class _HeroTodayCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '${today.summary.total} lieu can quan tam',
+            '${today.summary.total} liều cần quan tâm',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w900,
@@ -497,10 +499,13 @@ class _HeroTodayCard extends StatelessWidget {
           const SizedBox(height: 18),
           Row(
             children: [
-              _HeroMetric(label: 'Da uong', value: '${today.summary.taken}'),
-              _HeroMetric(label: 'Cho', value: '${today.summary.pending}'),
-              _HeroMetric(label: 'Bo qua', value: '${today.summary.skipped}'),
-              _HeroMetric(label: 'Missed', value: '${today.summary.missed}'),
+              _HeroMetric(label: 'Đã uống', value: '${today.summary.taken}'),
+              _HeroMetric(label: 'Chờ', value: '${today.summary.pending}'),
+              _HeroMetric(label: 'Bỏ qua', value: '${today.summary.skipped}'),
+              _HeroMetric(
+                label: 'Không uống',
+                value: '${today.summary.missed}',
+              ),
             ],
           ),
         ],
@@ -685,7 +690,7 @@ class _PlanCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${_freqLabel(plan.frequency)} · ${plan.pillsPerDose} vien · ${plan.times.join(', ')}',
+                    '${_freqLabel(plan.frequency)} · ${plan.pillsPerDose} viên · ${plan.times.join(', ')}',
                     style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 12,
@@ -701,7 +706,7 @@ class _PlanCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: const Text(
-                'Active',
+                'Đang bật',
                 style: TextStyle(
                   color: AppColors.primaryDark,
                   fontWeight: FontWeight.w800,
@@ -718,13 +723,13 @@ class _PlanCard extends StatelessWidget {
   static String _freqLabel(String freq) {
     switch (freq) {
       case 'twice_daily':
-        return '2 lan/ngay';
+        return '2 lần/ngày';
       case 'three_daily':
-        return '3 lan/ngay';
+        return '3 lần/ngày';
       case 'weekly':
-        return 'Hang tuan';
+        return 'Hàng tuần';
       default:
-        return '1 lan/ngay';
+        return '1 lần/ngày';
     }
   }
 }
@@ -749,7 +754,7 @@ class _TodayLoadingCard extends StatelessWidget {
             child: CircularProgressIndicator(strokeWidth: 2.4),
           ),
           SizedBox(width: 14),
-          Expanded(child: Text('Dang tai ke hoach hom nay...')),
+          Expanded(child: Text('Đang tải kế hoạch hôm nay...')),
         ],
       ),
     );
@@ -775,7 +780,7 @@ class _TodayErrorCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Khong tai duoc lich hom nay',
+            'Không tải được lịch hôm nay',
             style: TextStyle(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
@@ -784,7 +789,7 @@ class _TodayErrorCard extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh),
-            label: const Text('Thu lai'),
+            label: const Text('Thử lại'),
           ),
         ],
       ),
@@ -813,12 +818,12 @@ class _TodayEmptyCard extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            'Hom nay khong co lieu uong nao.',
+            'Hôm nay không có liều uống nào.',
             style: TextStyle(fontWeight: FontWeight.w800),
           ),
           SizedBox(height: 4),
           Text(
-            'Ban co the xem lich su hoac kiem tra cac ke hoach dang chay.',
+            'Bạn có thể xem lịch sử hoặc kiểm tra các kế hoạch đang chạy.',
             style: TextStyle(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
@@ -832,6 +837,7 @@ class _TodayDoseTile extends StatelessWidget {
   const _TodayDoseTile({
     required this.dose,
     required this.canMark,
+    required this.onEnrollReference,
     required this.onVerify,
     required this.onTaken,
     required this.onSkipped,
@@ -839,6 +845,7 @@ class _TodayDoseTile extends StatelessWidget {
 
   final TodayDose dose;
   final bool canMark;
+  final VoidCallback onEnrollReference;
   final VoidCallback onVerify;
   final VoidCallback onTaken;
   final VoidCallback onSkipped;
@@ -847,11 +854,13 @@ class _TodayDoseTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = dose.status;
     final pending = status == 'pending';
+    final missingReference = !dose.hasReferenceProfile;
+    final verificationDisabled = missingReference || !dose.verificationReady;
     final statusMeta = switch (status) {
-      'taken' => ('Da uong', AppColors.success, Icons.check_circle_rounded),
-      'skipped' => ('Bo qua', AppColors.warning, Icons.remove_circle_rounded),
-      'missed' => ('Missed', AppColors.error, Icons.error_rounded),
-      _ => ('Cho den gio', AppColors.primaryDark, Icons.schedule_rounded),
+      'taken' => ('Đã uống', AppColors.success, Icons.check_circle_rounded),
+      'skipped' => ('Bỏ qua', AppColors.warning, Icons.remove_circle_rounded),
+      'missed' => ('Không uống', AppColors.error, Icons.error_rounded),
+      _ => ('Chờ đến giờ', AppColors.primaryDark, Icons.schedule_rounded),
     };
 
     return Container(
@@ -898,7 +907,7 @@ class _TodayDoseTile extends StatelessWidget {
                     Text(
                       dose.dosage?.isNotEmpty == true
                           ? dose.dosage!
-                          : '${dose.pillsPerDose ?? 1} vien/lien',
+                          : '${dose.pillsPerDose ?? 1} viên/liều',
                       style: const TextStyle(color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 8),
@@ -927,10 +936,33 @@ class _TodayDoseTile extends StatelessWidget {
           ),
           if (pending) ...[
             const SizedBox(height: 14),
+            if (missingReference)
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.warning.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  dose.missingReferenceDrugNames.isNotEmpty
+                      ? 'Thiếu ảnh mẫu cho: ${dose.missingReferenceDrugNames.join(', ')}. Hãy chụp mẫu để xác minh chính xác.'
+                      : 'Bạn chưa có ảnh mẫu viên thuốc cho liều này. Hãy chụp mẫu để tăng độ chính xác khi xác minh.',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            if (missingReference)
+              OutlinedButton.icon(
+                onPressed: canMark ? onEnrollReference : null,
+                icon: const Icon(Icons.add_a_photo_outlined),
+                label: const Text('Chụp mẫu viên thuốc'),
+              ),
+            if (missingReference) const SizedBox(height: 8),
             OutlinedButton.icon(
-              onPressed: canMark ? onVerify : null,
+              onPressed: canMark && !verificationDisabled ? onVerify : null,
               icon: const Icon(Icons.photo_camera_back_outlined),
-              label: const Text('Kiem tra thuoc truoc khi uong'),
+              label: const Text('Xác minh liều này'),
             ),
             const SizedBox(height: 8),
             Row(
@@ -938,14 +970,14 @@ class _TodayDoseTile extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: canMark ? onSkipped : null,
-                    child: const Text('Bo qua'),
+                    child: const Text('Bỏ qua'),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: canMark ? onTaken : null,
-                    child: const Text('Da uong'),
+                    child: const Text('Đã uống'),
                   ),
                 ),
               ],

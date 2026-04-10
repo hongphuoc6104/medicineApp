@@ -1,29 +1,37 @@
-/// Scan result — matches POST /api/scan response.
 class ScanResult {
   final String scanId;
-  final String? sessionId;
   final List<DetectedDrug> drugs;
   final String qualityState;
   final String? rejectReason;
   final String? guidance;
   final bool rejected;
-  final bool converged;
-  final String? rawText;
-  final int unresolvedCount;
-  final List<DetectedDrug> candidates;
+  // Legacy / internal session info (for backwards compatibility)
+  final LegacyScanData legacyData;
+
+  // Backward compatibility getters for legacy multi-image session flow
+  @Deprecated('Use legacyData.sessionId')
+  String? get sessionId => legacyData.sessionId;
+
+  @Deprecated('Use legacyData.converged')
+  bool get converged => legacyData.converged;
+
+  @Deprecated('Use legacyData.rawText')
+  String? get rawText => legacyData.rawText;
+
+  @Deprecated('Use legacyData.unresolvedCount')
+  int get unresolvedCount => legacyData.unresolvedCount;
+
+  @Deprecated('Use legacyData.candidates')
+  List<DetectedDrug> get candidates => legacyData.candidates;
 
   const ScanResult({
     required this.scanId,
-    this.sessionId,
     required this.drugs,
     this.qualityState = 'GOOD',
     this.rejectReason,
     this.guidance,
     this.rejected = false,
-    this.converged = false,
-    this.rawText,
-    this.unresolvedCount = 0,
-    this.candidates = const [],
+    this.legacyData = const LegacyScanData(),
   });
 
   factory ScanResult.fromJson(Map<String, dynamic> json) {
@@ -32,18 +40,46 @@ class ScanResult {
     final drugs = src
         .map((d) => DetectedDrug.fromJson(d as Map<String, dynamic>))
         .toList();
-    final candidateSrc = (json['candidates'] as List?) ?? src;
-    final candidates = candidateSrc
-        .map((d) => DetectedDrug.fromJson(d as Map<String, dynamic>))
-        .toList();
+
     return ScanResult(
       scanId: json['scanId'] as String? ?? '',
-      sessionId: json['sessionId'] as String?,
       drugs: drugs,
       qualityState: json['qualityState'] as String? ?? 'GOOD',
       rejectReason: json['rejectReason'] as String?,
       guidance: json['guidance'] as String?,
       rejected: json['rejected'] as bool? ?? false,
+      legacyData: LegacyScanData.fromJson(json, src),
+    );
+  }
+}
+
+/// Legacy fields used by the older multi-image session flow.
+/// Kept here for compatibility when querying old endpoints.
+class LegacyScanData {
+  final String? sessionId;
+  final bool converged;
+  final String? rawText;
+  final int unresolvedCount;
+  final List<DetectedDrug> candidates;
+
+  const LegacyScanData({
+    this.sessionId,
+    this.converged = false,
+    this.rawText,
+    this.unresolvedCount = 0,
+    this.candidates = const [],
+  });
+
+  factory LegacyScanData.fromJson(
+    Map<String, dynamic> json,
+    List<dynamic> src,
+  ) {
+    final candidateSrc = (json['candidates'] as List?) ?? src;
+    final candidates = candidateSrc
+        .map((d) => DetectedDrug.fromJson(d as Map<String, dynamic>))
+        .toList();
+    return LegacyScanData(
+      sessionId: json['sessionId'] as String?,
       converged: json['converged'] as bool? ?? false,
       rawText: json['rawText'] as String?,
       unresolvedCount: json['unresolvedCount'] as int? ?? 0,

@@ -8,22 +8,21 @@ import '../constants.dart';
 
 /// Provides a configured Dio instance with auth interceptor.
 final dioProvider = Provider<Dio>((ref) {
-  final dio = Dio(BaseOptions(
-    baseUrl: dotenv.env['API_BASE_URL'] ?? 'http://localhost:3000/api',
-    connectTimeout: AppConstants.apiTimeout,
-    receiveTimeout: AppConstants.apiTimeout,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-  ));
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: dotenv.env['API_BASE_URL'] ?? 'http://localhost:3000/api',
+      connectTimeout: AppConstants.apiTimeout,
+      receiveTimeout: AppConstants.apiTimeout,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    ),
+  );
 
   dio.interceptors.add(AuthInterceptor(dio));
   if (kDebugMode) {
-    dio.interceptors.add(LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-    ));
+    dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
   }
 
   return dio;
@@ -37,7 +36,10 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor(this._dio);
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // Skip auth for login/register/refresh
     final noAuthPaths = ['/auth/login', '/auth/register', '/auth/refresh'];
     if (noAuthPaths.any((p) => options.path.endsWith(p))) {
@@ -65,20 +67,25 @@ class AuthInterceptor extends Interceptor {
 
     // Try refreshing token
     try {
-      final refreshToken = await _storage.read(key: AppConstants.refreshTokenKey);
+      final refreshToken = await _storage.read(
+        key: AppConstants.refreshTokenKey,
+      );
       if (refreshToken == null) {
         await _clearTokensAndRedirect();
         return handler.next(err);
       }
 
-      final dio = Dio(BaseOptions(
-        baseUrl: err.requestOptions.baseUrl,
-        headers: {'Content-Type': 'application/json'},
-      ));
+      final dio = Dio(
+        BaseOptions(
+          baseUrl: err.requestOptions.baseUrl,
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
 
-      final response = await dio.post('/auth/refresh', data: {
-        'refreshToken': refreshToken,
-      });
+      final response = await dio.post(
+        '/auth/refresh',
+        data: {'refreshToken': refreshToken},
+      );
 
       if (response.statusCode == 200) {
         final data = response.data['data'];

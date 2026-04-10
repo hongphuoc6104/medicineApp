@@ -29,9 +29,9 @@ class ScanScreen extends StatelessWidget {
             const SizedBox(height: 24),
             Text(
               'Chụp hoặc chọn ảnh đơn thuốc',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 32),
             Padding(

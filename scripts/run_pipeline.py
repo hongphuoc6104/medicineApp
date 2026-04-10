@@ -25,6 +25,7 @@ import time
 from pathlib import Path
 
 import cv2
+import numpy as np
 
 # Setup
 ROOT = str(Path(__file__).parent.parent)
@@ -81,10 +82,10 @@ def run_phase_a(img_path, out_dir, shared=None):
     t0 = time.time()
     img = cv2.imread(img_path)
     if img is None:
-        print_step(1, "YOLO Detect", "fail", detail="Cannot read image")
+        print_step("1.1", "YOLO Detect", "fail", detail="Cannot read image")
         return {"image": stem, "error": "cannot_read"}, []
 
-    cv2.imwrite(os.path.join(out_dir, "step-0_raw.jpg"), img)
+    cv2.imwrite(os.path.join(out_dir, "step-0.0_raw.jpg"), img)
 
     detector = shared.get("detector") if shared else None
     if detector is not None:
@@ -98,23 +99,23 @@ def run_phase_a(img_path, out_dir, shared=None):
     else:
         crop_info = f"raw {img.shape[1]}×{img.shape[0]}"
 
-    cv2.imwrite(os.path.join(out_dir, "step-1_cropped.jpg"), img)
+    cv2.imwrite(os.path.join(out_dir, "step-1.1_cropped.jpg"), img)
     t1 = time.time() - t0
-    print_step(1, "YOLO Detect", "ok", t1, crop_info)
+    print_step("1.1", "YOLO Detect", "ok", t1, crop_info)
     summary["steps"]["yolo"] = {"time_s": round(t1, 1), "detail": crop_info}
 
     # ── Step 2: Preprocess ────────────────────────────────────────────────
     t0 = time.time()
     from core.phase_a.s2_preprocess.orientation import preprocess_image
-    processed, prep_info = preprocess_image(img, stem="step-2", save_dir=out_dir)
+    processed, prep_info = preprocess_image(img, stem="step-2.1", save_dir=out_dir)
     processed = resize_if_needed(processed)
-    cv2.imwrite(os.path.join(out_dir, "step-2_preprocessed.jpg"), processed)
+    cv2.imwrite(os.path.join(out_dir, "step-2.1_preprocessed.jpg"), processed)
     t2 = time.time() - t0
     orient = prep_info.get("rotation", "0°")
-    print_step(2, "Preprocess", "ok", t2, f"orient={orient}")
+    print_step("2.1", "Preprocess", "ok", t2, f"orient={orient}")
     summary["steps"]["preprocess"] = {"time_s": round(t2, 1), "info": prep_info}
 
-    # ── Step 3: OCR ───────────────────────────────────────────────────────
+    # ── Step 3: OCR Engine (Hybrid: Paddle + VietOCR) ─────────────────────
     t0_ocr = time.time()
     ocr_module = shared.get("ocr") if shared else None
     if ocr_module is None:
@@ -125,42 +126,85 @@ def run_phase_a(img_path, out_dir, shared=None):
         if shared is not None:
             shared["ocr"] = ocr_module
 
-    result = ocr_module.extract(processed, input_type="raw")
-    ocr_module.save_results(result, processed, "step-3", out_dir, out_dir, out_dir)
+    # 3.1: Text Detection (PaddleOCR)
+    t1 = time.time()
+    ocr_module._ensure_detector()
+    polys = ocr_module._detect_polys(processed)
+    t_det = time.time() - t1
+    print_step("3.1", "Text Detection", "ok", t_det, f"found {len(polys)} regions")
+    
+    # [DEBUG VIZ] Vẽ polygons và đánh số thứ tự
+    det_img = processed.copy()
+    for i, poly in enumerate(polys):
+        pts = np.array(poly, np.int32).reshape((-1, 1, 2))
+        cv2.polylines(det_img, [pts], isClosed=True, color=(0, 255, 0), thickness=2)
+        x, y = int(poly[0][0]), int(poly[0][1])
+        cv2.putText(det_img, str(i+1), (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 255), 1)
+    
+    cv2.imwrite(os.path.join(out_dir, "step-3.1_only_detection.png"), det_img)
+    print(f"      [DEBUG] Saved detection-only image: step-3.1_only_detection.png")
+
+    # 3.2: Text Recognition (VietOCR)
+    t2 = time.time()
+    ocr_module._ensure_recognizer()
+    text_blocks = ocr_module._recognize_batch(processed, polys)
+    t_rec = time.time() - t2
+    print_step("3.2", "Text Recognition", "ok", t_rec, f"read {len(text_blocks)} blocks")
+    
+    # In một vài kết quả nhận diện thô để debug
+    for i, b in enumerate(text_blocks[:8]):
+        print(f"      [R] Block {i+1:02d}: {b.text} ({b.confidence:.2f})")
+    if len(text_blocks) > 8:
+        print(f"      ... total {len(text_blocks)} blocks recognized")
+
+    # Save visualization chính (có kèm text tiếng Việt)
+    from core.phase_a.s3_ocr.base import OcrResult
+    result = OcrResult(
+        text_blocks=text_blocks,
+        module_name="hybrid",
+        input_type="raw",
+        elapsed_ms=(time.time() - t0_ocr) * 1000
+    )
+    ocr_module.save_results(result, processed, "step-3.2", out_dir, out_dir, out_dir)
 
     ocr_blocks = [
         {"text": b.text, "confidence": round(b.confidence, 4), "bbox": b.bbox}
-        for b in result.text_blocks
+        for b in text_blocks
     ]
-    with open(os.path.join(out_dir, "step-3_ocr.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(out_dir, "step-3.2_ocr.json"), "w", encoding="utf-8") as f:
         json.dump(ocr_blocks, f, ensure_ascii=False, indent=2)
 
-    t3 = time.time() - t0_ocr
-    print_step(3, "OCR", "ok", t3, f"{len(ocr_blocks)} text blocks")
-    summary["steps"]["ocr"] = {"time_s": round(t3, 1), "blocks": len(ocr_blocks)}
+    # 3.3: STT Grouping (Check-only)
+    from core.phase_a.s3_ocr.ocr_engine import group_by_stt
+    t3_start = time.time()
+    merged_blocks_obj = group_by_stt(text_blocks)
+    merged_blocks = [
+        {"text": b.text, "confidence": round(b.confidence, 4), "bbox": b.bbox}
+        for b in merged_blocks_obj
+    ]
+    t_stt = time.time() - t3_start
+    print_step("3.3", "STT Grouping", "ok", t_stt, f"{len(ocr_blocks)} → {len(merged_blocks)} lines")
 
-    # ── Build NER input from OCR blocks ──────────────────────────────────
+    # Calculate final OCR timing/summary
+    t_total_ocr = time.time() - t0_ocr
+    summary["steps"]["ocr"] = {
+        "time_s": round(t_total_ocr, 1),
+        "raw_blocks": len(ocr_blocks),
+        "stt_lines": len(merged_blocks)
+    }
+
+    # ── Build NER input for Step 4 ──────────────────────────────────────
     ner_input = []
-    for b in ocr_blocks:
+    for b in merged_blocks:
         text = b.get("text", "").strip()
         if not text:
             continue
         ner_input.append({
             "text": text,
             "label": "other",
-            "box": [0, 0, 0, 0],
+            "box": b.get("bbox", [0, 0, 0, 0]),
             "bbox": b.get("bbox", []),
         })
-
-
-    # Calculate final OCR timing/summary
-    t_total_ocr = time.time() - t0_ocr
-    summary["steps"]["ocr"] = {
-        "time_s": round(t_total_ocr, 1),
-        "raw_blocks": len(ocr_blocks)
-    }
-
-
 
     # ── Step 4: NER Classify drugname/other ───────────────────────────────
     t0 = time.time()
@@ -175,129 +219,67 @@ def run_phase_a(img_path, out_dir, shared=None):
             shared["matcher"] = matcher
         ner_results = matcher.classify(ner_input)
 
-    # Post-NER filter: dosage/instruction text → force "other"
-    import re as _re
-    _DOSAGE_RE = _re.compile(
-        r"(uống|ngày\s+\d|lần\s*,|sau\s*ăn|trước\s*ăn|"
-        r"sáng\s+uống|trưa\s+uống|tối\s+uống|"
-        r"mỗi\s+lần|hòa\s+tan|nhỏ\s+mắt)",
-        _re.IGNORECASE,
-    )
-    _PURE_NUM_RE = _re.compile(r"^[\d\s.,]+$")
-    # "Viên 60 8", "Viên 15", "Ống 20", "Tab 30 5"
-    _UNIT_ONLY_RE = _re.compile(
-        r"^(viên|ống|lọ|tab|gói|viên\s+sủi)\s+[\d\s]*$",
-        _re.IGNORECASE,
-    )
-    # "20 50mg", "150mg", "500mcg"
-    _DOSAGE_ONLY_RE = _re.compile(
-        r"^[\d\s.,]*(mg|ml|mcg|g|iu)\b",
-        _re.IGNORECASE,
-    )
-    # Non-drug: headers, hospital names, dates, addresses
-    _HEADER_RE = _re.compile(
-        r"(đơn\s+thuốc|bhyt|bệnh\s+viện|phòng\s+khám|"
-        r"họ\s+tên|giới\s+tính|địa\s+chỉ|chẩn\s+đoán|"
-        r"thuốc\s+điều\s+trị|mã\s+số|số\s+phiếu|"
-        r"bộ\s+y\s+tế|sở\s+y\s+tế|xem\s+tiếp)",
-        _re.IGNORECASE,
-    )
-    for r in ner_results:
-        if r["label"] == "drugname":
-            txt = r["text"].strip()
-            if (_DOSAGE_RE.search(txt) or
-                    _PURE_NUM_RE.match(txt) or
-                    _UNIT_ONLY_RE.match(txt) or
-                    _DOSAGE_ONLY_RE.match(txt) or
-                    _HEADER_RE.search(txt) or
-                    len(txt) < 4):
-                r["label"] = "other"
-                r["confidence"] = 0.0
-
-    # Separate drugnames
+    # Lọc kết quả NER: chỉ giữ lại những dòng có label == "drugname"
+    # (NER extractor v2 đã trả về drug_name thuần tuý nên không cần filter regex nữa)
     drug_names = [r for r in ner_results if r["label"] == "drugname"]
 
-    with open(os.path.join(out_dir, "step-4_ner_classify.json"), "w", encoding="utf-8") as f:
+    with open(os.path.join(out_dir, "step-4.1_ner_classify.json"), "w", encoding="utf-8") as f:
         json.dump(ner_results, f, ensure_ascii=False, indent=2)
 
-    t5 = time.time() - t0
-    print_step(4, "NER Classify", "ok", t5,
-               f"{len(drug_names)} drugnames")
+    # ── Step 4.1: NER Classify (PhoBERT) ──────────────────────────────────
+    t_ner = time.time() - t0
+    print_step("4.1", "NER Classify (PhoBERT)", "ok", t_ner, f"{len(drug_names)} drugnames found")
     summary["steps"]["ner_classify"] = {
-        "time_s": round(t5, 1),
-        "method": "PhoBERT-NER",
-        "drugnames": len(drug_names),
-        "total": len(ner_results),
+        "time_s": round(t_ner, 1),
+        "found": len(drug_names)
     }
 
-    # Print all blocks — highlight drugnames
-    for r in ner_results:
-        icon = "💊" if r["label"] == "drugname" else "  "
-        conf = f"[{r['confidence']:.0%}]" if r["confidence"] > 0 else ""
-        print(f"      {icon} {r['text'][:60]} {conf}")
+    # ── Step 5.1: Drug Lookup (Database Match) ─────────────────────────────
+    t0_lookup = time.time()
+    from core.phase_a.s6_drug_search.drug_lookup import DrugLookup
+    lookup_engine = shared.get("lookup") if shared else None
+    if lookup_engine is None:
+        lookup_engine = DrugLookup()
+        if shared is not None:
+            shared["lookup"] = lookup_engine
 
-    # ── Step 5: Drug Lookup ───────────────────────────────────────────────
-    t0 = time.time()
-    drug_lookup = shared.get("drug_lookup") if shared else None
+    matched_count = 0
     lookup_results = []
+    for r in drug_names:
+        found = lookup_engine.lookup(r["text"])
+        if found and found.get("name"):
+            matched_count += 1
+            print(f"      💊 {r['text']:.<40s} → 🔍 {found['name']} ({found['score']:.0%})")
+            lookup_results.append(found)
+        else:
+            print(f"      ❓ {r['text']:.<40s} → không tìm thấy trong DB")
+    
+    with open(os.path.join(out_dir, "step-5.1_drug_lookup.json"), "w", encoding="utf-8") as f:
+        json.dump(lookup_results, f, ensure_ascii=False, indent=2)
 
-    if drug_lookup is not None and drug_names:
-        drug_texts = [r["text"] for r in drug_names]
-        lookup_results = drug_lookup.lookup_batch(drug_texts)
+    t5 = time.time() - t0_lookup
+    print_step("5.1", "Drug Lookup", "ok", t5, f"{matched_count}/{len(drug_names)} matched")
+    
+    t_fin = time.time() - t_total
+    print(f"  {'─'*60}")
+    print(f"  🏁 Total: {t_fin:.1f}s | Drugs Found: {len(drug_names)}")
+    print(f"  {'─'*60}")
 
-        # Gắn kết quả lookup vào ner_results
-        lookup_map = {r["original"]: r for r in lookup_results if r.get("name")}
-        for r in drug_names:
-            match = lookup_map.get(r["text"])
-            if match:
-                r["drug_db"] = {
-                    "name":       match["name"],
-                    "generic":    match["generic"],
-                    "score":      match["score"],
-                    "so_dang_ky": match["so_dang_ky"],
-                    "nong_do":    match["nong_do"],
-                }
-
-        with open(os.path.join(out_dir, "step-5_drug_lookup.json"), "w", encoding="utf-8") as f:
-            json.dump(lookup_results, f, ensure_ascii=False, indent=2)
-
-        matched = [r for r in lookup_results if r.get("name")]
-        t6 = time.time() - t0
-        print_step(5, "Drug Lookup", "ok", t6,
-                   f"{len(matched)}/{len(drug_names)} matched in DB")
-        summary["steps"]["drug_lookup"] = {
-            "time_s": round(t6, 1),
-            "matched": len(matched),
-            "total": len(drug_names),
-        }
-
-        # In kết quả lookup
-        for r in lookup_results:
-            if r.get("name"):
-                print(f"      🔍 {r['original'][:40]:40s} → {r['name']} [{r['score']:.0%}]")
-            else:
-                print(f"      ❓ {r['original'][:40]:40s} → không tìm thấy trong DB")
-    else:
-        print_step(5, "Drug Lookup", "skip", detail="DrugLookup not loaded")
-        summary["steps"]["drug_lookup"] = {"skipped": True}
-
-    # ── Summary ───────────────────────────────────────────────────────────
-    extracted_names = [r["text"] for r in drug_names]
-
-    elapsed = time.time() - t_total
-    summary["total_time_s"] = round(elapsed, 1)
-    summary["drugs_found"] = extracted_names
+    summary["steps"]["drug_lookup"] = {"time_s": round(t5, 1), "matches": matched_count}
+    summary["total_time_s"] = round(t_fin, 1)
+    summary["drugs_found"] = [d["text"] for d in drug_names]
+    # Lưu thông tin đầy đủ của từng thuốc (stt, drug_name, instruction, qty, unit)
+    summary["drugs_structured"] = [
+        d.get("extracted", {})
+        for d in drug_names
+    ]
     summary["drug_lookup_results"] = lookup_results
 
     # Save summary
     with open(os.path.join(out_dir, "summary.json"), "w", encoding="utf-8") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
 
-    print(f"  {'─' * 56}")
-    print(f"  Total: {elapsed:.1f}s | Drugs found: {len(extracted_names)}")
-    # Đã in chi tiết thuốc trong quá trình chạy, không in lại ở đây để tránh trùng lặp
-    
-    return summary, ner_input
+    return summary, ocr_blocks
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
@@ -374,8 +356,10 @@ def main():
     if not args.no_drug_lookup:
         try:
             from core.phase_a.s6_drug_search.drug_lookup import DrugLookup
-            shared["drug_lookup"] = DrugLookup()
-            print(f"  DrugLookup loaded ({shared['drug_lookup'].db_size:,} thuốc)")
+            lookup_engine = DrugLookup()
+            shared["lookup"] = lookup_engine
+            # Kiểm tra xem class có thuộc tính db_size không, nếu không chỉ in thông báo đơn giản
+            print("  DrugLookup loaded")
         except Exception as e:
             logger.warning(f"DrugLookup không load được: {e}")
 

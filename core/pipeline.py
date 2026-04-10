@@ -57,6 +57,7 @@ class MedicinePipeline:
         self._pill_det = None
         self._drug_mapper = None
         self._matcher = None
+        self._reference_matcher = None
 
         logger.info("MedicinePipeline initialized")
 
@@ -122,6 +123,15 @@ class MedicinePipeline:
             self._matcher = GcnMatcher()
             logger.info("GCN matcher loaded")
         return self._matcher
+
+    def _get_reference_matcher(self):
+        if self._reference_matcher is None:
+            from core.phase_b.s2_match.reference_matcher import (
+                ReferenceMatcher,
+            )
+            self._reference_matcher = ReferenceMatcher()
+            logger.info("Reference matcher loaded")
+        return self._reference_matcher
 
     # ── Phase A: Scan Prescription ───────────────────────
 
@@ -195,6 +205,118 @@ class MedicinePipeline:
                 "total_blocks": len(ocr_blocks),
                 "drugnames": len(medications),
                 "others": len(ocr_blocks) - len(medications),
+            },
+        }
+
+    def scan_prescription_app(self, image, skip_yolo=False):
+        """
+        Safer API scan path incorporating STT grouping and confidence levels.
+        """
+        if isinstance(image, str):
+            img = cv2.imread(image)
+            if img is None:
+                return {"error": f"Cannot read: {image}"}
+        elif hasattr(image, 'shape'):
+            img = image
+        else:
+            img = np.array(image)
+
+        if not skip_yolo:
+            try:
+                cropped = self._crop_prescription(img)
+                if cropped is not None:
+                    img = cropped
+                    logger.info("YOLO crop successful")
+                else:
+                    logger.warning("YOLO detection failed, using full image as fallback")
+            except Exception as e:
+                logger.error(f"YOLO detection error: {e}, using full image")
+
+        try:
+            from core.phase_a.s2_preprocess.orientation import preprocess_image
+            img, prep_info = preprocess_image(img, stem="api")
+            logger.info(f"Preprocess: {prep_info}")
+        except Exception as e:
+            logger.warning(f"Preprocess failed: {e}, continuing with original image")
+
+        h, w = img.shape[:2]
+
+        ocr = self._get_ocr()
+        result = ocr.extract(img)
+        if not result.text_blocks:
+            return {"error": "OCR found no text", "image_size": (w, h)}
+        
+        # STT Grouping
+        from core.phase_a.s3_ocr.ocr_engine import group_by_stt
+        merged_blocks_obj = group_by_stt(result.text_blocks)
+        
+        ner_input = []
+        for b in merged_blocks_obj:
+            text = b.text.strip()
+            if not text:
+                continue
+            ner_input.append({
+                "text": text,
+                "label": "other",
+                "box": b.bbox,
+                "bbox": b.bbox,
+            })
+
+        if not ner_input:
+            return {"error": "No text after grouping", "image_size": (w, h)}
+
+        ner_results = self._classify_blocks(ner_input)
+        
+        # Mapping rules
+        mapper = self._get_drug_mapper()
+        medications = []
+        
+        for block in ner_results:
+            if block.get("label") == "drugname":
+                text = block["text"]
+                match = mapper.lookup(text)
+                bbox = block.get("bbox") or block.get("box") or [0, 0, 0, 0]
+                
+                match_score = match.get("score", 0) if match else 0
+                matched_name = match.get("name", text) if match else text
+                
+                # Confidence Thresholding
+                # Level B: strict confirmed
+                if match_score >= 0.85:
+                    mapping_status = "confirmed"
+                elif match_score >= 0.65:
+                    mapping_status = "unmapped_candidate"
+                else:
+                    mapping_status = "rejected_noise"
+                    
+                medications.append({
+                    "ocr_text": text,
+                    "drug_name_raw": text, # Raw text before fuzzy match
+                    "matched_drug_name": matched_name,
+                    "mapping_status": mapping_status,
+                    "confidence": block.get("confidence", 0),
+                    "match_score": match_score,
+                    "bbox": bbox,
+                    "extracted": {
+                        "stt": "",
+                        "drug_name": matched_name if mapping_status == "confirmed" else text,
+                        "instruction": "",
+                        "quantity": "",
+                        "unit": ""
+                    }
+                })
+
+        # Remove rejected noise from returned medications (or keep them but UI will hide)
+        filtered_meds = [m for m in medications if m["mapping_status"] != "rejected_noise"]
+
+        return {
+            "medications": filtered_meds,
+            "ocr_blocks": ner_results,
+            "image_size": (w, h),
+            "stats": {
+                "total_blocks": len(ner_input),
+                "drugnames": len(filtered_meds),
+                "others": len(ner_input) - len(filtered_meds),
             },
         }
 
@@ -275,18 +397,31 @@ class MedicinePipeline:
 
     # ── Phase B: Verify Pills ────────────────────────────
 
-    def verify_pills(self, pill_image, prescription_blocks,
-                     img_w=1000, img_h=1000):
+    def verify_pills(
+        self,
+        pill_image,
+        prescription_blocks=None,
+        img_w=1000,
+        img_h=1000,
+        occurrence_id=None,
+        scheduled_time=None,
+        expected_medications=None,
+        reference_profiles=None,
+    ):
         """
         Verify pills match the prescription.
 
         Args:
             pill_image: str path or numpy array (BGR)
-            prescription_blocks: ocr_blocks from scan_prescription()
+            prescription_blocks: legacy ocr_blocks from scan_prescription()
             img_w, img_h: prescription image dimensions
+            occurrence_id: dose occurrence id (new dose-centric flow)
+            scheduled_time: dose scheduled time (new dose-centric flow)
+            expected_medications: medications expected in current dose
+            reference_profiles: user reference profiles per plan
 
         Returns:
-            dict: matches, detections, n_pills
+            dict: verification result in legacy or dose-centric shape
         """
         if isinstance(pill_image, str):
             pimg = cv2.imread(pill_image)
@@ -300,6 +435,33 @@ class MedicinePipeline:
         detections = pill_det.detect(pimg)
 
         if not detections:
+            if expected_medications is not None:
+                reference_matcher = self._get_reference_matcher()
+                empty_verify = reference_matcher.verify(
+                    pimg,
+                    [],
+                    expected_medications=expected_medications,
+                    reference_profiles=reference_profiles or [],
+                )
+                return {
+                    "mode": "dose_verification",
+                    "occurrenceId": occurrence_id,
+                    "scheduledTime": scheduled_time,
+                    "detections": [],
+                    "summary": empty_verify.get("summary", {}),
+                    "referenceCoverage": empty_verify.get(
+                        "referenceCoverage", {}
+                    ),
+                    "expectedMedications": empty_verify.get(
+                        "expectedMedications", []
+                    ),
+                    "missingReferences": empty_verify.get(
+                        "missingReferences", []
+                    ),
+                    "matches": [],
+                    "n_pills": 0,
+                    "warning": "No pills detected",
+                }
             return {
                 "matches": [],
                 "detections": [],
@@ -307,9 +469,50 @@ class MedicinePipeline:
                 "warning": "No pills detected",
             }
 
+        if expected_medications is not None:
+            reference_matcher = self._get_reference_matcher()
+            verify_result = reference_matcher.verify(
+                pimg,
+                detections,
+                expected_medications=expected_medications,
+                reference_profiles=reference_profiles or [],
+            )
+
+            assigned_matches = [
+                {
+                    "detection_idx": item["detectionIdx"],
+                    "drug_name": item.get("assignedDrugName"),
+                    "confidence": item.get("confidence", 0),
+                    "status": item.get("status", "unknown"),
+                }
+                for item in verify_result.get("detections", [])
+                if item.get("status") in ("assigned", "uncertain")
+            ]
+
+            return {
+                "mode": "dose_verification",
+                "occurrenceId": occurrence_id,
+                "scheduledTime": scheduled_time,
+                "detections": verify_result.get("detections", []),
+                "summary": verify_result.get("summary", {}),
+                "referenceCoverage": verify_result.get(
+                    "referenceCoverage", {}
+                ),
+                "expectedMedications": verify_result.get(
+                    "expectedMedications", []
+                ),
+                "missingReferences": verify_result.get(
+                    "missingReferences", []
+                ),
+                # Backward-compatible fields
+                "matches": assigned_matches,
+                "n_pills": len(detections),
+            }
+
         matcher = self._get_matcher()
+        blocks = prescription_blocks or []
         matches = matcher.match(
-            pimg, prescription_blocks,
+            pimg, blocks,
             img_w=img_w, img_h=img_h,
         )
 

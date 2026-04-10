@@ -12,6 +12,20 @@ import '../../settings/data/settings_repository.dart';
 import '../data/plan_repository.dart';
 import '../domain/plan.dart';
 
+// ---------------------------------------------------------------------------
+// Data model: a time slot with drugs assigned to it
+// ---------------------------------------------------------------------------
+
+class _TimeSlot {
+  String time; // "HH:mm"
+
+  _TimeSlot({required this.time});
+}
+
+// ---------------------------------------------------------------------------
+// Screen
+// ---------------------------------------------------------------------------
+
 class SetScheduleScreen extends ConsumerStatefulWidget {
   const SetScheduleScreen({super.key, required this.drugs});
 
@@ -22,22 +36,41 @@ class SetScheduleScreen extends ConsumerStatefulWidget {
 }
 
 class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
+  static const List<String> _defaultSlotTimes = ['08:00', '12:00', '20:00'];
+
   late DateTime _startDate;
   late DateTime _endDate;
-  int _currentIndex = 0;
+  late int _totalDays;
   bool _isSaving = false;
+
+  // Time slots — default 3 common slots
+  final List<_TimeSlot> _slots = _defaultSlotTimes
+      .map((time) => _TimeSlot(time: time))
+      .toList();
+
+  // Pills per dose per drug (index → count)
+  late List<int> _pillsPerDose;
+
+  // Per-drug slot assignments (drug index -> slot indices)
+  late List<Set<int>> _drugSlotIndices;
 
   @override
   void initState() {
     super.initState();
     _startDate = DateTime.now();
     final firstDays = widget.drugs.isEmpty ? 7 : widget.drugs.first.totalDays;
-    _endDate = _startDate.add(Duration(days: firstDays - 1));
+    _totalDays = firstDays;
+    _endDate = _startDate.add(Duration(days: _totalDays - 1));
+    _pillsPerDose = List<int>.filled(widget.drugs.length, 1);
+    _drugSlotIndices = List<Set<int>>.generate(
+      widget.drugs.length,
+      (_) => _slots.isEmpty ? <int>{} : <int>{0},
+    );
   }
 
-  PlanDrugItem get _currentDrug => widget.drugs[_currentIndex];
-
-  String get _startDateStr => DateFormat('yyyy-MM-dd').format(_startDate);
+  // -------------------------------------------------------------------------
+  // Date picking
+  // -------------------------------------------------------------------------
 
   Future<void> _pickDate({required bool isStart}) async {
     final initial = isStart ? _startDate : _endDate;
@@ -51,19 +84,21 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
     setState(() {
       if (isStart) {
         _startDate = picked;
-        if (_endDate.isBefore(_startDate)) {
-          _endDate = _startDate;
-        }
+        if (_endDate.isBefore(_startDate)) _endDate = _startDate;
       } else {
         _endDate = picked;
       }
-      final totalDays = _endDate.difference(_startDate).inDays + 1;
-      _currentDrug.totalDays = totalDays < 1 ? 1 : totalDays;
+      _totalDays = _endDate.difference(_startDate).inDays + 1;
+      if (_totalDays < 1) _totalDays = 1;
     });
   }
 
-  Future<void> _pickTime(int index) async {
-    final parts = _currentDrug.times[index].split(':');
+  // -------------------------------------------------------------------------
+  // Slot management
+  // -------------------------------------------------------------------------
+
+  Future<void> _editSlotTime(int slotIndex) async {
+    final parts = _slots[slotIndex].time.split(':');
     final picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(
@@ -73,67 +108,191 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
     );
     if (picked == null) return;
     setState(() {
-      _currentDrug.times[index] =
+      _slots[slotIndex].time =
           '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
     });
   }
 
-  void _applyCurrentToAll() {
-    final current = _currentDrug.copyWith();
+  void _addSlot() {
     setState(() {
-      for (var i = 0; i < widget.drugs.length; i++) {
-        if (i == _currentIndex) continue;
-        widget.drugs[i] = widget.drugs[i].copyWith(
-          frequency: current.frequency,
-          times: List<String>.from(current.times),
-          pillsPerDose: current.pillsPerDose,
-          totalDays: current.totalDays,
-          notes: current.notes,
-        );
-      }
-      _endDate = _startDate.add(Duration(days: current.totalDays - 1));
+      _slots.add(_TimeSlot(time: '18:00'));
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Da ap dung lich uong cho toan bo don thuoc'),
-      ),
-    );
   }
 
-  void _setFrequency(String value) {
+  void _removeSlot(int index) {
+    if (_slots.length <= 1) return;
     setState(() {
-      _currentDrug.frequency = value;
-      switch (value) {
-        case 'daily':
-          _currentDrug.times = ['08:00'];
-          break;
-        case 'twice_daily':
-          _currentDrug.times = ['08:00', '17:00'];
-          break;
-        case 'three_daily':
-          _currentDrug.times = ['08:00', '12:00', '18:00'];
-          break;
+      _slots.removeAt(index);
+      for (var i = 0; i < _drugSlotIndices.length; i++) {
+        final updated = <int>{};
+        for (final slotIdx in _drugSlotIndices[i]) {
+          if (slotIdx == index) continue;
+          updated.add(slotIdx > index ? slotIdx - 1 : slotIdx);
+        }
+        if (updated.isEmpty && _slots.isNotEmpty) {
+          updated.add(0);
+        }
+        _drugSlotIndices[i] = updated;
       }
     });
+  }
+
+  void _toggleDrugInSlot(int drugIndex, int slotIndex) {
+    setState(() {
+      final assignedSlots = _drugSlotIndices[drugIndex];
+      if (assignedSlots.contains(slotIndex)) {
+        if (assignedSlots.length == 1) return;
+        assignedSlots.remove(slotIndex);
+      } else {
+        assignedSlots.add(slotIndex);
+      }
+    });
+  }
+
+  Set<int> _assignedDrugsForSlot(int slotIndex) {
+    final result = <int>{};
+    for (var i = 0; i < _drugSlotIndices.length; i++) {
+      if (_drugSlotIndices[i].contains(slotIndex)) {
+        result.add(i);
+      }
+    }
+    return result;
+  }
+
+  bool _isSlotAppliedToAllDrugs(int slotIndex) {
+    if (widget.drugs.isEmpty) return false;
+    return _assignedDrugsForSlot(slotIndex).length == widget.drugs.length;
+  }
+
+  void _setSlotForAllDrugs(int slotIndex, bool enabled) {
+    setState(() {
+      for (var i = 0; i < _drugSlotIndices.length; i++) {
+        final assignedSlots = _drugSlotIndices[i];
+        if (enabled) {
+          assignedSlots.add(slotIndex);
+          continue;
+        }
+
+        assignedSlots.remove(slotIndex);
+        if (assignedSlots.isEmpty && _slots.isNotEmpty) {
+          final fallback = _slots.length > 1 && slotIndex == 0 ? 1 : 0;
+          assignedSlots.add(fallback);
+        }
+      }
+    });
+  }
+
+  void _assignAllDrugsToAllSlots() {
+    if (_slots.isEmpty) return;
+    final allSlots = Set<int>.from(List<int>.generate(_slots.length, (i) => i));
+    setState(() {
+      for (var i = 0; i < _drugSlotIndices.length; i++) {
+        _drugSlotIndices[i] = Set<int>.from(allSlots);
+      }
+    });
+  }
+
+  void _assignAllDrugsToFirstSlot() {
+    if (_slots.isEmpty) return;
+    setState(() {
+      for (var i = 0; i < _drugSlotIndices.length; i++) {
+        _drugSlotIndices[i] = <int>{0};
+      }
+    });
+  }
+
+  void _applyDailyPreset(int timesPerDay) {
+    final presetTimes = switch (timesPerDay) {
+      1 => <String>['08:00'],
+      2 => <String>['08:00', '20:00'],
+      _ => <String>['08:00', '12:00', '20:00'],
+    };
+
+    setState(() {
+      _slots
+        ..clear()
+        ..addAll(presetTimes.map((time) => _TimeSlot(time: time)));
+
+      final assignedAll = Set<int>.from(
+        List<int>.generate(_slots.length, (index) => index),
+      );
+      for (var i = 0; i < _drugSlotIndices.length; i++) {
+        _drugSlotIndices[i] = Set<int>.from(assignedAll);
+      }
+    });
+  }
+
+  String _slotPreviewText(Set<int> assignedDrugIndices) {
+    if (assignedDrugIndices.isEmpty) {
+      return 'Chưa có thuốc nào trong khung giờ này';
+    }
+
+    final names = assignedDrugIndices
+        .where((index) => index >= 0 && index < widget.drugs.length)
+        .map((index) => widget.drugs[index].name)
+        .toList();
+    names.sort();
+
+    if (names.length <= 3) {
+      return names.join(', ');
+    }
+
+    final firstThree = names.take(3).join(', ');
+    return '$firstThree +${names.length - 3} thuốc';
+  }
+
+  // -------------------------------------------------------------------------
+  // Save
+  // -------------------------------------------------------------------------
+
+  /// Build a list of (drug, times[]) pairs from slot assignments.
+  List<(PlanDrugItem, List<String>)> _buildDrugTimePairs() {
+    final result = <(PlanDrugItem, List<String>)>[];
+    for (var i = 0; i < widget.drugs.length; i++) {
+      final sortedSlots = _drugSlotIndices[i].toList()..sort();
+      final times = sortedSlots
+          .where((slotIndex) => slotIndex >= 0 && slotIndex < _slots.length)
+          .map((slotIndex) => _slots[slotIndex].time)
+          .toList();
+      times.sort();
+      final drug = widget.drugs[i];
+      result.add((drug, times));
+    }
+    return result;
   }
 
   Future<void> _savePlans() async {
     setState(() => _isSaving = true);
+    final startDateStr = DateFormat('yyyy-MM-dd').format(_startDate);
     try {
       final repo = ref.read(planRepositoryProvider);
       final notificationService = ref.read(notificationServiceProvider);
       final settingsRepo = ref.read(settingsRepositoryProvider);
       final remindersEnabled = await settingsRepo.getRemindersEnabled();
-      for (final drug in widget.drugs) {
-        final created = await repo.createPlan(drug, _startDateStr);
+
+      final pairs = _buildDrugTimePairs();
+
+      for (final (drug, times) in pairs) {
+        final idx = widget.drugs.indexOf(drug);
+        final pills = idx >= 0 ? _pillsPerDose[idx] : 1;
+        final frequency = switch (times.length) {
+          1 => 'daily',
+          2 => 'twice_daily',
+          _ => 'three_daily',
+        };
+        final adjusted = drug.copyWith(
+          times: times,
+          frequency: frequency,
+          pillsPerDose: pills,
+          totalDays: _totalDays,
+        );
+        final created = await repo.createPlan(adjusted, startDateStr);
         if (remindersEnabled) {
           try {
             await notificationService.schedulePlanNotifications(created);
           } catch (e) {
             if (kDebugMode) {
-              debugPrint(
-                '[SetScheduleScreen] Notification scheduling failed: $e',
-              );
+              debugPrint('[SetScheduleScreen] Notification error: $e');
             }
           }
         }
@@ -143,7 +302,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       ref.invalidate(planNotifierProvider);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Da tao ${widget.drugs.length} ke hoach uong thuoc'),
+          content: Text('Đã tạo ${widget.drugs.length} kế hoạch uống thuốc'),
           backgroundColor: AppColors.success,
         ),
       );
@@ -154,8 +313,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
         SnackBar(
           content: Text(
             e.type == DioExceptionType.connectionError
-                ? 'Khong ket noi duoc server'
-                : 'Khong the luu ke hoach',
+                ? 'Không kết nối được máy chủ'
+                : 'Không thể lưu kế hoạch',
           ),
           backgroundColor: AppColors.error,
         ),
@@ -164,135 +323,118 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Loi: $e'), backgroundColor: AppColors.error),
+        SnackBar(content: Text('Lỗi: $e'), backgroundColor: AppColors.error),
       );
       setState(() => _isSaving = false);
     }
   }
 
+  // -------------------------------------------------------------------------
+  // Build
+  // -------------------------------------------------------------------------
+
   @override
   Widget build(BuildContext context) {
-    final drug = _currentDrug;
-    final isLast = _currentIndex == widget.drugs.length - 1;
+    final df = DateFormat('dd/MM');
+    final startStr = df.format(_startDate);
+    final endStr = df.format(_endDate);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dat lich uong thuoc'),
+        title: const Text('Lập lịch uống thuốc'),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 120),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
         children: [
-          _HeaderStepper(
-            currentIndex: _currentIndex,
-            total: widget.drugs.length,
-          ),
-          const SizedBox(height: 18),
-          _CardShell(
+          // ── Header summary ──
+          _SectionCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _FieldLabel('Ten thuoc'),
-                const SizedBox(height: 8),
-                TextField(
-                  controller: TextEditingController(text: drug.name),
-                  readOnly: true,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.medication_outlined),
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.14),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Icon(
+                        Icons.schedule_rounded,
+                        color: AppColors.primaryDark,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Lập lịch theo khung giờ',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 17,
+                            ),
+                          ),
+                          Text(
+                            '${widget.drugs.length} thuốc · Gán vào các khung giờ bên dưới',
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 18),
-                const _FieldLabel('Ban dung thuoc trong bao lau?'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // ── Date range ──
+          _SectionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _SectionLabel('Thời gian dùng thuốc'),
                 const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       child: _DateCard(
-                        label: 'Bat dau',
-                        value: DateFormat('dd/MM').format(_startDate),
+                        label: 'Bắt đầu',
+                        value: startStr,
                         onTap: () => _pickDate(isStart: true),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: _DateCard(
-                        label: 'Ket thuc',
-                        value: DateFormat('dd/MM').format(_endDate),
+                        label: 'Kết thúc',
+                        value: endStr,
                         onTap: () => _pickDate(isStart: false),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 18),
-                const _FieldLabel('Ban dung thuoc bao lau mot lan?'),
-                const SizedBox(height: 10),
-                SegmentedButton<String>(
-                  segments: const [
-                    ButtonSegment(value: 'daily', label: Text('1 lan/ngay')),
-                    ButtonSegment(
-                      value: 'twice_daily',
-                      label: Text('2 lan/ngay'),
-                    ),
-                    ButtonSegment(
-                      value: 'three_daily',
-                      label: Text('3 lan/ngay'),
-                    ),
-                  ],
-                  selected: {drug.frequency},
-                  onSelectionChanged: (values) => _setFrequency(values.first),
-                ),
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: const [
-                    _WeekChip(label: 'T2', selected: true),
-                    _WeekChip(label: 'T3', selected: true),
-                    _WeekChip(label: 'T4', selected: true),
-                    _WeekChip(label: 'T5', selected: true),
-                    _WeekChip(label: 'T6', selected: true),
-                    _WeekChip(label: 'T7', selected: true),
-                    _WeekChip(label: 'CN', selected: true),
-                  ],
-                ),
-                const SizedBox(height: 14),
-                OutlinedButton(
-                  onPressed: _applyCurrentToAll,
-                  child: const Text('Ap dung lich uong cho toan bo don thuoc'),
-                ),
-                const SizedBox(height: 18),
-                const _FieldLabel('Ban hay dat gio uong thuoc'),
-                const SizedBox(height: 10),
-                ...drug.times.asMap().entries.map(
-                  (entry) => _TimeRow(
-                    time: entry.value,
-                    onEdit: () => _pickTime(entry.key),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                const _FieldLabel('Ban uong bao nhieu vien 1 lan?'),
-                const SizedBox(height: 10),
-                _DoseStepper(
-                  value: drug.pillsPerDose,
-                  onMinus: drug.pillsPerDose > 1
-                      ? () => setState(() => drug.pillsPerDose--)
-                      : null,
-                  onPlus: drug.pillsPerDose < 10
-                      ? () => setState(() => drug.pillsPerDose++)
-                      : null,
-                ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 12),
                 Container(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.surfaceSoft,
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '${drug.pillsPerDose} vien x ${drug.times.length} lan/ngay, tu ${DateFormat('dd/MM').format(_startDate)} den ${DateFormat('dd/MM').format(_endDate)}',
+                    'Tổng $_totalDays ngày · từ $startStr đến $endStr',
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryDark,
@@ -302,118 +444,393 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
               ],
             ),
           ),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 6, 20, 20),
-          child: Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _currentIndex > 0
-                      ? () => setState(() => _currentIndex--)
-                      : () => context.go('/create/edit', extra: widget.drugs),
-                  child: Text(_currentIndex > 0 ? 'Thuoc truoc' : 'Quay lai'),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _isSaving
-                      ? null
-                      : () {
-                          if (isLast) {
-                            _savePlans();
-                          } else {
-                            setState(() => _currentIndex++);
-                          }
-                        },
-                  child: _isSaving
-                      ? const SizedBox(
-                          height: 18,
-                          width: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(isLast ? 'Luu' : 'Thuoc sau'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+          const SizedBox(height: 16),
 
-class _HeaderStepper extends StatelessWidget {
-  const _HeaderStepper({required this.currentIndex, required this.total});
-
-  final int currentIndex;
-  final int total;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Icon(
-              Icons.schedule_rounded,
-              color: AppColors.primaryDark,
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
+          // ── Group assignment first ──
+          _SectionCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const _SectionLabel('Bước 1 · Gán theo nhóm'),
+                const SizedBox(height: 8),
                 const Text(
-                  'Dat lich cho tung thuoc',
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+                  'Gán nhanh toàn bộ thuốc trước, sau đó mới chỉnh ngoại lệ từng thuốc.',
+                  style: TextStyle(color: AppColors.textSecondary),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Thuoc ${currentIndex + 1}/$total',
-                  style: const TextStyle(color: AppColors.textSecondary),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: _assignAllDrugsToFirstSlot,
+                      icon: const Icon(Icons.wb_sunny_outlined),
+                      label: Text('Tất cả vào ${_slots.first.time}'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: _assignAllDrugsToAllSlots,
+                      icon: const Icon(Icons.auto_awesome_motion_outlined),
+                      label: const Text('Tất cả vào mọi khung'),
+                    ),
+                  ],
                 ),
+                const SizedBox(height: 12),
+                ..._slots.asMap().entries.map((entry) {
+                  final slotIndex = entry.key;
+                  final slot = entry.value;
+                  final allSelected = _isSlotAppliedToAllDrugs(slotIndex);
+                  final assignedDrugIndices = _assignedDrugsForSlot(slotIndex);
+
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceSoft,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryDark.withValues(
+                                alpha: 0.1,
+                              ),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Text(
+                              slot.time,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.primaryDark,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              _slotPreviewText(assignedDrugIndices),
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                          Checkbox(
+                            value: allSelected,
+                            onChanged: (value) =>
+                                _setSlotForAllDrugs(slotIndex, value ?? false),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // ── Exception tuning ──
+          const Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Text(
+              'Bước 2 · Chỉnh ngoại lệ từng thuốc',
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                color: AppColors.textSecondary,
+                fontSize: 13,
+              ),
+            ),
+          ),
+
+          // ── Slots ──
+          ..._slots.asMap().entries.map((entry) {
+            final slotIndex = entry.key;
+            final slot = entry.value;
+            final assignedDrugIndices = _assignedDrugsForSlot(slotIndex);
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 14),
+              child: _TimeSlotCard(
+                slot: slot,
+                slotIndex: slotIndex,
+                drugs: widget.drugs,
+                assignedDrugIndices: assignedDrugIndices,
+                slotPreviewText: _slotPreviewText(assignedDrugIndices),
+                onEditTime: () => _editSlotTime(slotIndex),
+                onRemove: _slots.length > 1
+                    ? () => _removeSlot(slotIndex)
+                    : null,
+                onToggleDrug: (di) => _toggleDrugInSlot(di, slotIndex),
+              ),
+            );
+          }),
+
+          // Add slot button
+          OutlinedButton.icon(
+            onPressed: _addSlot,
+            icon: const Icon(Icons.add_alarm),
+            label: const Text('Thêm khung giờ'),
+          ),
+          const SizedBox(height: 16),
+
+          // ── Pills per dose per drug ──
+          _SectionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _SectionLabel('Số viên mỗi lần uống'),
+                const SizedBox(height: 12),
+                ...widget.drugs.asMap().entries.map((entry) {
+                  final idx = entry.key;
+                  final drug = entry.value;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            drug.name,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        _PillStepper(
+                          value: _pillsPerDose[idx],
+                          onMinus: _pillsPerDose[idx] > 1
+                              ? () => setState(() => _pillsPerDose[idx]--)
+                              : null,
+                          onPlus: _pillsPerDose[idx] < 10
+                              ? () => setState(() => _pillsPerDose[idx]++)
+                              : null,
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          // ── Summary ──
+          _SectionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _SectionLabel('Tóm tắt lịch uống'),
+                const SizedBox(height: 10),
+                ..._buildSummaryLines(),
               ],
             ),
           ),
         ],
       ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: ElevatedButton(
+            onPressed: _isSaving ? null : _savePlans,
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+            ),
+            child: _isSaving
+                ? const SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Text(
+                    'Lưu kế hoạch',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildSummaryLines() {
+    final pairs = _buildDrugTimePairs();
+    return pairs.map((pair) {
+      final (drug, times) = pair;
+      final idx = widget.drugs.indexOf(drug);
+      final pills = idx >= 0 ? _pillsPerDose[idx] : 1;
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 6),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(
+              Icons.medication_outlined,
+              size: 16,
+              color: AppColors.primary,
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                '${drug.name} — $pills viên × ${times.join(', ')}',
+                style: const TextStyle(fontSize: 13),
+              ),
+            ),
+          ],
+        ),
+      );
+    }).toList();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Time slot card
+// ---------------------------------------------------------------------------
+
+class _TimeSlotCard extends StatelessWidget {
+  const _TimeSlotCard({
+    required this.slot,
+    required this.slotIndex,
+    required this.drugs,
+    required this.assignedDrugIndices,
+    required this.slotPreviewText,
+    required this.onEditTime,
+    required this.onToggleDrug,
+    this.onRemove,
+  });
+
+  final _TimeSlot slot;
+  final int slotIndex;
+  final List<PlanDrugItem> drugs;
+  final Set<int> assignedDrugIndices;
+  final String slotPreviewText;
+  final VoidCallback onEditTime;
+  final void Function(int drugIndex) onToggleDrug;
+  final VoidCallback? onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.access_time_rounded,
+                color: AppColors.primaryDark,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: onEditTime,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryDark.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    slot.time,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                      color: AppColors.primaryDark,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${assignedDrugIndices.length} thuốc',
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 13,
+                ),
+              ),
+              const Spacer(),
+              if (onRemove != null)
+                IconButton(
+                  onPressed: onRemove,
+                  icon: const Icon(
+                    Icons.remove_circle_outline,
+                    color: AppColors.error,
+                  ),
+                  iconSize: 20,
+                  tooltip: 'Xóa khung giờ',
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            slotPreviewText,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Chọn thuốc uống vào giờ này:',
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: drugs.asMap().entries.map((e) {
+              final selected = assignedDrugIndices.contains(e.key);
+              return FilterChip(
+                selected: selected,
+                label: Text(e.value.name),
+                selectedColor: AppColors.primary.withValues(alpha: 0.18),
+                checkmarkColor: AppColors.primaryDark,
+                labelStyle: TextStyle(
+                  color: selected
+                      ? AppColors.primaryDark
+                      : AppColors.textPrimary,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.normal,
+                ),
+                onSelected: (_) => onToggleDrug(e.key),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _CardShell extends StatelessWidget {
-  const _CardShell({required this.child});
+// ---------------------------------------------------------------------------
+// Shared UI components
+// ---------------------------------------------------------------------------
 
+class _SectionCard extends StatelessWidget {
+  const _SectionCard({required this.child});
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.border),
       ),
       child: child,
@@ -421,9 +838,8 @@ class _CardShell extends StatelessWidget {
   }
 }
 
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(this.label);
-
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.label);
   final String label;
 
   @override
@@ -433,6 +849,7 @@ class _FieldLabel extends StatelessWidget {
       style: const TextStyle(
         fontWeight: FontWeight.w800,
         color: AppColors.textSecondary,
+        fontSize: 13,
       ),
     );
   }
@@ -444,7 +861,6 @@ class _DateCard extends StatelessWidget {
     required this.value,
     required this.onTap,
   });
-
   final String label;
   final String value;
   final VoidCallback onTap;
@@ -453,12 +869,12 @@ class _DateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(14),
       child: Ink(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: AppColors.surfaceSoft,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.border),
         ),
         child: Row(
@@ -466,26 +882,27 @@ class _DateCard extends StatelessWidget {
             const Icon(
               Icons.calendar_month_rounded,
               color: AppColors.primaryDark,
+              size: 18,
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    value,
-                    style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -494,75 +911,12 @@ class _DateCard extends StatelessWidget {
   }
 }
 
-class _WeekChip extends StatelessWidget {
-  const _WeekChip({required this.label, required this.selected});
-
-  final String label;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 42,
-      height: 42,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: selected ? AppColors.primary : AppColors.surfaceSoft,
-        borderRadius: BorderRadius.circular(21),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: selected ? Colors.white : AppColors.textPrimary,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-    );
-  }
-}
-
-class _TimeRow extends StatelessWidget {
-  const _TimeRow({required this.time, required this.onEdit});
-
-  final String time;
-  final VoidCallback onEdit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceSoft,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.access_time_rounded, color: AppColors.textMuted),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              time,
-              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
-            ),
-          ),
-          IconButton(
-            onPressed: onEdit,
-            icon: const Icon(Icons.edit_rounded, color: AppColors.primaryDark),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DoseStepper extends StatelessWidget {
-  const _DoseStepper({
+class _PillStepper extends StatelessWidget {
+  const _PillStepper({
     required this.value,
     required this.onMinus,
     required this.onPlus,
   });
-
   final int value;
   final VoidCallback? onMinus;
   final VoidCallback? onPlus;
@@ -570,34 +924,25 @@ class _DoseStepper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        _StepButton(icon: Icons.remove_rounded, onTap: onMinus),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Container(
-            height: 54,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppColors.surfaceSoft,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Text(
-              '$value',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-            ),
+        _StepBtn(icon: Icons.remove_rounded, onTap: onMinus),
+        Container(
+          width: 44,
+          alignment: Alignment.center,
+          child: Text(
+            '$value',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
           ),
         ),
-        const SizedBox(width: 10),
-        _StepButton(icon: Icons.add_rounded, onTap: onPlus),
+        _StepBtn(icon: Icons.add_rounded, onTap: onPlus),
       ],
     );
   }
 }
 
-class _StepButton extends StatelessWidget {
-  const _StepButton({required this.icon, required this.onTap});
-
+class _StepBtn extends StatelessWidget {
+  const _StepBtn({required this.icon, required this.onTap});
   final IconData icon;
   final VoidCallback? onTap;
 
@@ -605,17 +950,18 @@ class _StepButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(14),
       child: Ink(
-        width: 54,
-        height: 54,
+        width: 36,
+        height: 36,
         decoration: BoxDecoration(
           color: onTap == null ? AppColors.surfaceHigh : AppColors.surface,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.border),
         ),
         child: Icon(
           icon,
+          size: 18,
           color: onTap == null ? AppColors.textMuted : AppColors.primaryDark,
         ),
       ),

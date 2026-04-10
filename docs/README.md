@@ -8,6 +8,7 @@
 |------|----------|
 | `master_plan.md` | Kế hoạch tổng thể dự án MedicineApp — kiến trúc, pipeline, phases, Flutter App |
 | `project_status.md` | Trạng thái hiện tại: việc đã hoàn thành, đang chạy, chưa làm |
+| `phase_a_debug_runbook.md` | Runbook debug chuẩn cho flow Phase A của app |
 | `COLAB_SETUP.md` | Hướng dẫn setup training Zero-PIMA trên Google Colab |
 | `OCR_METHOD_DECISION.md` | So sánh các phương pháp OCR đã thử (PaddleOCR, VietOCR, Hybrid) |
 | `resume_on_new_account.md` | Hướng dẫn resume training khi đổi Colab account |

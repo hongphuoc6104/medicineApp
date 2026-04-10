@@ -28,12 +28,11 @@ class AuthState {
     Object? user = _keepUser,
     bool? isLoading,
     String? error,
-  }) =>
-      AuthState(
-        user: identical(user, _keepUser) ? this.user : user as User?,
-        isLoading: isLoading ?? this.isLoading,
-        error: error,
-      );
+  }) => AuthState(
+    user: identical(user, _keepUser) ? this.user : user as User?,
+    isLoading: isLoading ?? this.isLoading,
+    error: error,
+  );
 
   bool get isAuthenticated => user != null;
 }
@@ -99,7 +98,10 @@ class AuthNotifier extends Notifier<AuthState> {
       state = state.copyWith(isLoading: false, error: _extractError(e));
       return false;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Đã xảy ra lỗi khi đăng ký');
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Đã xảy ra lỗi khi đăng ký',
+      );
       return false;
     }
 
@@ -113,7 +115,10 @@ class AuthNotifier extends Notifier<AuthState> {
       state = state.copyWith(isLoading: false, error: _extractError(e));
       return false;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Đăng ký xong nhưng đăng nhập thất bại');
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Đăng ký xong nhưng đăng nhập thất bại',
+      );
       return false;
     }
   }
@@ -160,5 +165,6 @@ class AuthNotifier extends Notifier<AuthState> {
   }
 }
 
-final authNotifierProvider =
-    NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
+final authNotifierProvider = NotifierProvider<AuthNotifier, AuthState>(
+  AuthNotifier.new,
+);

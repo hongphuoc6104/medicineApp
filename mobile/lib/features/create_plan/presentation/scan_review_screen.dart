@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../drug/data/drug_repository.dart';
 import '../domain/plan.dart';
 import '../domain/scan_result.dart';
+import 'widgets/drug_entry_sheet.dart';
 
 class ScanReviewScreen extends ConsumerStatefulWidget {
   const ScanReviewScreen({super.key, required this.result});
@@ -19,7 +19,6 @@ class ScanReviewScreen extends ConsumerStatefulWidget {
 class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
   late List<DetectedDrug> _drugs;
   final _searchCtrl = TextEditingController();
-  bool _onlyNeedsReview = false;
 
   @override
   void initState() {
@@ -36,189 +35,79 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
   List<DetectedDrug> get _visibleDrugs {
     final q = _searchCtrl.text.trim().toLowerCase();
     return _drugs.where((drug) {
-      final matchesReview = !_onlyNeedsReview || drug.needsReview;
       final haystack = '${drug.name} ${drug.ocrText}'.toLowerCase();
-      final matchesSearch = q.isEmpty || haystack.contains(q);
-      return matchesReview && matchesSearch;
-    }).toList();
+      return q.isEmpty || haystack.contains(q);
+    }).toList()..sort((a, b) {
+      if (a.needsReview && !b.needsReview) return -1;
+      if (!a.needsReview && b.needsReview) return 1;
+      return 0;
+    });
   }
 
   void _removeDrug(DetectedDrug drug) {
     setState(() => _drugs.remove(drug));
   }
 
-  void _replaceDrug(DetectedDrug target, String newName) {
-    final index = _drugs.indexOf(target);
-    if (index < 0) return;
-    final current = _drugs[index];
-    setState(() {
-      _drugs[index] = DetectedDrug(
-        name: newName,
-        dosage: current.dosage,
-        confidence: current.confidence,
-        matchScore: current.matchScore,
-        mappingStatus: 'confirmed',
-        ocrText: current.ocrText,
-        mappedDrugName: newName,
-        frequency: current.frequency,
-        sources: current.sources,
-      );
-    });
-  }
-
-  void _editDrug(DetectedDrug drug) {
+  Future<void> _editDrug(DetectedDrug drug) async {
     final current = drug;
-    final ctrl = TextEditingController(text: current.name);
-    final dosageCtrl = TextEditingController(text: current.dosage ?? '');
-    showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Xac nhan ten thuoc'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: ctrl,
-              decoration: const InputDecoration(labelText: 'Ten thuoc'),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: dosageCtrl,
-              decoration: const InputDecoration(labelText: 'Lieu luong'),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Huy'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final index = _drugs.indexOf(current);
-              if (index >= 0) {
-                setState(() {
-                  _drugs[index] = DetectedDrug(
-                    name: ctrl.text.trim().isEmpty
-                        ? current.name
-                        : ctrl.text.trim(),
-                    dosage: dosageCtrl.text.trim(),
-                    confidence: current.confidence,
-                    matchScore: current.matchScore,
-                    mappingStatus: 'confirmed',
-                    ocrText: current.ocrText,
-                    mappedDrugName: current.mappedDrugName,
-                    frequency: current.frequency,
-                    sources: current.sources,
-                  );
-                });
-              }
-              Navigator.pop(ctx);
-            },
-            child: const Text('Luu'),
-          ),
-        ],
-      ),
+    final initial = PlanDrugItem(
+      name: current.name,
+      dosage: current.dosage ?? '',
     );
-  }
 
-  Future<void> _findCorrectDrug(DetectedDrug drug) async {
-    final repo = ref.read(drugRepositoryProvider);
-    final ctrl = TextEditingController(text: drug.name);
-    List<DrugSearchItem> results = [];
-    bool loading = false;
-
-    await showModalBottomSheet<void>(
+    final result = await showModalBottomSheet<PlanDrugItem?>(
       context: context,
       isScrollControlled: true,
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (ctx, setModalState) {
-            Future<void> runSearch(String query) async {
-              if (query.trim().length < 2) {
-                setModalState(() => results = []);
-                return;
-              }
-              setModalState(() => loading = true);
-              try {
-                final page = await repo.search(query.trim(), limit: 8);
-                setModalState(() {
-                  results = page.items;
-                  loading = false;
-                });
-              } catch (_) {
-                setModalState(() => loading = false);
-              }
-            }
-
-            return SafeArea(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  top: 16,
-                  bottom: MediaQuery.of(ctx).viewInsets.bottom + 16,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextField(
-                      controller: ctrl,
-                      autofocus: true,
-                      onChanged: runSearch,
-                      decoration: const InputDecoration(
-                        hintText: 'Tim thuoc dung...',
-                        prefixIcon: Icon(Icons.search),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: 320,
-                      child: loading
-                          ? const Center(child: CircularProgressIndicator())
-                          : results.isEmpty
-                          ? const Center(
-                              child: Text(
-                                'Nhap it nhat 2 ky tu de tim trong co so du lieu thuoc',
-                                textAlign: TextAlign.center,
-                              ),
-                            )
-                          : ListView.separated(
-                              itemCount: results.length,
-                              separatorBuilder: (context, index) =>
-                                  const Divider(height: 1),
-                              itemBuilder: (context, index) {
-                                final item = results[index];
-                                return ListTile(
-                                  title: Text(item.name),
-                                  subtitle: Text(
-                                    item.activeIngredient ??
-                                        'Khong ro hoat chat',
-                                  ),
-                                  trailing: Text(item.score.toStringAsFixed(2)),
-                                  onTap: () {
-                                    _replaceDrug(drug, item.name);
-                                    Navigator.pop(ctx);
-                                  },
-                                );
-                              },
-                            ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
+      builder: (ctx) => DrugEntrySheet(ref: ref, initial: initial),
     );
+
+    if (result != null) {
+      final index = _drugs.indexOf(current);
+      if (index >= 0) {
+        setState(() {
+          _drugs[index] = DetectedDrug(
+            name: result.name,
+            dosage: result.dosage,
+            confidence: current.confidence,
+            matchScore: current.matchScore,
+            mappingStatus: 'confirmed',
+            ocrText: current.ocrText,
+            mappedDrugName: result.name,
+            frequency: current.frequency,
+            sources: current.sources,
+          );
+        });
+      }
+    }
+  }
+
+  Future<void> _addDrugManually() async {
+    final result = await showModalBottomSheet<PlanDrugItem?>(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => DrugEntrySheet(ref: ref),
+    );
+
+    if (result != null) {
+      setState(() {
+        _drugs.add(
+          DetectedDrug(
+            name: result.name,
+            dosage: result.dosage,
+            mappingStatus: 'confirmed',
+            confidence: 1.0,
+          ),
+        );
+      });
+    }
   }
 
   void _continue() {
     final items = _drugs
         .map((d) => PlanDrugItem(name: d.name, dosage: d.dosage ?? ''))
         .toList();
-    context.go('/create/edit', extra: items);
+    // Skip edit_drugs step — go directly to schedule (plan §6.4, §8.1)
+    context.go('/create/schedule', extra: items);
   }
 
   @override
@@ -227,7 +116,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
     final visible = _visibleDrugs;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Xac nhan ket qua quet')),
+      appBar: AppBar(title: const Text('Xác nhận kết quả quét')),
       body: Column(
         children: [
           Container(
@@ -244,7 +133,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
               children: [
                 Text(
                   widget.result.guidance ??
-                      'Kiem tra danh sach thuoc truoc khi lap lich.',
+                      'Kiểm tra danh sách thuốc trước khi lập lịch.',
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
@@ -253,18 +142,12 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                   runSpacing: 8,
                   children: [
                     _StatusChip(
-                      label: 'Chat luong: ${widget.result.qualityState}',
-                      color: widget.result.qualityState == 'GOOD'
-                          ? AppColors.success
-                          : AppColors.warning,
-                    ),
-                    _StatusChip(
-                      label: '${_drugs.length} thuoc',
+                      label: '${_drugs.length} thuốc',
                       color: AppColors.primary,
                     ),
                     if (needsReviewCount > 0)
                       _StatusChip(
-                        label: '$needsReviewCount can kiem tra',
+                        label: '$needsReviewCount cần xem lại',
                         color: AppColors.warning,
                       ),
                   ],
@@ -274,27 +157,18 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                   controller: _searchCtrl,
                   onChanged: (_) => setState(() {}),
                   decoration: InputDecoration(
-                    hintText: 'Loc theo ten hoac OCR text',
+                    hintText: 'Tìm theo tên thuốc...',
                     prefixIcon: const Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _searchCtrl.clear();
-                        setState(() {});
-                      },
-                    ),
+                    suffixIcon: _searchCtrl.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              _searchCtrl.clear();
+                              setState(() {});
+                            },
+                          )
+                        : null,
                   ),
-                ),
-                const SizedBox(height: 8),
-                SwitchListTile.adaptive(
-                  value: _onlyNeedsReview,
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text('Chi hien thuoc can review'),
-                  subtitle: const Text(
-                    'An cac thuoc da map chac de review nhanh hon',
-                  ),
-                  onChanged: (value) =>
-                      setState(() => _onlyNeedsReview = value),
                 ),
               ],
             ),
@@ -303,7 +177,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
             child: visible.isEmpty
                 ? const Center(
                     child: Text(
-                      'Khong co thuoc nao khop voi bo loc hien tai',
+                      'Không có thuốc nào khớp với bộ lọc hiện tại',
                       style: TextStyle(color: AppColors.textSecondary),
                     ),
                   )
@@ -314,22 +188,24 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                         const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final drug = visible[index];
-                      final statusColor =
-                          drug.mappingStatus == 'confirmed' && !drug.needsReview
-                          ? AppColors.success
-                          : AppColors.warning;
-                      final statusLabel =
-                          drug.mappingStatus == 'confirmed' && !drug.needsReview
-                          ? 'Da map chac'
-                          : drug.mappingStatus == 'confirmed'
-                          ? 'Nen kiem tra'
-                          : 'Chua map chac';
+                      // §9.2: extracted name is always the primary display
+                      final hasDbSuggestion =
+                          drug.mappedDrugName != null &&
+                          drug.mappedDrugName!.isNotEmpty &&
+                          drug.mappedDrugName!.toLowerCase().trim() !=
+                              drug.name.toLowerCase().trim();
+                      // §3.3: show friendly label, not raw confidence number
+                      final needsCheck = drug.needsReview;
                       return Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           color: AppColors.surface,
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: AppColors.surfaceHigh),
+                          border: Border.all(
+                            color: needsCheck
+                                ? AppColors.warning.withValues(alpha: 0.4)
+                                : AppColors.surfaceHigh,
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,55 +217,68 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                                     drug.name,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w700,
+                                      fontSize: 15,
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: statusColor.withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    statusLabel,
-                                    style: TextStyle(
-                                      color: statusColor,
-                                      fontSize: 11,
+                                if (needsCheck)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.warning.withValues(
+                                        alpha: 0.12,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: const Text(
+                                      'Nên kiểm tra',
+                                      style: TextStyle(
+                                        color: AppColors.warning,
+                                        fontSize: 11,
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
-                            const SizedBox(height: 6),
-                            Text(
-                              drug.ocrText.isNotEmpty
-                                  ? 'OCR: ${drug.ocrText}'
-                                  : 'Khong co text goc',
-                              style: const TextStyle(
-                                color: AppColors.textSecondary,
-                                fontSize: 12,
+                            // DB suggestion — optional secondary info
+                            if (hasDbSuggestion) ...[
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.info_outline,
+                                    size: 14,
+                                    color: AppColors.info,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      'Tên chuẩn: ${drug.mappedDrugName}',
+                                      style: const TextStyle(
+                                        color: AppColors.info,
+                                        fontSize: 12,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: [
-                                _MetaChip(
-                                  label:
-                                      'Conf ${(drug.confidence * 100).round()}%',
+                            ],
+                            if (drug.ocrText.isNotEmpty &&
+                                drug.ocrText.toLowerCase().trim() !=
+                                    drug.name.toLowerCase().trim()) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                'OCR gốc: ${drug.ocrText}',
+                                style: const TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontSize: 12,
                                 ),
-                                _MetaChip(
-                                  label:
-                                      'Match ${(drug.matchScore * 100).round()}%',
-                                ),
-                                if (drug.frequency > 1)
-                                  _MetaChip(label: '${drug.frequency} anh'),
-                              ],
-                            ),
+                              ),
+                            ],
                             const SizedBox(height: 10),
                             Wrap(
                               spacing: 8,
@@ -397,24 +286,22 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                               children: [
                                 OutlinedButton.icon(
                                   onPressed: () => _editDrug(drug),
-                                  icon: const Icon(Icons.edit_outlined),
-                                  label: const Text('Sua'),
-                                ),
-                                OutlinedButton.icon(
-                                  onPressed: () => _findCorrectDrug(drug),
-                                  icon: const Icon(Icons.search),
-                                  label: const Text('Tim dung'),
+                                  icon: const Icon(
+                                    Icons.edit_outlined,
+                                    size: 16,
+                                  ),
+                                  label: const Text('Sửa'),
                                 ),
                                 OutlinedButton.icon(
                                   onPressed: () => _removeDrug(drug),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: AppColors.error,
+                                  ),
                                   icon: const Icon(
                                     Icons.delete_outline,
-                                    color: AppColors.error,
+                                    size: 16,
                                   ),
-                                  label: const Text(
-                                    'Loai bo',
-                                    style: TextStyle(color: AppColors.error),
-                                  ),
+                                  label: const Text('Loại bỏ'),
                                 ),
                               ],
                             ),
@@ -425,20 +312,40 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                   ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                OutlinedButton.icon(
-                  onPressed: () =>
-                      context.go('/create/edit', extra: const <PlanDrugItem>[]),
-                  icon: const Icon(Icons.edit_note),
-                  label: const Text('Nhap tay thay the'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: _addDrugManually,
+                        icon: const Icon(Icons.add, size: 18),
+                        label: const Text('Thêm thuốc'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => context.go('/create/scan'),
+                        icon: const Icon(
+                          Icons.document_scanner_outlined,
+                          size: 18,
+                        ),
+                        label: const Text('Quét lại'),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 ElevatedButton.icon(
                   onPressed: _drugs.isEmpty ? null : _continue,
                   icon: const Icon(Icons.arrow_forward),
-                  label: const Text('Tiep tuc lap lich'),
+                  label: Text('Tiếp tục lập lịch (${_drugs.length} thuốc)'),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                  ),
                 ),
               ],
             ),
@@ -464,24 +371,6 @@ class _StatusChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(label, style: TextStyle(color: color, fontSize: 12)),
-    );
-  }
-}
-
-class _MetaChip extends StatelessWidget {
-  const _MetaChip({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceHigh,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(label, style: const TextStyle(fontSize: 11)),
     );
   }
 }

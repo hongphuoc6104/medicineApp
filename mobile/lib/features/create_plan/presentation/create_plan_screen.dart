@@ -18,24 +18,37 @@ class CreatePlanScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 32),
             Text(
-              'Chọn cách tạo kế hoạch',
+              'Chọn cách bắt đầu tạo kế hoạch',
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text(
-              'Quét đơn thuốc hoặc nhập thủ công',
+            const Text(
+              'Ứng dụng hỗ trợ trích xuất tên thuốc. Bạn kiểm tra lại danh sách trước khi lưu kế hoạch.',
               style: TextStyle(color: AppColors.textSecondary),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceSoft,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: const Text(
+                'Lưu ý: Kết quả quét là bước gợi ý ban đầu, không thay thế hoàn toàn việc kiểm tra toa thuốc.',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              ),
+            ),
+            const SizedBox(height: 24),
 
             // ── Option 1: Scan ──
             _OptionCard(
               icon: Icons.document_scanner_outlined,
               title: 'Quét đơn thuốc',
               subtitle:
-                  'Dùng camera quét đơn thuốc,\nAI sẽ nhận diện tên thuốc tự động',
+                  'Chụp hoặc tải ảnh đơn thuốc,\nứng dụng trích xuất tên thuốc để bạn kiểm tra lại',
               color: AppColors.primary,
               onTap: () => context.go('/create/scan'),
             ),
@@ -46,7 +59,7 @@ class CreatePlanScreen extends StatelessWidget {
               icon: Icons.edit_note,
               title: 'Nhập thủ công',
               subtitle:
-                  'Tìm kiếm và thêm thuốc\ntừ cơ sở dữ liệu 9,284 thuốc VN',
+                  'Tự nhập danh sách thuốc\nkhi không dùng ảnh quét hoặc cần nhập mới hoàn toàn',
               color: AppColors.info,
               onTap: () => context.go('/create/edit'),
             ),
@@ -55,7 +68,7 @@ class CreatePlanScreen extends StatelessWidget {
               icon: Icons.history_toggle_off,
               title: 'Dùng lại từ lịch sử',
               subtitle:
-                  'Mở lịch sử quét và tạo lại kế hoạch\ntừ kết quả đã có trước đó',
+                  'Dùng lại kết quả đã quét trước đó\nđể tạo kế hoạch mới nhanh hơn',
               color: AppColors.success,
               onTap: () => context.go('/history'),
             ),
