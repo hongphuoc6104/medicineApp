@@ -1,0 +1,75 @@
+erDiagram
+    USERS ||--o{ SCANS : tao
+    USERS ||--o{ SCAN_SESSIONS : tao
+    USERS ||--o{ PRESCRIPTION_PLANS : so_huu
+
+    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_DRUGS : gom
+    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_SLOTS : gom
+    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_LOGS : ghi_nhat_ky
+
+    PRESCRIPTION_PLAN_SLOTS ||--o{ PRESCRIPTION_PLAN_SLOT_DRUGS : chua
+    PRESCRIPTION_PLAN_DRUGS ||--o{ PRESCRIPTION_PLAN_SLOT_DRUGS : duoc_gan
+
+    USERS {
+        uuid id PK
+        varchar email
+        varchar name
+    }
+
+    SCANS {
+        uuid id PK
+        uuid user_id FK
+        uuid session_id FK
+        jsonb result
+        integer drug_count
+        timestamptz scanned_at
+    }
+
+    SCAN_SESSIONS {
+        uuid id PK
+        uuid user_id FK
+        varchar status
+        boolean converged
+        jsonb merged_result
+    }
+
+    PRESCRIPTION_PLANS {
+        uuid id PK
+        uuid user_id FK
+        varchar title
+        integer total_days
+        date start_date
+        date end_date
+        boolean is_active
+    }
+
+    PRESCRIPTION_PLAN_DRUGS {
+        uuid id PK
+        uuid plan_id FK
+        varchar drug_name
+        varchar dosage
+        integer sort_order
+    }
+
+    PRESCRIPTION_PLAN_SLOTS {
+        uuid id PK
+        uuid plan_id FK
+        varchar time
+        integer sort_order
+    }
+
+    PRESCRIPTION_PLAN_SLOT_DRUGS {
+        uuid id PK
+        uuid slot_id FK
+        uuid drug_id FK
+        integer pills
+    }
+
+    PRESCRIPTION_PLAN_LOGS {
+        uuid id PK
+        uuid plan_id FK
+        varchar occurrence_id
+        varchar slot_time
+        timestamptz scheduled_time
+        varchar status
+    }

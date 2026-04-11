@@ -132,16 +132,32 @@ class AuthNotifier extends Notifier<AuthState> {
 
   /// Extract user-facing error message from DioException.
   String _extractError(DioException e) {
+    final rawMessage = [
+      e.message,
+      e.error?.toString(),
+      if (e.response?.data is Map && (e.response?.data as Map)['error'] is Map)
+        ((e.response?.data as Map)['error'] as Map)['message']?.toString(),
+    ].whereType<String>().join(' ').toLowerCase();
+
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
         return 'Kết nối quá chậm, thử lại sau';
       case DioExceptionType.connectionError:
-        return 'Không có kết nối mạng';
+        return 'Không kết nối được máy chủ';
       default:
         break;
     }
+
+    if (rawMessage.contains('socketexception') ||
+        rawMessage.contains('connection closed') ||
+        rawMessage.contains('failed host lookup') ||
+        rawMessage.contains('connection refused') ||
+        rawMessage.contains('no route to host')) {
+      return 'Không kết nối được máy chủ';
+    }
+
     final data = e.response?.data;
     if (data is Map && data['error'] is Map) {
       final msg = (data['error'] as Map)['message'];

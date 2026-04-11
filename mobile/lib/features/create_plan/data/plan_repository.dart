@@ -12,12 +12,9 @@ class PlanRepository {
 
   PlanRepository(this._dio);
 
-  /// Create a new medication plan (1 drug per plan).
-  Future<Plan> createPlan(PlanDrugItem drug, String startDate) async {
-    final response = await _dio.post(
-      '/plans',
-      data: drug.toCreateJson(startDate),
-    );
+  /// Create a new grouped medication plan.
+  Future<Plan> createPlan(PrescriptionPlanDraft draft) async {
+    final response = await _dio.post('/plans', data: draft.toJson());
     return Plan.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 
@@ -47,15 +44,8 @@ class PlanRepository {
     await _dio.delete('/plans/$id');
   }
 
-  Future<Plan> updatePlan(
-    String id,
-    PlanDrugItem drug,
-    String startDate,
-  ) async {
-    final response = await _dio.put(
-      '/plans/$id',
-      data: drug.toCreateJson(startDate),
-    );
+  Future<Plan> updatePlan(String id, Plan plan) async {
+    final response = await _dio.put('/plans/$id', data: plan.toUpdateJson());
     return Plan.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 

@@ -1,0 +1,751 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[english,vietnamese]{babel}
+\usepackage[a4paper,left=3.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage[hyphens]{url}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{verbatim}
+
+\hypersetup{
+  hidelinks,
+  pdfauthor={Nguyen Nhat Hong Phuoc},
+  pdftitle={Bao cao nien luan nganh Khoa hoc May tinh},
+  pdfsubject={MedicineApp}
+}
+
+\onehalfspacing
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0pt}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+\setlength{\emergencystretch}{3em}
+
+\addto\captionsvietnamese{%
+  \renewcommand{\contentsname}{MỤC LỤC}%
+  \renewcommand{\listfigurename}{DANH MỤC HÌNH}%
+  \renewcommand{\listtablename}{DANH MỤC BẢNG}%
+  \renewcommand{\bibname}{TÀI LIỆU THAM KHẢO}%
+}
+\renewcommand{\chaptername}{Chương}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\figurename}{Hình}
+
+\captionsetup{font=small,labelfont=bf}
+
+\makeatletter
+\def\@makechapterhead#1{%
+  \vspace*{20\p@}%
+  {\parindent \z@ \centering \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+      \LARGE\bfseries \MakeUppercase{\chaptername\ \thechapter}\par\nobreak
+      \vskip 10\p@
+    \fi
+    \LARGE \bfseries #1\par\nobreak
+    \vskip 24\p@
+  }}
+\def\@makeschapterhead#1{%
+  \vspace*{20\p@}%
+  {\parindent \z@ \centering \normalfont
+    \LARGE \bfseries #1\par\nobreak
+    \vskip 24\p@
+  }}
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{Nguyễn Nhật Hồng Phước}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{18pt}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\newcommand{\truong}{TRƯỜNG ĐẠI HỌC CẦN THƠ}
+\newcommand{\khoa}{KHOA CÔNG NGHỆ THÔNG TIN VÀ TRUYỀN THÔNG}
+\newcommand{\loaibaocao}{\shortstack[c]{BÁO CÁO NIÊN LUẬN\\NGÀNH KHOA HỌC MÁY TÍNH}}
+\newcommand{\tentailieu}{\shortstack[c]{XÂY DỰNG ỨNG DỤNG HỖ TRỢ QUÉT ĐƠN THUỐC\\VÀ LẬP KẾ HOẠCH DÙNG THUỐC BẰNG TRÍ TUỆ NHÂN TẠO}}
+\newcommand{\sinhvien}{Nguyễn Nhật Hồng Phước}
+\newcommand{\mssv}{B2308385}
+\newcommand{\gvhd}{TS.\ Lưu Tiến Đạo}
+\newcommand{\nganh}{Khoa học máy tính}
+\newcommand{\thoigian}{Cần Thơ, tháng 4 năm 2026}
+
+\begin{document}
+\selectlanguage{vietnamese}
+\hypersetup{pageanchor=false}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+    \textbf{BỘ GIÁO DỤC VÀ ĐÀO TẠO}\\[0.2cm]
+    \textbf{\truong}\\[0.2cm]
+    \textbf{\khoa}\\[1.0cm]
+
+    \includegraphics[width=3.2cm]{assets/ctu-logo.png}\\[1.0cm]
+
+    {\Large \bfseries \loaibaocao}\\[1.2cm]
+
+    {\normalsize \bfseries \tentailieu}\\[1.5cm]
+
+    \begin{tabular}{rl}
+        Sinh viên thực hiện: & \textbf{\sinhvien} \\
+        Mã số sinh viên: & \textbf{\mssv} \\
+        Ngành: & \textbf{\nganh} \\
+        Giáo viên hướng dẫn: & \textbf{\gvhd} \\
+    \end{tabular}
+
+    \vfill
+    \textbf{\thoigian}
+\end{center}
+\end{titlepage}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+    \textbf{BỘ GIÁO DỤC VÀ ĐÀO TẠO}\\[0.2cm]
+    \textbf{\truong}\\[0.2cm]
+    \textbf{\khoa}\\[0.8cm]
+
+    \includegraphics[width=2.8cm]{assets/ctu-logo.png}\\[0.8cm]
+
+    {\Large \bfseries \loaibaocao}\\[1.0cm]
+    {\normalsize \bfseries \tentailieu}\\[1.3cm]
+
+    \begin{tabular}{rl}
+        Sinh viên thực hiện: & \textbf{\sinhvien} \\
+        Mã số sinh viên: & \textbf{\mssv} \\
+        Giáo viên hướng dẫn: & \textbf{\gvhd} \\
+    \end{tabular}
+
+    \vfill
+    \textbf{\thoigian}
+\end{center}
+\end{titlepage}
+
+\hypersetup{pageanchor=true}
+
+\pagenumbering{roman}
+
+\chapter*{LỜI CAM ĐOAN}
+\addcontentsline{toc}{chapter}{LỜI CAM ĐOAN}
+
+Tôi xin cam đoan báo cáo niên luận này là kết quả nghiên cứu, thiết kế, cài đặt và tổng hợp của cá nhân tôi dưới sự hướng dẫn của \gvhd. Các nội dung mô tả trong báo cáo được xây dựng dựa trên quá trình phát triển hệ thống \textit{MedicineApp}, trên kết quả thử nghiệm thực tế của dự án, cùng với các tài liệu tham khảo đã được trích dẫn rõ ràng. Tôi xin chịu trách nhiệm về tính trung thực của các số liệu, nhận xét và kết luận được trình bày trong báo cáo.
+
+\chapter*{LỜI CẢM ƠN}
+\addcontentsline{toc}{chapter}{LỜI CẢM ƠN}
+
+Trong quá trình thực hiện đề tài, tôi đã nhận được nhiều sự hỗ trợ quý báu từ giảng viên hướng dẫn, bạn bè và những người thân xung quanh. Tôi xin gửi lời cảm ơn chân thành đến \gvhd{} đã định hướng chuyên môn, góp ý về cách tiếp cận bài toán và giúp tôi điều chỉnh phạm vi thực hiện theo hướng phù hợp với điều kiện thời gian cũng như mục tiêu học thuật của niên luận.
+
+Tôi cũng xin cảm ơn các thầy cô của Khoa Công nghệ Thông tin và Truyền thông, Trường Đại học Cần Thơ đã trang bị cho tôi nền tảng kiến thức trong suốt quá trình học tập. Bên cạnh đó, tôi xin cảm ơn gia đình và bạn bè đã luôn động viên, hỗ trợ tôi trong quá trình hoàn thiện hệ thống, kiểm thử ứng dụng và hoàn thành báo cáo này.
+
+Mặc dù đã cố gắng hoàn thiện báo cáo ở mức tốt nhất, đề tài chắc chắn vẫn còn những thiếu sót. Tôi rất mong nhận được thêm các ý kiến đóng góp để tiếp tục hoàn thiện sản phẩm và mở rộng nghiên cứu trong tương lai.
+
+\chapter*{TÓM TẮT}
+\addcontentsline{toc}{chapter}{TÓM TẮT}
+
+Đề tài tập trung xây dựng một ứng dụng hỗ trợ quét đơn thuốc và lập kế hoạch dùng thuốc trên thiết bị di động. Bài toán xuất phát từ thực tế người dùng, nhất là người lớn tuổi, thường gặp khó khăn khi đọc đơn thuốc, nhập lại tên thuốc và ghi nhớ giờ uống hằng ngày. Mục tiêu của hệ thống là chuyển thông tin thuốc trên đơn giấy thành danh sách thuốc có thể rà soát, chỉnh sửa và dùng trực tiếp cho bước tạo lịch dùng thuốc.
+
+Về mặt kỹ thuật, hệ thống được tổ chức thành ba phần chính. Ứng dụng di động đảm nhiệm việc chụp ảnh, hiển thị kết quả quét, cho phép người dùng rà soát và thiết lập lịch dùng thuốc. Máy chủ Node.js lưu lịch sử quét, kế hoạch dùng thuốc và nhật ký uống thuốc. Phần AI xử lý ảnh đơn thuốc theo chuỗi gồm phát hiện vùng đơn, tiền xử lý ảnh, OCR, tách tên thuốc và đối sánh với cơ sở dữ liệu thuốc Việt Nam.
+
+Kết quả triển khai cho thấy hệ thống đã hình thành được luồng hoạt động tương đối đầy đủ từ quét đơn thuốc đến lưu kế hoạch dùng thuốc. Kết quả thử nghiệm nội bộ cho thấy mô-đun nhận diện xử lý ổn định trên tập ảnh thực tế và trả về danh sách thuốc đủ dùng cho bước lập lịch. Đề tài cũng chỉ ra hai hướng chưa tích hợp vào phiên bản chính là mở rộng đọc toàn bộ nội dung trên đơn và xác minh viên thuốc qua hình ảnh, do làm tăng thời gian xử lý hoặc chưa bảo đảm độ tin cậy cần thiết cho sử dụng thực tế.
+
+\noindent\textbf{Từ khóa:} đơn thuốc, nhận dạng ký tự quang học, trích xuất tên thuốc, ứng dụng di động, kế hoạch dùng thuốc, nhận diện thuốc.
+
+\chapter*{ABSTRACT}
+\addcontentsline{toc}{chapter}{ABSTRACT}
+
+\begin{otherlanguage}{english}
+This report focuses on developing a mobile application that supports prescription scanning and medication schedule creation. The problem comes from the fact that many users, especially elderly users, often have difficulty reading paper prescriptions, re-entering drug names, and remembering medication times. The goal of the system is to convert prescription information into a medication list that can be reviewed, edited, and used directly to create a daily medication schedule.
+
+Technically, the system is organized into three main parts. The mobile application handles image capture, scan result display, review, and schedule setup. A Node.js server stores scan history, medication plans, and dose logs. The AI module processes prescription images through prescription-region detection, image preprocessing, OCR, drug-name extraction, and lookup against a Vietnamese drug database.
+
+The implementation shows that the system has formed a fairly complete workflow from prescription scanning to medication plan storage. Internal experiments indicate that the recognition module works stably on real prescription images and returns medication lists that are usable for the scheduling step. The report also identifies two functions that were not integrated into the main version: reading the entire prescription content and verifying pills from images, because these directions either increase processing time or do not yet provide the level of reliability required for practical use.
+
+\noindent\textbf{Keywords:} prescription, OCR, drug-name extraction, mobile application, medication schedule, drug recognition.
+\end{otherlanguage}
+
+\tableofcontents
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+\clearpage
+
+\chapter*{DANH MỤC TỪ VIẾT TẮT}
+\addcontentsline{toc}{chapter}{DANH MỤC TỪ VIẾT TẮT}
+
+\begin{longtable}{p{3cm}p{11cm}}
+AI & Trí tuệ nhân tạo (Artificial Intelligence) \\
+API & Giao diện lập trình ứng dụng (Application Programming Interface) \\
+GPU & Bộ xử lý đồ họa (Graphics Processing Unit) \\
+JSON & JavaScript Object Notation \\
+NER & Nhận dạng thực thể tên (Named Entity Recognition) \\
+OCR & Nhận dạng ký tự quang học (Optical Character Recognition) \\
+REST & Kiểu giao tiếp dữ liệu REST \\
+ROI & Vùng quan tâm (Region of Interest) \\
+\end{longtable}
+
+\clearpage
+\pagenumbering{arabic}
+
+\chapter{GIỚI THIỆU}
+
+\section{Đặt vấn đề}
+
+Trong thực tế chăm sóc sức khỏe cá nhân, đơn thuốc giấy vẫn là hình thức phổ biến tại nhiều cơ sở y tế. Tuy nhiên, việc chuyển thông tin từ đơn thuốc giấy sang một hình thức dễ theo dõi hơn vẫn còn phụ thuộc nhiều vào thao tác thủ công của người bệnh hoặc người nhà. Người dùng phải đọc lại tên thuốc, tự nhập tên thuốc vào điện thoại hoặc ghi chú ra giấy, sau đó tự nhớ giờ uống và số lần uống trong ngày. Quy trình này vừa tốn thời gian, vừa dễ xảy ra sai sót, đặc biệt đối với người lớn tuổi hoặc người không quen sử dụng ứng dụng số.
+
+Trong bối cảnh đó, việc xây dựng một hệ thống có thể hỗ trợ quét đơn thuốc, nhận diện tên thuốc và chuyển trực tiếp thành kế hoạch dùng thuốc là một hướng tiếp cận có giá trị thực tế cao. Khó khăn lớn nhất của bài toán nằm ở việc đơn thuốc thực tế có bố cục không đồng nhất, chất lượng ảnh chụp thay đổi mạnh, chữ in trên giấy có thể bị nghiêng, mờ, chói hoặc thiếu vùng nội dung. Do đó, hệ thống cần đồng thời giải quyết bài toán xử lý ảnh, OCR, trích xuất thông tin thuốc và thiết kế ứng dụng sao cho người dùng cuối vẫn có thể thao tác dễ dàng.
+
+\section{Mục tiêu đề tài}
+
+Mục tiêu tổng quát của đề tài là xây dựng một hệ thống hỗ trợ quản lý dùng thuốc từ đơn thuốc giấy, trong đó trí tuệ nhân tạo đóng vai trò hỗ trợ nhận diện thông tin thuốc còn ứng dụng di động đóng vai trò đưa công nghệ này vào một luồng sử dụng thực tế.
+
+Các mục tiêu cụ thể gồm:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Xây dựng quy trình nhận diện đơn thuốc từ ảnh đầu vào để trích xuất danh sách thuốc phục vụ cho các bước xử lý tiếp theo.
+    \item Xây dựng máy chủ trung gian để kết nối ứng dụng di động với dịch vụ trí tuệ nhân tạo, đồng thời quản lý dữ liệu lịch sử quét, kế hoạch dùng thuốc và nhật ký uống thuốc.
+    \item Xây dựng ứng dụng di động cho phép người dùng quét đơn thuốc, rà soát lại kết quả, thiết lập giờ uống và theo dõi việc dùng thuốc theo ngày.
+    \item Đánh giá những hướng mở rộng đã được cân nhắc nhưng chưa nên đưa vào phiên bản chính, chẳng hạn như mở rộng nhận dạng ký tự quang học sang các vùng thông tin khác trên đơn hoặc xác minh viên thuốc qua hình ảnh.
+\end{enumerate}
+
+\section{Ý nghĩa thực tiễn của đề tài}
+
+Đề tài có ý nghĩa thực tiễn ở chỗ giúp giảm thao tác nhập tay thông tin thuốc từ đơn giấy, hỗ trợ người dùng thiết lập lịch uống rõ ràng hơn và thuận tiện hơn trong quá trình theo dõi việc dùng thuốc hằng ngày. Đối với người lớn tuổi hoặc người chăm sóc, một ứng dụng có thể quét đơn, gợi ý danh sách thuốc và hỗ trợ lập lịch sẽ dễ sử dụng hơn so với cách ghi nhớ hoặc ghi chép thủ công.
+
+\section{Đối tượng nghiên cứu}
+
+Đối tượng nghiên cứu của đề tài là ảnh đơn thuốc giấy, thông tin thuốc cần trích xuất từ ảnh và luồng tạo kế hoạch dùng thuốc trên ứng dụng di động. Đề tài tập trung vào phần thông tin liên quan trực tiếp đến thuốc và bước lập lịch, không đặt trọng tâm vào việc trích xuất toàn bộ nội dung hành chính hoặc chẩn đoán trên đơn thuốc.
+
+\section{Phạm vi thực hiện}
+
+Đề tài tập trung vào luồng chính của sản phẩm gồm: quét đơn thuốc, nhận diện danh sách thuốc, xác nhận kết quả nhận diện, lập lịch dùng thuốc, lưu kế hoạch và hỗ trợ theo dõi việc uống thuốc. Đây là phần có tính khả dụng thực tế cao nhất trong phạm vi niên luận và cũng là phần đã được hoàn thiện ở mức đầu cuối.
+
+Về nội dung trích xuất, hệ thống ưu tiên các thông tin phục vụ trực tiếp cho bài toán lập lịch dùng thuốc, đặc biệt là tên thuốc và các tín hiệu liên quan đến danh sách thuốc. Mặc dù về mặt kỹ thuật có thể mở rộng nhận dạng ký tự quang học để lấy thêm họ tên bệnh nhân, triệu chứng hoặc chẩn đoán, phạm vi đó chưa được đưa vào phiên bản chính vì làm tăng thời gian xử lý và yêu cầu điều kiện chụp ảnh nghiêm ngặt hơn.
+
+Một hướng khác cũng đã được khảo sát là chức năng xác minh viên thuốc qua hình ảnh. Tuy nhiên, chức năng này chưa được tích hợp vào luồng chính do tồn tại rủi ro an toàn nếu hệ thống nhận nhầm các viên thuốc có ngoại hình gần giống nhau. Nội dung này được phân tích như một giới hạn và hướng phát triển ở các chương sau.
+
+\section{Phương pháp nghiên cứu}
+
+Đề tài được triển khai theo hướng kết hợp giữa nghiên cứu ứng dụng và phát triển hệ thống. Thay vì chỉ dừng lại ở việc thử nghiệm một mô hình OCR hoặc một mô hình nhận diện đơn lẻ, hệ thống được thiết kế thành ba phần rõ ràng: ứng dụng di động, máy chủ chính và dịch vụ AI. Cách làm này giúp kiểm tra tính khả thi của một sản phẩm hoàn chỉnh trong bối cảnh sử dụng thực tế, đồng thời thuận lợi hơn cho việc đánh giá từng phần của hệ thống.
+
+Quá trình nghiên cứu và triển khai được thực hiện theo các bước chính sau:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Khảo cứu tài liệu về nhận dạng ký tự quang học, trích xuất tên thuốc và thiết kế ứng dụng hỗ trợ dùng thuốc.
+    \item Phân tích bài toán thực tế và xác định phạm vi ưu tiên cho luồng quét đơn thuốc, rà soát kết quả và lập lịch dùng thuốc.
+    \item Thiết kế kiến trúc hệ thống gồm ứng dụng di động, máy chủ chính, dịch vụ trí tuệ nhân tạo và cơ sở dữ liệu.
+    \item Cài đặt, kết nối và kiểm thử từng thành phần trước khi đánh giá luồng hoạt động đầu cuối.
+    \item Tổng hợp kết quả, phân tích hạn chế và đề xuất các hướng phát triển tiếp theo.
+\end{enumerate}
+
+Về kỹ thuật, quy trình xử lý quét đơn thuốc được tổ chức theo chuỗi: phát hiện vùng đơn thuốc, tiền xử lý ảnh, OCR, trích xuất tên thuốc và chuẩn hóa tên thuốc. Ở phía ứng dụng, người dùng không bị buộc phải chấp nhận hoàn toàn kết quả nhận diện mà vẫn có bước rà soát lại kết quả trước khi lập lịch. Đây là quyết định thiết kế quan trọng nhằm giảm rủi ro sai sót và biến AI thành công cụ hỗ trợ, thay vì thành phần ra quyết định cuối cùng.
+
+\section{Đóng góp của đề tài}
+
+Các đóng góp chính của đề tài có thể tóm tắt như sau:
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item Xây dựng được một hệ thống có luồng hoạt động đầu cuối từ ảnh đơn thuốc đến kế hoạch dùng thuốc trên ứng dụng di động.
+    \item Kết hợp được nhiều thành phần trí tuệ nhân tạo khác nhau trong cùng một quy trình xử lý gồm phát hiện vùng đơn thuốc, nhận dạng ký tự quang học, trích xuất thực thể tên thuốc và đối sánh cơ sở dữ liệu thuốc.
+    \item Thiết kế máy chủ và mô hình dữ liệu đủ để quản lý kế hoạch dùng thuốc, lịch sử quét và nhật ký xác nhận liều uống.
+    \item Phân tích trung thực các nội dung chưa nên tích hợp, đặc biệt là mở rộng nhận dạng ký tự quang học cho toàn bộ đơn thuốc và xác minh viên thuốc qua hình ảnh trong bối cảnh yêu cầu an toàn thực tế.
+\end{itemize}
+
+\section{Cấu trúc báo cáo}
+
+Báo cáo gồm sáu chương. Chương 1 trình bày bối cảnh, mục tiêu, ý nghĩa thực tiễn, phạm vi và phương pháp nghiên cứu. Chương 2 trình bày cơ sở lý thuyết và công nghệ sử dụng. Chương 3 phân tích yêu cầu và thiết kế kiến trúc hệ thống. Chương 4 mô tả việc cài đặt từng thành phần chính của hệ thống. Chương 5 trình bày kết quả thực nghiệm, đánh giá và các giới hạn kỹ thuật. Chương 6 đưa ra kết luận và định hướng phát triển trong tương lai.
+
+\chapter{CƠ SỞ LÝ THUYẾT VÀ\\ CÔNG NGHỆ LIÊN QUAN}
+
+\section{Bài toán nhận diện thông tin từ đơn thuốc}
+
+Đơn thuốc là một dạng tài liệu bán cấu trúc. Mặc dù về tổng thể có những vùng thông tin thường gặp như thông tin bệnh nhân, thông tin bác sĩ, chẩn đoán và danh sách thuốc, cách trình bày giữa các mẫu đơn vẫn khác nhau. Ngoài ra, ảnh đơn thuốc trong điều kiện thực tế thường chịu ảnh hưởng bởi góc chụp, ánh sáng, bóng đổ, độ nghiêng, độ mờ và nền cảnh xung quanh. Vì vậy, hệ thống không thể coi ảnh đầu vào là một tài liệu phẳng và sạch như trong các bộ dữ liệu OCR chuẩn hóa.
+
+Với bài toán của đề tài, thông tin có giá trị nhất cần lấy ra là danh sách thuốc. Từ góc nhìn sản phẩm, đây là phần trực tiếp tạo ra giá trị cho người dùng vì danh sách thuốc là đầu vào để tạo kế hoạch dùng thuốc. Chính vì vậy, đề tài không theo đuổi chiến lược trích xuất toàn bộ nội dung trên đơn thuốc ngay từ đầu mà ưu tiên vùng thông tin đem lại tác dụng cao nhất cho luồng chính.
+
+\section{Nhận dạng ký tự quang học và tiền xử lý ảnh}
+
+OCR là thành phần cốt lõi để chuyển nội dung văn bản trong ảnh thành dữ liệu số có thể xử lý được. Tuy nhiên, chất lượng OCR phụ thuộc mạnh vào bước tiền xử lý. Trong hệ thống này, trước khi OCR, ảnh được đưa qua các bước phát hiện vùng đơn thuốc, cắt vùng quan tâm, hiệu chỉnh nghiêng và chỉnh hướng ảnh. Mục tiêu là đưa ảnh về một dạng đủ tốt để bộ OCR có thể phát hiện và đọc chữ ổn định hơn.
+
+Hệ thống sử dụng PaddleOCR cho bước phát hiện vùng chữ và VietOCR cho bước nhận dạng chữ tiếng Việt. PaddleOCR là một giải pháp nhận dạng ký tự quang học hiệu quả cho các bài toán tài liệu và cảnh thực tế, có thể phát hiện các đa giác văn bản thay vì chỉ dùng khung chữ nhật đơn giản \cite{paddleocr}. VietOCR hỗ trợ nhận dạng tiếng Việt tốt hơn ở bước đọc chuỗi ký tự sau khi đã có vùng cắt từ bộ phát hiện văn bản \cite{vietocr}. Việc kết hợp hai thành phần này cho phép tận dụng ưu điểm của từng công cụ thay vì phụ thuộc hoàn toàn vào một mô hình duy nhất.
+
+\section{Nhận dạng thực thể tên thuốc}
+
+Sau bước OCR, hệ thống thu được nhiều đoạn văn bản ngắn từ ảnh đơn thuốc. Không phải mọi đoạn văn bản đều là tên thuốc. Vì vậy, đề tài sử dụng bài toán nhận dạng thực thể tên, thường được gọi tắt là NER, để phân loại những đoạn nào có vai trò là tên thuốc. Mô hình được dùng là PhoBERT, một mô hình ngôn ngữ tiền huấn luyện cho tiếng Việt, phù hợp với các tác vụ phân loại và gán nhãn chuỗi \cite{phobert}.
+
+Trong ngữ cảnh đề tài, mô hình NER giúp tách các khối OCR liên quan đến tên thuốc ra khỏi các khối còn lại như hướng dẫn dùng, số lượng hoặc các thông tin nhiễu khác. Đây là bước quan trọng giúp giảm sai số trước khi đưa kết quả sang bước chuẩn hóa tên thuốc.
+
+\section{Chuẩn hóa và đối sánh tên thuốc}
+
+Tên thuốc trên đơn thuốc thực tế thường không hoàn toàn trùng với tên chuẩn trong cơ sở dữ liệu. Có thể xuất hiện khác biệt về viết hoa, thiếu dấu, rút gọn, sai OCR hoặc khác biệt giữa tên thương mại và hoạt chất. Do đó, sau bước NER, hệ thống cần thêm một bước đối sánh với cơ sở dữ liệu thuốc Việt Nam để đưa các kết quả OCR về dạng chuẩn hơn.
+
+Trong hệ thống, bước này được thực hiện bằng mô-đun tra cứu thuốc, sử dụng cơ sở dữ liệu thuốc Việt Nam với quy mô hàng nghìn mục. Kết quả đối sánh không được dùng để ghi đè tuyệt đối lên văn bản nhận dạng mà đóng vai trò như nguồn chuẩn hóa và nguồn gợi ý phụ. Quyết định này giúp tránh việc một kết quả đối sánh gần đúng sai làm thay đổi hoàn toàn tên hiển thị cho người dùng.
+
+\section{Phát triển ứng dụng di động và máy chủ}
+
+Flutter được chọn để xây dựng ứng dụng di động do khả năng phát triển giao diện đa nền tảng, hỗ trợ camera, quản lý trạng thái và tích hợp thông báo nhắc uống tương đối thuận lợi. Ở dự án này, Flutter được dùng cho các màn hình quét đơn, rà soát danh sách thuốc, thiết lập lịch dùng thuốc, xem kế hoạch hôm nay, lịch sử quét và lịch sử dùng thuốc.
+
+Máy chủ chính sử dụng Node.js với Express và PostgreSQL. Node.js phù hợp cho việc xây dựng API, dễ tổ chức phần định tuyến và phần xử lý nghiệp vụ, đồng thời thuận tiện cho việc kiểm thử dữ liệu trao đổi giữa ứng dụng và máy chủ. PostgreSQL được dùng để lưu người dùng, lịch sử quét, phiên quét, kế hoạch dùng thuốc, các khung giờ và nhật ký uống thuốc.
+
+\section{Nhắc uống thuốc và quản lý kế hoạch dùng thuốc}
+
+Sau khi đã có danh sách thuốc, người dùng cần một cơ chế để chuyển dữ liệu đó thành kế hoạch uống thuốc có thể theo dõi được hằng ngày. Đề tài giải quyết bài toán này bằng mô hình kế hoạch gồm tập thuốc, tập khung giờ, số viên tương ứng với từng khung giờ và thời gian hiệu lực của kế hoạch. Ứng dụng di động sử dụng thông báo nhắc uống cục bộ để nhắc uống thuốc theo lịch, đồng thời máy chủ lưu nhật ký xác nhận uống thuốc nhằm hỗ trợ xem lại lịch sử.
+
+Điểm quan trọng là hệ thống không chỉ lưu số viên chung cho một loại thuốc, mà còn cho phép biểu diễn số viên theo từng khung giờ. Điều này phù hợp hơn với thực tế sử dụng thuốc, ví dụ có trường hợp sáng uống hai viên nhưng tối chỉ uống một viên.
+
+\section{Một số công nghệ chính trong hệ thống}
+
+\begin{table}[H]
+\centering
+\caption{Các công nghệ chính được sử dụng trong hệ thống}
+\label{tab:tech-stack}
+\begin{tabularx}{\textwidth}{p{3.2cm}p{4.2cm}Y}
+\toprule
+\textbf{Nhóm} & \textbf{Công nghệ} & \textbf{Vai trò} \\
+\midrule
+Ứng dụng di động & Flutter, Riverpod, Go Router & Xây dựng giao diện người dùng, quản lý trạng thái, điều hướng màn hình. \\
+Máy chủ chính & Node.js, Express, Zod & Cung cấp API, kiểm tra dữ liệu đầu vào, quản lý nghiệp vụ. \\
+Lưu trữ & PostgreSQL & Lưu kế hoạch dùng thuốc, lịch sử quét, nhật ký uống thuốc và dữ liệu người dùng. \\
+Dịch vụ trí tuệ nhân tạo & FastAPI & Xử lý ảnh đơn thuốc và cung cấp API cho máy chủ chính. \\
+Phát hiện đơn thuốc & YOLO & Phát hiện và cắt vùng đơn thuốc từ ảnh đầu vào. \\
+OCR & PaddleOCR, VietOCR & Phát hiện vùng chữ và nhận dạng tiếng Việt. \\
+Hiểu ngôn ngữ & PhoBERT & Trích xuất các thực thể tên thuốc từ kết quả nhận dạng ký tự quang học. \\
+Tra cứu thuốc & Mô-đun tra cứu nội bộ & Chuẩn hóa tên thuốc và hỗ trợ đối sánh với cơ sở dữ liệu thuốc Việt Nam. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\chapter{PHÂN TÍCH VÀ THIẾT KẾ HỆ THỐNG}
+
+\section{Yêu cầu chức năng}
+
+Từ bài toán thực tế, hệ thống được xác định có các chức năng chính như sau:
+
+\begin{table}[H]
+\centering
+\caption{Các yêu cầu chức năng chính của hệ thống}
+\label{tab:functional-requirements}
+\begin{tabularx}{\textwidth}{p{1.3cm}p{4cm}Y}
+\toprule
+\textbf{Mã} & \textbf{Chức năng} & \textbf{Mô tả} \\
+\midrule
+F1 & Quét đơn thuốc & Người dùng chụp hoặc chọn ảnh đơn thuốc để hệ thống nhận diện danh sách thuốc. \\
+F2 & Rà soát kết quả quét & Người dùng xem lại kết quả nhận diện, sửa tên thuốc, thêm hoặc xóa thuốc khi cần. \\
+F3 & Lập lịch dùng thuốc & Người dùng chọn ngày bắt đầu, số ngày dùng, khung giờ uống và số viên theo từng khung giờ. \\
+F4 & Lưu kế hoạch & Hệ thống lưu kế hoạch dùng thuốc vào máy chủ để có thể xem lại và chỉnh sửa. \\
+F5 & Nhắc uống thuốc & Ứng dụng thiết lập nhắc uống thuốc đúng giờ trên thiết bị di động. \\
+F6 & Ghi nhận lần uống thuốc & Người dùng xác nhận trạng thái đã uống, bỏ qua hoặc chưa uống để tạo lịch sử. \\
+F7 & Lịch sử và theo dõi & Người dùng xem lịch sử quét và kế hoạch đang hoạt động. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Yêu cầu phi chức năng}
+
+Ngoài chức năng, hệ thống phải đáp ứng các yêu cầu phi chức năng sau:
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{Tính khả dụng:} luồng chính phải đủ đơn giản để người dùng phổ thông có thể thực hiện mà không cần hiểu cấu trúc dữ liệu bên trong hệ thống.
+    \item \textbf{Tính phản hồi:} thời gian xử lý ảnh cần ở mức chấp nhận được để không làm gián đoạn trải nghiệm người dùng.
+    \item \textbf{Tính ổn định:} máy chủ chính và dịch vụ trí tuệ nhân tạo cần tách biệt để lỗi ở một tầng không phá vỡ hoàn toàn các tầng còn lại.
+    \item \textbf{Tính an toàn sử dụng:} người dùng phải có bước rà soát kết quả nhận diện trước khi lưu kế hoạch, tránh phụ thuộc hoàn toàn vào kết quả tự động.
+    \item \textbf{Khả năng mở rộng:} kiến trúc cần cho phép mở rộng thêm chức năng trong tương lai như đồng bộ dữ liệu, phân tích đơn sâu hơn hoặc hỗ trợ nhiều đối tượng người dùng hơn.
+\end{itemize}
+
+\section{Kiến trúc tổng thể}
+
+Kiến trúc tổng thể của hệ thống gồm ba lớp riêng biệt: ứng dụng di động, máy chủ chính và dịch vụ trí tuệ nhân tạo. Ứng dụng di động chịu trách nhiệm tương tác với người dùng. Máy chủ chính chịu trách nhiệm điều phối nghiệp vụ, xác thực, lưu trữ và cung cấp dữ liệu. Dịch vụ trí tuệ nhân tạo chuyên xử lý ảnh đơn thuốc và trả về kết quả nhận diện.
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\begin{minipage}{0.92\textwidth}
+\centering
+\begin{tabularx}{\textwidth}{YcYcY}
+\textbf{Ứng dụng di động (Flutter)} & $\Longleftrightarrow$ & \textbf{Máy chủ chính (Node.js)} & $\Longleftrightarrow$ & \textbf{Dịch vụ trí tuệ nhân tạo (FastAPI)} \\
+Quét đơn, rà soát thuốc, lập lịch, nhắc uống &  & Giao diện lập trình ứng dụng, xác thực, lịch sử quét, kế hoạch dùng thuốc, nhật ký uống thuốc &  & Phát hiện đơn, tiền xử lý, nhận dạng ký tự, trích xuất tên thuốc, tra cứu thuốc \\
+\end{tabularx}
+\end{minipage}}
+\caption{Kiến trúc tổng thể của hệ thống}
+\label{fig:overall-architecture}
+\end{figure}
+
+Việc tách thành ba lớp giúp dự án dễ phát triển hơn ở hai khía cạnh. Thứ nhất, ứng dụng di động và máy chủ chính có thể thay đổi giao diện và nghiệp vụ mà không phải can thiệp sâu vào phần xử lý AI. Thứ hai, phần xử lý AI có thể được kiểm thử và tối ưu riêng mà không làm ảnh hưởng đến dữ liệu trao đổi của toàn hệ thống.
+
+\section{Thiết kế luồng quét đơn thuốc}
+
+Luồng quét đơn thuốc được thiết kế theo thứ tự sau:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Người dùng mở màn hình quét và chụp ảnh hoặc chọn ảnh từ thư viện.
+    \item Ứng dụng thực hiện kiểm tra chất lượng ảnh ở mức cục bộ để loại bỏ các trường hợp quá mờ hoặc quá chói.
+    \item Ảnh được gửi đến máy chủ chính. Máy chủ đóng vai trò trung gian chuyển tiếp ảnh đến dịch vụ trí tuệ nhân tạo.
+    \item Dịch vụ trí tuệ nhân tạo thực hiện phát hiện vùng đơn thuốc, tiền xử lý, nhận dạng ký tự quang học, trích xuất tên thuốc và đối sánh tên thuốc.
+    \item Kết quả được trả về máy chủ và chuẩn hóa về cấu trúc phản hồi phù hợp cho ứng dụng di động.
+    \item Ứng dụng hiển thị danh sách thuốc để người dùng rà soát trước khi lập lịch.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\begin{minipage}{0.92\textwidth}
+\centering
+Ảnh đầu vào $\rightarrow$ phát hiện vùng đơn thuốc $\rightarrow$ tiền xử lý ảnh $\rightarrow$ nhận dạng ký tự quang học $\rightarrow$ trích xuất tên thuốc $\rightarrow$ tra cứu thuốc $\rightarrow$ danh sách thuốc để rà soát
+\end{minipage}}
+\caption{Luồng xử lý chính của mô-đun quét đơn thuốc}
+\label{fig:scan-flow}
+\end{figure}
+
+\section{Thiết kế quy trình xử lý nhận diện đơn thuốc}
+
+Quy trình nhận diện đơn thuốc được chia thành nhiều bước để tăng tính kiểm soát và khả năng gỡ lỗi:
+
+\begin{table}[H]
+\centering
+\caption{Các bước chính trong quy trình nhận diện đơn thuốc}
+\label{tab:pipeline-steps}
+\begin{tabularx}{\textwidth}{p{1.3cm}p{4.2cm}Y}
+\toprule
+\textbf{Bước} & \textbf{Thành phần} & \textbf{Vai trò} \\
+\midrule
+1 & Phát hiện và cắt vùng đơn & Phát hiện vùng đơn thuốc và cắt khỏi nền ảnh. \\
+2 & Tiền xử lý & Chỉnh nghiêng, hiệu chỉnh hướng và chuẩn hóa ảnh trước bước nhận dạng ký tự quang học. \\
+3 & Nhận dạng ký tự kết hợp & Dùng PaddleOCR để phát hiện vùng chữ và VietOCR để nhận dạng nội dung tiếng Việt. \\
+4 & Trích xuất tên thuốc & Xác định khối văn bản nào là tên thuốc. \\
+5 & Tra cứu thuốc & Đối sánh với cơ sở dữ liệu thuốc Việt Nam để chuẩn hóa và gợi ý tên thuốc. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Thiết kế nhiều bước giúp mỗi khâu có thể được kiểm tra độc lập. Đây là lợi thế đáng kể trong quá trình phát triển vì kết quả nhận dạng ký tự không chính xác chưa chắc xuất phát từ bộ nhận dạng ký tự; nguyên nhân có thể đến từ việc cắt vùng đơn chưa tốt hoặc bước chỉnh hướng chưa ổn định.
+
+\section{Thiết kế dữ liệu kế hoạch dùng thuốc}
+
+Sau khi người dùng xác nhận danh sách thuốc, dữ liệu được chuyển thành một kế hoạch dùng thuốc. Một kế hoạch gồm ba phần chính: danh sách thuốc, các khung giờ uống và thông tin liều dùng theo từng khung giờ. Cấu trúc này cho phép một loại thuốc có thể có số viên khác nhau ở các thời điểm khác nhau trong ngày.
+
+Ở máy chủ, dữ liệu được tách thành nhiều bảng để dễ quản lý: bảng kế hoạch tổng quát, bảng thuốc trong kế hoạch, bảng khung giờ và bảng liên kết giữa khung giờ với thuốc. Cách tách này giúp biểu diễn rõ các trường hợp như một khung giờ có nhiều thuốc, hoặc một thuốc xuất hiện ở nhiều khung giờ khác nhau.
+
+\section{Thiết kế nhật ký dùng thuốc và theo dõi trong ngày}
+
+Để hỗ trợ theo dõi việc uống thuốc, hệ thống tạo ra mã định danh cho từng lần uống. Mỗi mã định danh tương ứng với một kế hoạch, một ngày và một khung giờ cụ thể. Khi người dùng xác nhận đã uống hoặc bỏ qua, máy chủ lưu trạng thái vào bảng nhật ký. Thiết kế này giúp tránh việc ghi trùng khi người dùng thao tác lại hoặc khi ứng dụng cần đồng bộ lại trạng thái từ thiết bị.
+
+\section{Các quyết định thiết kế quan trọng}
+
+\subsection{Ưu tiên luồng chính thay vì mở rộng quá sớm}
+
+Một quyết định quan trọng của đề tài là ưu tiên hoàn thiện luồng có giá trị thực tế cao nhất gồm quét đơn thuốc, rà soát kết quả và lập lịch dùng thuốc. Thay vì cố gắng mở rộng ngay sang nhiều chức năng phức tạp khác, đề tài tập trung làm tốt phần đầu cuối đang phục vụ trực tiếp cho người dùng.
+
+\subsection{Không để đối sánh tên thuốc ghi đè hoàn toàn văn bản nhận dạng}
+
+Trong thực tế, đối sánh gần đúng có thể giúp chuẩn hóa dữ liệu nhưng cũng có thể đưa ra ứng viên sai. Vì vậy, hệ thống giữ văn bản nhận dạng được như nguồn hiển thị chính và dùng kết quả đối sánh như thông tin bổ sung hỗ trợ. Điều này làm tăng tính minh bạch cho người dùng khi rà soát lại kết quả quét.
+
+\subsection{Không tích hợp ngay chức năng xác minh viên thuốc qua hình ảnh}
+
+Đề tài đã khảo sát hướng xác minh viên thuốc bằng ảnh đầu vào của người dùng, kết hợp đối sánh theo tên thuốc, màu sắc, hình dạng và dạng bào chế. Tuy nhiên, hướng này chưa được đưa vào phiên bản chính vì độ an toàn chưa đủ cao. Phần phân tích chi tiết được trình bày ở Chương 5.
+
+\chapter{CÀI ĐẶT HỆ THỐNG}
+
+\section{Môi trường phát triển}
+
+Hệ thống được phát triển trong môi trường gồm Python 3.12 cho dịch vụ trí tuệ nhân tạo, Node.js 20 cho máy chủ chính, PostgreSQL 16 cho lưu trữ và Flutter cho ứng dụng di động. Về mặt phần cứng, quá trình phát triển và thử nghiệm trí tuệ nhân tạo được tối ưu cho GPU RTX 3050 4GB, đồng thời vẫn duy trì khả năng chuyển sang chế độ dự phòng bằng CPU trong một số tình huống.
+
+\begin{table}[H]
+\centering
+\caption{Môi trường phát triển chính của hệ thống}
+\label{tab:environment}
+\begin{tabularx}{\textwidth}{p{4cm}Y}
+\toprule
+\textbf{Thành phần} & \textbf{Mô tả} \\
+\midrule
+Ngôn ngữ dịch vụ trí tuệ nhân tạo & Python 3.12 \\
+Ngôn ngữ máy chủ chính & Node.js 20 \\
+Khung chương trình máy chủ & FastAPI, Express 4 \\
+Ứng dụng di động & Flutter, Dart SDK 3.10.x \\
+Hệ quản trị cơ sở dữ liệu & PostgreSQL 16 \\
+Mô hình nhận dạng và ngôn ngữ & PaddleOCR, VietOCR, PhoBERT \\
+Thiết bị tăng tốc & GPU RTX 3050 4GB hoặc CPU dự phòng \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Cài đặt mô-đun quét đơn thuốc}
+
+Mô-đun quét đơn thuốc được triển khai trong dịch vụ trí tuệ nhân tạo viết bằng Python. Thành phần điều phối có nhiệm vụ nối các bước xử lý thành một chuỗi thống nhất. Ở mức tách lớp, các bước phát hiện đơn thuốc, tiền xử lý ảnh, nhận dạng ký tự quang học, trích xuất tên thuốc và tra cứu thuốc được đặt ở các thư mục riêng để dễ gỡ lỗi và kiểm thử.
+
+Trong quá trình triển khai, bước phát hiện đơn thuốc bằng YOLO được dùng để tách phần tờ đơn ra khỏi nền ảnh. Sau đó ảnh được chỉnh góc và hướng để bộ nhận dạng ký tự hoạt động ổn định hơn. Bước nhận dạng ký tự kết hợp PaddleOCR và VietOCR cho phép vừa phát hiện vị trí chữ, vừa đọc nội dung tiếng Việt. Kết quả nhận dạng tiếp tục đi qua PhoBERT để lọc ra các đoạn có khả năng là tên thuốc, rồi mới tới bước đối sánh với cơ sở dữ liệu thuốc Việt Nam.
+
+\section{Cài đặt máy chủ chính}
+
+Máy chủ chính được tổ chức theo mô hình tách riêng phần định tuyến, phần xử lý nghiệp vụ và phần tiện ích hỗ trợ. Các phần định tuyến kiểm tra dữ liệu đầu vào bằng Zod, sau đó chuyển sang phần xử lý nghiệp vụ tương ứng. Dữ liệu được trả về theo cấu trúc JSON thống nhất để ứng dụng di động có thể sử dụng trực tiếp.
+
+Trong luồng quét đơn thuốc, máy chủ nhận ảnh từ ứng dụng di động, chuyển tiếp sang FastAPI dưới dạng tệp tải lên, sau đó chuẩn hóa kết quả nhận diện về một cấu trúc ổn định hơn cho ứng dụng di động. Máy chủ cũng lưu lịch sử quét, trạng thái chất lượng ảnh và các thông tin tổng hợp khác phục vụ cho màn hình lịch sử và theo dõi hệ thống.
+
+Các nhóm API chính được triển khai gồm:
+
+\begin{table}[H]
+\centering
+\caption{Một số nhóm API chính của hệ thống}
+\label{tab:api-groups}
+\begin{tabularx}{\textwidth}{p{3cm}p{4cm}Y}
+\toprule
+\textbf{Nhóm} & \textbf{Ví dụ đường dẫn} & \textbf{Vai trò} \\
+\midrule
+Xác thực & \texttt{/api/auth/...} & Đăng ký, đăng nhập và quản lý người dùng. \\
+Quét đơn & \path{/api/scan/...} & Nhận ảnh đơn thuốc, lưu lịch sử quét và trả kết quả quét. \\
+Kế hoạch dùng thuốc & \path{/api/plans} & Tạo, đọc, cập nhật, hủy kích hoạt kế hoạch dùng thuốc. \\
+Lịch hôm nay & \path{/api/plans/today/summary} & Trả danh sách liều uống trong ngày và trạng thái xác nhận. \\
+Nhật ký dùng thuốc & \path{/api/plans/:id/log} & Lưu trạng thái đã uống, bỏ qua hoặc chưa uống cho từng lần dùng thuốc. \\
+Tra cứu thuốc & \path{/api/drugs/...} & Tìm kiếm và đọc thông tin thuốc. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Cài đặt ứng dụng di động}
+
+Ứng dụng di động được phát triển bằng Flutter, sử dụng Riverpod cho quản lý trạng thái và Go Router cho điều hướng. Luồng tạo kế hoạch được chia thành nhiều màn hình nhỏ để người dùng không phải xử lý quá nhiều thông tin trong cùng một màn hình.
+
+Ở màn hình quét đơn, ứng dụng hỗ trợ mở camera trực tiếp, đánh giá chất lượng ảnh cục bộ và tự động chụp khi điều kiện đủ tốt. Điều này giúp giảm bớt thao tác cho người dùng. Sau khi nhận kết quả từ máy chủ, ứng dụng điều hướng sang màn hình rà soát danh sách thuốc. Tại đây người dùng có thể chỉnh sửa tên thuốc, thêm hoặc xóa thuốc trước khi sang bước lập lịch.
+
+Màn hình lập lịch cho phép người dùng chọn ngày bắt đầu, số ngày dùng, các khung giờ uống và số viên tương ứng cho từng khung giờ. Dữ liệu được xây dựng thành bản nháp kế hoạch rồi gửi lên máy chủ. Sau khi tạo thành công, ứng dụng thiết lập các thông báo nhắc uống cục bộ để nhắc uống thuốc.
+
+\section{Cài đặt chức năng theo dõi trong ngày}
+
+Sau khi người dùng đã có kế hoạch dùng thuốc, ứng dụng hiển thị danh sách liều uống trong ngày từ API tổng hợp của máy chủ. Mỗi mục hiển thị giờ uống, tên thuốc, số viên và trạng thái hiện tại. Khi người dùng chọn ``Đã uống'' hoặc ``Bỏ qua'', ứng dụng gọi API ghi nhật ký tương ứng. Thiết kế này tạo thành một vòng kín giữa tạo kế hoạch, nhắc uống và theo dõi việc thực hiện.
+
+\section{Một số quyết định cài đặt đáng chú ý}
+
+\subsection{Tách máy chủ chính và dịch vụ trí tuệ nhân tạo}
+
+Nếu tích hợp trực tiếp toàn bộ trí tuệ nhân tạo vào máy chủ chính, dự án sẽ khó kiểm soát hơn ở cả mặt triển khai lẫn gỡ lỗi. Việc tách FastAPI thành một dịch vụ riêng giúp máy chủ chính tập trung vào xử lý nghiệp vụ và dữ liệu của ứng dụng, trong khi phần AI có thể được tối ưu theo nhịp riêng.
+
+\subsection{Giữ bước rà soát thủ công sau AI}
+
+Ứng dụng không coi kết quả của trí tuệ nhân tạo là dữ liệu cuối cùng. Thay vào đó, trí tuệ nhân tạo tạo ra danh sách thuốc sơ bộ và người dùng vẫn có bước rà soát trước khi lưu kế hoạch. Cách thiết kế này phù hợp hơn với ngữ cảnh y tế, nơi một sai sót nhỏ trong nhận diện thuốc có thể kéo theo hậu quả sử dụng sai thuốc hoặc sai liều.
+
+\subsection{Biểu diễn liều dùng theo từng khung giờ}
+
+Trong các phiên bản đầu, nhiều hệ thống thường chỉ lưu số viên chung cho một loại thuốc. Tuy nhiên, điều đó không phản ánh đúng thực tế sử dụng thuốc. Dự án hiện tại cài đặt mô hình liều dùng theo từng khung giờ, cho phép biểu diễn các trường hợp như sáng uống hai viên, tối uống một viên. Đây là một điểm cải thiện quan trọng ở tầng ứng dụng và máy chủ.
+
+\chapter{THỰC NGHIỆM VÀ ĐÁNH GIÁ}
+
+\section{Mục tiêu đánh giá}
+
+Quá trình đánh giá trong đề tài tập trung vào ba mục tiêu. Thứ nhất là kiểm tra xem quy trình nhận diện đơn thuốc có đủ ổn định để tạo ra danh sách thuốc đủ sử dụng cho ứng dụng hay không. Thứ hai là kiểm tra xem luồng đầu cuối từ quét đơn đến tạo kế hoạch có vận hành được trong bối cảnh thực tế hay không. Thứ ba là đánh giá các giới hạn kỹ thuật của những chức năng mở rộng chưa được tích hợp.
+
+\section{Dữ liệu và môi trường thử nghiệm}
+
+Đề tài sử dụng tập ảnh đơn thuốc thực tế trong thư mục dữ liệu đầu vào nội bộ của dự án. Theo tài liệu trạng thái kỹ thuật, tập đánh giá thử nghiệm chính của quy trình nhận diện gồm khoảng 50 ảnh đơn thuốc thực tế, bao phủ nhiều điều kiện khác nhau như ảnh chụp hơi nghiêng, bố cục đơn thuốc khác nhau và chất lượng ảnh không đồng đều. Ngoài ra, hệ thống còn được thử nghiệm theo luồng ứng dụng thực tế để kiểm tra khả năng tạo kế hoạch, nhắc uống và ghi nhận nhật ký dùng thuốc.
+
+Các thử nghiệm được thực hiện trên môi trường có GPU RTX 3050 4GB để tận dụng khả năng tăng tốc cho nhận dạng ký tự quang học và nhận diện, đồng thời vẫn duy trì cơ chế chuyển sang CPU khi cần.
+
+\section{Lưu ý về dữ liệu và quyền riêng tư}
+
+Do ảnh đơn thuốc có thể chứa thông tin cá nhân của người bệnh, việc thu thập và sử dụng dữ liệu trong đề tài được xem xét theo hướng hạn chế tối đa rủi ro lộ lọt thông tin. Trong quá trình thử nghiệm và tổng hợp báo cáo, dữ liệu được dùng chủ yếu để đánh giá khả năng nhận diện thuốc và kiểm tra luồng hoạt động của hệ thống, không nhằm mục đích khai thác thông tin cá nhân ngoài phạm vi nghiên cứu.
+
+Khi đưa dữ liệu vào báo cáo, đề tài ưu tiên trình bày kết quả ở dạng tổng hợp thay vì công bố trực tiếp toàn bộ nội dung đơn thuốc. Đối với các hình minh họa sẽ bổ sung ở giai đoạn sau, cần tiếp tục che hoặc lược bỏ những vùng có khả năng làm lộ thông tin cá nhân như họ tên, địa chỉ hoặc mã số khám bệnh.
+
+\section{Tiêu chí đánh giá}
+
+Để bảo đảm việc đánh giá bám sát mục tiêu thực tế của đề tài, các tiêu chí chính được sử dụng gồm:
+
+\begin{enumerate}[label=\arabic*.]
+    \item \textbf{Tỉ lệ xử lý thành công:} số ảnh được hệ thống xử lý hoàn chỉnh mà không phát sinh lỗi dừng xử lý.
+    \item \textbf{Số lượng thuốc nhận diện được:} tổng số thuốc mà hệ thống trích xuất được từ tập ảnh thử nghiệm.
+    \item \textbf{Khả năng sử dụng cho bước lập lịch:} mức độ mà danh sách thuốc đầu ra có thể được dùng trực tiếp hoặc chỉ cần chỉnh sửa nhỏ trước khi lập kế hoạch dùng thuốc.
+    \item \textbf{Thời gian xử lý:} thời gian cần thiết để hệ thống trả về kết quả cho một ảnh đầu vào trong các trạng thái khởi động ban đầu và sau khi đã ổn định.
+    \item \textbf{Tính hoàn chỉnh của luồng ứng dụng:} khả năng đi trọn từ quét đơn thuốc đến lưu kế hoạch và theo dõi việc dùng thuốc trong ngày.
+\end{enumerate}
+
+\section{Kết quả nhận diện đơn thuốc}
+
+Theo kết quả đánh giá thử nghiệm nội bộ của dự án, quy trình nhận diện đơn thuốc đạt kết quả ổn định trên tập ảnh thực tế, với các chỉ số tổng hợp đáng chú ý như sau:
+
+\begin{table}[H]
+\centering
+\caption{Một số kết quả đánh giá thử nghiệm nội bộ của quy trình nhận diện đơn thuốc}
+\label{tab:phase-a-benchmark}
+\begin{tabularx}{\textwidth}{p{6cm}Y}
+\toprule
+\textbf{Chỉ số} & \textbf{Giá trị ghi nhận} \\
+\midrule
+Số ảnh đánh giá chính & 50 ảnh đơn thuốc thực tế \\
+Tỉ lệ xử lý thành công & 50/50 ảnh \\
+Tổng số thuốc nhận được & 338 thuốc \\
+Trung bình số thuốc trên mỗi ảnh & 6.8 thuốc/ảnh \\
+Số lỗi hệ thống trong quá trình đánh giá thử nghiệm & 0 lỗi \\
+Thời gian ảnh đầu tiên sau khi khởi động & khoảng 17 giây \\
+Thời gian xử lý sau khi hệ thống đã ổn định & khoảng 7 giây/ảnh \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Một trường hợp điển hình được ghi nhận trong tài liệu kỹ thuật là ảnh đơn thuốc ở tập thử nghiệm \path{prescription_3/IMG_20260209_180505.jpg}, trong đó hệ thống nhận diện được đầy đủ 5/5 thuốc và đều tìm thấy kết quả trong cơ sở dữ liệu thuốc. Trường hợp này cho thấy khi chất lượng ảnh ở mức chấp nhận được và bố cục danh sách thuốc nằm trong phạm vi trí tuệ nhân tạo xử lý tốt, quy trình nhận diện có thể trả về kết quả đủ chất lượng để phục vụ luồng ứng dụng.
+
+\section{Đánh giá hệ thống ứng dụng}
+
+Ngoài quy trình xử lý trí tuệ nhân tạo, đề tài còn chú trọng kiểm tra tính hoàn chỉnh của hệ thống ở mức ứng dụng. Theo tài liệu trạng thái dự án, máy chủ Node.js có bộ kiểm thử đạt 55/55 kiểm thử, trong khi bộ kiểm thử Python đạt 16/16 kiểm thử ở thời điểm tổng hợp. Bên cạnh đó, quy trình phát triển của dự án còn bao gồm các bước kiểm tra \texttt{flutter analyze} và \texttt{flutter test} để hạn chế lỗi tích hợp ở phía ứng dụng di động.
+
+Xét trên khía cạnh luồng nghiệp vụ, hệ thống hiện đã hỗ trợ được chuỗi thao tác sau: quét đơn thuốc, rà soát kết quả nhận diện, lập lịch dùng thuốc, xem kế hoạch hôm nay, ghi nhận trạng thái dùng thuốc và xem lịch sử. Điều này cho thấy đề tài không chỉ dừng ở mức thử nghiệm trí tuệ nhân tạo độc lập mà đã tiến tới một hệ thống phần mềm có giá trị sử dụng thực tế.
+
+\section{Các dạng sai sót điển hình}
+
+Trong quá trình thử nghiệm, một số dạng sai sót điển hình có thể ảnh hưởng đến kết quả nhận diện đã được ghi nhận. Thứ nhất là ảnh bị nghiêng, mờ hoặc chói sáng, làm giảm khả năng phát hiện vùng chữ và kéo theo sai số ở bước nhận dạng ký tự. Thứ hai là bố cục đơn thuốc không đồng đều, khiến một số khối chữ khó được gom đúng ngữ cảnh. Thứ ba là tên thuốc bị viết tắt, in mờ hoặc nằm gần các dòng hướng dẫn dùng thuốc, dẫn đến nguy cơ trích xuất nhầm hoặc thiếu.
+
+Các dạng sai sót này cho thấy chất lượng đầu vào vẫn là yếu tố ảnh hưởng rất mạnh đến độ ổn định của hệ thống. Vì vậy, việc giữ bước rà soát thủ công ở phía người dùng tiếp tục là một quyết định phù hợp trong phiên bản hiện tại.
+
+\section{Ưu điểm của hệ thống}
+
+Các ưu điểm chính của hệ thống gồm:
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item Có luồng hoạt động đầu cuối rõ ràng từ ảnh đơn thuốc đến kế hoạch dùng thuốc.
+    \item Kết hợp trí tuệ nhân tạo theo hướng hỗ trợ người dùng, không loại bỏ hoàn toàn vai trò rà soát thủ công.
+    \item Kiến trúc tách lớp giúp dễ bảo trì và dễ mở rộng.
+    \item Phần lịch dùng thuốc phản ánh tương đối sát nhu cầu thực tế nhờ hỗ trợ số viên theo từng khung giờ.
+    \item Có lưu lịch sử và trạng thái dùng thuốc, tạo nền tảng cho các phân tích sâu hơn trong tương lai.
+\end{itemize}
+
+\section{Hạn chế của hệ thống}
+
+Mặc dù đạt được kết quả khả quan ở luồng chính, hệ thống vẫn còn một số hạn chế:
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item Độ chính xác của bước nhận dạng ký tự quang học vẫn chịu ảnh hưởng mạnh bởi chất lượng ảnh chụp đầu vào.
+    \item Dữ liệu quét đơn thuốc thực tế rất đa dạng nên khó đảm bảo một mức độ ổn định tuyệt đối cho mọi loại đơn.
+    \item Kết quả chuẩn hóa tên thuốc phụ thuộc vào dữ liệu thuốc nội bộ và chất lượng đối sánh gần đúng.
+    \item Việc mở rộng sang các chức năng đòi hỏi mức an toàn cao hơn, chẳng hạn như xác minh viên thuốc, vẫn chưa đạt ngưỡng phù hợp để đưa vào luồng chính.
+\end{itemize}
+
+\section{Vì sao chưa mở rộng nhận dạng ký tự quang học sang toàn bộ thông tin trên đơn thuốc}
+
+Trong quá trình phát triển, đề tài có cân nhắc khả năng trích xuất thêm các trường thông tin như họ tên bệnh nhân, triệu chứng hoặc chẩn đoán. Tuy nhiên, việc mở rộng này chưa được tích hợp vào phiên bản chính vì ba lý do.
+
+Thứ nhất, các trường thông tin ngoài danh sách thuốc thường có vị trí và bố cục kém ổn định hơn. Không giống danh sách thuốc vốn thường nằm trong khu vực bảng kê hoặc vùng nội dung chính, các vùng như chẩn đoán hoặc ghi chú có thể ngắn, nhỏ, đặt ở nhiều vị trí khác nhau và dễ bị che khuất hoặc mờ.
+
+Thứ hai, mở rộng phạm vi nhận dạng ký tự quang học đồng nghĩa với việc hệ thống phải đọc nhiều vùng hơn, nhiều khối chữ hơn và xử lý thêm nhiều tình huống nhiễu hơn. Điều đó làm tăng thời gian xử lý tổng thể. Trong bối cảnh người dùng di động mong muốn quét nhanh để lập lịch dùng thuốc, việc tăng thêm độ trễ chỉ để lấy các trường chưa phục vụ trực tiếp cho luồng chính là một đánh đổi chưa tối ưu.
+
+Thứ ba, khi muốn lấy thêm những trường thông tin này, ảnh đầu vào phải được chụp đầy đủ hơn, ít cắt mép hơn, thẳng góc hơn và rõ nét hơn. Nói cách khác, yêu cầu đặt lên người dùng sẽ cao hơn. Trong khi mục tiêu trải nghiệm người dùng của đề tài là giảm gánh nặng thao tác cho người dùng, đặc biệt là người lớn tuổi, việc buộc họ phải chụp ảnh quá chuẩn là không phù hợp với định hướng sản phẩm hiện tại.
+
+Từ các lý do trên, đề tài chủ động giới hạn phạm vi nhận dạng ký tự quang học ở các thông tin phục vụ trực tiếp cho bài toán nhận diện thuốc và tạo kế hoạch dùng thuốc.
+
+\section{Giới hạn của số liệu thử nghiệm}
+
+Các số liệu trình bày trong báo cáo là kết quả đánh giá thử nghiệm nội bộ trong phạm vi phát triển của đề tài. Những số liệu này có giá trị phản ánh mức độ hoàn thiện kỹ thuật của hệ thống ở giai đoạn hiện tại, nhưng chưa nên được xem là kết luận cuối cùng cho mọi bối cảnh sử dụng thực tế.
+
+Nguyên nhân là bộ dữ liệu thử nghiệm vẫn chủ yếu nằm trong phạm vi ảnh đơn thuốc mà nhóm thu thập và xử lý được trong quá trình phát triển. Bên cạnh đó, môi trường thử nghiệm phần lớn được thực hiện trên cấu hình phần cứng quen thuộc của dự án. Vì vậy, nếu triển khai trên tập dữ liệu lớn hơn, đa dạng hơn hoặc trong môi trường thiết bị khác, kết quả có thể thay đổi. Nội dung này cho thấy cần có thêm các vòng đánh giá mở rộng trong tương lai.
+
+\section{Vì sao chưa tích hợp chức năng xác minh viên thuốc qua hình ảnh}
+
+Một hướng mở rộng khác của đề tài là xây dựng chức năng xác minh viên thuốc qua hình ảnh. Ý tưởng của hướng này là sau khi đã có tên thuốc từ đơn thuốc, hệ thống sẽ tiếp tục nhận ảnh viên thuốc do người dùng cung cấp, sau đó đối sánh dựa trên các đặc trưng như màu sắc, hình dạng, dạng bào chế và các thuộc tính mô tả viên thuốc trong cơ sở dữ liệu.
+
+Tuy nhiên, qua khảo sát và thử nghiệm, đề tài nhận thấy đây là một chức năng có rủi ro an toàn cao nếu chưa đạt độ tin cậy đủ mạnh. Trước hết, nhiều viên thuốc trong thực tế có ngoại hình gần giống nhau, đặc biệt là các viên nén tròn màu trắng. Trong những trường hợp như vậy, điểm khác biệt quan trọng nhất có thể nằm ở dấu in, ký hiệu hoặc mặt trước - mặt sau của viên thuốc. Theo hướng dẫn hình ảnh SPL của DailyMed thuộc National Library of Medicine, để nhận diện các đặc điểm thị giác quan trọng, ảnh viên thuốc cần bao gồm cả mặt trước và mặt sau, đồng thời các dấu in, ký hiệu, vạch chia và màu sắc phải được thể hiện rõ nét \cite{dailymed-spl}.
+
+Điều này có nghĩa là nếu người dùng chỉ chụp một mặt hoặc chụp trong điều kiện ảnh không đủ tốt, hệ thống rất dễ nhầm lẫn giữa các viên có hình dạng gần tương tự nhau. Một nghiên cứu về nhận diện viên thuốc bằng học sâu cũng cho thấy các lớp khó nhất thường rơi vào nhóm viên trắng, tròn hoặc gần như chỉ khác nhau ở dấu khắc rất khó đọc \cite{pill-ai}.
+
+Một vấn đề quan trọng khác là cùng một hoạt chất có thể có ngoại hình khác nhau giữa các nhà sản xuất. Theo FDA, thuốc generic có thể khác về thành phần tá dược như màu sắc hoặc hương liệu, từ đó dẫn đến khác biệt về hình thức bên ngoài \cite{fda-generic}. Điều này khiến việc suy ra ``ngoại hình chuẩn'' từ tên thuốc trở nên không đáng tin cậy nếu không có bộ dữ liệu tham chiếu rất chặt chẽ theo từng hãng, từng hàm lượng và từng dạng bào chế.
+
+Từ góc nhìn an toàn sử dụng thuốc, rủi ro nhầm lẫn ở bài toán này không chỉ là một vấn đề về trải nghiệm người dùng. MedlinePlus nhấn mạnh rằng việc dùng nhầm thuốc hoặc dùng sai liều có thể gây hậu quả nghiêm trọng \cite{medlineplus-safety}. Vì vậy, một chức năng xác minh viên thuốc bằng hình ảnh mà chưa đạt ngưỡng tin cậy cao không nên được tích hợp vào luồng chính của sản phẩm.
+
+Tóm lại, đề tài đánh giá rằng chức năng xác minh viên thuốc qua hình ảnh là một hướng nghiên cứu có giá trị, nhưng chưa đủ khả thi để tích hợp an toàn ở phiên bản hiện tại do các nguyên nhân sau:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Nhiều viên thuốc có ngoại hình thị giác quá giống nhau.
+    \item Dấu in là tín hiệu phân biệt quan trọng nhưng khó chụp ổn định trong điều kiện sử dụng thực tế.
+    \item Cùng một hoạt chất có thể có nhiều ngoại hình khác nhau giữa các nhà sản xuất.
+    \item Việc yêu cầu người dùng chụp đủ hai mặt, đủ sáng, đúng góc làm tăng gánh nặng thao tác và giảm tính thực dụng của sản phẩm.
+    \item Sai sót ở bước xác minh viên thuốc có thể kéo theo rủi ro an toàn cao hơn nhiều so với sai sót ở bước gợi ý kết quả nhận dạng ký tự.
+\end{enumerate}
+
+\chapter{KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN}
+
+\section{Kết luận}
+
+Đề tài đã xây dựng được một hệ thống hỗ trợ quét đơn thuốc và lập kế hoạch dùng thuốc theo hướng cân bằng giữa trí tuệ nhân tạo, nhận dạng ký tự quang học và phát triển ứng dụng hoàn chỉnh. Điểm trọng tâm của hệ thống không chỉ là nhận diện văn bản từ ảnh đơn thuốc, mà còn là đưa kết quả đó vào một luồng sử dụng thực tế gồm rà soát kết quả, thiết lập lịch uống, nhắc uống và theo dõi việc dùng thuốc hằng ngày.
+
+Về mặt kỹ thuật, hệ thống đã tích hợp được nhiều thành phần khác nhau vào cùng một kiến trúc: ứng dụng di động Flutter ở phía người dùng, máy chủ Node.js và PostgreSQL cho nghiệp vụ và lưu trữ, cùng dịch vụ trí tuệ nhân tạo viết bằng Python để xử lý ảnh đơn thuốc. Quy trình nhận diện sử dụng phát hiện vùng đơn thuốc, tiền xử lý ảnh, nhận dạng ký tự quang học, trích xuất tên thuốc và đối sánh cơ sở dữ liệu thuốc nhằm tạo ra danh sách thuốc đủ tốt cho bước lập lịch. Ở phía ứng dụng, việc vẫn giữ bước rà soát thủ công sau trí tuệ nhân tạo giúp hệ thống thực tế và an toàn hơn đối với bài toán y tế.
+
+Xét theo mục tiêu ban đầu, đề tài đã hoàn thành tốt phần cốt lõi nhất của sản phẩm là luồng ``quét đơn thuốc -> xác nhận danh sách thuốc -> lập lịch -> lưu kế hoạch -> theo dõi dùng thuốc''. Đây là đóng góp chính của đề tài và là phần có giá trị sử dụng rõ ràng nhất.
+
+\section{Những nội dung chưa tích hợp vào phiên bản chính}
+
+Trong quá trình thực hiện, đề tài có xem xét một số hướng mở rộng như trích xuất thêm thông tin bệnh nhân, triệu chứng, chẩn đoán và xác minh viên thuốc qua hình ảnh. Tuy nhiên, thay vì cố gắng tích hợp tất cả vào một phiên bản duy nhất, đề tài chọn cách thu hẹp phạm vi để bảo toàn tính ổn định và tính thực dụng của hệ thống.
+
+Việc chưa đưa các hướng này vào sản phẩm chính không nên được xem là thất bại của đề tài, mà là một quyết định kỹ thuật có chủ đích. Trong bối cảnh niên luận, việc lựa chọn một phạm vi phù hợp, làm rõ giới hạn và đánh giá trung thực các rủi ro là cần thiết hơn so với việc cố đưa vào các chức năng chưa đạt ngưỡng chất lượng sử dụng thực tế.
+
+\section{Hướng phát triển trong tương lai}
+
+Từ kết quả hiện tại, đề tài có thể được mở rộng theo một số hướng sau:
+
+\begin{enumerate}[label=\arabic*.]
+    \item \textbf{Mở rộng nhận dạng ký tự theo vùng thông minh:} thay vì nhận dạng toàn bộ đơn thuốc một cách đồng loạt, có thể nghiên cứu phát hiện riêng từng vùng như thông tin bệnh nhân, chẩn đoán hoặc hướng dẫn để giảm chi phí xử lý và tăng độ chính xác.
+    \item \textbf{Nâng cấp dữ liệu thuốc và chuẩn hóa sâu hơn:} cải thiện cơ sở dữ liệu thuốc, tăng khả năng đối sánh giữa tên thương mại và hoạt chất, đồng thời bổ sung các thông tin bổ sung hữu ích cho bước rà soát.
+    \item \textbf{Cải thiện chức năng xác minh viên thuốc:} nếu tiếp tục nghiên cứu hướng này, cần có chiến lược thu thập ảnh tham chiếu chuẩn hơn, ưu tiên nhận diện dấu in trên viên thuốc, chụp đủ hai mặt và đánh giá an toàn nghiêm ngặt trước khi đưa vào luồng chính.
+    \item \textbf{Mở rộng đồng bộ và quản lý người dùng:} phát triển thêm các chức năng đồng bộ dữ liệu nhiều thiết bị, quản lý nhiều người dùng hoặc quản lý thuốc cho thành viên gia đình.
+    \item \textbf{Đánh giá người dùng thực tế:} tổ chức khảo sát hoặc thử nghiệm người dùng, đặc biệt với người lớn tuổi, để đo mức độ dễ sử dụng của luồng quét đơn và lập lịch dùng thuốc.
+\end{enumerate}
+
+\section{Tổng kết cuối cùng}
+
+Nhìn chung, đề tài cho thấy một hướng tiếp cận phù hợp cho bài toán số hóa đơn thuốc trong bối cảnh ứng dụng di động: không đặt toàn bộ kỳ vọng vào mô hình trí tuệ nhân tạo, mà kết hợp trí tuệ nhân tạo với thiết kế hệ thống và trải nghiệm người dùng để tạo ra giá trị sử dụng thực tế. Đây cũng là điểm cốt lõi của dự án \textit{MedicineApp}: trí tuệ nhân tạo hỗ trợ người dùng ra quyết định tốt hơn, chứ không thay thế hoàn toàn người dùng trong các tình huống có độ nhạy cao liên quan đến việc sử dụng thuốc.
+
+\clearpage
+
+\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
+\begin{thebibliography}{99}
+
+\bibitem{paddleocr}
+PaddlePaddle Authors, ``PaddleOCR: Awesome multilingual OCR toolkits and benchmark,'' \url{https://github.com/PaddlePaddle/PaddleOCR}, truy cập tháng 4 năm 2026.
+
+\bibitem{vietocr}
+P. Q. Nguyen, ``VietOCR: Vietnamese OCR toolkit,'' \url{https://github.com/pbcquoc/vietocr}, truy cập tháng 4 năm 2026.
+
+\bibitem{phobert}
+Dat Quoc Nguyen and Anh Tuan Nguyen, ``PhoBERT: Pre-trained language models for Vietnamese,'' \textit{Findings of the Association for Computational Linguistics: EMNLP 2020}, pp. 1037--1042, 2020.
+
+\bibitem{dailymed-spl}
+National Library of Medicine, ``DailyMed SPL Image Guidelines,'' \url{https://dailymed.nlm.nih.gov/dailymed/splimage-guidelines.cfm}, truy cập tháng 4 năm 2026.
+
+\bibitem{pill-ai}
+M. A. Zunair et al., ``Pill Image Recognition for Medication Safety using Deep Learning,'' \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC6550183/}, truy cập tháng 4 năm 2026.
+
+\bibitem{fda-generic}
+U.S. Food and Drug Administration, ``Generic Drugs Undergo Rigorous FDA Review,'' \url{https://www.fda.gov/consumers/consumer-updates/generic-drugs-undergo-rigorous-fda-review}, truy cập tháng 4 năm 2026.
+
+\bibitem{generic-appearance}
+K. Kesselheim et al., ``Patient views about generic medication appearance changes,'' \url{https://pmc.ncbi.nlm.nih.gov/articles/PMC6420535/}, truy cập tháng 4 năm 2026.
+
+\bibitem{medlineplus-safety}
+MedlinePlus, ``Medicine safety - Filling your prescription,'' \url{https://medlineplus.gov/ency/patientinstructions/000766.htm}, truy cập tháng 4 năm 2026.
+
+\bibitem{flutter}
+Flutter Team, ``Flutter documentation,'' \url{https://docs.flutter.dev/}, truy cập tháng 4 năm 2026.
+
+\bibitem{postgresql}
+PostgreSQL Global Development Group, ``PostgreSQL documentation,'' \url{https://www.postgresql.org/docs/}, truy cập tháng 4 năm 2026.
+
+\bibitem{fastapi}
+Sebastian Ramirez, ``FastAPI documentation,'' \url{https://fastapi.tiangolo.com/}, truy cập tháng 4 năm 2026.
+
+\bibitem{express}
+Express.js, ``Express web framework,'' \url{https://expressjs.com/}, truy cập tháng 4 năm 2026.
+
+\end{thebibliography}
+
+\end{document}

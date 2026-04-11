@@ -13,20 +13,73 @@ const router = Router();
 
 // ── Validation ──
 
-const createPlanSchema = z.object({
+const doseScheduleItemSchema = z.object({
+  time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+  pills: z.number().int().min(1).max(20),
+});
+
+const planDrugSchema = z.object({
+  id: z.string().optional(),
   drugName: z.string().min(1).max(255),
   dosage: z.string().max(100).optional(),
-  frequency: z.enum(['daily', 'twice_daily', 'three_daily', 'weekly', 'as_needed']),
-  times: z.array(z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/)).min(1),
-  pillsPerDose: z.number().int().min(1).max(20).default(1),
+  notes: z.string().max(500).optional(),
+  sortOrder: z.number().int().min(0).optional(),
+});
+
+const planSlotItemSchema = z.object({
+  drugId: z.string().optional(),
+  drugName: z.string().min(1).max(255),
+  dosage: z.string().max(100).optional(),
+  pills: z.number().int().min(1).max(20),
+});
+
+const planSlotSchema = z.object({
+  id: z.string().optional(),
+  time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+  sortOrder: z.number().int().min(0).optional(),
+  items: z.array(planSlotItemSchema).min(1),
+});
+
+function validatePlanGroup(data, ctx) {
+  const slotTimes = new Set();
+  for (const slot of data.slots || []) {
+    if (slotTimes.has(slot.time)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['slots'],
+        message: 'Không được trùng giờ giữa các khung giờ',
+      });
+      break;
+    }
+    slotTimes.add(slot.time);
+  }
+}
+
+const createPlanBaseSchema = z.object({
+  title: z.string().max(255).optional(),
+  drugs: z.array(planDrugSchema).min(1),
+  slots: z.array(planSlotSchema).min(1),
   totalDays: z.number().int().min(1).max(365).optional(),
   startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
   notes: z.string().max(500).optional(),
 });
 
-const updatePlanSchema = createPlanSchema.partial().extend({
+const createPlanSchema = createPlanBaseSchema.superRefine(validatePlanGroup);
+
+const updatePlanSchema = z.object({
+  title: z.string().max(255).optional(),
+  drugs: z.array(planDrugSchema).min(1).optional(),
+  slots: z.array(planSlotSchema).min(1).optional(),
+  totalDays: z.number().int().min(1).max(365).optional(),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  notes: z.string().max(500).optional(),
   isActive: z.boolean().optional(),
+}).superRefine((data, ctx) => {
+  if (data.slots !== undefined) {
+    validatePlanGroup({ slots: data.slots }, ctx);
+  }
 });
 
 const logSchema = z.object({

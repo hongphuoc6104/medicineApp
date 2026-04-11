@@ -1,0 +1,15 @@
+flowchart LR
+    U["Nguoi dung"] --> M["Ung dung di dong\nFlutter"]
+    M --> N["May chu chinh\nNode.js + Express"]
+    N --> P["Dich vu AI\nFastAPI"]
+    N --> D["PostgreSQL"]
+    P --> K["Co so du lieu thuoc\nva mo hinh AI"]
+
+    M --- M1["Quet don\nRa soat thuoc\nLap lich\nXem lich hom nay"]
+    N --- N1["API\nXac thuc\nLuu lich su quet\nQuan ly ke hoach"]
+    P --- P1["Phat hien vung don\nTien xu ly anh\nOCR\nTach ten thuoc\nTra cuu thuoc"]
+
+    classDef main fill:#eef6ff,stroke:#2457a5,stroke-width:1.5px,color:#111;
+    classDef sub fill:#f9fbfd,stroke:#8aa4c8,stroke-width:1px,color:#222;
+    class M,N,P,D,K,U main;
+    class M1,N1,P1 sub;

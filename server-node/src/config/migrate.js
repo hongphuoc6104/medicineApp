@@ -94,6 +94,7 @@ const MIGRATIONS = [
     frequency VARCHAR(50) NOT NULL,
     times JSONB NOT NULL,
     pills_per_dose INTEGER DEFAULT 1,
+    dose_schedule JSONB DEFAULT '[]'::jsonb,
     total_days INTEGER,
     start_date DATE NOT NULL,
     end_date DATE,
@@ -101,6 +102,7 @@ const MIGRATIONS = [
     notes TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
   );`,
+  `ALTER TABLE medication_plans ADD COLUMN IF NOT EXISTS dose_schedule JSONB DEFAULT '[]'::jsonb;`,
   `CREATE INDEX IF NOT EXISTS idx_plans_user
    ON medication_plans(user_id, is_active);`,
 
@@ -236,6 +238,76 @@ const MIGRATIONS = [
   );`,
   `CREATE INDEX IF NOT EXISTS idx_dose_verification_feedback_events_session
    ON dose_verification_feedback_events(session_id, created_at DESC);`,
+
+  // 044: Prescription plan groups (new model)
+  `CREATE TABLE IF NOT EXISTS prescription_plans (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(255),
+    total_days INTEGER,
+    start_date DATE NOT NULL,
+    end_date DATE,
+    is_active BOOLEAN DEFAULT true,
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_prescription_plans_user
+   ON prescription_plans(user_id, is_active, created_at DESC);`,
+
+  // 045: Drugs inside one prescription plan
+  `CREATE TABLE IF NOT EXISTS prescription_plan_drugs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    plan_id UUID REFERENCES prescription_plans(id) ON DELETE CASCADE,
+    drug_name VARCHAR(255) NOT NULL,
+    dosage VARCHAR(100),
+    notes TEXT,
+    sort_order INTEGER DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_prescription_plan_drugs_plan
+   ON prescription_plan_drugs(plan_id, sort_order, created_at);`,
+
+  // 046: Time slots inside one prescription plan
+  `CREATE TABLE IF NOT EXISTS prescription_plan_slots (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    plan_id UUID REFERENCES prescription_plans(id) ON DELETE CASCADE,
+    time VARCHAR(5) NOT NULL,
+    sort_order INTEGER DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(plan_id, time)
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_prescription_plan_slots_plan
+   ON prescription_plan_slots(plan_id, sort_order, time);`,
+
+  // 047: Drug quantities per slot
+  `CREATE TABLE IF NOT EXISTS prescription_plan_slot_drugs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    slot_id UUID REFERENCES prescription_plan_slots(id) ON DELETE CASCADE,
+    drug_id UUID REFERENCES prescription_plan_drugs(id) ON DELETE CASCADE,
+    pills INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(slot_id, drug_id)
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_prescription_plan_slot_drugs_slot
+   ON prescription_plan_slot_drugs(slot_id);`,
+
+  // 048: Logs for slot occurrences
+  `CREATE TABLE IF NOT EXISTS prescription_plan_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    plan_id UUID REFERENCES prescription_plans(id) ON DELETE CASCADE,
+    occurrence_id VARCHAR(120) NOT NULL,
+    slot_time VARCHAR(5) NOT NULL,
+    scheduled_time TIMESTAMPTZ NOT NULL,
+    taken_at TIMESTAMPTZ,
+    status VARCHAR(20) NOT NULL CHECK (status IN ('taken', 'missed', 'skipped', 'pending')),
+    note TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(plan_id, occurrence_id)
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_prescription_plan_logs_plan
+   ON prescription_plan_logs(plan_id, scheduled_time DESC);`,
 ];
 
 async function migrate() {

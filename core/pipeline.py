@@ -20,6 +20,7 @@ Usage:
 
 import logging
 from pathlib import Path
+import re
 from typing import Optional
 
 import cv2
@@ -284,7 +285,13 @@ class MedicinePipeline:
                 # Level B: strict confirmed
                 if match_score >= 0.85:
                     mapping_status = "confirmed"
-                elif match_score >= 0.65:
+                elif (
+                    match_score >= 0.65
+                    or self._looks_like_valid_drugname_app(
+                        text,
+                        block.get("confidence", 0),
+                    )
+                ):
                     mapping_status = "unmapped_candidate"
                 else:
                     mapping_status = "rejected_noise"
@@ -319,6 +326,43 @@ class MedicinePipeline:
                 "others": len(ner_input) - len(filtered_meds),
             },
         }
+
+    @staticmethod
+    def _looks_like_valid_drugname_app(text, confidence):
+        """Keep plausible OCR drug names even when DB matching is weak.
+
+        App product decision: extracted names should still surface to the user,
+        even when local fuzzy matching is imperfect.
+        """
+        if float(confidence or 0) < 0.75:
+            return False
+
+        cleaned = re.sub(r"\s+", " ", str(text or "")).strip()
+        if len(cleaned) < 4:
+            return False
+
+        alpha_tokens = [
+            token for token in re.split(r"[^A-Za-zÀ-ỹ0-9]+", cleaned)
+            if any(ch.isalpha() for ch in token)
+        ]
+        if not alpha_tokens:
+            return False
+
+        normalized = cleaned.lower()
+        reject_phrases = {
+            "ngày uống",
+            "buổi sáng",
+            "buổi tối",
+            "sau ăn",
+            "trước ăn",
+            "viên",
+            "ống",
+            "lọ",
+        }
+        if normalized in reject_phrases:
+            return False
+
+        return True
 
     def _crop_prescription(self, img):
         """Use YOLO to detect and crop prescription area."""

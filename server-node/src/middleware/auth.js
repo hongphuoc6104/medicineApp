@@ -5,12 +5,13 @@
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
 import { AppError } from '../utils/errors.js';
+import { query } from '../config/database.js';
 
 /**
  * Require valid JWT Bearer token.
  * Sets req.user = { sub, email, iat, exp }
  */
-export function requireAuth(req, res, next) {
+export async function requireAuth(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -21,6 +22,10 @@ export function requireAuth(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET);
+    const result = await query('SELECT id, email FROM users WHERE id = $1', [decoded.sub]);
+    if (result.rows.length === 0) {
+      return next(new AppError('Session expired', 401, 'AUTH_USER_NOT_FOUND'));
+    }
     req.user = decoded;
     next();
   } catch (err) {

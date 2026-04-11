@@ -59,6 +59,7 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
             return TodayDose(
               occurrenceId: d.occurrenceId,
               planId: d.planId,
+              title: d.title,
               drugName: d.drugName,
               time: d.time,
               scheduledTime: d.scheduledTime,
@@ -73,6 +74,7 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
               verificationReady: d.verificationReady,
               expectedMedications: d.expectedMedications,
               missingReferenceDrugNames: d.missingReferenceDrugNames,
+              medications: d.medications,
             );
           }
           return d;

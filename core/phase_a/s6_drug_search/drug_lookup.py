@@ -149,6 +149,41 @@ class DrugLookup:
         c_words = {w for w in re.split(r"\W+", candidate.lower()) if w not in stop and len(w) >= 3}
         return bool(q_words & c_words)
 
+    @staticmethod
+    def _extract_strength_tokens(text: str) -> set[str]:
+        matches = re.findall(
+            r"(\d+(?:[.,]\d+)?)\s*(mg|ml|mcg|g|iu)",
+            text.lower(),
+        )
+        return {f"{value.replace(',', '.')} {unit}" for value, unit in matches}
+
+    @classmethod
+    def _strength_compatible(
+        cls,
+        query_text: str,
+        entry: dict,
+        match_key: str,
+    ) -> bool:
+        query_strengths = cls._extract_strength_tokens(query_text)
+        if not query_strengths:
+            return True
+
+        candidate_text = " ".join(
+            filter(
+                None,
+                [
+                    entry.get("brand_name", ""),
+                    entry.get("generic_name", ""),
+                    entry.get("nong_do", ""),
+                    match_key,
+                ],
+            )
+        )
+        candidate_strengths = cls._extract_strength_tokens(candidate_text)
+        if not candidate_strengths:
+            return True
+        return bool(query_strengths & candidate_strengths)
+
     # ── Public API ────────────────────────────────────────────────────────────
 
     def lookup(self, text: str) -> dict:
@@ -163,27 +198,47 @@ class DrugLookup:
         no_paren     = re.sub(r"\([^)]*\)", " ", text)
         query_no_par = self._clean(no_paren)
 
-        best_score  = 0
         best_result = None
+        variant_priority = {
+            "query_clean": 1,
+            "query_raw": 0,
+            "query_paren": 3,
+            "query_no_par": 2,
+        }
 
-        for query in [query_clean, query_raw, query_paren, query_no_par]:
+        for variant_name, query in [
+            ("query_clean", query_clean),
+            ("query_raw", query_raw),
+            ("query_paren", query_paren),
+            ("query_no_par", query_no_par),
+        ]:
             if not query or len(query) < 3:
                 continue
-            r = process.extractOne(
+            results = process.extract(
                 query,
                 self._search_keys,
                 scorer=fuzz.token_sort_ratio,
+                limit=5,
             )
-            if r and r[1] > best_score:
-                best_score  = r[1]
-                best_result = r
+            for match_key, score, idx in results:
+                if score < MIN_SCORE:
+                    continue
+                if not self._has_root_overlap(query_clean or query_raw, match_key):
+                    continue
+                entry = self._entries[idx]
+                strength_ok = self._strength_compatible(text, entry, match_key)
+                candidate_rank = (
+                    1 if strength_ok else 0,
+                    variant_priority[variant_name],
+                    score,
+                )
+                if best_result is None or candidate_rank > best_result[0]:
+                    best_result = (candidate_rank, match_key, score, idx)
 
-        if not best_result or best_score < MIN_SCORE:
+        if not best_result:
             return self._empty(text)
 
-        match_key, score, idx = best_result
-        if not self._has_root_overlap(query_clean or query_raw, match_key):
-            return self._empty(text)
+        _, match_key, score, idx = best_result
 
         entry = self._entries[idx]
         return {

@@ -112,7 +112,6 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final needsReviewCount = _drugs.where((d) => d.needsReview).length;
     final visible = _visibleDrugs;
 
     return Scaffold(
@@ -145,11 +144,6 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                       label: '${_drugs.length} thuốc',
                       color: AppColors.primary,
                     ),
-                    if (needsReviewCount > 0)
-                      _StatusChip(
-                        label: '$needsReviewCount cần xem lại',
-                        color: AppColors.warning,
-                      ),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -195,17 +189,12 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                           drug.mappedDrugName!.toLowerCase().trim() !=
                               drug.name.toLowerCase().trim();
                       // §3.3: show friendly label, not raw confidence number
-                      final needsCheck = drug.needsReview;
                       return Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           color: AppColors.surface,
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: needsCheck
-                                ? AppColors.warning.withValues(alpha: 0.4)
-                                : AppColors.surfaceHigh,
-                          ),
+                          border: Border.all(color: AppColors.surfaceHigh),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,26 +210,6 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                                     ),
                                   ),
                                 ),
-                                if (needsCheck)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 3,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.warning.withValues(
-                                        alpha: 0.12,
-                                      ),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: const Text(
-                                      'Nên kiểm tra',
-                                      style: TextStyle(
-                                        color: AppColors.warning,
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                  ),
                               ],
                             ),
                             // DB suggestion — optional secondary info

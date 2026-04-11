@@ -141,6 +141,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
         _qualityGuidance = quality.guidance;
         _error = null;
       });
+      _scanCameraCtrl.startAutoCaptureStream();
       return;
     }
 
@@ -156,7 +157,10 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
         guidance: quality.guidance,
         rejectReason: quality.rejectReason,
       );
-      if (!shouldProceed) return;
+      if (!shouldProceed) {
+        _scanCameraCtrl.startAutoCaptureStream();
+        return;
+      }
     }
 
     // Step 2: upload and scan
@@ -182,6 +186,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           _qualityGuidance =
               result.guidance ?? 'Ảnh có vấn đề, thử chụp lại rõ hơn.';
         });
+        _scanCameraCtrl.startAutoCaptureStream();
         return;
       }
 
@@ -190,6 +195,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           _mode = _ScreenMode.cameraPreview;
           _error = 'Không nhận diện được thuốc nào. Hãy thử lại hoặc nhập tay.';
         });
+        _scanCameraCtrl.startAutoCaptureStream();
         return;
       }
 
@@ -209,6 +215,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
         _mode = _ScreenMode.cameraPreview;
         _error = msg;
       });
+      _scanCameraCtrl.startAutoCaptureStream();
     }
   }
 

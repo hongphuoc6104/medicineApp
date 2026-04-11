@@ -49,13 +49,13 @@ class MainShell extends StatelessWidget {
                 _NavItem(
                   selected: current == 0,
                   icon: Icons.home_rounded,
-                  label: 'Home',
+                  label: 'Trang chủ',
                   onTap: () => context.go('/home'),
                 ),
                 _NavItem(
                   selected: current == 1,
                   icon: Icons.medication_rounded,
-                  label: 'Thuoc',
+                  label: 'Thuốc',
                   onTap: () => context.go('/drugs'),
                 ),
                 _CenterAction(
@@ -65,13 +65,13 @@ class MainShell extends StatelessWidget {
                 _NavItem(
                   selected: current == 3,
                   icon: Icons.calendar_month_rounded,
-                  label: 'Ke hoach',
+                  label: 'Kế hoạch',
                   onTap: () => context.go('/plans'),
                 ),
                 _NavItem(
                   selected: current == 4,
                   icon: Icons.history_rounded,
-                  label: 'Lich su',
+                  label: 'Lịch sử',
                   onTap: () => context.go('/history'),
                 ),
               ],

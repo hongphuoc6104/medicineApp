@@ -2,167 +2,175 @@
 
 ## Initiative active
 
-`Elderly-First Create Flow Simplification`
-
-Detailed plan này chỉ phục vụ cho initiative active hiện tại.
+`Prescription Plan Group Redesign`
 
 ---
 
 ## 0. Mục tiêu giao sản phẩm
 
-Biến flow tạo kế hoạch thành một flow:
+Đưa app sang mô hình:
 
-- ít bước
-- ít suy nghĩ
-- tự động hơn
-- dễ dùng với người lớn tuổi
+- `1 kế hoạch`
+- `n` khung giờ
+- mỗi khung giờ có `n` thuốc
+- mỗi thuốc có `pills` riêng theo giờ
 
-Mục tiêu thực tế của initiative này là cải thiện 3 màn hình chính trong cùng một batch song song (`7A / 7B / 7C`), sau đó dừng để user test gộp trước khi mở bước tiếp theo.
+Người dùng phải cảm thấy đang tạo **một kế hoạch thuốc hoàn chỉnh**, không phải nhiều record thuốc rời rạc.
 
 ---
 
 ## 1. Thứ tự đọc bắt buộc
-
-AI execution phải đọc đúng thứ tự sau:
 
 1. `AGENTS.md`
 2. `AGENT_START_HERE.md`
 3. `APP_ACTIVE_GENERAL_PLAN.md`
 4. `APP_ACTIVE_DETAILED_PLAN.md`
 5. `docs/phase_a_debug_runbook.md`
-
-Sau đó mới đọc code theo lát cắt được giao.
+6. `mobile/lib/features/create_plan/domain/plan.dart`
+7. `mobile/lib/features/create_plan/data/plan_repository.dart`
+8. `mobile/lib/features/create_plan/presentation/set_schedule_screen.dart`
+9. `mobile/lib/features/home/domain/today_schedule.dart`
+10. `mobile/lib/features/home/presentation/home_screen.dart`
+11. `mobile/lib/features/plan/presentation/plan_list_screen.dart`
+12. `mobile/lib/features/plan/presentation/plan_detail_screen.dart`
+13. `mobile/lib/core/notifications/notification_service.dart`
+14. `server-node/src/config/migrate.js`
+15. `server-node/src/routes/plan.routes.js`
+16. `server-node/src/services/plan.service.js`
+17. `server-node/tests/unit/plan.service.test.js`
+18. `server-node/tests/integration/plan.routes.test.js`
 
 ---
 
-## 2. Phạm vi initiative này
+## 2. Phạm vi được sửa
 
-### 2.1 In scope
+### In scope
 
-- `mobile/lib/features/create_plan/presentation/scan_camera_screen.dart`
-- `mobile/lib/features/create_plan/data/scan_camera_controller.dart`
-- `mobile/lib/features/create_plan/data/local_quality_gate.dart`
-- `mobile/lib/features/create_plan/presentation/widgets/drug_entry_sheet.dart`
+- `mobile/lib/features/create_plan/domain/plan.dart`
+- `mobile/lib/features/create_plan/data/plan_repository.dart`
 - `mobile/lib/features/create_plan/presentation/set_schedule_screen.dart`
-- nếu cần ở các lát cắt sau: các màn create/history/home liên quan UX của create flow
+- `mobile/lib/features/home/domain/today_schedule.dart`
+- `mobile/lib/features/home/presentation/home_screen.dart`
+- `mobile/lib/features/home/data/today_schedule_notifier.dart`
+- `mobile/lib/features/plan/presentation/plan_list_screen.dart`
+- `mobile/lib/features/plan/presentation/plan_detail_screen.dart`
+- `mobile/lib/core/notifications/notification_service.dart`
+- `server-node/src/config/migrate.js`
+- `server-node/src/routes/plan.routes.js`
+- `server-node/src/services/plan.service.js`
+- `server-node/tests/unit/plan.service.test.js`
+- `server-node/tests/integration/plan.routes.test.js`
 
-### 2.2 Out of scope
+### Out of scope
 
+- scan camera
+- scan review
 - Phase B
-- backend lớn cho prescription batch
-- train lại model
+- auth
 - `scripts/run_pipeline.py`
-- thay đổi lớn ở auth hoặc hệ notification
 
 ---
 
-## 3. Lát cắt chính của initiative này
+## 3. Thiết kế mục tiêu
 
-## Lát cắt 7A — Scan UX thực dụng hơn
+### Backend
 
-Mục tiêu:
+Nguồn sự thật mới phải là plan group với các thực thể:
 
-- user không phải tự căn/chụp quá nhiều
-- app tự động hơn
-- quality gate bám nhu cầu thực tế: đọc được vùng thuốc là đủ
+- `prescription_plans`
+- `prescription_plan_drugs`
+- `prescription_plan_slots`
+- `prescription_plan_slot_drugs`
+- `prescription_plan_logs`
 
-Việc phải làm:
+Không tiếp tục dựa nghiệp vụ vào `medication_plans` cũ.
 
-1. rà camera preview để giảm cảm giác mờ
-2. đổi copy màn quét sang ngắn gọn, dễ hiểu hơn
-3. thêm `auto-capture` hoặc `semi-auto capture`:
-   - khi mở camera lên, app liên tục tự đánh giá khung hình
-   - gặp khung hình đủ tốt thì tự lấy ảnh và gửi quét
-   - nút chụp tay chỉ còn là fallback phụ nếu cần
-4. đổi quality gate để không ép phải thấy trọn toàn bộ đơn mới cho quét
+### Mobile
 
-File trọng tâm:
+Nguồn sự thật mới phải là:
 
-- `mobile/lib/features/create_plan/presentation/scan_camera_screen.dart`
-- `mobile/lib/features/create_plan/data/scan_camera_controller.dart`
-- `mobile/lib/features/create_plan/data/local_quality_gate.dart`
-
-Điều kiện xong:
-
-- user chỉ cần đưa vùng thuốc vào khung là app hỗ trợ chụp/quét được dễ hơn
-- flow chính không còn phụ thuộc vào việc user phải bấm nút chụp
-- copy dễ hiểu hơn hiện tại
-
-## Lát cắt 7B — OCR correction ổn định
-
-Mục tiêu:
-
-- sửa tên thuốc không còn giật layout
-
-Việc phải làm:
-
-1. thêm debounce cho search
-2. giữ chiều cao vùng gợi ý ổn định
-3. tránh giật layout khi gợi ý xuất hiện/biến mất
-
-File trọng tâm:
-
-- `mobile/lib/features/create_plan/presentation/widgets/drug_entry_sheet.dart`
-
-Điều kiện xong:
-
-- sheet sửa thuốc mượt hơn rõ rệt
-
-## Lát cắt 7C — Lập lịch dễ hiểu hơn
-
-Mục tiêu:
-
-- user không phải ngồi mò và suy nghĩ nhiều
-
-Việc phải làm:
-
-1. đơn giản hóa ngôn ngữ và cấu trúc màn lập lịch
-2. ưu tiên flow rất rõ theo từng bước
-3. giảm độ kỹ thuật của summary và thao tác
-
-File trọng tâm:
-
-- `mobile/lib/features/create_plan/presentation/set_schedule_screen.dart`
-
-Điều kiện xong:
-
-- màn lập lịch dễ hiểu hơn cho user phổ thông
-
-## Lát cắt 8 — Prescription-first UX
-
-Chỉ mở sau khi user đã test và đồng ý các lát cắt 7A, 7B, 7C.
+- `Plan` có nhiều `drugs`
+- `Plan` có nhiều `slots`
+- mỗi `slot` có nhiều `drug items`
 
 ---
 
-## 4. Quy tắc nghiệm thu batch hiện tại
+## 4. Lát cắt triển khai
 
-### Rất quan trọng
+## 9A — Backend foundation mới
 
-Batch hiện tại gồm 3 lát cắt song song:
+Mục tiêu:
 
-- `7A`
-- `7B`
-- `7C`
+- tạo schema mới và route/service mới cho plan group
 
-Quy tắc:
+Việc phải làm:
 
-1. mỗi execution model chỉ làm đúng lát cắt của mình
-2. planner sẽ review từng lát cắt sau khi model trả kết quả
-3. chỉ khi cả 3 lát cắt đã xong và qua review thì mới mời user test gộp
-4. chỉ khi user đồng ý batch này mới mở bước tiếp theo
+1. migration cho bảng mới
+2. create/update/get/delete/log/today dùng bảng mới
+3. route schema nhận payload plan group mới
 
-Không được tự ý mở `Lát cắt 8` trước khi user đã test xong batch `7A/7B/7C`.
+Điều kiện xong:
+
+- backend save/read/log/today summary theo group plan hoạt động
+
+## 9B — Mobile domain/repository mới
+
+Mục tiêu:
+
+- mobile parse và gửi đúng payload plan group
+
+Việc phải làm:
+
+1. model `Plan` mới
+2. repository create/update/get theo model mới
+3. giữ create flow dùng được với schedule screen
+
+Điều kiện xong:
+
+- mobile giao tiếp được với backend model mới
+
+## 9C — Schedule screen mới
+
+Mục tiêu:
+
+- schedule screen save một `plan group` duy nhất
+
+Việc phải làm:
+
+1. schedule dùng `khung giờ -> thuốc -> số viên`
+2. save ra một request duy nhất
+3. summary trước khi lưu đúng với model mới
+
+Điều kiện xong:
+
+- user tạo được một kế hoạch nhiều thuốc nhiều giờ và lưu thành công
+
+## 9D — Home / today / list / detail
+
+Mục tiêu:
+
+- hiển thị đúng mô hình mới
+
+Việc phải làm:
+
+1. home hiển thị theo `dose slot`
+2. plan list/detail hiển thị theo `plan group`
+3. log dose theo slot occurrence đúng
+
+Điều kiện xong:
+
+- app nhất quán với mô hình mới ở các màn chính
 
 ---
 
-## 5. Luật dừng khi có lỗi lớn
+## 5. Luật dừng
 
-Execution model phải dừng nếu:
+Phải dừng nếu:
 
-1. cần sửa ngoài phạm vi lát cắt đang được giao
-2. phải đụng backend hoặc contract lớn để hoàn thành một thay đổi UI nhỏ
-3. test fail ở phần không liên quan
-4. workspace bẩn gây xung đột trực tiếp với file đang làm
+1. thay đổi bắt đầu lan sang scan flow hoặc Phase B
+2. schema mới cần rộng hơn mức đã chốt
+3. test fail ở phần không liên quan mà chưa rõ nguyên nhân
+4. workspace xung đột trực tiếp với file đang làm
 
 Khi dừng phải báo:
 
@@ -174,19 +182,31 @@ Khi dừng phải báo:
 
 ---
 
-## 6. Test bắt buộc sau mỗi lát cắt
+## 6. Test bắt buộc
+
+### Mobile
 
 ```bash
 cd mobile && flutter analyze
 cd mobile && flutter test
 ```
 
-Và nếu màn hình có thể test ngay trên máy thật thì planner phải mời user test trước khi mở lát cắt tiếp theo.
+### Node
+
+```bash
+cd server-node && npm test -- tests/unit/plan.service.test.js tests/integration/plan.routes.test.js
+```
+
+### Manual checkpoint
+
+1. tạo một kế hoạch có nhiều thuốc và nhiều giờ
+2. lưu thành công
+3. home/today hiển thị đúng theo slot
 
 ---
 
 ## 7. Trạng thái hiện tại
 
-- Batch active hiện tại là `7A + 7B + 7C`.
-- Cả 3 execution plan đều có thể bắt đầu ngay.
-- Sau khi cả 3 xong, planner sẽ mời user test gộp một lần.
+- `9A`, `9B`, `9C` đang được triển khai.
+- `9D` mới chỉ vá tạm một số hiển thị, chưa hoàn chỉnh theo group plan.
+- Sau khi xong `9A + 9B + 9C`, phải dừng để user test create/save trước khi hoàn thiện `9D`.

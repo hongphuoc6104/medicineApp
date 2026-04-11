@@ -1,0 +1,29 @@
+flowchart LR
+    actor["Nguoi dung"]
+    uc1(["Dang nhap"])
+    uc2(["Quet don thuoc"])
+    uc3(["Xac nhan danh sach thuoc"])
+    uc4(["Lap lich dung thuoc"])
+    uc5(["Xem lich hom nay"])
+    uc6(["Ghi nhan da uong hoac bo qua"])
+    uc7(["Xem lich su quet"])
+    uc8(["Tra cuu thuoc"])
+
+    actor --- uc1
+    actor --- uc2
+    actor --- uc3
+    actor --- uc4
+    actor --- uc5
+    actor --- uc6
+    actor --- uc7
+    actor --- uc8
+
+    uc2 --> uc3
+    uc3 --> uc4
+    uc4 --> uc5
+    uc5 --> uc6
+
+    classDef actor fill:#fff7e8,stroke:#b7791f,stroke-width:1.5px,color:#111;
+    classDef usecase fill:#f8f8ff,stroke:#6b6bb8,stroke-width:1.2px,color:#111;
+    class actor actor;
+    class uc1,uc2,uc3,uc4,uc5,uc6,uc7,uc8 usecase;

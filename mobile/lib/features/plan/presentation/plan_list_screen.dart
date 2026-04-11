@@ -51,7 +51,7 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ke hoach'),
+        title: const Text('Kế hoạch'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline),
@@ -104,31 +104,31 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
                   ),
                   const SizedBox(height: 20),
                   _SectionTitle(
-                    title: 'Dang kich hoat',
+                    title: 'Đang kích hoạt',
                     subtitle: activePlans.isEmpty
-                        ? 'Chua co ke hoach nao dang chay'
-                        : '${activePlans.length} ke hoach dang nhac thuoc',
+                        ? 'Chưa có kế hoạch nào đang chạy'
+                        : '${activePlans.length} kế hoạch đang nhắc thuốc',
                   ),
                   const SizedBox(height: 10),
                   if (activePlans.isEmpty)
                     _EmptyPlanCard(
                       message:
-                          'Ban chua co ke hoach dang kich hoat. Quet don moi hoac tao thu cong.',
+                          'Bạn chưa có kế hoạch đang kích hoạt. Quét đơn mới hoặc tạo thủ công.',
                     )
                   else
                     ...activePlans.map((plan) => _PlanTile(plan: plan)),
                   const SizedBox(height: 20),
                   _SectionTitle(
-                    title: 'Da ket thuc',
+                    title: 'Đã kết thúc',
                     subtitle: inactivePlans.isEmpty
-                        ? 'Chua co ke hoach da ket thuc'
-                        : '${inactivePlans.length} ke hoach luu trong lich su',
+                        ? 'Chưa có kế hoạch đã kết thúc'
+                        : '${inactivePlans.length} kế hoạch lưu trong lịch sử',
                   ),
                   const SizedBox(height: 10),
                   if (inactivePlans.isEmpty)
                     _EmptyPlanCard(
                       message:
-                          'Ke hoach ket thuc se xuat hien o day de ban xem lai.',
+                          'Kế hoạch kết thúc sẽ xuất hiện ở đây để bạn xem lại.',
                     )
                   else
                     ...inactivePlans.map((plan) => _PlanTile(plan: plan)),
@@ -140,7 +140,7 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
         onPressed: () => context.go('/create'),
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add),
-        label: const Text('Tao ke hoach'),
+        label: const Text('Tạo kế hoạch'),
       ),
     );
   }
@@ -164,15 +164,15 @@ class _SummaryHeader extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _SummaryMetric(label: 'Dang chay', value: '$activeCount'),
+            child: _SummaryMetric(label: 'Đang chạy', value: '$activeCount'),
           ),
           Expanded(
-            child: _SummaryMetric(label: 'Tong', value: '$totalCount'),
+            child: _SummaryMetric(label: 'Tổng', value: '$totalCount'),
           ),
           Expanded(
             child: _SummaryMetric(
-              label: 'Trang thai',
-              value: activeCount > 0 ? 'On' : 'Empty',
+              label: 'Trạng thái',
+              value: activeCount > 0 ? 'Có kế hoạch' : 'Trống',
             ),
           ),
         ],
@@ -260,7 +260,7 @@ class _PlanTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statusColor = plan.isActive ? AppColors.success : AppColors.textMuted;
-    final statusLabel = plan.isActive ? 'Dang chay' : 'Da ket thuc';
+    final statusLabel = plan.isActive ? 'Đang chạy' : 'Đã kết thúc';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -284,7 +284,7 @@ class _PlanTile extends ConsumerWidget {
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: Text(
-          '${_freqLabel(plan.frequency)} · ${plan.times.join(', ')}',
+          '${plan.drugs.length} thuốc · ${plan.slots.length} khung giờ',
           style: const TextStyle(color: AppColors.textSecondary),
         ),
         trailing: Column(
@@ -297,27 +297,14 @@ class _PlanTile extends ConsumerWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${plan.pillsPerDose} vien/lan',
+              plan.hasVariableDoseSchedule
+                  ? 'Số viên theo từng giờ'
+                  : plan.scheduleSummary,
               style: const TextStyle(fontSize: 12),
             ),
           ],
         ),
       ),
     );
-  }
-
-  static String _freqLabel(String freq) {
-    switch (freq) {
-      case 'twice_daily':
-        return '2 lan/ngay';
-      case 'three_daily':
-        return '3 lan/ngay';
-      case 'weekly':
-        return 'Hang tuan';
-      case 'as_needed':
-        return 'Khi can';
-      default:
-        return '1 lan/ngay';
-    }
   }
 }

@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor U as Nguoi dung
+    participant M as Ung dung di dong
+    participant N as May chu Node.js
+    participant P as Dich vu AI FastAPI
+    participant D as PostgreSQL
+
+    U->>M: Chup hoac chon anh don thuoc
+    M->>M: Kiem tra chat luong anh cuc bo
+    M->>N: Gui anh len API quet don
+    N->>P: Chuyen tiep anh den dich vu AI
+    P->>P: Phat hien vung don
+    P->>P: Tien xu ly anh va OCR
+    P->>P: Tach ten thuoc va tra cuu thuoc
+    P-->>N: Tra ve ket qua nhan dien
+    N->>D: Luu lich su quet va ket qua
+    N-->>M: Tra ve danh sach thuoc
+    M-->>U: Hien thi de ra soat

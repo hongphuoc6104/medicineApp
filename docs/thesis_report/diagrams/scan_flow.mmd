@@ -1,0 +1,11 @@
+flowchart TD
+    A["Anh don thuoc"] --> B["Phat hien va cat vung don"]
+    B --> C["Tien xu ly anh\nchinh nghieng va huong anh"]
+    C --> D["OCR\nPaddleOCR + VietOCR"]
+    D --> E["Tach ten thuoc\nPhoBERT"]
+    E --> F["Doi sanh co so du lieu thuoc"]
+    F --> G["Danh sach thuoc de nguoi dung ra soat"]
+    G --> H["Lap lich dung thuoc"]
+
+    classDef box fill:#f6fbf8,stroke:#2d7a46,stroke-width:1.4px,color:#111;
+    class A,B,C,D,E,F,G,H box;

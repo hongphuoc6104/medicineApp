@@ -294,7 +294,7 @@ class _DashboardView extends ConsumerWidget {
                           SnackBar(
                             content: Text(
                               ok
-                                  ? 'Đã uống: ${dose.drugName}'
+                                  ? 'Đã uống: ${dose.primaryTitle}'
                                   : 'Đã lưu tạm offline',
                             ),
                             backgroundColor: ok
@@ -312,7 +312,7 @@ class _DashboardView extends ConsumerWidget {
                           SnackBar(
                             content: Text(
                               ok
-                                  ? 'Đã bỏ qua: ${dose.drugName}'
+                                  ? 'Đã bỏ qua: ${dose.primaryTitle}'
                                   : 'Đã lưu tạm offline',
                             ),
                             backgroundColor: ok
@@ -690,7 +690,9 @@ class _PlanCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${_freqLabel(plan.frequency)} · ${plan.pillsPerDose} viên · ${plan.times.join(', ')}',
+                    plan.hasVariableDoseSchedule
+                        ? '${_freqLabel(plan.frequency)} · Theo từng giờ · ${plan.times.join(', ')}'
+                        : '${_freqLabel(plan.frequency)} · ${plan.pillsPerDose} viên · ${plan.times.join(', ')}',
                     style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 12,
@@ -897,19 +899,32 @@ class _TodayDoseTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      dose.drugName,
+                      dose.primaryTitle,
                       style: const TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 16,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      dose.dosage?.isNotEmpty == true
-                          ? dose.dosage!
-                          : '${dose.pillsPerDose ?? 1} viên/liều',
-                      style: const TextStyle(color: AppColors.textSecondary),
-                    ),
+                    if (dose.medications.isNotEmpty)
+                      ...dose.medications.map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.only(bottom: 2),
+                          child: Text(
+                            '${item.drugName}: ${item.pills} viên',
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      Text(
+                        dose.dosage?.isNotEmpty == true
+                            ? dose.dosage!
+                            : '${dose.pillsPerDose ?? 1} viên/liều',
+                        style: const TextStyle(color: AppColors.textSecondary),
+                      ),
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(

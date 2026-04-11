@@ -117,10 +117,21 @@ class NotificationService {
         }
 
         final id = _hashId('${plan.id}:${scheduled.toIso8601String()}');
+        final medications = plan.medicationsForTime(
+          '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}',
+        );
+        final pills = plan.pillsForTime(
+          '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}',
+        );
+        final body = medications.isNotEmpty
+            ? medications
+                  .map((item) => '${item.drugName} (${item.pills} viên)')
+                  .join(', ')
+            : '${plan.drugName} ($pills viên)';
         await _plugin.zonedSchedule(
           id,
           'Den gio uong thuoc',
-          '${plan.drugName} (${plan.pillsPerDose} vien)',
+          body,
           tz.TZDateTime.from(scheduled, tz.local),
           const NotificationDetails(
             android: _androidDetails,

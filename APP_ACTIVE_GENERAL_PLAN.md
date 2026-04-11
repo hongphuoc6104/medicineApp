@@ -2,96 +2,90 @@
 
 ## Initiative hiện tại
 
-`Elderly-First Create Flow Simplification`
+`Prescription Plan Group Redesign`
 
-Mục tiêu của initiative này là tối giản app cho:
+Mục tiêu là bỏ mô hình cũ `1 plan = 1 thuốc` và chuyển app sang mô hình đúng với cách người dùng nghĩ:
 
-- người lớn tuổi
-- người không rành ứng dụng hiện đại
-- người muốn làm nhanh mà không phải suy nghĩ nhiều
+- `1 kế hoạch`
+- có `1 hoặc nhiều khung giờ uống`
+- mỗi khung giờ có `1 hoặc nhiều loại thuốc`
+- mỗi thuốc trong khung giờ có `số lượng riêng`
 
-Nguyên tắc chính:
+---
 
-- cái gì tự động được thì ưu tiên tự động
-- một màn chỉ nên có một mục tiêu rõ ràng
-- không bắt user phải hiểu model dữ liệu hay trạng thái kỹ thuật
-- sau mỗi màn hoặc quy trình lớn được sửa xong, phải dừng để user test và duyệt trước khi sang bước kế tiếp
+## Quyết định sản phẩm đã chốt
+
+### 1. Không giữ dữ liệu cũ như ràng buộc
+
+- không cần tương thích ngược với schema cũ ở mức nghiệp vụ
+- có thể bỏ cách hiểu cũ `medication_plans = từng thuốc`
+- có thể dùng schema mới và route/service mới trong cùng app
+
+### 2. Một lần uống là một khung giờ có nhiều thuốc
+
+- home/today phải xoay quanh `dose slot`
+- không xoay quanh từng thuốc riêng lẻ nữa
+
+### 3. Phase B tiếp tục đứng ngoài luồng này
+
+- không mở Phase B trong initiative này
 
 ---
 
 ## Vấn đề tổng quát cần giải quyết
 
-### 1. Màn quét đơn thuốc còn khó dùng
+### 1. Data model hiện tại sai với nghiệp vụ thật
 
-- user phải tự bấm chụp
-- quality gate đang thiên về “phải thấy rõ toàn bộ đơn”
-- camera preview/capture tạo cảm giác mờ và khó căn
-- quy trình quét chưa đủ tự động
+- đang lưu theo từng thuốc riêng
+- người dùng nghĩ theo từng đơn/kế hoạch có nhiều thuốc
 
-### 2. Màn sửa lỗi OCR bị giật khi hiện gợi ý
+### 2. Màn lập lịch bị bó buộc bởi model cũ
 
-- vùng gợi ý tên thuốc thay đổi chiều cao liên tục
-- cảm giác app giật lên giật xuống khi nhập
+- chỉ mới vá được số viên theo từng giờ
+- chưa phản ánh đúng `1 kế hoạch nhiều thuốc nhiều khung giờ`
 
-### 3. Màn lập lịch vẫn quá phức tạp
+### 3. Home / plan list / plan detail vẫn đang lộ mô hình cũ
 
-- user phải đọc, mò và suy nghĩ nhiều
-- thuật ngữ và cách trình bày chưa đủ trực quan cho người lớn tuổi
-
-### 4. UI đang lộ mô hình kỹ thuật theo từng thuốc quá nhiều
-
-- user nghĩ theo `một đơn` và `một lần uống`
-- app hiện vẫn lộ cảm giác đang thao tác trên nhiều record nhỏ
-
-### 5. Phase B tạm dừng
-
-- không mở thêm việc mới cho Phase B
-- không đưa Phase B vào flow chính của sản phẩm trong initiative này
+- chưa nhìn ra đúng một kế hoạch tổng thể
 
 ---
 
 ## Nhóm ưu tiên
 
-### Nhóm A — Quét đơn thuốc thực dụng hơn
+### Nhóm A — Backend foundation mới
 
-- continuous auto scan / auto capture
-- quality gate bám vùng thuốc, không ép toàn bộ đơn hoàn hảo
-- copy dễ hiểu hơn
+- schema mới cho plan group
+- service mới cho create/read/update/log/today
 
-### Nhóm B — Sửa lỗi OCR mượt hơn
+### Nhóm B — Mobile domain/repository mới
 
-- debounce
-- suggestion ổn định
-- không giật layout
+- mobile hiểu plan group mới
 
-### Nhóm C — Lập lịch dễ hiểu hơn
+### Nhóm C — Schedule screen mới
 
-- ít bước hơn
-- ít khái niệm hơn
-- dễ nhìn theo buổi/lần uống
+- schedule xoay quanh `khung giờ -> thuốc -> số viên`
 
-### Nhóm D — Prescription-first UX
+### Nhóm D — Home / plan list / plan detail mới
 
-- UI phải cho cảm giác đang làm việc với `một đơn thuốc`
-- chỉ mở sau khi 3 nhóm trên đủ ổn
+- hiển thị đúng theo kế hoạch nhóm
 
 ---
 
 ## Thứ tự xử lý lớn
 
-1. sửa trải nghiệm quét đơn thuốc
-2. sửa sheet nhập/tìm thuốc để không còn giật
-3. sửa màn lập lịch cho dễ hiểu hơn
-4. chỉ sau khi 1-3 đã được user test và đồng ý mới mở phần prescription-first UX sâu hơn
+1. backend foundation mới
+2. mobile domain/repository mới
+3. schedule screen save theo plan group
+4. user test create/save
+5. home/today/list/detail theo model mới
 
 ---
 
 ## Quy tắc nghiệm thu trong initiative này
 
-- batch hiện tại (`7A / 7B / 7C`) được phép chạy song song
-- sau khi cả 3 lát cắt hoàn thành, planner sẽ review và mời user test gộp trên app thật
-- chỉ khi user đồng ý batch này mới mở initiative hoặc lát cắt tiếp theo
+- sau khi xong phần `backend + mobile domain + schedule save`, phải dừng để user test
+- chỉ khi user xác nhận flow create/save ổn mới mở tiếp phần `home/list/detail`
 
-Initiative gần nhất đã hoàn thành và được archive tại:
+Batch cũ đã hoàn thành và được archive tại:
 
 - `archive/plan_bin/2026-04-10_phase-a_master/APP_REBUILD_GENERAL_PLAN.md`

@@ -91,6 +91,31 @@ python -m server.main
 
 ---
 
+## Mobile Dev Khong Phu Thuoc Wi-Fi
+
+Khi test app Android that, khuyen nghi dung USB + `adb reverse` thay vi hardcode IP LAN.
+
+```bash
+bash dev.sh
+cd mobile && flutter run -d <device-id>
+```
+
+Workflow nay se cap nhat `mobile/.env` ve:
+
+```bash
+API_BASE_URL=http://127.0.0.1:3001/api
+```
+
+va map request tren dien thoai ve may dev qua USB. `dev.sh` chay:
+
+- PostgreSQL bang Docker
+- Node API local tren `3001`
+- Python AI local tren `8000`
+
+nen khong can sua lai IP moi lan doi Wi-Fi.
+
+---
+
 ## Cau truc du an
 
 ```

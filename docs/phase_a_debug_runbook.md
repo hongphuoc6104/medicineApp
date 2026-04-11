@@ -45,6 +45,27 @@ Script dùng để chạy kiểm tra Phase A:
 bash scripts/debug_phase_a_checks.sh --quick
 ```
 
+### Dev setup khuyến nghị cho Android thật
+
+Để tránh phải đổi IP mỗi khi đổi Wi-Fi, dùng workflow `adb reverse` qua USB:
+
+```bash
+bash dev.sh
+```
+
+Script này sẽ:
+
+- cập nhật `mobile/.env` về `http://127.0.0.1:3001/api`
+- khởi động Node API local ở `3001`
+- khởi động Python AI server
+- chạy `adb reverse tcp:3001 tcp:3001`
+
+Kết quả:
+
+- app Android thật sẽ gọi `127.0.0.1:3001`
+- nhưng request được reverse về máy dev qua USB
+- đổi Wi-Fi không còn làm hỏng kết nối nếu điện thoại vẫn cắm USB và `adb reverse` còn hiệu lực
+
 Các mode hỗ trợ:
 
 ```bash

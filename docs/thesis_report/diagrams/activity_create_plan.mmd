@@ -1,0 +1,17 @@
+flowchart TD
+    A(["Bat dau"]) --> B["Nguoi dung quet don thuoc"]
+    B --> C["He thong tra ve danh sach thuoc"]
+    C --> D{"Can chinh sua khong?"}
+    D -->|Co| E["Sua, them hoac xoa thuoc"]
+    D -->|Khong| F["Chon ngay bat dau\nva so ngay dung"]
+    E --> F
+    F --> G["Chon khung gio uong thuoc"]
+    G --> H["Nhap so vien theo tung khung gio"]
+    H --> I["Luu ke hoach vao may chu"]
+    I --> J["Thiet lap thong bao nhac uong"]
+    J --> K(["Ket thuc"])
+
+    classDef node fill:#eef7ff,stroke:#346ea8,stroke-width:1.3px,color:#111;
+    classDef decision fill:#fff3d9,stroke:#b7791f,stroke-width:1.3px,color:#111;
+    class A,B,C,E,F,G,H,I,J,K node;
+    class D decision;

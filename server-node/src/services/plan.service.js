@@ -1,498 +1,411 @@
 /**
- * Plan service — medication plan CRUD + medication logs.
+ * Plan service — prescription plan group CRUD + logs.
  */
 import { query } from '../config/database.js';
 import { AppError } from '../utils/errors.js';
 
-function toUtcDateAndTimeKey(input) {
-  const dt = new Date(input);
-  if (Number.isNaN(dt.getTime())) {
-    return null;
-  }
-
-  const iso = dt.toISOString();
-  return {
-    date: iso.slice(0, 10),
-    time: iso.slice(11, 16),
-  };
-}
-
 function normalizeDateKey(dateStr) {
-  if (!dateStr || typeof dateStr !== 'string') {
-    return null;
-  }
+  if (!dateStr || typeof dateStr !== 'string') return null;
   const trimmed = dateStr.trim();
   return /^\d{4}-\d{2}-\d{2}$/.test(trimmed) ? trimmed : null;
+}
+
+function normalizeTime(value) {
+  const time = String(value || '').slice(0, 5);
+  return /^([01]\d|2[0-3]):[0-5]\d$/.test(time) ? time : null;
 }
 
 function buildOccurrenceId(planId, scheduledTime, providedOccurrenceId) {
   if (providedOccurrenceId && typeof providedOccurrenceId === 'string') {
     const cleaned = providedOccurrenceId.trim();
-    if (cleaned.length > 0) {
-      return cleaned.slice(0, 120);
-    }
+    if (cleaned.length > 0) return cleaned.slice(0, 120);
   }
-
-  const dateAndTime = toUtcDateAndTimeKey(scheduledTime);
-  if (!dateAndTime) {
-    return null;
-  }
-  return `${planId}:${dateAndTime.date}:${dateAndTime.time}`;
+  const dt = new Date(scheduledTime);
+  if (Number.isNaN(dt.getTime())) return null;
+  const iso = dt.toISOString();
+  return `${planId}:${iso.slice(0, 10)}:${iso.slice(11, 16)}`;
 }
 
-/**
- * Create a new medication plan.
- */
-export async function createPlan(userId, data) {
-  const result = await query(
-    `INSERT INTO medication_plans
-       (user_id, drug_name, dosage, frequency, times, pills_per_dose,
-        total_days, start_date, end_date, notes)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-     RETURNING *`,
-    [
-      userId, data.drugName, data.dosage || null, data.frequency,
-      JSON.stringify(data.times), data.pillsPerDose || 1,
-      data.totalDays || null, data.startDate,
-      data.endDate || null, data.notes || null,
-    ]
-  );
-  return result.rows[0];
+function derivePlanTitle(row, drugs) {
+  if (row.title && row.title.trim()) return row.title;
+  if (!drugs.length) return 'Kế hoạch thuốc';
+  if (drugs.length === 1) return drugs[0].drugName;
+  const preview = drugs.slice(0, 2).map((drug) => drug.drugName).join(', ');
+  return `${preview}${drugs.length > 2 ? ` và ${drugs.length - 2} thuốc khác` : ''}`;
 }
 
-/**
- * Get all active plans for a user.
- */
-export async function getUserPlans(userId, { page = 1, limit = 20, activeOnly = true } = {}) {
-  const offset = (page - 1) * limit;
-
-  // Use parameterized query — no string interpolation to avoid SQL injection risk
-  const result = await query(
-    `SELECT * FROM medication_plans
-     WHERE user_id = $1 AND ($2::boolean IS FALSE OR is_active = true)
-     ORDER BY created_at DESC
-     LIMIT $3 OFFSET $4`,
-    [userId, activeOnly, limit, offset]
+async function hydratePlanRow(row) {
+  const drugsResult = await query(
+    `SELECT id, drug_name, dosage, notes, sort_order
+     FROM prescription_plan_drugs
+     WHERE plan_id = $1
+     ORDER BY sort_order ASC, created_at ASC`,
+    [row.id],
   );
 
-  const countResult = await query(
-    `SELECT COUNT(*) FROM medication_plans
-     WHERE user_id = $1 AND ($2::boolean IS FALSE OR is_active = true)`,
-    [userId, activeOnly]
+  const slotsResult = await query(
+    `SELECT s.id,
+            s.time,
+            s.sort_order,
+            COALESCE(
+              jsonb_agg(
+                jsonb_build_object(
+                  'drugId', d.id,
+                  'drugName', d.drug_name,
+                  'dosage', d.dosage,
+                  'pills', sd.pills
+                )
+                ORDER BY d.sort_order ASC, d.created_at ASC
+              ) FILTER (WHERE d.id IS NOT NULL),
+              '[]'::jsonb
+            ) AS items
+     FROM prescription_plan_slots s
+     LEFT JOIN prescription_plan_slot_drugs sd ON sd.slot_id = s.id
+     LEFT JOIN prescription_plan_drugs d ON d.id = sd.drug_id
+     WHERE s.plan_id = $1
+     GROUP BY s.id, s.time, s.sort_order
+     ORDER BY s.sort_order ASC, s.time ASC`,
+    [row.id],
   );
+
+  const drugs = drugsResult.rows.map((drug) => ({
+    id: drug.id,
+    drugName: drug.drug_name,
+    dosage: drug.dosage,
+    notes: drug.notes,
+    sortOrder: drug.sort_order,
+  }));
+
+  const slots = slotsResult.rows.map((slot) => ({
+    id: slot.id,
+    time: slot.time,
+    sortOrder: slot.sort_order,
+    items: Array.isArray(slot.items) ? slot.items : [],
+  }));
 
   return {
-    plans: result.rows,
-    total: parseInt(countResult.rows[0].count),
+    id: row.id,
+    title: derivePlanTitle(row, drugs),
+    drugs,
+    slots,
+    total_days: row.total_days,
+    start_date: row.start_date,
+    end_date: row.end_date,
+    is_active: row.is_active,
+    notes: row.notes,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
   };
 }
 
-/**
- * Get a single plan by ID (must belong to user).
- */
-export async function getPlanById(userId, planId) {
+async function ensurePlanOwnership(userId, planId) {
   const result = await query(
-    'SELECT * FROM medication_plans WHERE id = $1 AND user_id = $2',
-    [planId, userId]
+    'SELECT * FROM prescription_plans WHERE id = $1 AND user_id = $2',
+    [planId, userId],
   );
-  if (result.rows.length === 0) {
+  if (!result.rows.length) {
     throw new AppError('Plan not found', 404, 'PLAN_NOT_FOUND');
   }
   return result.rows[0];
 }
 
-/**
- * Update a plan.
- */
+async function replacePlanChildren(execute, planId, drugs = [], slots = []) {
+  await execute('DELETE FROM prescription_plan_slot_drugs WHERE slot_id IN (SELECT id FROM prescription_plan_slots WHERE plan_id = $1)', [planId]);
+  await execute('DELETE FROM prescription_plan_slots WHERE plan_id = $1', [planId]);
+  await execute('DELETE FROM prescription_plan_drugs WHERE plan_id = $1', [planId]);
+
+  const drugIdByTempKey = new Map();
+  for (let i = 0; i < drugs.length; i += 1) {
+    const drug = drugs[i];
+    const inserted = await execute(
+      `INSERT INTO prescription_plan_drugs (plan_id, drug_name, dosage, notes, sort_order)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id`,
+      [planId, drug.drugName, drug.dosage || null, drug.notes || null, drug.sortOrder ?? i],
+    );
+    const insertedId = inserted.rows[0].id;
+    const tempKeys = [drug.id, drug.drugName, `${i}`].filter(Boolean);
+    for (const key of tempKeys) {
+      if (!drugIdByTempKey.has(key)) {
+        drugIdByTempKey.set(key, insertedId);
+      }
+    }
+  }
+
+  for (let i = 0; i < slots.length; i += 1) {
+    const slot = slots[i];
+    const time = normalizeTime(slot.time);
+    if (!time) continue;
+
+    const insertedSlot = await execute(
+      `INSERT INTO prescription_plan_slots (plan_id, time, sort_order)
+       VALUES ($1, $2, $3)
+       RETURNING id`,
+      [planId, time, slot.sortOrder ?? i],
+    );
+    const slotId = insertedSlot.rows[0].id;
+
+    for (const item of slot.items || []) {
+      let drugId = item.drugId ? drugIdByTempKey.get(item.drugId) : null;
+      if (!drugId && item.drugName) {
+        drugId = drugIdByTempKey.get(item.drugName);
+      }
+      if (!drugId) continue;
+
+      await execute(
+        `INSERT INTO prescription_plan_slot_drugs (slot_id, drug_id, pills)
+         VALUES ($1, $2, $3)`,
+        [slotId, drugId, Number.parseInt(item.pills, 10) || 1],
+      );
+    }
+  }
+}
+
+export async function createPlan(userId, data) {
+  try {
+    const title = String(data.title || '').trim() || null;
+    const result = await query(
+      `INSERT INTO prescription_plans (user_id, title, total_days, start_date, end_date, notes)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING *`,
+      [userId, title, data.totalDays || null, data.startDate, data.endDate || null, data.notes || null],
+    );
+    const planRow = result.rows[0];
+    await replacePlanChildren(query, planRow.id, data.drugs || [], data.slots || []);
+    return getPlanById(userId, planRow.id);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getUserPlans(userId, { page = 1, limit = 20, activeOnly = true } = {}) {
+  const offset = (page - 1) * limit;
+  const result = await query(
+    `SELECT * FROM prescription_plans
+     WHERE user_id = $1 AND ($2::boolean IS FALSE OR is_active = true)
+     ORDER BY created_at DESC
+     LIMIT $3 OFFSET $4`,
+    [userId, activeOnly, limit, offset],
+  );
+
+  const countResult = await query(
+    `SELECT COUNT(*) FROM prescription_plans
+     WHERE user_id = $1 AND ($2::boolean IS FALSE OR is_active = true)`,
+    [userId, activeOnly],
+  );
+
+  const plans = [];
+  for (const row of result.rows) {
+    plans.push(await hydratePlanRow(row));
+  }
+  return {
+    plans,
+    total: Number.parseInt(countResult.rows[0].count, 10),
+  };
+}
+
+export async function getPlanById(userId, planId) {
+  const row = await ensurePlanOwnership(userId, planId);
+  return hydratePlanRow(row);
+}
+
 export async function updatePlan(userId, planId, data) {
-  // Verify ownership
-  await getPlanById(userId, planId);
+  await ensurePlanOwnership(userId, planId);
 
   const fields = [];
   const values = [];
   let idx = 1;
-
   const mapping = {
-    drugName: 'drug_name', dosage: 'dosage', frequency: 'frequency',
-    times: 'times', pillsPerDose: 'pills_per_dose',
-    totalDays: 'total_days', startDate: 'start_date',
-    endDate: 'end_date', isActive: 'is_active', notes: 'notes',
+    title: 'title',
+    totalDays: 'total_days',
+    startDate: 'start_date',
+    endDate: 'end_date',
+    isActive: 'is_active',
+    notes: 'notes',
   };
-
   for (const [jsKey, dbKey] of Object.entries(mapping)) {
     if (data[jsKey] !== undefined) {
-      const val = jsKey === 'times' ? JSON.stringify(data[jsKey]) : data[jsKey];
       fields.push(`${dbKey} = $${idx}`);
-      values.push(val);
-      idx++;
+      values.push(data[jsKey]);
+      idx += 1;
     }
   }
 
-  if (fields.length === 0) {
+  const hasChildrenUpdate = data.drugs !== undefined || data.slots !== undefined;
+  if (fields.length === 0 && !hasChildrenUpdate) {
     throw new AppError('No fields to update', 400, 'NO_UPDATES');
   }
 
-  values.push(planId, userId);
-  const result = await query(
-    `UPDATE medication_plans SET ${fields.join(', ')}
-     WHERE id = $${idx} AND user_id = $${idx + 1}
-     RETURNING *`,
-    values
-  );
+  try {
+    if (fields.length > 0) {
+      values.push(planId, userId);
+      await query(
+        `UPDATE prescription_plans SET ${fields.join(', ')}, updated_at = NOW()
+         WHERE id = $${idx} AND user_id = $${idx + 1}`,
+        values,
+      );
+    }
 
-  return result.rows[0];
-}
-
-/**
- * Delete a plan (soft delete: set is_active = false).
- */
-export async function deletePlan(userId, planId) {
-  await getPlanById(userId, planId);
-  await query(
-    'UPDATE medication_plans SET is_active = false WHERE id = $1 AND user_id = $2',
-    [planId, userId]
-  );
-}
-
-/**
- * Log medication as taken/missed/skipped.
- */
-export async function logMedication(planId, userId, data) {
-  // Verify plan ownership
-  const plan = await query(
-    'SELECT id FROM medication_plans WHERE id = $1 AND user_id = $2',
-    [planId, userId]
-  );
-  if (plan.rows.length === 0) {
-    throw new AppError('Plan not found', 404, 'PLAN_NOT_FOUND');
+    if (hasChildrenUpdate) {
+      await replacePlanChildren(query, planId, data.drugs || [], data.slots || []);
+    }
+    return getPlanById(userId, planId);
+  } catch (error) {
+    throw error;
   }
+}
 
-  const occurrenceId = buildOccurrenceId(
-    planId,
-    data.scheduledTime,
-    data.occurrenceId
+export async function deletePlan(userId, planId) {
+  await ensurePlanOwnership(userId, planId);
+  await query(
+    'UPDATE prescription_plans SET is_active = false, updated_at = NOW() WHERE id = $1 AND user_id = $2',
+    [planId, userId],
   );
+}
 
+export async function logMedication(planId, userId, data) {
+  await ensurePlanOwnership(userId, planId);
+  const occurrenceId = buildOccurrenceId(planId, data.scheduledTime, data.occurrenceId);
+  if (!occurrenceId) {
+    throw new AppError('Invalid occurrence', 400, 'INVALID_OCCURRENCE');
+  }
+  const dt = new Date(data.scheduledTime);
+  const slotTime = dt.toISOString().slice(11, 16);
   const takenAt = data.status === 'taken' ? new Date().toISOString() : null;
 
-  if (!occurrenceId) {
-    const inserted = await query(
-      `INSERT INTO medication_logs
-         (plan_id, scheduled_time, taken_at, status, note, occurrence_id)
-       VALUES ($1, $2, $3, $4, $5, $6)
-       RETURNING *`,
-      [
-        planId,
-        data.scheduledTime,
-        takenAt,
-        data.status,
-        data.note || null,
-        null,
-      ]
-    );
-    return inserted.rows[0];
-  }
-
   const result = await query(
-    `INSERT INTO medication_logs
-       (plan_id, scheduled_time, taken_at, status, note, occurrence_id)
-     VALUES ($1, $2, $3, $4, $5, $6)
+    `INSERT INTO prescription_plan_logs (plan_id, occurrence_id, slot_time, scheduled_time, taken_at, status, note)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
      ON CONFLICT (plan_id, occurrence_id)
      DO UPDATE SET
+       slot_time = EXCLUDED.slot_time,
        scheduled_time = EXCLUDED.scheduled_time,
        taken_at = EXCLUDED.taken_at,
        status = EXCLUDED.status,
-       note = COALESCE(EXCLUDED.note, medication_logs.note)
+       note = COALESCE(EXCLUDED.note, prescription_plan_logs.note),
+       updated_at = NOW()
      RETURNING *`,
-    [
-      planId,
-      data.scheduledTime,
-      takenAt,
-      data.status,
-      data.note || null,
-      occurrenceId,
-    ]
+    [planId, occurrenceId, slotTime, data.scheduledTime, takenAt, data.status, data.note || null],
   );
   return result.rows[0];
 }
 
-/**
- * Get medication logs for a plan.
- */
-export async function getPlanLogs(planId, userId, { page = 1, limit = 50 } = {}) {
-  // Verify ownership with proper await
-  const planCheck = await query(
-    'SELECT id FROM medication_plans WHERE id = $1 AND user_id = $2',
-    [planId, userId]
-  );
-  if (planCheck.rows.length === 0) {
-    throw new AppError('Plan not found', 404, 'PLAN_NOT_FOUND');
-  }
-
-  const offset = (page - 1) * limit;
+export async function getPlanLogs(planId, userId) {
+  await ensurePlanOwnership(userId, planId);
   const result = await query(
-    `SELECT * FROM medication_logs
-     WHERE plan_id = $1
-     ORDER BY scheduled_time DESC
-     LIMIT $2 OFFSET $3`,
-    [planId, limit, offset]
+    `SELECT * FROM prescription_plan_logs WHERE plan_id = $1 ORDER BY scheduled_time DESC`,
+    [planId],
   );
-
   return result.rows;
 }
 
-/**
- * Get all medication logs for a user (across all plans).
- */
-export async function getUserMedicationLogs(
-  userId,
-  { date = null, page = 1, limit = 100 } = {}
-) {
+export async function getUserMedicationLogs(userId, { date = null, page = 1, limit = 20 } = {}) {
   const offset = (page - 1) * limit;
   const dateKey = normalizeDateKey(date);
-
   const clauses = ['p.user_id = $1'];
   const params = [userId];
-
   if (dateKey) {
     params.push(dateKey);
-    const idx = params.length;
-    clauses.push(`(l.occurrence_id LIKE '%' || $${idx} || ':%' OR l.scheduled_time::date = $${idx}::date)`);
+    clauses.push(`l.scheduled_time::date = $2::date`);
   }
-
   params.push(limit, offset);
   const limitIdx = params.length - 1;
   const offsetIdx = params.length;
 
   const result = await query(
-    `SELECT l.*, p.drug_name, p.dosage, p.pills_per_dose
-     FROM medication_logs l
-     JOIN medication_plans p ON p.id = l.plan_id
+    `SELECT l.*, p.title
+     FROM prescription_plan_logs l
+     JOIN prescription_plans p ON p.id = l.plan_id
      WHERE ${clauses.join(' AND ')}
      ORDER BY l.scheduled_time DESC
      LIMIT $${limitIdx} OFFSET $${offsetIdx}`,
-    params
+    params,
   );
-
-  const countParams = params.slice(0, params.length - 2);
   const countResult = await query(
     `SELECT COUNT(*)
-     FROM medication_logs l
-     JOIN medication_plans p ON p.id = l.plan_id
+     FROM prescription_plan_logs l
+     JOIN prescription_plans p ON p.id = l.plan_id
      WHERE ${clauses.join(' AND ')}`,
-    countParams
+    params.slice(0, params.length - 2),
   );
 
   return {
-    logs: result.rows,
+    logs: result.rows.map((row) => ({
+      ...row,
+      drug_name: row.title,
+    })),
     total: Number.parseInt(countResult.rows[0].count, 10),
   };
 }
 
-/**
- * Build today's medication schedule (expanded per dose time) and merge
- * with existing logs to expose pending/taken/skipped/missed status.
- */
 export async function getTodaySchedule(userId, { date = null } = {}) {
   const dateKey = normalizeDateKey(date) || new Date().toISOString().slice(0, 10);
-
   const plansResult = await query(
-    `SELECT id, drug_name, dosage, pills_per_dose, frequency, times, notes
-     FROM medication_plans
+    `SELECT * FROM prescription_plans
      WHERE user_id = $1
        AND is_active = true
        AND start_date <= $2::date
        AND (end_date IS NULL OR end_date >= $2::date)
      ORDER BY created_at DESC`,
-    [userId, dateKey]
+    [userId, dateKey],
   );
 
-  const plans = plansResult.rows;
-  if (plans.length === 0) {
+  if (!plansResult.rows.length) {
     return {
       date: dateKey,
       doses: [],
-      summary: {
-        total: 0,
-        taken: 0,
-        pending: 0,
-        skipped: 0,
-        missed: 0,
-      },
+      summary: { total: 0, taken: 0, pending: 0, skipped: 0, missed: 0 },
     };
   }
 
   const doses = [];
-  const occurrenceIds = [];
-  const planIds = [];
-
-  for (const plan of plans) {
-    const times = Array.isArray(plan.times) ? plan.times : [];
-    for (const time of times) {
-      const hhmm = String(time || '').slice(0, 5);
-      if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(hhmm)) {
-        continue;
-      }
-      const scheduledTime = `${dateKey}T${hhmm}:00.000Z`;
-      const occurrenceId = `${plan.id}:${dateKey}:${hhmm}`;
-      occurrenceIds.push(occurrenceId);
-      planIds.push(plan.id);
+  for (const row of plansResult.rows) {
+    const plan = await hydratePlanRow(row);
+    for (const slot of plan.slots) {
+      const scheduledTime = `${dateKey}T${slot.time}:00.000Z`;
       doses.push({
-        occurrenceId,
+        occurrenceId: `${plan.id}:${dateKey}:${slot.time}`,
         planId: plan.id,
-        drugName: plan.drug_name,
-        dosage: plan.dosage,
-        pillsPerDose: plan.pills_per_dose,
-        frequency: plan.frequency,
-        notes: plan.notes,
-        time: hhmm,
+        title: plan.title,
+        drugName: slot.items.map((item) => item.drugName).join(', '),
+        time: slot.time,
         scheduledTime,
         status: 'pending',
+        pillsPerDose: slot.items.reduce((sum, item) => sum + item.pills, 0),
+        doseSchedule: slot.items.map((item) => ({ drugName: item.drugName, pills: item.pills })),
+        medications: slot.items,
+        notes: plan.notes,
         takenAt: null,
         note: null,
       });
     }
   }
 
-  let referenceRows = { rows: [] };
-  if (planIds.length > 0) {
-    try {
-      referenceRows = await query(
-        `SELECT prs.plan_id,
-                prs.status,
-                COUNT(pri.id) AS image_count,
-                COUNT(pri.id) FILTER (WHERE pri.confirmed_by_user = true) AS confirmed_count
-         FROM pill_reference_sets prs
-         LEFT JOIN pill_reference_images pri
-           ON pri.reference_set_id = prs.id
-         WHERE prs.user_id = $1
-           AND prs.plan_id = ANY($2::uuid[])
-         GROUP BY prs.plan_id, prs.status`,
-        [userId, Array.from(new Set(planIds))]
-      );
-    } catch (err) {
-      if (err?.code !== '42P01') {
-        throw err;
-      }
-      referenceRows = { rows: [] };
-    }
-  }
-
-  const referenceByPlan = new Map(
-    referenceRows.rows.map((row) => [
-      row.plan_id,
-      {
-        status: row.status,
-        imageCount: Number.parseInt(row.image_count || 0, 10),
-        confirmedCount: Number.parseInt(row.confirmed_count || 0, 10),
-      },
-    ])
-  );
-
-  const dosesBySlot = new Map();
-  for (const dose of doses) {
-    const slotKey = dose.scheduledTime;
-    if (!dosesBySlot.has(slotKey)) {
-      dosesBySlot.set(slotKey, []);
-    }
-    dosesBySlot.get(slotKey).push(dose);
-  }
-
-  for (const slotDoses of dosesBySlot.values()) {
-    const expectedMedications = slotDoses.map((dose) => ({
-      planId: dose.planId,
-      drugName: dose.drugName,
-      dosage: dose.dosage,
-      pillsPerDose: dose.pillsPerDose,
-      occurrenceId: dose.occurrenceId,
-    }));
-
-    const missingReferenceDrugNames = expectedMedications
-      .filter((med) => {
-        const ref = referenceByPlan.get(med.planId);
-        return !ref || ref.confirmedCount <= 0;
-      })
-      .map((med) => med.drugName);
-
-    const totalExpected = expectedMedications.length;
-    const withReference = totalExpected - missingReferenceDrugNames.length;
-    const slotReferenceStatus = withReference === 0
-      ? 'missing'
-      : withReference === totalExpected
-        ? 'ready'
-        : 'partial';
-    const verificationReady = missingReferenceDrugNames.length === 0;
-
-    for (const dose of slotDoses) {
-      const selfReference = referenceByPlan.get(dose.planId);
-      dose.hasReferenceProfile = Boolean(selfReference && selfReference.confirmedCount > 0);
-      dose.referenceProfileStatus = slotReferenceStatus;
-      dose.verificationReady = verificationReady;
-      dose.expectedMedications = expectedMedications;
-      dose.missingReferenceDrugNames = missingReferenceDrugNames;
-    }
-  }
-
+  const occurrenceIds = doses.map((dose) => dose.occurrenceId);
   const logsResult = await query(
-    `SELECT l.*
-     FROM medication_logs l
-     JOIN medication_plans p ON p.id = l.plan_id
-     WHERE p.user_id = $1
-       AND (l.occurrence_id = ANY($2::text[]) OR l.scheduled_time::date = $3::date)
-     ORDER BY l.scheduled_time DESC`,
-    [userId, occurrenceIds, dateKey]
+    `SELECT * FROM prescription_plan_logs
+     WHERE plan_id = ANY($1::uuid[])
+       AND occurrence_id = ANY($2::text[])
+     ORDER BY scheduled_time DESC`,
+    [plansResult.rows.map((row) => row.id), occurrenceIds],
   );
-
-  const logByOccurrence = new Map();
-  for (const log of logsResult.rows) {
-    if (log.occurrence_id) {
-      logByOccurrence.set(log.occurrence_id, log);
-      continue;
-    }
-
-    const dt = toUtcDateAndTimeKey(log.scheduled_time);
-    if (!dt) {
-      continue;
-    }
-    const fallbackOccurrence = `${log.plan_id}:${dt.date}:${dt.time}`;
-    logByOccurrence.set(fallbackOccurrence, log);
-  }
-
+  const logByOccurrence = new Map(logsResult.rows.map((row) => [row.occurrence_id, row]));
   for (const dose of doses) {
     const log = logByOccurrence.get(dose.occurrenceId);
-    if (!log) {
-      continue;
-    }
+    if (!log) continue;
     dose.status = log.status || 'pending';
     dose.takenAt = log.taken_at || null;
     dose.note = log.note || null;
   }
 
-  doses.sort((a, b) => {
-    if (a.time !== b.time) {
-      return a.time.localeCompare(b.time);
-    }
-    return a.drugName.localeCompare(b.drugName);
-  });
-
+  doses.sort((a, b) => a.time.localeCompare(b.time));
   const summary = doses.reduce(
     (acc, dose) => {
       acc.total += 1;
       acc[dose.status] = (acc[dose.status] || 0) + 1;
       return acc;
     },
-    {
-      total: 0,
-      taken: 0,
-      pending: 0,
-      skipped: 0,
-      missed: 0,
-    }
+    { total: 0, taken: 0, pending: 0, skipped: 0, missed: 0 },
   );
-
-  return {
-    date: dateKey,
-    doses,
-    summary,
-  };
+  return { date: dateKey, doses, summary };
 }

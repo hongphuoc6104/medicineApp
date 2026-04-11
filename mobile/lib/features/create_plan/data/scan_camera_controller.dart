@@ -69,7 +69,7 @@ class ScanCameraController extends ChangeNotifier {
       _setState(ScanCameraState.ready);
 
       // Start the auto-capture stream
-      await _startAutoCaptureStream();
+      await startAutoCaptureStream();
     } on CameraException catch (e) {
       if (e.code == 'CameraAccessDenied' ||
           e.code == 'CameraAccessDeniedWithoutPrompt' ||
@@ -123,7 +123,7 @@ class ScanCameraController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _startAutoCaptureStream() async {
+  Future<void> startAutoCaptureStream() async {
     if (_cameraController == null || !_cameraController!.value.isInitialized) return;
     if (_cameraController!.value.isStreamingImages) return;
 
@@ -168,7 +168,7 @@ class ScanCameraController extends ChangeNotifier {
             } catch (e) {
               _errorMessage = 'Lỗi tự động chụp: $e';
               _setState(ScanCameraState.ready);
-              _startAutoCaptureStream(); // Restart stream on failure
+              startAutoCaptureStream(); // Restart stream on failure
             }
           }
           _isEvaluatingFrame = false;

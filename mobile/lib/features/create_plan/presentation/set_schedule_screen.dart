@@ -11,6 +11,7 @@ import '../../home/data/plan_notifier.dart';
 import '../../settings/data/settings_repository.dart';
 import '../data/plan_repository.dart';
 import '../domain/plan.dart';
+import '../domain/scan_result.dart';
 
 // ---------------------------------------------------------------------------
 // Data model: a time slot with drugs assigned to it
@@ -48,8 +49,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       .map((time) => _TimeSlot(time: time))
       .toList();
 
-  // Pills per dose per drug (index → count)
-  late List<int> _pillsPerDose;
+  // Per-drug per-slot pills (drug index -> {slot index: pills})
+  late List<Map<int, int>> _dosePillsByDrugSlot;
 
   // Per-drug slot assignments (drug index -> slot indices)
   late List<Set<int>> _drugSlotIndices;
@@ -61,10 +62,15 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
     final firstDays = widget.drugs.isEmpty ? 7 : widget.drugs.first.totalDays;
     _totalDays = firstDays;
     _endDate = _startDate.add(Duration(days: _totalDays - 1));
-    _pillsPerDose = List<int>.filled(widget.drugs.length, 1);
     _drugSlotIndices = List<Set<int>>.generate(
       widget.drugs.length,
       (_) => _slots.isEmpty ? <int>{} : <int>{0},
+    );
+    _dosePillsByDrugSlot = List<Map<int, int>>.generate(
+      widget.drugs.length,
+      (index) => _slots.isEmpty
+          ? <int, int>{}
+          : <int, int>{0: widget.drugs[index].pillsPerDose},
     );
   }
 
@@ -125,14 +131,22 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       _slots.removeAt(index);
       for (var i = 0; i < _drugSlotIndices.length; i++) {
         final updated = <int>{};
+        final currentPills = _dosePillsByDrugSlot[i];
+        final updatedPills = <int, int>{};
         for (final slotIdx in _drugSlotIndices[i]) {
           if (slotIdx == index) continue;
-          updated.add(slotIdx > index ? slotIdx - 1 : slotIdx);
+          final normalized = slotIdx > index ? slotIdx - 1 : slotIdx;
+          updated.add(normalized);
+          updatedPills[normalized] = currentPills[slotIdx] ?? 1;
         }
         if (updated.isEmpty && _slots.isNotEmpty) {
           updated.add(0);
+          updatedPills[0] = currentPills.values.isNotEmpty
+              ? currentPills.values.first
+              : 1;
         }
         _drugSlotIndices[i] = updated;
+        _dosePillsByDrugSlot[i] = updatedPills;
       }
     });
   }
@@ -140,11 +154,16 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
   void _toggleDrugInSlot(int drugIndex, int slotIndex) {
     setState(() {
       final assignedSlots = _drugSlotIndices[drugIndex];
+      final pillMap = _dosePillsByDrugSlot[drugIndex];
       if (assignedSlots.contains(slotIndex)) {
         if (assignedSlots.length == 1) return;
         assignedSlots.remove(slotIndex);
+        pillMap.remove(slotIndex);
       } else {
         assignedSlots.add(slotIndex);
+        pillMap[slotIndex] = pillMap.values.isNotEmpty
+            ? pillMap.values.first
+            : 1;
       }
     });
   }
@@ -157,48 +176,6 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       }
     }
     return result;
-  }
-
-  bool _isSlotAppliedToAllDrugs(int slotIndex) {
-    if (widget.drugs.isEmpty) return false;
-    return _assignedDrugsForSlot(slotIndex).length == widget.drugs.length;
-  }
-
-  void _setSlotForAllDrugs(int slotIndex, bool enabled) {
-    setState(() {
-      for (var i = 0; i < _drugSlotIndices.length; i++) {
-        final assignedSlots = _drugSlotIndices[i];
-        if (enabled) {
-          assignedSlots.add(slotIndex);
-          continue;
-        }
-
-        assignedSlots.remove(slotIndex);
-        if (assignedSlots.isEmpty && _slots.isNotEmpty) {
-          final fallback = _slots.length > 1 && slotIndex == 0 ? 1 : 0;
-          assignedSlots.add(fallback);
-        }
-      }
-    });
-  }
-
-  void _assignAllDrugsToAllSlots() {
-    if (_slots.isEmpty) return;
-    final allSlots = Set<int>.from(List<int>.generate(_slots.length, (i) => i));
-    setState(() {
-      for (var i = 0; i < _drugSlotIndices.length; i++) {
-        _drugSlotIndices[i] = Set<int>.from(allSlots);
-      }
-    });
-  }
-
-  void _assignAllDrugsToFirstSlot() {
-    if (_slots.isEmpty) return;
-    setState(() {
-      for (var i = 0; i < _drugSlotIndices.length; i++) {
-        _drugSlotIndices[i] = <int>{0};
-      }
-    });
   }
 
   void _applyDailyPreset(int timesPerDay) {
@@ -218,13 +195,20 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       );
       for (var i = 0; i < _drugSlotIndices.length; i++) {
         _drugSlotIndices[i] = Set<int>.from(assignedAll);
+        final firstPills = _dosePillsByDrugSlot[i].values.isNotEmpty
+            ? _dosePillsByDrugSlot[i].values.first
+            : 1;
+        _dosePillsByDrugSlot[i] = {
+          for (var slotIndex = 0; slotIndex < _slots.length; slotIndex++)
+            slotIndex: firstPills,
+        };
       }
     });
   }
 
   String _slotPreviewText(Set<int> assignedDrugIndices) {
     if (assignedDrugIndices.isEmpty) {
-      return 'Chưa có thuốc nào trong khung giờ này';
+      return 'Chưa chọn thuốc cho giờ này';
     }
 
     final names = assignedDrugIndices
@@ -234,31 +218,110 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
     names.sort();
 
     if (names.length <= 3) {
-      return names.join(', ');
+      return 'Thuốc: ${names.join(', ')}';
     }
 
     final firstThree = names.take(3).join(', ');
-    return '$firstThree +${names.length - 3} thuốc';
+    return 'Thuốc: $firstThree và ${names.length - 3} thuốc khác';
   }
 
   // -------------------------------------------------------------------------
   // Save
   // -------------------------------------------------------------------------
 
-  /// Build a list of (drug, times[]) pairs from slot assignments.
-  List<(PlanDrugItem, List<String>)> _buildDrugTimePairs() {
-    final result = <(PlanDrugItem, List<String>)>[];
-    for (var i = 0; i < widget.drugs.length; i++) {
-      final sortedSlots = _drugSlotIndices[i].toList()..sort();
-      final times = sortedSlots
-          .where((slotIndex) => slotIndex >= 0 && slotIndex < _slots.length)
-          .map((slotIndex) => _slots[slotIndex].time)
-          .toList();
-      times.sort();
-      final drug = widget.drugs[i];
-      result.add((drug, times));
-    }
-    return result;
+  List<DoseScheduleItem> _buildDoseScheduleForDrug(int drugIndex) {
+    final sortedSlots = _drugSlotIndices[drugIndex].toList()..sort();
+    return sortedSlots
+        .where((slotIndex) => slotIndex >= 0 && slotIndex < _slots.length)
+        .map(
+          (slotIndex) => DoseScheduleItem(
+            time: _slots[slotIndex].time,
+            pills: _dosePillsByDrugSlot[drugIndex][slotIndex] ?? 1,
+          ),
+        )
+        .toList();
+  }
+
+  void _changeDosePills(int drugIndex, int slotIndex, int delta) {
+    setState(() {
+      final current = _dosePillsByDrugSlot[drugIndex][slotIndex] ?? 1;
+      final next = (current + delta).clamp(1, 10);
+      _dosePillsByDrugSlot[drugIndex][slotIndex] = next;
+    });
+  }
+
+  void _goBackToReview() {
+    final drugs = widget.drugs
+        .map(
+          (drug) => DetectedDrug(
+            name: drug.name,
+            dosage: drug.dosage,
+            mappingStatus: 'confirmed',
+            confidence: 1.0,
+            mappedDrugName: drug.name,
+          ),
+        )
+        .toList();
+
+    context.go(
+      '/create/review',
+      extra: ScanResult(scanId: 'schedule-back', drugs: drugs),
+    );
+  }
+
+  PrescriptionPlanDraft _buildPlanDraft(String startDateStr) {
+    final drugs = widget.drugs.asMap().entries.map((entry) {
+      final index = entry.key;
+      final drug = entry.value;
+      return PlanMedication(
+        id: 'draft-drug-$index',
+        drugName: drug.name,
+        dosage: drug.dosage.isEmpty ? null : drug.dosage,
+        notes: drug.notes.isEmpty ? null : drug.notes,
+        sortOrder: index,
+      );
+    }).toList();
+
+    final slots = _slots
+        .asMap()
+        .entries
+        .map((entry) {
+          final slotIndex = entry.key;
+          final slot = entry.value;
+          final assignedDrugIndices = _assignedDrugsForSlot(slotIndex).toList()
+            ..sort();
+          final items = assignedDrugIndices.map((drugIndex) {
+            final drug = widget.drugs[drugIndex];
+            return PlanSlotMedication(
+              drugId: 'draft-drug-$drugIndex',
+              drugName: drug.name,
+              dosage: drug.dosage.isEmpty ? null : drug.dosage,
+              pills: _dosePillsByDrugSlot[drugIndex][slotIndex] ?? 1,
+            );
+          }).toList();
+          return PlanSlot(
+            id: 'draft-slot-$slotIndex',
+            time: slot.time,
+            sortOrder: slotIndex,
+            items: items,
+          );
+        })
+        .where((slot) => slot.items.isNotEmpty)
+        .toList();
+
+    final title = widget.drugs.isEmpty
+        ? 'Kế hoạch thuốc'
+        : widget.drugs.length == 1
+        ? widget.drugs.first.name
+        : '${widget.drugs.first.name} và ${widget.drugs.length - 1} thuốc khác';
+
+    return PrescriptionPlanDraft(
+      title: title,
+      drugs: drugs,
+      slots: slots,
+      totalDays: _totalDays,
+      startDate: startDateStr,
+    );
   }
 
   Future<void> _savePlans() async {
@@ -270,30 +333,14 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       final settingsRepo = ref.read(settingsRepositoryProvider);
       final remindersEnabled = await settingsRepo.getRemindersEnabled();
 
-      final pairs = _buildDrugTimePairs();
-
-      for (final (drug, times) in pairs) {
-        final idx = widget.drugs.indexOf(drug);
-        final pills = idx >= 0 ? _pillsPerDose[idx] : 1;
-        final frequency = switch (times.length) {
-          1 => 'daily',
-          2 => 'twice_daily',
-          _ => 'three_daily',
-        };
-        final adjusted = drug.copyWith(
-          times: times,
-          frequency: frequency,
-          pillsPerDose: pills,
-          totalDays: _totalDays,
-        );
-        final created = await repo.createPlan(adjusted, startDateStr);
-        if (remindersEnabled) {
-          try {
-            await notificationService.schedulePlanNotifications(created);
-          } catch (e) {
-            if (kDebugMode) {
-              debugPrint('[SetScheduleScreen] Notification error: $e');
-            }
+      final draft = _buildPlanDraft(startDateStr);
+      final created = await repo.createPlan(draft);
+      if (remindersEnabled) {
+        try {
+          await notificationService.schedulePlanNotifications(created);
+        } catch (e) {
+          if (kDebugMode) {
+            debugPrint('[SetScheduleScreen] Notification error: $e');
           }
         }
       }
@@ -301,8 +348,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       if (!mounted) return;
       ref.invalidate(planNotifierProvider);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Đã tạo ${widget.drugs.length} kế hoạch uống thuốc'),
+        const SnackBar(
+          content: Text('Đã tạo kế hoạch uống thuốc'),
           backgroundColor: AppColors.success,
         ),
       );
@@ -314,6 +361,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
           content: Text(
             e.type == DioExceptionType.connectionError
                 ? 'Không kết nối được máy chủ'
+                : e.response?.statusCode == 401
+                ? 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.'
                 : 'Không thể lưu kế hoạch',
           ),
           backgroundColor: AppColors.error,
@@ -341,9 +390,9 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lập lịch uống thuốc'),
+        title: const Text('Thiết lập giờ uống thuốc'),
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: _goBackToReview,
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
       ),
@@ -375,17 +424,15 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Lập lịch theo khung giờ',
+                            'Thiết lập giờ uống',
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 17,
                             ),
                           ),
-                          Text(
-                            '${widget.drugs.length} thuốc · Gán vào các khung giờ bên dưới',
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
-                            ),
+                          const Text(
+                            'Chọn số lần uống mỗi ngày trước, rồi chỉnh lại nếu cần.',
+                            style: TextStyle(color: AppColors.textSecondary),
                           ),
                         ],
                       ),
@@ -446,15 +493,15 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
           ),
           const SizedBox(height: 16),
 
-          // ── Group assignment first ──
+          // ── Quick preset ──
           _SectionCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _SectionLabel('Bước 1 · Gán theo nhóm'),
+                const _SectionLabel('1) Chọn nhanh số lần uống mỗi ngày'),
                 const SizedBox(height: 8),
                 const Text(
-                  'Gán nhanh toàn bộ thuốc trước, sau đó mới chỉnh ngoại lệ từng thuốc.',
+                  'Bạn chỉ cần chọn một mức phù hợp. Có thể chỉnh giờ chi tiết ở bên dưới.',
                   style: TextStyle(color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: 12),
@@ -463,84 +510,32 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                   runSpacing: 10,
                   children: [
                     OutlinedButton.icon(
-                      onPressed: _assignAllDrugsToFirstSlot,
+                      onPressed: () => _applyDailyPreset(1),
                       icon: const Icon(Icons.wb_sunny_outlined),
-                      label: Text('Tất cả vào ${_slots.first.time}'),
+                      label: const Text('1 lần/ngày'),
                     ),
                     OutlinedButton.icon(
-                      onPressed: _assignAllDrugsToAllSlots,
+                      onPressed: () => _applyDailyPreset(2),
+                      icon: const Icon(Icons.wb_twilight_outlined),
+                      label: const Text('2 lần/ngày'),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => _applyDailyPreset(3),
                       icon: const Icon(Icons.auto_awesome_motion_outlined),
-                      label: const Text('Tất cả vào mọi khung'),
+                      label: const Text('3 lần/ngày'),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                ..._slots.asMap().entries.map((entry) {
-                  final slotIndex = entry.key;
-                  final slot = entry.value;
-                  final allSelected = _isSlotAppliedToAllDrugs(slotIndex);
-                  final assignedDrugIndices = _assignedDrugsForSlot(slotIndex);
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceSoft,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryDark.withValues(
-                                alpha: 0.1,
-                              ),
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: Text(
-                              slot.time,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.primaryDark,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              _slotPreviewText(assignedDrugIndices),
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ),
-                          Checkbox(
-                            value: allSelected,
-                            onChanged: (value) =>
-                                _setSlotForAllDrugs(slotIndex, value ?? false),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
               ],
             ),
           ),
           const SizedBox(height: 16),
 
-          // ── Exception tuning ──
+          // ── Fine tune ──
           const Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: Text(
-              'Bước 2 · Chỉnh ngoại lệ từng thuốc',
+              '2) Giờ uống thuốc (chỉnh thêm nếu cần)',
               style: TextStyle(
                 fontWeight: FontWeight.w800,
                 color: AppColors.textSecondary,
@@ -575,7 +570,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
           OutlinedButton.icon(
             onPressed: _addSlot,
             icon: const Icon(Icons.add_alarm),
-            label: const Text('Thêm khung giờ'),
+            label: const Text('Thêm giờ uống khác'),
           ),
           const SizedBox(height: 16),
 
@@ -584,30 +579,75 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _SectionLabel('Số viên mỗi lần uống'),
+                const _SectionLabel('3) Số viên ở từng giờ uống'),
+                const SizedBox(height: 6),
+                const Text(
+                  'Bạn có thể đặt số viên khác nhau cho từng giờ của cùng một thuốc.',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12,
+                  ),
+                ),
                 const SizedBox(height: 12),
-                ...widget.drugs.asMap().entries.map((entry) {
-                  final idx = entry.key;
-                  final drug = entry.value;
+                ..._slots.asMap().entries.map((slotEntry) {
+                  final slotIndex = slotEntry.key;
+                  final slot = slotEntry.value;
+                  final assignedDrugIndices = _assignedDrugsForSlot(
+                    slotIndex,
+                  ).toList()..sort();
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Text(
-                            drug.name,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
+                        Text(
+                          slot.time,
+                          style: const TextStyle(fontWeight: FontWeight.w800),
                         ),
-                        _PillStepper(
-                          value: _pillsPerDose[idx],
-                          onMinus: _pillsPerDose[idx] > 1
-                              ? () => setState(() => _pillsPerDose[idx]--)
-                              : null,
-                          onPlus: _pillsPerDose[idx] < 10
-                              ? () => setState(() => _pillsPerDose[idx]++)
-                              : null,
-                        ),
+                        const SizedBox(height: 8),
+                        if (assignedDrugIndices.isEmpty)
+                          const Text(
+                            'Chưa có thuốc nào ở giờ này.',
+                            style: TextStyle(color: AppColors.textSecondary),
+                          )
+                        else
+                          ...assignedDrugIndices.map((drugIndex) {
+                            final drug = widget.drugs[drugIndex];
+                            final pills =
+                                _dosePillsByDrugSlot[drugIndex][slotIndex] ?? 1;
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      drug.name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  _PillStepper(
+                                    value: pills,
+                                    onMinus: pills > 1
+                                        ? () => _changeDosePills(
+                                            drugIndex,
+                                            slotIndex,
+                                            -1,
+                                          )
+                                        : null,
+                                    onPlus: pills < 10
+                                        ? () => _changeDosePills(
+                                            drugIndex,
+                                            slotIndex,
+                                            1,
+                                          )
+                                        : null,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                       ],
                     ),
                   );
@@ -622,7 +662,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _SectionLabel('Tóm tắt lịch uống'),
+                const _SectionLabel('4) Xem lại trước khi lưu'),
                 const SizedBox(height: 10),
                 ..._buildSummaryLines(),
               ],
@@ -659,11 +699,13 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
   }
 
   List<Widget> _buildSummaryLines() {
-    final pairs = _buildDrugTimePairs();
-    return pairs.map((pair) {
-      final (drug, times) = pair;
-      final idx = widget.drugs.indexOf(drug);
-      final pills = idx >= 0 ? _pillsPerDose[idx] : 1;
+    return widget.drugs.asMap().entries.map((entry) {
+      final idx = entry.key;
+      final drug = entry.value;
+      final doseSchedule = _buildDoseScheduleForDrug(idx);
+      final summary = doseSchedule
+          .map((item) => '${item.time}: ${item.pills} viên')
+          .join(', ');
       return Padding(
         padding: const EdgeInsets.only(bottom: 6),
         child: Row(
@@ -677,7 +719,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
             const SizedBox(width: 6),
             Expanded(
               child: Text(
-                '${drug.name} — $pills viên × ${times.join(', ')}',
+                '${drug.name}: $summary',
                 style: const TextStyle(fontSize: 13),
               ),
             ),
@@ -786,7 +828,7 @@ class _TimeSlotCard extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           const Text(
-            'Chọn thuốc uống vào giờ này:',
+            'Chọn thuốc uống ở giờ này:',
             style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
           ),
           const SizedBox(height: 8),
