@@ -79,7 +79,7 @@ class AuthNotifier extends Notifier<AuthState> {
       state = state.copyWith(isLoading: false, error: _extractError(e));
       return false;
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: 'Đã xảy ra lỗi');
+      state = state.copyWith(isLoading: false, error: 'authErrorGeneric');
       return false;
     }
   }
@@ -100,7 +100,7 @@ class AuthNotifier extends Notifier<AuthState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: 'Đã xảy ra lỗi khi đăng ký',
+        error: 'authErrorRegisterGeneric',
       );
       return false;
     }
@@ -117,7 +117,7 @@ class AuthNotifier extends Notifier<AuthState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: 'Đăng ký xong nhưng đăng nhập thất bại',
+        error: 'authErrorLoginAfterRegister',
       );
       return false;
     }
@@ -143,9 +143,9 @@ class AuthNotifier extends Notifier<AuthState> {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return 'Kết nối quá chậm, thử lại sau';
+        return 'authErrorTimeout';
       case DioExceptionType.connectionError:
-        return 'Không kết nối được máy chủ';
+        return 'authErrorNoConnection';
       default:
         break;
     }
@@ -155,7 +155,7 @@ class AuthNotifier extends Notifier<AuthState> {
         rawMessage.contains('failed host lookup') ||
         rawMessage.contains('connection refused') ||
         rawMessage.contains('no route to host')) {
-      return 'Không kết nối được máy chủ';
+      return 'authErrorNoConnection';
     }
 
     final data = e.response?.data;
@@ -165,18 +165,18 @@ class AuthNotifier extends Notifier<AuthState> {
     }
     switch (e.response?.statusCode) {
       case 400:
-        return 'Thông tin không hợp lệ';
+        return 'authErrorInvalidData';
       case 401:
-        return 'Email hoặc mật khẩu sai';
+        return 'authErrorWrongCredentials';
       case 409:
-        return 'Email đã được đăng ký';
+        return 'authErrorEmailExists';
       case 429:
-        return 'Quá nhiều yêu cầu, thử lại sau';
+        return 'authErrorTooManyRequests';
       case 500:
       case 503:
-        return 'Server đang gặp sự cố';
+        return 'authErrorServerError';
       default:
-        return 'Đã xảy ra lỗi (${e.response?.statusCode ?? 'unknown'})';
+        return 'authErrorUnknown|${e.response?.statusCode ?? 'unknown'}';
     }
   }
 }

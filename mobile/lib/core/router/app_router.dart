@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
 import '../../shared/widgets/main_shell.dart';
@@ -46,6 +47,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     initialLocation: '/boot',
+    errorBuilder: (context, state) => const _RouteFallbackScreen(),
     redirect: (context, state) {
       final onAuthPage =
           state.matchedLocation == '/login' ||
@@ -206,5 +208,18 @@ class _BootScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(body: Center(child: CircularProgressIndicator()));
+  }
+}
+
+class _RouteFallbackScreen extends StatelessWidget {
+  const _RouteFallbackScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.routeFallbackTitle)),
+      body: Center(child: Text(l10n.routeFallbackTitle)),
+    );
   }
 }

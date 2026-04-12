@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 
 class MainShell extends StatelessWidget {
@@ -23,6 +24,7 @@ class MainShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final current = _currentIndex(context);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: child,
@@ -49,13 +51,13 @@ class MainShell extends StatelessWidget {
                 _NavItem(
                   selected: current == 0,
                   icon: Icons.home_rounded,
-                  label: 'Trang chủ',
+                  label: l10n.navHome,
                   onTap: () => context.go('/home'),
                 ),
                 _NavItem(
                   selected: current == 1,
                   icon: Icons.medication_rounded,
-                  label: 'Thuốc',
+                  label: l10n.navDrug,
                   onTap: () => context.go('/drugs'),
                 ),
                 _CenterAction(
@@ -65,13 +67,13 @@ class MainShell extends StatelessWidget {
                 _NavItem(
                   selected: current == 3,
                   icon: Icons.calendar_month_rounded,
-                  label: 'Kế hoạch',
+                  label: l10n.navPlan,
                   onTap: () => context.go('/plans'),
                 ),
                 _NavItem(
                   selected: current == 4,
                   icon: Icons.history_rounded,
-                  label: 'Lịch sử',
+                  label: l10n.navHistory,
                   onTap: () => context.go('/history'),
                 ),
               ],

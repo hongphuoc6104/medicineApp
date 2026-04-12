@@ -2,8 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:medicine_app/l10n/app_localizations.dart';
+
 import '../../../core/theme/app_theme.dart';
 import '../data/auth_notifier.dart';
+
+String _translateAuthError(BuildContext context, String? error) {
+  if (error == null) return '';
+  final l10n = AppLocalizations.of(context);
+  switch (error) {
+    case 'authErrorTimeout':
+      return l10n.authErrorTimeout;
+    case 'authErrorNoConnection':
+      return l10n.authErrorNoConnection;
+    case 'authErrorInvalidData':
+      return l10n.authErrorInvalidData;
+    case 'authErrorWrongCredentials':
+      return l10n.authErrorWrongCredentials;
+    case 'authErrorEmailExists':
+      return l10n.authErrorEmailExists;
+    case 'authErrorTooManyRequests':
+      return l10n.authErrorTooManyRequests;
+    case 'authErrorServerError':
+      return l10n.authErrorServerError;
+    case 'authErrorGeneric':
+      return l10n.commonErrorGeneric;
+    case 'authErrorRegisterGeneric':
+      return l10n.authErrorRegisterGeneric;
+    case 'authErrorLoginAfterRegister':
+      return l10n.authErrorLoginAfterRegister;
+    default:
+      if (error.startsWith('authErrorUnknown|')) {
+        return l10n.authErrorUnknown(error.split('|').last);
+      }
+      return error; // For server-provided error messages
+  }
+}
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -29,8 +63,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
+      final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng nhập email và mật khẩu')),
+        SnackBar(content: Text(l10n.authErrorEmptyEmailPassword)),
       );
       return;
     }
@@ -41,9 +76,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     if (!success && mounted) {
       final error = ref.read(authNotifierProvider).error;
+      final msg = _translateAuthError(context, error);
+      final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error ?? 'Đăng nhập thất bại'),
+          content: Text(msg.isNotEmpty ? msg : l10n.authErrorLoginFailed),
           backgroundColor: AppColors.error,
         ),
       );
@@ -54,6 +91,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: SafeArea(
@@ -71,7 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'MedicineApp',
+                l10n.authLoginTitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -80,7 +118,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Quản lý đơn thuốc thông minh',
+                l10n.authLoginSubtitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.textSecondary,
@@ -93,9 +131,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 enabled: !authState.isLoading,
-                decoration: const InputDecoration(
-                  hintText: 'Email',
-                  prefixIcon: Icon(Icons.email_outlined),
+                decoration: InputDecoration(
+                  hintText: l10n.authEmailHint,
+                  prefixIcon: const Icon(Icons.email_outlined),
                 ),
               ),
               const SizedBox(height: 16),
@@ -107,7 +145,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 enabled: !authState.isLoading,
                 onSubmitted: (_) => _handleLogin(),
                 decoration: InputDecoration(
-                  hintText: 'Mật khẩu',
+                  hintText: l10n.authPasswordHint,
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -132,7 +170,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Đăng nhập'),
+                    : Text(l10n.authLoginButton),
               ),
               const SizedBox(height: 16),
 
@@ -143,12 +181,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     : () => context.go('/register'),
                 child: Text.rich(
                   TextSpan(
-                    text: 'Chưa có tài khoản? ',
-                    style: TextStyle(color: AppColors.textSecondary),
+                    text: l10n.authNoAccountPrompt,
+                    style: const TextStyle(color: AppColors.textSecondary),
                     children: [
                       TextSpan(
-                        text: 'Đăng ký',
-                        style: TextStyle(
+                        text: l10n.authRegisterAction,
+                        style: const TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w600,
                         ),

@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/widgets.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../features/create_plan/domain/plan.dart';
+import '../../l10n/app_localizations.dart';
 
 class NotificationService {
   NotificationService();
@@ -13,14 +15,17 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
   bool _initialized = false;
 
-  static const AndroidNotificationDetails _androidDetails =
-      AndroidNotificationDetails(
-        'medicine_plan_channel',
-        'Medicine reminders',
-        channelDescription: 'Nhac lich uong thuoc hang ngay',
-        importance: Importance.max,
-        priority: Priority.high,
-      );
+  AppLocalizations get _l10n => lookupAppLocalizations(const Locale('vi'));
+
+  AndroidNotificationDetails _androidDetails() {
+    return AndroidNotificationDetails(
+      'medicine_plan_channel',
+      _l10n.notificationChannelName,
+      channelDescription: _l10n.notificationChannelDescription,
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+  }
 
   Future<void> initialize() async {
     if (_initialized) {
@@ -76,6 +81,7 @@ class NotificationService {
     if (kIsWeb) {
       return;
     }
+    final l10n = _l10n;
     await cancelPlanNotifications(plan.id);
 
     final now = DateTime.now();
@@ -127,14 +133,16 @@ class NotificationService {
             ? medications
                   .map((item) => '${item.drugName} (${item.pills} viên)')
                   .join(', ')
-            : '${plan.drugName} ($pills viên)';
+            : (plan.drugName.isNotEmpty
+                  ? '${plan.drugName} ($pills viên)'
+                  : l10n.notificationDefaultBody);
         await _plugin.zonedSchedule(
           id,
-          'Den gio uong thuoc',
+          l10n.notificationDefaultTitle,
           body,
           tz.TZDateTime.from(scheduled, tz.local),
-          const NotificationDetails(
-            android: _androidDetails,
+          NotificationDetails(
+            android: _androidDetails(),
             iOS: DarwinNotificationDetails(),
           ),
           androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

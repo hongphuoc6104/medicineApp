@@ -1,0 +1,590 @@
+{
+  "@@locale": "vi",
+
+  "appTitle": "Thuốc Của Tôi",
+  "@appTitle": {
+    "description": "Application title displayed in app bar and task switcher"
+  },
+
+  "navHome": "Trang chủ",
+  "@navHome": {
+    "description": "Bottom navigation label for Home tab"
+  },
+
+  "navCreatePlan": "Tạo kế hoạch",
+  "@navCreatePlan": {
+    "description": "Bottom navigation label for Create Plan tab"
+  },
+
+  "navDrug": "Thuốc",
+  "@navDrug": {
+    "description": "Bottom navigation label for Drug tab"
+  },
+
+  "navPlan": "Kế hoạch",
+  "@navPlan": {
+    "description": "Bottom navigation label for Plan tab"
+  },
+
+  "navHistory": "Lịch sử",
+  "@navHistory": {
+    "description": "Bottom navigation label for History tab"
+  },
+
+  "navSettings": "Cài đặt",
+  "@navSettings": {
+    "description": "Bottom navigation label for Settings tab"
+  },
+
+  "commonLoading": "Đang tải…",
+  "@commonLoading": {
+    "description": "Generic loading state label"
+  },
+
+  "commonRetry": "Thử lại",
+  "@commonRetry": {
+    "description": "Generic retry button label"
+  },
+
+  "commonConfirm": "Xác nhận",
+  "@commonConfirm": {
+    "description": "Generic confirm button label"
+  },
+
+  "commonCancel": "Hủy",
+  "@commonCancel": {
+    "description": "Generic cancel button label"
+  },
+
+  "commonSave": "Lưu",
+  "@commonSave": {
+    "description": "Generic save button label"
+  },
+
+  "commonDelete": "Xóa",
+  "@commonDelete": {
+    "description": "Generic delete button label"
+  },
+
+  "commonEdit": "Chỉnh sửa",
+  "@commonEdit": {
+    "description": "Generic edit button label"
+  },
+
+  "commonClose": "Đóng",
+  "@commonClose": {
+    "description": "Generic close button label"
+  },
+
+  "commonBack": "Quay lại",
+  "@commonBack": {
+    "description": "Generic back button / navigation label"
+  },
+
+  "commonEmptyState": "Không có dữ liệu",
+  "@commonEmptyState": {
+    "description": "Generic empty state message"
+  },
+
+  "commonErrorGeneric": "Đã xảy ra lỗi. Vui lòng thử lại.",
+  "@commonErrorGeneric": {
+    "description": "Generic error message shown when no specific reason is available"
+  },
+
+  "commonErrorNetwork": "Không thể kết nối. Kiểm tra mạng và thử lại.",
+  "@commonErrorNetwork": {
+    "description": "Network connectivity error message"
+  },
+
+  "commonSuccessGeneric": "Thành công!",
+  "@commonSuccessGeneric": {
+    "description": "Generic success message"
+  },
+
+  "commonOk": "OK",
+  "@commonOk": {
+    "description": "Generic acknowledgement button label"
+  },
+
+  "notificationChannelName": "Nhắc uống thuốc",
+  "@notificationChannelName": {
+    "description": "Android notification channel display name"
+  },
+
+  "notificationChannelDescription": "Thông báo nhắc nhở uống thuốc đúng giờ",
+  "@notificationChannelDescription": {
+    "description": "Android notification channel description"
+  },
+
+  "notificationDefaultTitle": "Đến giờ uống thuốc",
+  "@notificationDefaultTitle": {
+    "description": "Default title for medication reminder notifications"
+  },
+
+  "notificationDefaultBody": "Hãy uống thuốc đúng giờ để đảm bảo hiệu quả điều trị.",
+  "@notificationDefaultBody": {
+    "description": "Default body text for medication reminder notifications"
+  },
+
+  "routeFallbackTitle": "Trang không tìm thấy",
+  "@routeFallbackTitle": {
+    "description": "Title shown on 404/unknown route fallback screen"
+  },
+
+  "authLoginTitle": "MedicineApp",
+  "@authLoginTitle": {},
+  "authLoginSubtitle": "Quản lý đơn thuốc thông minh",
+  "@authLoginSubtitle": {},
+  "authEmailHint": "Email",
+  "@authEmailHint": {},
+  "authPasswordHint": "Mật khẩu",
+  "@authPasswordHint": {},
+  "authLoginButton": "Đăng nhập",
+  "@authLoginButton": {},
+  "authNoAccountPrompt": "Chưa có tài khoản? ",
+  "@authNoAccountPrompt": {},
+  "authRegisterAction": "Đăng ký",
+  "@authRegisterAction": {},
+  "authRegisterTitle": "Tạo tài khoản",
+  "@authRegisterTitle": {},
+  "authRegisterSubtitle": "Đăng ký để quản lý đơn thuốc",
+  "@authRegisterSubtitle": {},
+  "authNameOptionalHint": "Họ tên (tùy chọn)",
+  "@authNameOptionalHint": {},
+  "authPasswordRequirements": "Mật khẩu (≥8 ký tự, 1 hoa, 1 số)",
+  "@authPasswordRequirements": {},
+  "authPasswordConfirmHint": "Xác nhận mật khẩu",
+  "@authPasswordConfirmHint": {},
+  "authRegisterButton": "Đăng ký",
+  "@authRegisterButton": {},
+  "authHasAccountPrompt": "Đã có tài khoản? ",
+  "@authHasAccountPrompt": {},
+  "authLoginAction": "Đăng nhập",
+  "@authLoginAction": {},
+
+  "authErrorEmptyEmailPassword": "Vui lòng nhập email và mật khẩu",
+  "@authErrorEmptyEmailPassword": {},
+  "authErrorPasswordLength": "Mật khẩu phải có ít nhất 8 ký tự",
+  "@authErrorPasswordLength": {},
+  "authErrorPasswordUppercase": "Mật khẩu phải có ít nhất 1 chữ hoa",
+  "@authErrorPasswordUppercase": {},
+  "authErrorPasswordNumber": "Mật khẩu phải có ít nhất 1 số",
+  "@authErrorPasswordNumber": {},
+  "authErrorPasswordMismatch": "Mật khẩu xác nhận không khớp",
+  "@authErrorPasswordMismatch": {},
+  "authErrorLoginFailed": "Đăng nhập thất bại",
+  "@authErrorLoginFailed": {},
+  "authErrorRegisterFailed": "Đăng ký thất bại",
+  "@authErrorRegisterFailed": {},
+  "authErrorRegisterGeneric": "Đã xảy ra lỗi khi đăng ký",
+  "@authErrorRegisterGeneric": {},
+  "authErrorLoginAfterRegister": "Đăng ký xong nhưng đăng nhập thất bại",
+  "@authErrorLoginAfterRegister": {},
+  "authErrorTimeout": "Kết nối quá chậm, thử lại sau",
+  "@authErrorTimeout": {},
+  "authErrorNoConnection": "Không kết nối được máy chủ",
+  "@authErrorNoConnection": {},
+  "authErrorInvalidData": "Thông tin không hợp lệ",
+  "@authErrorInvalidData": {},
+  "authErrorWrongCredentials": "Email hoặc mật khẩu sai",
+  "@authErrorWrongCredentials": {},
+  "authErrorEmailExists": "Email đã được đăng ký",
+  "@authErrorEmailExists": {},
+  "authErrorTooManyRequests": "Quá nhiều yêu cầu, thử lại sau",
+  "@authErrorTooManyRequests": {},
+  "authErrorServerError": "Server đang gặp sự cố",
+  "@authErrorServerError": {},
+  "authErrorUnknown": "Đã xảy ra lỗi ({code})",
+  "@authErrorUnknown": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+
+  "homeSyncSuccess": "Đã đồng bộ {count} thao tác offline",
+  "@homeSyncSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeErrorLoadToday": "Không tải được dữ liệu hôm nay",
+  "@homeErrorLoadToday": {},
+  "homeOnboardingTitle": "Bắt đầu quản lý thuốc một cách dễ hiểu",
+  "@homeOnboardingTitle": {},
+  "homeOnboardingSubtitle": "Quét đơn thuốc để tạo lịch nhắc, hoặc nhập thủ công nếu bạn muốn bắt đầu ngay.",
+  "@homeOnboardingSubtitle": {},
+  "homeActionScan": "Quét đơn thuốc mới",
+  "@homeActionScan": {},
+  "homeActionManual": "Nhập tay",
+  "@homeActionManual": {},
+  "homeActionHistory": "Lịch sử",
+  "@homeActionHistory": {},
+  "homeActionDrugLookup": "Tra cứu thuốc",
+  "@homeActionDrugLookup": {},
+  "homeActionDrugLookupSubtitle": "Xem thông tin thuốc và hoạt chất",
+  "@homeActionDrugLookupSubtitle": {},
+  "homeActionPlans": "Kế hoạch",
+  "@homeActionPlans": {},
+  "homeActionPlansSubtitle": "Xem các lịch đã tạo",
+  "@homeActionPlansSubtitle": {},
+  "homePendingSync": "{count} thao tác đang chờ đồng bộ. Kéo xuống để đồng bộ lại.",
+  "@homePendingSync": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeTitleToday": "Hôm nay",
+  "@homeTitleToday": {},
+  "homeTodayDrugs": "Thuốc hôm nay",
+  "@homeTodayDrugs": {},
+  "homeHeroTitle": "Theo dõi liều uống hôm nay",
+  "@homeHeroTitle": {},
+  "homeHeroTotalDoses": "{count} liều cần quan tâm",
+  "@homeHeroTotalDoses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeHeroTaken": "Đã uống",
+  "@homeHeroTaken": {},
+  "homeHeroPending": "Chờ",
+  "@homeHeroPending": {},
+  "homeHeroSkipped": "Bỏ qua",
+  "@homeHeroSkipped": {},
+  "homeHeroMissed": "Không uống",
+  "@homeHeroMissed": {},
+  "homeDoseTakenStatus": "Đã uống: {title}",
+  "@homeDoseTakenStatus": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "homeDoseOfflineStatus": "Đã lưu tạm offline",
+  "@homeDoseOfflineStatus": {},
+  "homeDoseSkippedStatus": "Đã bỏ qua: {title}",
+  "@homeDoseSkippedStatus": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "homeInUse": "Đang sử dụng",
+  "@homeInUse": {},
+  "homeViewAllPlans": "Xem {count} kế hoạch",
+  "@homeViewAllPlans": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homePlanActive": "Đang bật",
+  "@homePlanActive": {},
+  "homeFreqHourly": "Theo từng giờ",
+  "@homeFreqHourly": {},
+  "homeFreqWeekly": "Hàng tuần",
+  "@homeFreqWeekly": {},
+  "homeFreqDaily1": "1 lần/ngày",
+  "@homeFreqDaily1": {},
+  "homeFreqDaily2": "2 lần/ngày",
+  "@homeFreqDaily2": {},
+  "homeFreqDaily3": "3 lần/ngày",
+  "@homeFreqDaily3": {},
+  "homeLoadingToday": "Đang tải kế hoạch hôm nay...",
+  "@homeLoadingToday": {},
+  "homeErrorLoadSchedule": "Không tải được lịch hôm nay",
+  "@homeErrorLoadSchedule": {},
+
+  "createPlanTitle": "Tạo kế hoạch",
+  "@createPlanTitle": {},
+  "createPlanStartTitle": "Chọn cách bắt đầu tạo kế hoạch",
+  "@createPlanStartTitle": {},
+  "createPlanStartSubtitle": "Ứng dụng hỗ trợ trích xuất tên thuốc. Bạn kiểm tra lại danh sách trước khi lưu kế hoạch.",
+  "@createPlanStartSubtitle": {},
+  "createPlanDisclaimer": "Lưu ý: Kết quả quét là bước gợi ý ban đầu, không thay thế hoàn toàn việc kiểm tra toa thuốc.",
+  "@createPlanDisclaimer": {},
+  "createPlanScanTitle": "Quét đơn thuốc",
+  "@createPlanScanTitle": {},
+  "createPlanScanSubtitle": "Chụp hoặc tải ảnh đơn thuốc,\nứng dụng trích xuất tên thuốc để bạn kiểm tra lại",
+  "@createPlanScanSubtitle": {},
+  "createPlanManualTitle": "Nhập thủ công",
+  "@createPlanManualTitle": {},
+  "createPlanManualSubtitle": "Tự nhập danh sách thuốc\nkhi không dùng ảnh quét hoặc cần nhập mới hoàn toàn",
+  "@createPlanManualSubtitle": {},
+  "createPlanHistoryTitle": "Dùng lại từ lịch sử",
+  "@createPlanHistoryTitle": {},
+  "createPlanHistorySubtitle": "Dùng lại kết quả đã quét trước đó\nđể tạo kế hoạch mới nhanh hơn",
+  "@createPlanHistorySubtitle": {},
+
+  "scanCameraTitle": "Chụp đơn thuốc",
+  "@scanCameraTitle": { "description": "AppBar / top-bar title on scan camera screen" },
+  "scanCameraClose": "Đóng",
+  "@scanCameraClose": {},
+  "scanCameraGuide": "Hướng dẫn",
+  "@scanCameraGuide": {},
+  "scanCameraHint": "Đưa danh sách thuốc vào khung hình\nvà chạm màn hình để chụp",
+  "@scanCameraHint": {},
+  "scanCameraGallery": "Thư viện",
+  "@scanCameraGallery": {},
+  "scanCameraManual": "Nhập tay",
+  "@scanCameraManual": {},
+  "scanCameraInitializing": "Đang khởi động camera...",
+  "@scanCameraInitializing": {},
+  "scanCameraPermissionDenied": "Quyền camera bị từ chối. Vào Cài đặt để cấp quyền.",
+  "@scanCameraPermissionDenied": {},
+  "scanCameraUnavailable": "Camera không khả dụng.",
+  "@scanCameraUnavailable": {},
+  "scanCameraUseGallery": "Dùng Thư viện",
+  "@scanCameraUseGallery": {},
+  "scanCameraCaptureFailed": "Chụp ảnh thất bại. Thử lại.",
+  "@scanCameraCaptureFailed": {},
+  "scanCameraFileTooLarge": "Ảnh quá lớn, vui lòng chọn ảnh < 10MB",
+  "@scanCameraFileTooLarge": {},
+  "scanCameraGalleryError": "Không thể mở thư viện ảnh",
+  "@scanCameraGalleryError": {},
+  "scanCameraUploadingTitle": "Đang trích xuất thông tin từ đơn thuốc...",
+  "@scanCameraUploadingTitle": {},
+  "scanCameraUploadingSubtitle": "Quá trình này mất khoảng 10–20 giây",
+  "@scanCameraUploadingSubtitle": {},
+  "scanCameraNodrugFound": "Không nhận diện được thuốc nào. Hãy thử lại hoặc nhập tay.",
+  "@scanCameraNodrugFound": {},
+  "scanCameraErrorGeneric": "Đã xảy ra lỗi khi quét",
+  "@scanCameraErrorGeneric": {},
+  "scanCameraErrorUnavailable": "Dịch vụ AI tạm thời không khả dụng",
+  "@scanCameraErrorUnavailable": {},
+  "scanCameraErrorTimeout": "Quá thời gian chờ, vui lòng thử lại",
+  "@scanCameraErrorTimeout": {},
+  "scanCameraErrorConnection": "Không kết nối được máy chủ",
+  "@scanCameraErrorConnection": {},
+  "scanCameraQualityReject": "Ảnh có vấn đề, hãy chụp lại.",
+  "@scanCameraQualityReject": {},
+  "scanCameraQualityWarning": "Ảnh chưa tối ưu.",
+  "@scanCameraQualityWarning": {},
+  "scanCameraQualityDefault": "Ảnh có thể ảnh hưởng đến kết quả nhận diện.",
+  "@scanCameraQualityDefault": {},
+  "scanCameraRetake": "Chụp lại",
+  "@scanCameraRetake": {},
+  "scanCameraProceed": "Vẫn tiếp tục quét",
+  "@scanCameraProceed": {},
+  "scanCameraQualityBlurry": "Ảnh bị mờ",
+  "@scanCameraQualityBlurry": {},
+  "scanCameraQualityGlare": "Ảnh bị chói",
+  "@scanCameraQualityGlare": {},
+  "scanCameraQualityCutoff": "Ảnh bị cắt thiếu",
+  "@scanCameraQualityCutoff": {},
+  "scanCameraQualityUnknown": "Ảnh chưa đủ sắc nét",
+  "@scanCameraQualityUnknown": {},
+  "scanCameraGuideTitle": "Hướng dẫn quét đơn thuốc",
+  "@scanCameraGuideTitle": {},
+  "scanCameraGuideStep1": "1. Đưa vùng hiển thị tên thuốc vào giữa khung hình.",
+  "@scanCameraGuideStep1": {},
+  "scanCameraGuideStep2": "2. Giữ máy ổn định, tránh chỗ quá chói sáng.",
+  "@scanCameraGuideStep2": {},
+  "scanCameraGuideStep3": "3. Ứng dụng sẽ TỰ ĐỘNG CHỤP khi ảnh đủ rõ nét.",
+  "@scanCameraGuideStep3": {},
+  "scanCameraGuideStep4": "4. Hoặc bạn có thể chạm vào màn hình / bấm nút để tự chụp.",
+  "@scanCameraGuideStep4": {},
+  "scanCameraQualityServerReject": "Ảnh có vấn đề, thử chụp lại rõ hơn.",
+  "@scanCameraQualityServerReject": {},
+
+  "scanReviewTitle": "Xác nhận kết quả quét",
+  "@scanReviewTitle": {},
+  "scanReviewDefaultGuidance": "Kiểm tra danh sách thuốc trước khi lập lịch.",
+  "@scanReviewDefaultGuidance": {},
+  "scanReviewDrugCount": "{count} thuốc",
+  "@scanReviewDrugCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "scanReviewSearchHint": "Tìm theo tên thuốc...",
+  "@scanReviewSearchHint": {},
+  "scanReviewEmptyFilter": "Không có thuốc nào khớp với bộ lọc hiện tại",
+  "@scanReviewEmptyFilter": {},
+  "scanReviewStandardName": "Tên chuẩn: {name}",
+  "@scanReviewStandardName": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "scanReviewOcrRaw": "OCR gốc: {text}",
+  "@scanReviewOcrRaw": {
+    "placeholders": {
+      "text": { "type": "String" }
+    }
+  },
+  "scanReviewEdit": "Sửa",
+  "@scanReviewEdit": {},
+  "scanReviewRemove": "Loại bỏ",
+  "@scanReviewRemove": {},
+  "scanReviewAddDrug": "Thêm thuốc",
+  "@scanReviewAddDrug": {},
+  "scanReviewRescan": "Quét lại",
+  "@scanReviewRescan": {},
+  "scanReviewContinue": "Tiếp tục lập lịch ({count} thuốc)",
+  "@scanReviewContinue": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "editDrugsTitle": "Danh sách thuốc",
+  "@editDrugsTitle": {},
+  "editDrugsAddTooltip": "Thêm thuốc",
+  "@editDrugsAddTooltip": {},
+  "editDrugsEmptyTitle": "Chưa có thuốc nào",
+  "@editDrugsEmptyTitle": {},
+  "editDrugsEmptyHint": "Bấm + để thêm thuốc",
+  "@editDrugsEmptyHint": {},
+  "editDrugsContinue": "Tiếp tục — {count} thuốc",
+  "@editDrugsContinue": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "scheduleTitle": "Thiết lập giờ uống thuốc",
+  "@scheduleTitle": {},
+  "scheduleHeaderTitle": "Thiết lập giờ uống",
+  "@scheduleHeaderTitle": {},
+  "scheduleHeaderSubtitle": "Chọn số lần uống mỗi ngày trước, rồi chỉnh lại nếu cần.",
+  "@scheduleHeaderSubtitle": {},
+  "scheduleDateRangeLabel": "Thời gian dùng thuốc",
+  "@scheduleDateRangeLabel": {},
+  "scheduleDateStart": "Bắt đầu",
+  "@scheduleDateStart": {},
+  "scheduleDateEnd": "Kết thúc",
+  "@scheduleDateEnd": {},
+  "scheduleDateSummary": "Tổng {days} ngày · từ {start} đến {end}",
+  "@scheduleDateSummary": {
+    "placeholders": {
+      "days": { "type": "int" },
+      "start": { "type": "String" },
+      "end": { "type": "String" }
+    }
+  },
+  "schedulePresetLabel": "1) Chọn nhanh số lần uống mỗi ngày",
+  "@schedulePresetLabel": {},
+  "schedulePresetHint": "Bạn chỉ cần chọn một mức phù hợp. Có thể chỉnh giờ chi tiết ở bên dưới.",
+  "@schedulePresetHint": {},
+  "schedulePreset1": "1 lần/ngày",
+  "@schedulePreset1": {},
+  "schedulePreset2": "2 lần/ngày",
+  "@schedulePreset2": {},
+  "schedulePreset3": "3 lần/ngày",
+  "@schedulePreset3": {},
+  "scheduleSlotsLabel": "2) Giờ uống thuốc (chỉnh thêm nếu cần)",
+  "@scheduleSlotsLabel": {},
+  "scheduleAddSlot": "Thêm giờ uống khác",
+  "@scheduleAddSlot": {},
+  "schedulePillsLabel": "3) Số viên ở từng giờ uống",
+  "@schedulePillsLabel": {},
+  "schedulePillsHint": "Bạn có thể đặt số viên khác nhau cho từng giờ của cùng một thuốc.",
+  "@schedulePillsHint": {},
+  "scheduleSlotNoDrug": "Chưa có thuốc nào ở giờ này.",
+  "@scheduleSlotNoDrug": {},
+  "scheduleReviewLabel": "4) Xem lại trước khi lưu",
+  "@scheduleReviewLabel": {},
+  "scheduleSave": "Lưu kế hoạch",
+  "@scheduleSave": {},
+  "scheduleSaveSuccess": "Đã tạo kế hoạch uống thuốc",
+  "@scheduleSaveSuccess": {},
+  "scheduleSaveErrorConnection": "Không kết nối được máy chủ",
+  "@scheduleSaveErrorConnection": {},
+  "scheduleSaveErrorSession": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+  "@scheduleSaveErrorSession": {},
+  "scheduleSaveErrorGeneric": "Không thể lưu kế hoạch",
+  "@scheduleSaveErrorGeneric": {},
+  "scheduleSaveErrorUnknown": "Lỗi: {error}",
+  "@scheduleSaveErrorUnknown": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "scheduleSlotNoSelection": "Chưa chọn thuốc cho giờ này",
+  "@scheduleSlotNoSelection": {},
+  "scheduleSlotDrugPreview": "Thuốc: {names}",
+  "@scheduleSlotDrugPreview": {
+    "placeholders": {
+      "names": { "type": "String" }
+    }
+  },
+  "scheduleSlotDrugPreviewMore": "Thuốc: {names} và {count} thuốc khác",
+  "@scheduleSlotDrugPreviewMore": {
+    "placeholders": {
+      "names": { "type": "String" },
+      "count": { "type": "int" }
+    }
+  },
+  "scheduleSlotDrugCount": "{count} thuốc",
+  "@scheduleSlotDrugCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "scheduleSlotChooseDrug": "Chọn thuốc uống ở giờ này:",
+  "@scheduleSlotChooseDrug": {},
+  "scheduleSlotRemoveTooltip": "Xóa khung giờ",
+  "@scheduleSlotRemoveTooltip": {},
+  "schedulePlanTitleSingle": "{name}",
+  "@schedulePlanTitleSingle": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "schedulePlanTitleMultiple": "{first} và {rest} thuốc khác",
+  "@schedulePlanTitleMultiple": {
+    "placeholders": {
+      "first": { "type": "String" },
+      "rest": { "type": "int" }
+    }
+  },
+  "schedulePlanTitleDefault": "Kế hoạch thuốc",
+  "@schedulePlanTitleDefault": {},
+  "scheduleSummaryDose": "{time}: {pills} viên",
+  "@scheduleSummaryDose": {
+    "placeholders": {
+      "time": { "type": "String" },
+      "pills": { "type": "int" }
+    }
+  },
+  "scheduleSummaryLine": "{drugName}: {summary}",
+  "@scheduleSummaryLine": {
+    "placeholders": {
+      "drugName": { "type": "String" },
+      "summary": { "type": "String" }
+    }
+  },
+
+  "drugEntrySheetAddTitle": "Thêm thuốc",
+  "@drugEntrySheetAddTitle": {},
+  "drugEntrySheetEditTitle": "Sửa thuốc",
+  "@drugEntrySheetEditTitle": {},
+  "drugEntrySheetNameLabel": "Tên thuốc *",
+  "@drugEntrySheetNameLabel": {},
+  "drugEntrySheetNameHint": "Nhập ít nhất 2 ký tự để tìm gợi ý...",
+  "@drugEntrySheetNameHint": {},
+  "drugEntrySheetDosageLabel": "Liều lượng (tuỳ chọn)",
+  "@drugEntrySheetDosageLabel": {},
+  "drugEntrySheetDosageHint": "VD: 500mg",
+  "@drugEntrySheetDosageHint": {},
+  "drugEntrySheetCancel": "Huỷ",
+  "@drugEntrySheetCancel": {},
+  "drugEntrySheetAdd": "Thêm",
+  "@drugEntrySheetAdd": {},
+  "drugEntrySheetSave": "Lưu",
+  "@drugEntrySheetSave": {},
+  "drugEntrySheetSearching": "Đang tìm gợi ý...",
+  "@drugEntrySheetSearching": {}
+}

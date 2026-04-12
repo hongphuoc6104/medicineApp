@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../drug/data/drug_repository.dart';
 import '../../domain/plan.dart';
 
@@ -139,6 +140,7 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Padding(
       padding: EdgeInsets.only(
         left: 20,
@@ -152,7 +154,9 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
         children: [
           // Title
           Text(
-            widget.initial == null ? 'Thêm thuốc' : 'Sửa thuốc',
+            widget.initial == null
+                ? l10n.drugEntrySheetAddTitle
+                : l10n.drugEntrySheetEditTitle,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 16),
@@ -162,10 +166,10 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
             controller: _nameCtrl,
             autofocus: true,
             onChanged: _onNameChanged,
-            decoration: const InputDecoration(
-              labelText: 'Tên thuốc *',
-              hintText: 'Nhập ít nhất 2 ký tự để tìm gợi ý...',
-              prefixIcon: Icon(Icons.medication_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.drugEntrySheetNameLabel,
+              hintText: l10n.drugEntrySheetNameHint,
+              prefixIcon: const Icon(Icons.medication_outlined),
             ),
           ),
 
@@ -176,7 +180,7 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeOut,
             alignment: Alignment.topCenter,
-            child: _buildSuggestionZone(),
+            child: _buildSuggestionZone(l10n),
           ),
 
           const SizedBox(height: 12),
@@ -184,10 +188,10 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
           // Dosage field
           TextField(
             controller: _dosageCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Liều lượng (tuỳ chọn)',
-              hintText: 'VD: 500mg',
-              prefixIcon: Icon(Icons.scale_outlined),
+            decoration: InputDecoration(
+              labelText: l10n.drugEntrySheetDosageLabel,
+              hintText: l10n.drugEntrySheetDosageHint,
+              prefixIcon: const Icon(Icons.scale_outlined),
             ),
           ),
           const SizedBox(height: 16),
@@ -198,14 +202,18 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Huỷ'),
+                  child: Text(l10n.drugEntrySheetCancel),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton(
                   onPressed: _submit,
-                  child: Text(widget.initial == null ? 'Thêm' : 'Lưu'),
+                  child: Text(
+                    widget.initial == null
+                        ? l10n.drugEntrySheetAdd
+                        : l10n.drugEntrySheetSave,
+                  ),
                 ),
               ),
             ],
@@ -219,7 +227,7 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
   // Suggestion zone widget
   // ---------------------------------------------------------------------------
 
-  Widget _buildSuggestionZone() {
+  Widget _buildSuggestionZone(AppLocalizations l10n) {
     // Nothing to show — return zero-size widget so AnimatedSize collapses.
     if (!_loadingSuggestions && _suggestions.isEmpty) {
       return const SizedBox.shrink();
@@ -234,7 +242,7 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
         color: AppColors.surface,
       ),
       child: _loadingSuggestions && _suggestions.isEmpty
-          ? const _SuggestionLoadingRow()
+          ? _SuggestionLoadingRow(label: l10n.drugEntrySheetSearching)
           : ListView.separated(
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
@@ -272,23 +280,25 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
 // ---------------------------------------------------------------------------
 
 class _SuggestionLoadingRow extends StatelessWidget {
-  const _SuggestionLoadingRow();
+  const _SuggestionLoadingRow({required this.label});
+
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       child: Row(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 16,
             width: 16,
             child: CircularProgressIndicator(strokeWidth: 2),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Text(
-            'Đang tìm gợi ý...',
-            style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+            label,
+            style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
           ),
         ],
       ),

@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/notifications/notification_service.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../home/data/plan_notifier.dart';
 import '../../settings/data/settings_repository.dart';
 import '../data/plan_repository.dart';
@@ -207,8 +208,9 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
   }
 
   String _slotPreviewText(Set<int> assignedDrugIndices) {
+    final l10n = AppLocalizations.of(context);
     if (assignedDrugIndices.isEmpty) {
-      return 'Chưa chọn thuốc cho giờ này';
+      return l10n.scheduleSlotNoSelection;
     }
 
     final names = assignedDrugIndices
@@ -218,11 +220,11 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
     names.sort();
 
     if (names.length <= 3) {
-      return 'Thuốc: ${names.join(', ')}';
+      return l10n.scheduleSlotDrugPreview(names.join(', '));
     }
 
     final firstThree = names.take(3).join(', ');
-    return 'Thuốc: $firstThree và ${names.length - 3} thuốc khác';
+    return l10n.scheduleSlotDrugPreviewMore(firstThree, names.length - 3);
   }
 
   // -------------------------------------------------------------------------
@@ -270,6 +272,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
   }
 
   PrescriptionPlanDraft _buildPlanDraft(String startDateStr) {
+    final l10n = AppLocalizations.of(context);
     final drugs = widget.drugs.asMap().entries.map((entry) {
       final index = entry.key;
       final drug = entry.value;
@@ -310,10 +313,13 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
         .toList();
 
     final title = widget.drugs.isEmpty
-        ? 'Kế hoạch thuốc'
+        ? l10n.schedulePlanTitleDefault
         : widget.drugs.length == 1
         ? widget.drugs.first.name
-        : '${widget.drugs.first.name} và ${widget.drugs.length - 1} thuốc khác';
+        : l10n.schedulePlanTitleMultiple(
+            widget.drugs.first.name,
+            widget.drugs.length - 1,
+          );
 
     return PrescriptionPlanDraft(
       title: title,
@@ -325,6 +331,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
   }
 
   Future<void> _savePlans() async {
+    final l10n = AppLocalizations.of(context);
     setState(() => _isSaving = true);
     final startDateStr = DateFormat('yyyy-MM-dd').format(_startDate);
     try {
@@ -348,22 +355,23 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       if (!mounted) return;
       ref.invalidate(planNotifierProvider);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Đã tạo kế hoạch uống thuốc'),
+        SnackBar(
+          content: Text(l10n.scheduleSaveSuccess),
           backgroundColor: AppColors.success,
         ),
       );
       context.go('/home');
     } on DioException catch (e) {
       if (!mounted) return;
+      final l10nInner = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             e.type == DioExceptionType.connectionError
-                ? 'Không kết nối được máy chủ'
+                ? l10nInner.scheduleSaveErrorConnection
                 : e.response?.statusCode == 401
-                ? 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.'
-                : 'Không thể lưu kế hoạch',
+                ? l10nInner.scheduleSaveErrorSession
+                : l10nInner.scheduleSaveErrorGeneric,
           ),
           backgroundColor: AppColors.error,
         ),
@@ -371,8 +379,12 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       setState(() => _isSaving = false);
     } catch (e) {
       if (!mounted) return;
+      final l10nInner = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi: $e'), backgroundColor: AppColors.error),
+        SnackBar(
+          content: Text(l10nInner.scheduleSaveErrorUnknown(e.toString())),
+          backgroundColor: AppColors.error,
+        ),
       );
       setState(() => _isSaving = false);
     }
@@ -384,13 +396,14 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final df = DateFormat('dd/MM');
     final startStr = df.format(_startDate);
     final endStr = df.format(_endDate);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thiết lập giờ uống thuốc'),
+        title: Text(l10n.scheduleTitle),
         leading: IconButton(
           onPressed: _goBackToReview,
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -423,16 +436,18 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Thiết lập giờ uống',
-                            style: TextStyle(
+                          Text(
+                            l10n.scheduleHeaderTitle,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 17,
                             ),
                           ),
-                          const Text(
-                            'Chọn số lần uống mỗi ngày trước, rồi chỉnh lại nếu cần.',
-                            style: TextStyle(color: AppColors.textSecondary),
+                          Text(
+                            l10n.scheduleHeaderSubtitle,
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                            ),
                           ),
                         ],
                       ),
@@ -449,13 +464,13 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _SectionLabel('Thời gian dùng thuốc'),
+                _SectionLabel(l10n.scheduleDateRangeLabel),
                 const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       child: _DateCard(
-                        label: 'Bắt đầu',
+                        label: l10n.scheduleDateStart,
                         value: startStr,
                         onTap: () => _pickDate(isStart: true),
                       ),
@@ -463,7 +478,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: _DateCard(
-                        label: 'Kết thúc',
+                        label: l10n.scheduleDateEnd,
                         value: endStr,
                         onTap: () => _pickDate(isStart: false),
                       ),
@@ -481,7 +496,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    'Tổng $_totalDays ngày · từ $startStr đến $endStr',
+                    l10n.scheduleDateSummary(_totalDays, startStr, endStr),
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryDark,
@@ -498,11 +513,11 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _SectionLabel('1) Chọn nhanh số lần uống mỗi ngày'),
+                _SectionLabel(l10n.schedulePresetLabel),
                 const SizedBox(height: 8),
-                const Text(
-                  'Bạn chỉ cần chọn một mức phù hợp. Có thể chỉnh giờ chi tiết ở bên dưới.',
-                  style: TextStyle(color: AppColors.textSecondary),
+                Text(
+                  l10n.schedulePresetHint,
+                  style: const TextStyle(color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: 12),
                 Wrap(
@@ -512,17 +527,17 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                     OutlinedButton.icon(
                       onPressed: () => _applyDailyPreset(1),
                       icon: const Icon(Icons.wb_sunny_outlined),
-                      label: const Text('1 lần/ngày'),
+                      label: Text(l10n.schedulePreset1),
                     ),
                     OutlinedButton.icon(
                       onPressed: () => _applyDailyPreset(2),
                       icon: const Icon(Icons.wb_twilight_outlined),
-                      label: const Text('2 lần/ngày'),
+                      label: Text(l10n.schedulePreset2),
                     ),
                     OutlinedButton.icon(
                       onPressed: () => _applyDailyPreset(3),
                       icon: const Icon(Icons.auto_awesome_motion_outlined),
-                      label: const Text('3 lần/ngày'),
+                      label: Text(l10n.schedulePreset3),
                     ),
                   ],
                 ),
@@ -532,11 +547,11 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
           const SizedBox(height: 16),
 
           // ── Fine tune ──
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
             child: Text(
-              '2) Giờ uống thuốc (chỉnh thêm nếu cần)',
-              style: TextStyle(
+              l10n.scheduleSlotsLabel,
+              style: const TextStyle(
                 fontWeight: FontWeight.w800,
                 color: AppColors.textSecondary,
                 fontSize: 13,
@@ -570,7 +585,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
           OutlinedButton.icon(
             onPressed: _addSlot,
             icon: const Icon(Icons.add_alarm),
-            label: const Text('Thêm giờ uống khác'),
+            label: Text(l10n.scheduleAddSlot),
           ),
           const SizedBox(height: 16),
 
@@ -579,11 +594,11 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _SectionLabel('3) Số viên ở từng giờ uống'),
+                _SectionLabel(l10n.schedulePillsLabel),
                 const SizedBox(height: 6),
-                const Text(
-                  'Bạn có thể đặt số viên khác nhau cho từng giờ của cùng một thuốc.',
-                  style: TextStyle(
+                Text(
+                  l10n.schedulePillsHint,
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
                   ),
@@ -606,9 +621,11 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                         ),
                         const SizedBox(height: 8),
                         if (assignedDrugIndices.isEmpty)
-                          const Text(
-                            'Chưa có thuốc nào ở giờ này.',
-                            style: TextStyle(color: AppColors.textSecondary),
+                          Text(
+                            l10n.scheduleSlotNoDrug,
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                            ),
                           )
                         else
                           ...assignedDrugIndices.map((drugIndex) {
@@ -662,9 +679,9 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _SectionLabel('4) Xem lại trước khi lưu'),
+                _SectionLabel(l10n.scheduleReviewLabel),
                 const SizedBox(height: 10),
-                ..._buildSummaryLines(),
+                ..._buildSummaryLines(l10n),
               ],
             ),
           ),
@@ -688,9 +705,12 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                       color: Colors.white,
                     ),
                   )
-                : const Text(
-                    'Lưu kế hoạch',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                : Text(
+                    l10n.scheduleSave,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
           ),
         ),
@@ -698,13 +718,13 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
     );
   }
 
-  List<Widget> _buildSummaryLines() {
+  List<Widget> _buildSummaryLines(AppLocalizations l10n) {
     return widget.drugs.asMap().entries.map((entry) {
       final idx = entry.key;
       final drug = entry.value;
       final doseSchedule = _buildDoseScheduleForDrug(idx);
       final summary = doseSchedule
-          .map((item) => '${item.time}: ${item.pills} viên')
+          .map((item) => l10n.scheduleSummaryDose(item.time, item.pills))
           .join(', ');
       return Padding(
         padding: const EdgeInsets.only(bottom: 6),
@@ -719,7 +739,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
             const SizedBox(width: 6),
             Expanded(
               child: Text(
-                '${drug.name}: $summary',
+                l10n.scheduleSummaryLine(drug.name, summary),
                 style: const TextStyle(fontSize: 13),
               ),
             ),
@@ -757,6 +777,7 @@ class _TimeSlotCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -798,7 +819,7 @@ class _TimeSlotCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                '${assignedDrugIndices.length} thuốc',
+                l10n.scheduleSlotDrugCount(assignedDrugIndices.length),
                 style: const TextStyle(
                   color: AppColors.textSecondary,
                   fontSize: 13,
@@ -813,7 +834,7 @@ class _TimeSlotCard extends StatelessWidget {
                     color: AppColors.error,
                   ),
                   iconSize: 20,
-                  tooltip: 'Xóa khung giờ',
+                  tooltip: l10n.scheduleSlotRemoveTooltip,
                 ),
             ],
           ),
@@ -827,9 +848,12 @@ class _TimeSlotCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
-            'Chọn thuốc uống ở giờ này:',
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
+          Text(
+            l10n.scheduleSlotChooseDrug,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 12,
+            ),
           ),
           const SizedBox(height: 8),
           Wrap(

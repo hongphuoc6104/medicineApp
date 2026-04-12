@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/plan.dart';
 import 'widgets/drug_entry_sheet.dart';
 
@@ -65,9 +66,10 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Danh sách thuốc'),
+        title: Text(l10n.editDrugsTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/create'),
@@ -76,7 +78,7 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addDrug,
         backgroundColor: AppColors.primary,
-        tooltip: 'Thêm thuốc',
+        tooltip: l10n.editDrugsAddTooltip,
         child: const Icon(Icons.add),
       ),
       body: Column(
@@ -84,7 +86,7 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
           // Drug list
           Expanded(
             child: _drugs.isEmpty
-                ? _buildEmpty()
+                ? _buildEmpty(l10n)
                 : ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: _drugs.length,
@@ -102,7 +104,7 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),
               ),
-              child: Text('Tiếp tục — ${_drugs.length} thuốc'),
+              child: Text(l10n.editDrugsContinue(_drugs.length)),
             ),
           ),
         ],
@@ -110,7 +112,7 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
     );
   }
 
-  Widget _buildEmpty() {
+  Widget _buildEmpty(AppLocalizations l10n) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -118,12 +120,12 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
           Icon(Icons.medication_outlined, size: 56, color: AppColors.textMuted),
           const SizedBox(height: 12),
           Text(
-            'Chưa có thuốc nào',
+            l10n.editDrugsEmptyTitle,
             style: TextStyle(color: AppColors.textMuted, fontSize: 16),
           ),
           const SizedBox(height: 8),
           Text(
-            'Bấm + để thêm thuốc',
+            l10n.editDrugsEmptyHint,
             style: TextStyle(color: AppColors.textMuted, fontSize: 13),
           ),
         ],

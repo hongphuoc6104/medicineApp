@@ -2,8 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:medicine_app/l10n/app_localizations.dart';
+
 import '../../../core/theme/app_theme.dart';
 import '../data/auth_notifier.dart';
+
+String _translateAuthError(BuildContext context, String? error) {
+  if (error == null) return '';
+  final l10n = AppLocalizations.of(context);
+  switch (error) {
+    case 'authErrorTimeout': return l10n.authErrorTimeout;
+    case 'authErrorNoConnection': return l10n.authErrorNoConnection;
+    case 'authErrorInvalidData': return l10n.authErrorInvalidData;
+    case 'authErrorWrongCredentials': return l10n.authErrorWrongCredentials;
+    case 'authErrorEmailExists': return l10n.authErrorEmailExists;
+    case 'authErrorTooManyRequests': return l10n.authErrorTooManyRequests;
+    case 'authErrorServerError': return l10n.authErrorServerError;
+    case 'authErrorGeneric': return l10n.commonErrorGeneric;
+    case 'authErrorRegisterGeneric': return l10n.authErrorRegisterGeneric;
+    case 'authErrorLoginAfterRegister': return l10n.authErrorLoginAfterRegister;
+    default:
+      if (error.startsWith('authErrorUnknown|')) {
+        return l10n.authErrorUnknown(error.split('|').last);
+      }
+      return error;
+  }
+}
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -35,24 +59,25 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final confirm = _confirmPasswordController.text;
 
     // Validation
+    final l10n = AppLocalizations.of(context);
     if (email.isEmpty || password.isEmpty) {
-      _showError('Vui lòng nhập email và mật khẩu');
+      _showError(l10n.authErrorEmptyEmailPassword);
       return;
     }
     if (password.length < 8) {
-      _showError('Mật khẩu phải có ít nhất 8 ký tự');
+      _showError(l10n.authErrorPasswordLength);
       return;
     }
     if (!password.contains(RegExp(r'[A-Z]'))) {
-      _showError('Mật khẩu phải có ít nhất 1 chữ hoa');
+      _showError(l10n.authErrorPasswordUppercase);
       return;
     }
     if (!password.contains(RegExp(r'[0-9]'))) {
-      _showError('Mật khẩu phải có ít nhất 1 số');
+      _showError(l10n.authErrorPasswordNumber);
       return;
     }
     if (password != confirm) {
-      _showError('Mật khẩu xác nhận không khớp');
+      _showError(l10n.authErrorPasswordMismatch);
       return;
     }
 
@@ -66,7 +91,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     if (!success && mounted) {
       final error = ref.read(authNotifierProvider).error;
-      _showError(error ?? 'Đăng ký thất bại');
+      final msg = _translateAuthError(context, error);
+      _showError(msg.isNotEmpty ? msg : AppLocalizations.of(context).authErrorRegisterFailed);
     }
     // If success → auto-login → GoRouter redirects to /home
   }
@@ -80,6 +106,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authNotifierProvider);
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       body: SafeArea(
@@ -96,7 +123,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Tạo tài khoản',
+                l10n.authRegisterTitle,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -104,9 +131,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Đăng ký để quản lý đơn thuốc',
+                l10n.authRegisterSubtitle,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.textSecondary),
+                style: const TextStyle(color: AppColors.textSecondary),
               ),
               const SizedBox(height: 36),
 
@@ -114,9 +141,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               TextField(
                 controller: _nameController,
                 enabled: !authState.isLoading,
-                decoration: const InputDecoration(
-                  hintText: 'Họ tên (tùy chọn)',
-                  prefixIcon: Icon(Icons.person_outline),
+                decoration: InputDecoration(
+                  hintText: l10n.authNameOptionalHint,
+                  prefixIcon: const Icon(Icons.person_outline),
                 ),
               ),
               const SizedBox(height: 16),
@@ -126,9 +153,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 enabled: !authState.isLoading,
-                decoration: const InputDecoration(
-                  hintText: 'Email',
-                  prefixIcon: Icon(Icons.email_outlined),
+                decoration: InputDecoration(
+                  hintText: l10n.authEmailHint,
+                  prefixIcon: const Icon(Icons.email_outlined),
                 ),
               ),
               const SizedBox(height: 16),
@@ -139,7 +166,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 obscureText: _obscurePassword,
                 enabled: !authState.isLoading,
                 decoration: InputDecoration(
-                  hintText: 'Mật khẩu (≥8 ký tự, 1 hoa, 1 số)',
+                  hintText: l10n.authPasswordRequirements,
                   prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
@@ -161,9 +188,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 obscureText: true,
                 enabled: !authState.isLoading,
                 onSubmitted: (_) => _handleRegister(),
-                decoration: const InputDecoration(
-                  hintText: 'Xác nhận mật khẩu',
-                  prefixIcon: Icon(Icons.lock_outline),
+                decoration: InputDecoration(
+                  hintText: l10n.authPasswordConfirmHint,
+                  prefixIcon: const Icon(Icons.lock_outline),
                 ),
               ),
               const SizedBox(height: 24),
@@ -177,7 +204,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Đăng ký'),
+                    : Text(l10n.authRegisterButton),
               ),
               const SizedBox(height: 16),
 
@@ -188,12 +215,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     : () => context.go('/login'),
                 child: Text.rich(
                   TextSpan(
-                    text: 'Đã có tài khoản? ',
-                    style: TextStyle(color: AppColors.textSecondary),
+                    text: l10n.authHasAccountPrompt,
+                    style: const TextStyle(color: AppColors.textSecondary),
                     children: [
                       TextSpan(
-                        text: 'Đăng nhập',
-                        style: TextStyle(
+                        text: l10n.authLoginAction,
+                        style: const TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w600,
                         ),

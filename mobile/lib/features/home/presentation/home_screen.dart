@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import 'package:medicine_app/l10n/app_localizations.dart';
+
 import '../../../core/theme/app_theme.dart';
 import '../../create_plan/data/offline_dose_queue.dart';
 import '../../create_plan/domain/plan.dart';
@@ -27,9 +29,10 @@ class HomeScreen extends ConsumerWidget {
             .read(todayScheduleNotifierProvider.notifier)
             .flushOfflineQueue();
         if (synced > 0 && context.mounted) {
+          final l10n = AppLocalizations.of(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Đã đồng bộ $synced thao tác offline'),
+              content: Text(l10n.homeSyncSuccess(synced)),
               backgroundColor: AppColors.success,
             ),
           );
@@ -37,9 +40,10 @@ class HomeScreen extends ConsumerWidget {
       }
     });
 
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MedicineApp'),
+        title: Text(l10n.authLoginTitle),
         actions: [
           IconButton(
             onPressed: () => context.go('/settings'),
@@ -87,9 +91,7 @@ class _ErrorView extends StatelessWidget {
         Text(
           'Không tải được dữ liệu hôm nay',
           textAlign: TextAlign.center,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 8),
         Text(
@@ -101,7 +103,7 @@ class _ErrorView extends StatelessWidget {
         ElevatedButton.icon(
           onPressed: onRetry,
           icon: const Icon(Icons.refresh),
-          label: const Text('Thử lại'),
+          label: Text(AppLocalizations.of(context).commonRetry),
         ),
       ],
     );
@@ -147,21 +149,21 @@ class _OnboardingView extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Text(
-                'Bắt đầu quản lý thuốc một cách dễ hiểu',
+                AppLocalizations.of(context).homeOnboardingTitle,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Quét đơn thuốc để tạo lịch nhắc, hoặc nhập thủ công nếu bạn muốn bắt đầu ngay.',
-                style: TextStyle(color: AppColors.textSecondary, height: 1.45),
+              Text(
+                AppLocalizations.of(context).homeOnboardingSubtitle,
+                style: const TextStyle(color: AppColors.textSecondary, height: 1.45),
               ),
               const SizedBox(height: 18),
               ElevatedButton.icon(
                 onPressed: () => context.go('/create/scan'),
                 icon: const Icon(Icons.document_scanner_outlined),
-                label: const Text('Quét đơn thuốc mới'),
+                label: Text(AppLocalizations.of(context).homeActionScan),
               ),
               const SizedBox(height: 10),
               Row(
@@ -170,7 +172,7 @@ class _OnboardingView extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/create/edit'),
                       icon: const Icon(Icons.edit_note),
-                      label: const Text('Nhập tay'),
+                      label: Text(AppLocalizations.of(context).homeActionManual),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -178,7 +180,7 @@ class _OnboardingView extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/history'),
                       icon: const Icon(Icons.history_outlined),
-                      label: const Text('Lịch sử'),
+                      label: Text(AppLocalizations.of(context).homeActionHistory),
                     ),
                   ),
                 ],
@@ -190,14 +192,14 @@ class _OnboardingView extends StatelessWidget {
         _QuickActionGrid(
           actions: [
             _QuickActionItem(
-              title: 'Tra cứu thuốc',
-              subtitle: 'Xem thông tin thuốc và hoạt chất',
+              title: AppLocalizations.of(context).homeActionDrugLookup,
+              subtitle: AppLocalizations.of(context).homeActionDrugLookupSubtitle,
               icon: Icons.search_rounded,
               onTap: () => context.go('/drugs'),
             ),
             _QuickActionItem(
-              title: 'Kế hoạch',
-              subtitle: 'Xem các lịch đã tạo',
+              title: AppLocalizations.of(context).homeActionPlans,
+              subtitle: AppLocalizations.of(context).homeActionPlansSubtitle,
               icon: Icons.calendar_month_rounded,
               onTap: () => context.go('/plans'),
             ),
@@ -247,7 +249,7 @@ class _DashboardView extends ConsumerWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      '$count thao tác đang chờ đồng bộ. Kéo xuống để đồng bộ lại.',
+                      AppLocalizations.of(context).homePendingSync(count),
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -270,8 +272,8 @@ class _DashboardView extends ConsumerWidget {
                 _HeroTodayCard(today: today),
                 const SizedBox(height: 16),
                 _SectionLabel(
-                  title: 'Thuốc hôm nay',
-                  actionLabel: 'Kế hoạch',
+                  title: AppLocalizations.of(context).homeTodayDrugs,
+                  actionLabel: AppLocalizations.of(context).homeActionPlans,
                   onAction: () => context.go('/plans'),
                 ),
                 const SizedBox(height: 10),
@@ -290,12 +292,13 @@ class _DashboardView extends ConsumerWidget {
                             .read(todayScheduleNotifierProvider.notifier)
                             .markDose(dose: dose, status: 'taken');
                         if (!context.mounted) return;
+                        final l10n = AppLocalizations.of(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
                               ok
-                                  ? 'Đã uống: ${dose.primaryTitle}'
-                                  : 'Đã lưu tạm offline',
+                                  ? l10n.homeDoseTakenStatus(dose.primaryTitle)
+                                  : l10n.homeDoseOfflineStatus,
                             ),
                             backgroundColor: ok
                                 ? AppColors.success
@@ -308,12 +311,13 @@ class _DashboardView extends ConsumerWidget {
                             .read(todayScheduleNotifierProvider.notifier)
                             .markDose(dose: dose, status: 'skipped');
                         if (!context.mounted) return;
+                        final l10n = AppLocalizations.of(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
                               ok
-                                  ? 'Đã bỏ qua: ${dose.primaryTitle}'
-                                  : 'Đã lưu tạm offline',
+                                  ? l10n.homeDoseSkippedStatus(dose.primaryTitle)
+                                  : l10n.homeDoseOfflineStatus,
                             ),
                             backgroundColor: ok
                                 ? AppColors.warning
@@ -324,7 +328,7 @@ class _DashboardView extends ConsumerWidget {
                     ),
                   ),
                 const SizedBox(height: 18),
-                const _SectionLabel(title: 'Đang sử dụng'),
+                _SectionLabel(title: AppLocalizations.of(context).homeInUse),
                 const SizedBox(height: 10),
                 ...plans.take(3).map((plan) => _PlanCard(plan: plan)),
                 if (plans.length > 3) ...[
@@ -332,7 +336,7 @@ class _DashboardView extends ConsumerWidget {
                   TextButton.icon(
                     onPressed: () => context.go('/plans'),
                     icon: const Icon(Icons.open_in_new),
-                    label: Text('Xem ${plans.length} kế hoạch'),
+                    label: Text(AppLocalizations.of(context).homeViewAllPlans(plans.length)),
                   ),
                 ],
               ],
@@ -362,7 +366,7 @@ class _DateHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Hôm nay',
+                AppLocalizations.of(context).homeTitleToday,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
@@ -382,16 +386,16 @@ class _DateHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: AppColors.border),
           ),
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.calendar_today_rounded,
                 size: 16,
                 color: AppColors.primaryDark,
               ),
-              SizedBox(width: 6),
-              Text('Thuốc hôm nay'),
+              const SizedBox(width: 6),
+              Text(AppLocalizations.of(context).homeTodayDrugs),
             ],
           ),
         ),
@@ -480,9 +484,9 @@ class _HeroTodayCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Theo dõi liều uống hôm nay',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context).homeHeroTitle,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -490,7 +494,7 @@ class _HeroTodayCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '${today.summary.total} liều cần quan tâm',
+            AppLocalizations.of(context).homeHeroTotalDoses(today.summary.total),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w900,
@@ -499,11 +503,11 @@ class _HeroTodayCard extends StatelessWidget {
           const SizedBox(height: 18),
           Row(
             children: [
-              _HeroMetric(label: 'Đã uống', value: '${today.summary.taken}'),
-              _HeroMetric(label: 'Chờ', value: '${today.summary.pending}'),
-              _HeroMetric(label: 'Bỏ qua', value: '${today.summary.skipped}'),
+              _HeroMetric(label: AppLocalizations.of(context).homeHeroTaken, value: '${today.summary.taken}'),
+              _HeroMetric(label: AppLocalizations.of(context).homeHeroPending, value: '${today.summary.pending}'),
+              _HeroMetric(label: AppLocalizations.of(context).homeHeroSkipped, value: '${today.summary.skipped}'),
               _HeroMetric(
-                label: 'Không uống',
+                label: AppLocalizations.of(context).homeHeroMissed,
                 value: '${today.summary.missed}',
               ),
             ],
@@ -691,8 +695,8 @@ class _PlanCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     plan.hasVariableDoseSchedule
-                        ? '${_freqLabel(plan.frequency)} · Theo từng giờ · ${plan.times.join(', ')}'
-                        : '${_freqLabel(plan.frequency)} · ${plan.pillsPerDose} viên · ${plan.times.join(', ')}',
+                        ? '${_freqLabel(context, plan.frequency)} · ${AppLocalizations.of(context).homeFreqHourly} · ${plan.times.join(', ')}'
+                        : '${_freqLabel(context, plan.frequency)} · ${plan.pillsPerDose} viên · ${plan.times.join(', ')}',
                     style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 12,
@@ -707,9 +711,9 @@ class _PlanCard extends StatelessWidget {
                 color: AppColors.primary.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Text(
-                'Đang bật',
-                style: TextStyle(
+              child: Text(
+                AppLocalizations.of(context).homePlanActive,
+                style: const TextStyle(
                   color: AppColors.primaryDark,
                   fontWeight: FontWeight.w800,
                   fontSize: 11,
@@ -722,16 +726,16 @@ class _PlanCard extends StatelessWidget {
     );
   }
 
-  static String _freqLabel(String freq) {
+  static String _freqLabel(BuildContext context, String freq) {
     switch (freq) {
       case 'twice_daily':
-        return '2 lần/ngày';
+        return AppLocalizations.of(context).homeFreqDaily2;
       case 'three_daily':
-        return '3 lần/ngày';
+        return AppLocalizations.of(context).homeFreqDaily3;
       case 'weekly':
-        return 'Hàng tuần';
+        return AppLocalizations.of(context).homeFreqWeekly;
       default:
-        return '1 lần/ngày';
+        return AppLocalizations.of(context).homeFreqDaily1;
     }
   }
 }
@@ -748,15 +752,15 @@ class _TodayLoadingCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.border),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          SizedBox(
+          const SizedBox(
             width: 22,
             height: 22,
             child: CircularProgressIndicator(strokeWidth: 2.4),
           ),
-          SizedBox(width: 14),
-          Expanded(child: Text('Đang tải kế hoạch hôm nay...')),
+          const SizedBox(width: 14),
+          Expanded(child: Text(AppLocalizations.of(context).homeLoadingToday)),
         ],
       ),
     );
@@ -781,9 +785,9 @@ class _TodayErrorCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Không tải được lịch hôm nay',
-            style: TextStyle(fontWeight: FontWeight.w800),
+          Text(
+            AppLocalizations.of(context).homeErrorLoadSchedule,
+            style: const TextStyle(fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 8),
           Text(message, style: const TextStyle(color: AppColors.textSecondary)),
@@ -791,7 +795,7 @@ class _TodayErrorCard extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh),
-            label: const Text('Thử lại'),
+            label: Text(AppLocalizations.of(context).commonRetry),
           ),
         ],
       ),

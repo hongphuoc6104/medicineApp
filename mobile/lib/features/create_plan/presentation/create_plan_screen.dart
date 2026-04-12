@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medicine_app/l10n/app_localizations.dart';
 
 import '../../../core/theme/app_theme.dart';
 
@@ -9,8 +10,9 @@ class CreatePlanScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Tạo kế hoạch')),
+      appBar: AppBar(title: Text(l10n.createPlanTitle)),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -18,15 +20,15 @@ class CreatePlanScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 32),
             Text(
-              'Chọn cách bắt đầu tạo kế hoạch',
+              l10n.createPlanStartTitle,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Ứng dụng hỗ trợ trích xuất tên thuốc. Bạn kiểm tra lại danh sách trước khi lưu kế hoạch.',
-              style: TextStyle(color: AppColors.textSecondary),
+            Text(
+              l10n.createPlanStartSubtitle,
+              style: const TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 14),
             Container(
@@ -36,9 +38,9 @@ class CreatePlanScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppColors.border),
               ),
-              child: const Text(
-                'Lưu ý: Kết quả quét là bước gợi ý ban đầu, không thay thế hoàn toàn việc kiểm tra toa thuốc.',
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              child: Text(
+                l10n.createPlanDisclaimer,
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
               ),
             ),
             const SizedBox(height: 24),
@@ -46,9 +48,8 @@ class CreatePlanScreen extends StatelessWidget {
             // ── Option 1: Scan ──
             _OptionCard(
               icon: Icons.document_scanner_outlined,
-              title: 'Quét đơn thuốc',
-              subtitle:
-                  'Chụp hoặc tải ảnh đơn thuốc,\nứng dụng trích xuất tên thuốc để bạn kiểm tra lại',
+              title: l10n.createPlanScanTitle,
+              subtitle: l10n.createPlanScanSubtitle,
               color: AppColors.primary,
               onTap: () => context.go('/create/scan'),
             ),
@@ -57,18 +58,16 @@ class CreatePlanScreen extends StatelessWidget {
             // ── Option 2: Manual ──
             _OptionCard(
               icon: Icons.edit_note,
-              title: 'Nhập thủ công',
-              subtitle:
-                  'Tự nhập danh sách thuốc\nkhi không dùng ảnh quét hoặc cần nhập mới hoàn toàn',
+              title: l10n.createPlanManualTitle,
+              subtitle: l10n.createPlanManualSubtitle,
               color: AppColors.info,
               onTap: () => context.go('/create/edit'),
             ),
             const SizedBox(height: 16),
             _OptionCard(
               icon: Icons.history_toggle_off,
-              title: 'Dùng lại từ lịch sử',
-              subtitle:
-                  'Dùng lại kết quả đã quét trước đó\nđể tạo kế hoạch mới nhanh hơn',
+              title: l10n.createPlanHistoryTitle,
+              subtitle: l10n.createPlanHistorySubtitle,
               color: AppColors.success,
               onTap: () => context.go('/history'),
             ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import '../domain/plan.dart';
 import '../domain/scan_result.dart';
 import 'widgets/drug_entry_sheet.dart';
@@ -112,10 +113,11 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final visible = _visibleDrugs;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Xác nhận kết quả quét')),
+      appBar: AppBar(title: Text(l10n.scanReviewTitle)),
       body: Column(
         children: [
           Container(
@@ -132,7 +134,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
               children: [
                 Text(
                   widget.result.guidance ??
-                      'Kiểm tra danh sách thuốc trước khi lập lịch.',
+                      l10n.scanReviewDefaultGuidance,
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
@@ -141,7 +143,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                   runSpacing: 8,
                   children: [
                     _StatusChip(
-                      label: '${_drugs.length} thuốc',
+                      label: l10n.scanReviewDrugCount(_drugs.length),
                       color: AppColors.primary,
                     ),
                   ],
@@ -151,7 +153,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                   controller: _searchCtrl,
                   onChanged: (_) => setState(() {}),
                   decoration: InputDecoration(
-                    hintText: 'Tìm theo tên thuốc...',
+                    hintText: l10n.scanReviewSearchHint,
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchCtrl.text.isNotEmpty
                         ? IconButton(
@@ -169,10 +171,10 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
           ),
           Expanded(
             child: visible.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text(
-                      'Không có thuốc nào khớp với bộ lọc hiện tại',
-                      style: TextStyle(color: AppColors.textSecondary),
+                      l10n.scanReviewEmptyFilter,
+                      style: const TextStyle(color: AppColors.textSecondary),
                     ),
                   )
                 : ListView.separated(
@@ -225,7 +227,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                                   const SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
-                                      'Tên chuẩn: ${drug.mappedDrugName}',
+                                      l10n.scanReviewStandardName(drug.mappedDrugName!),
                                       style: const TextStyle(
                                         color: AppColors.info,
                                         fontSize: 12,
@@ -241,7 +243,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                                     drug.name.toLowerCase().trim()) ...[
                               const SizedBox(height: 4),
                               Text(
-                                'OCR gốc: ${drug.ocrText}',
+                                l10n.scanReviewOcrRaw(drug.ocrText),
                                 style: const TextStyle(
                                   color: AppColors.textSecondary,
                                   fontSize: 12,
@@ -259,7 +261,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                                     Icons.edit_outlined,
                                     size: 16,
                                   ),
-                                  label: const Text('Sửa'),
+                                  label: Text(l10n.scanReviewEdit),
                                 ),
                                 OutlinedButton.icon(
                                   onPressed: () => _removeDrug(drug),
@@ -270,7 +272,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                                     Icons.delete_outline,
                                     size: 16,
                                   ),
-                                  label: const Text('Loại bỏ'),
+                                  label: Text(l10n.scanReviewRemove),
                                 ),
                               ],
                             ),
@@ -291,7 +293,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                       child: OutlinedButton.icon(
                         onPressed: _addDrugManually,
                         icon: const Icon(Icons.add, size: 18),
-                        label: const Text('Thêm thuốc'),
+                        label: Text(l10n.scanReviewAddDrug),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -302,7 +304,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                           Icons.document_scanner_outlined,
                           size: 18,
                         ),
-                        label: const Text('Quét lại'),
+                        label: Text(l10n.scanReviewRescan),
                       ),
                     ),
                   ],
@@ -311,7 +313,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                 ElevatedButton.icon(
                   onPressed: _drugs.isEmpty ? null : _continue,
                   icon: const Icon(Icons.arrow_forward),
-                  label: Text('Tiếp tục lập lịch (${_drugs.length} thuốc)'),
+                  label: Text(l10n.scanReviewContinue(_drugs.length)),
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(50),
                   ),

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../../l10n/app_localizations.dart';
 import '../data/local_quality_gate.dart';
 import '../data/scan_camera_controller.dart';
 import '../data/scan_repository.dart';
@@ -52,7 +53,10 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
     _scanCameraCtrl.addListener(_onCameraStateChanged);
     _scanCameraCtrl.onAutoCaptured = (bytes) {
       if (mounted) {
-        _processAndUpload(bytes, 'auto_capture_${DateTime.now().millisecondsSinceEpoch}.jpg');
+        _processAndUpload(
+          bytes,
+          'auto_capture_${DateTime.now().millisecondsSinceEpoch}.jpg',
+        );
       }
     };
     // Camera preview must open immediately on screen entry (plan §3.2 / §6.2)
@@ -96,9 +100,10 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   }
 
   Future<void> _captureFromCamera() async {
+    final l10n = AppLocalizations.of(context);
     final bytes = await _scanCameraCtrl.capturePhoto();
     if (bytes == null) {
-      setState(() => _error = 'Chụp ảnh thất bại. Thử lại.');
+      setState(() => _error = l10n.scanCameraCaptureFailed);
       return;
     }
     await _processAndUpload(
@@ -108,6 +113,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   }
 
   Future<void> _pickFromGallery() async {
+    final l10n = AppLocalizations.of(context);
     try {
       final picked = await _picker.pickImage(
         source: ImageSource.gallery,
@@ -118,12 +124,12 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
       if (picked == null) return;
       final bytes = await picked.readAsBytes();
       if (bytes.lengthInBytes > 10 * 1024 * 1024) {
-        setState(() => _error = 'Ảnh quá lớn, vui lòng chọn ảnh < 10MB');
+        setState(() => _error = l10n.scanCameraFileTooLarge);
         return;
       }
       await _processAndUpload(bytes, picked.name);
     } catch (e) {
-      setState(() => _error = 'Không thể mở thư viện ảnh: $e');
+      setState(() => _error = '${l10n.scanCameraGalleryError}: $e');
     }
   }
 
@@ -132,6 +138,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   // -------------------------------------------------------------------------
 
   Future<void> _processAndUpload(Uint8List bytes, String filename) async {
+    final l10n = AppLocalizations.of(context);
     // Step 1: local quality gate
     final quality = await assessLocalImageQuality(bytes);
 
@@ -184,7 +191,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           _mode = _ScreenMode.cameraPreview;
           _qualityBanner = 'REJECT';
           _qualityGuidance =
-              result.guidance ?? 'Ảnh có vấn đề, thử chụp lại rõ hơn.';
+              result.guidance ?? l10n.scanCameraQualityServerReject;
         });
         _scanCameraCtrl.startAutoCaptureStream();
         return;
@@ -193,7 +200,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
       if (result.drugs.isEmpty) {
         setState(() {
           _mode = _ScreenMode.cameraPreview;
-          _error = 'Không nhận diện được thuốc nào. Hãy thử lại hoặc nhập tay.';
+          _error = l10n.scanCameraNodrugFound;
         });
         _scanCameraCtrl.startAutoCaptureStream();
         return;
@@ -202,14 +209,14 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
       context.go('/create/review', extra: result);
     } catch (e) {
       if (!mounted) return;
-      var msg = 'Đã xảy ra lỗi khi quét';
+      var msg = l10n.scanCameraErrorGeneric;
       if (e.toString().contains('503')) {
-        msg = 'Dịch vụ AI tạm thời không khả dụng';
+        msg = l10n.scanCameraErrorUnavailable;
       } else if (e.toString().contains('timeout') ||
           e.toString().contains('Timeout')) {
-        msg = 'Quá thời gian chờ, vui lòng thử lại';
+        msg = l10n.scanCameraErrorTimeout;
       } else if (e.toString().contains('connection')) {
-        msg = 'Không kết nối được máy chủ';
+        msg = l10n.scanCameraErrorConnection;
       }
       setState(() {
         _mode = _ScreenMode.cameraPreview;
@@ -223,25 +230,26 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
     required String? guidance,
     String? rejectReason,
   }) async {
+    final l10n = AppLocalizations.of(context);
     // Chọn icon và tiêu đề phù hợp với từng loại lỗi
     IconData warningIcon;
     String warningTitle;
     switch (rejectReason) {
       case 'BLURRY_IMAGE':
         warningIcon = Icons.blur_on_outlined;
-        warningTitle = 'Ảnh bị mờ';
+        warningTitle = l10n.scanCameraQualityBlurry;
         break;
       case 'GLARE_IMAGE':
         warningIcon = Icons.wb_sunny_outlined;
-        warningTitle = 'Ảnh bị chói';
+        warningTitle = l10n.scanCameraQualityGlare;
         break;
       case 'CONTENT_CUTOFF':
         warningIcon = Icons.crop_outlined;
-        warningTitle = 'Ảnh bị cắt thiếu';
+        warningTitle = l10n.scanCameraQualityCutoff;
         break;
       default:
         warningIcon = Icons.warning_amber_rounded;
-        warningTitle = 'Ảnh chưa đủ sắc nét';
+        warningTitle = l10n.scanCameraQualityUnknown;
     }
 
     final result = await showModalBottomSheet<bool>(
@@ -259,25 +267,28 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
                   const SizedBox(width: 10),
                   Text(
                     warningTitle,
-                    style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 17,
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
               Text(
-                guidance ?? 'Ảnh có thể ảnh hưởng đến kết quả nhận diện.',
+                guidance ?? l10n.scanCameraQualityDefault,
                 style: const TextStyle(color: AppColors.textSecondary),
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
                 onPressed: () => Navigator.pop(ctx, false),
                 icon: const Icon(Icons.camera_alt_outlined),
-                label: const Text('Chụp lại'),
+                label: Text(l10n.scanCameraRetake),
               ),
               const SizedBox(height: 8),
               OutlinedButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Vẫn tiếp tục quét'),
+                child: Text(l10n.scanCameraProceed),
               ),
             ],
           ),
@@ -304,6 +315,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   // -------------------------------------------------------------------------
 
   Widget _buildUploadingOverlay() {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -320,12 +332,12 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
                 ),
               ),
               const SizedBox(height: 24),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                  'Đang trích xuất thông tin từ đơn thuốc...',
+                  l10n.scanCameraUploadingTitle,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -333,12 +345,12 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
                 ),
               ),
               const SizedBox(height: 12),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Text(
-                  'Quá trình này mất khoảng 10–20 giây',
+                  l10n.scanCameraUploadingSubtitle,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.textSecondary),
+                  style: const TextStyle(color: AppColors.textSecondary),
                 ),
               ),
             ],
@@ -389,18 +401,19 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   }
 
   Widget _buildCameraBody() {
+    final l10n = AppLocalizations.of(context);
     final camState = _scanCameraCtrl.state;
 
     if (camState == ScanCameraState.initializing) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(color: Colors.white),
-            SizedBox(height: 16),
+            const CircularProgressIndicator(color: Colors.white),
+            const SizedBox(height: 16),
             Text(
-              'Đang khởi động camera...',
-              style: TextStyle(color: Colors.white70),
+              l10n.scanCameraInitializing,
+              style: const TextStyle(color: Colors.white70),
             ),
           ],
         ),
@@ -411,9 +424,8 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
       return _buildCameraError(
         icon: Icons.no_photography_outlined,
         message:
-            _scanCameraCtrl.errorMessage ??
-            'Quyền camera bị từ chối. Vào Cài đặt để cấp quyền.',
-        actionLabel: 'Dùng Thư viện',
+            _scanCameraCtrl.errorMessage ?? l10n.scanCameraPermissionDenied,
+        actionLabel: l10n.scanCameraUseGallery,
         onAction: _pickFromGallery,
       );
     }
@@ -421,8 +433,8 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
     if (camState == ScanCameraState.unavailable) {
       return _buildCameraError(
         icon: Icons.camera_outlined,
-        message: _scanCameraCtrl.errorMessage ?? 'Camera không khả dụng.',
-        actionLabel: 'Dùng Thư viện',
+        message: _scanCameraCtrl.errorMessage ?? l10n.scanCameraUnavailable,
+        actionLabel: l10n.scanCameraUseGallery,
         onAction: _pickFromGallery,
       );
     }
@@ -443,10 +455,18 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
               fit: BoxFit.cover,
               child: SizedBox(
                 width:
-                    _scanCameraCtrl.cameraController!.value.previewSize?.height ??
+                    _scanCameraCtrl
+                        .cameraController!
+                        .value
+                        .previewSize
+                        ?.height ??
                     1,
                 height:
-                    _scanCameraCtrl.cameraController!.value.previewSize?.width ??
+                    _scanCameraCtrl
+                        .cameraController!
+                        .value
+                        .previewSize
+                        ?.width ??
                     1,
                 child: CameraPreview(_scanCameraCtrl.cameraController!),
               ),
@@ -487,6 +507,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   }
 
   Widget _buildCameraTopBar() {
+    final l10n = AppLocalizations.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       color: Colors.black54,
@@ -495,13 +516,13 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           IconButton(
             onPressed: () => context.go('/create'),
             icon: const Icon(Icons.close, color: Colors.white),
-            tooltip: 'Đóng',
+            tooltip: l10n.scanCameraClose,
           ),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Chụp đơn thuốc',
+              l10n.scanCameraTitle,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
@@ -512,7 +533,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           IconButton(
             onPressed: _showGuide,
             icon: const Icon(Icons.help_outline, color: Colors.white70),
-            tooltip: 'Hướng dẫn',
+            tooltip: l10n.scanCameraGuide,
           ),
         ],
       ),
@@ -520,6 +541,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   }
 
   Widget _buildCameraBottomBar() {
+    final l10n = AppLocalizations.of(context);
     final isCapturing = _scanCameraCtrl.state == ScanCameraState.capturing;
 
     return Container(
@@ -535,10 +557,14 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
         mainAxisSize: MainAxisSize.min,
         children: [
           // Guidance hint
-          const Text(
-            'Đưa danh sách thuốc vào khung hình\nvà chạm màn hình để chụp',
+          Text(
+            l10n.scanCameraHint,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
+              height: 1.4,
+            ),
           ),
           const SizedBox(height: 18),
           Row(
@@ -547,7 +573,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
               // Gallery fallback
               _CameraIconBtn(
                 icon: Icons.photo_library_outlined,
-                label: 'Thư viện',
+                label: l10n.scanCameraGallery,
                 onTap: _pickFromGallery,
               ),
 
@@ -584,7 +610,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
               // Retry / manual entry
               _CameraIconBtn(
                 icon: Icons.edit_note_rounded,
-                label: 'Nhập tay',
+                label: l10n.scanCameraManual,
                 onTap: () => context.go('/create/edit'),
               ),
             ],
@@ -595,9 +621,12 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   }
 
   Widget _buildQualityFeedback() {
+    final l10n = AppLocalizations.of(context);
     final isReject = _qualityBanner == 'REJECT';
     final color = isReject ? AppColors.error : AppColors.warning;
-    final icon = isReject ? Icons.cancel_outlined : Icons.warning_amber_outlined;
+    final icon = isReject
+        ? Icons.cancel_outlined
+        : Icons.warning_amber_outlined;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -613,8 +642,14 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  _qualityGuidance ?? (isReject ? 'Ảnh có vấn đề, hãy chụp lại.' : 'Ảnh chưa tối ưu.'),
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                  _qualityGuidance ??
+                      (isReject
+                          ? l10n.scanCameraQualityReject
+                          : l10n.scanCameraQualityWarning),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               TextButton(
@@ -622,7 +657,10 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
                   _qualityBanner = null;
                   _qualityGuidance = null;
                 }),
-                child: const Text('OK', style: TextStyle(color: Colors.white)),
+                child: Text(
+                  l10n.commonOk,
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -635,8 +673,15 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
                   _qualityBanner = null;
                   _qualityGuidance = null;
                 }),
-                icon: const Icon(Icons.camera_alt_outlined, color: Colors.white, size: 16),
-                label: const Text('Chụp lại', style: TextStyle(color: Colors.white)),
+                icon: const Icon(
+                  Icons.camera_alt_outlined,
+                  color: Colors.white,
+                  size: 16,
+                ),
+                label: Text(
+                  l10n.scanCameraRetake,
+                  style: const TextStyle(color: Colors.white),
+                ),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Colors.white38),
                   padding: const EdgeInsets.symmetric(vertical: 8),
@@ -671,7 +716,10 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           ),
           TextButton(
             onPressed: () => setState(() => _error = null),
-            child: const Text('OK', style: TextStyle(color: Colors.white)),
+            child: Text(
+              AppLocalizations.of(context).commonOk,
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -679,6 +727,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   }
 
   void _showGuide() {
+    final l10n = AppLocalizations.of(context);
     showModalBottomSheet<void>(
       context: context,
       builder: (ctx) => SafeArea(
@@ -687,19 +736,22 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               Text(
-                'Hướng dẫn quét đơn thuốc',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
+                l10n.scanCameraGuideTitle,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
-              SizedBox(height: 12),
-              Text('1. Đưa vùng hiển thị tên thuốc vào giữa khung hình.'),
-              SizedBox(height: 8),
-              Text('2. Giữ máy ổn định, tránh chỗ quá chói sáng.'),
-              SizedBox(height: 8),
-              Text('3. Ứng dụng sẽ TỰ ĐỘNG CHỤP khi ảnh đủ rõ nét.'),
-              SizedBox(height: 8),
-              Text('4. Hoặc bạn có thể chạm vào màn hình / bấm nút để tự chụp.'),
+              const SizedBox(height: 12),
+              Text(l10n.scanCameraGuideStep1),
+              const SizedBox(height: 8),
+              Text(l10n.scanCameraGuideStep2),
+              const SizedBox(height: 8),
+              Text(l10n.scanCameraGuideStep3),
+              const SizedBox(height: 8),
+              Text(l10n.scanCameraGuideStep4),
             ],
           ),
         ),

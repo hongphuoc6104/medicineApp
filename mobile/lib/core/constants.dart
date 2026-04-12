@@ -1,8 +1,10 @@
+import '../l10n/app_localizations.dart';
+
 /// App-wide constants.
 class AppConstants {
   AppConstants._();
 
-  static const String appName = 'MedicineApp';
+  static String appTitle(AppLocalizations l10n) => l10n.appTitle;
 
   // API
   static const Duration apiTimeout = Duration(seconds: 30);
