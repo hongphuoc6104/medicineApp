@@ -1,33 +1,32 @@
-flowchart LR
+flowchart TD
     U["Người dùng"]
 
-    subgraph APP["Ứng dụng di động (Flutter)"]
-        direction TB
+    subgraph APP["Tầng 1 — Ứng dụng di động (Flutter)"]
+        direction LR
         A1["Quét đơn thuốc"]
-        A2["Rà soát danh sách thuốc"]
+        A2["Rà soát danh sách"]
         A3["Lập lịch dùng thuốc"]
         A4["Xem lịch hôm nay"]
     end
 
-    subgraph SRV["Máy chủ chính (Node.js + Express)"]
-        direction TB
-        S1["Xác thực người dùng"]
-        S2["Lưu lịch sử quét"]
-        S3["Quản lý kế hoạch dùng thuốc"]
-        S4["Nhật ký uống thuốc"]
+    subgraph SRV["Tầng 2 — Máy chủ chính (Node.js / Express)"]
+        direction LR
+        S1["Xác thực"]
+        S2["Lịch sử quét"]
+        S3["Kế hoạch"]
+        S4["Nhật ký uống"]
     end
 
-    subgraph AI["Dịch vụ trí tuệ nhân tạo (FastAPI)"]
-        direction TB
-        P1["Phát hiện vùng đơn thuốc"]
-        P2["Tiền xử lý ảnh"]
-        P3["Nhận dạng ký tự quang học"]
-        P4["Trích xuất tên thuốc"]
-        P5["Tra cứu cơ sở dữ liệu thuốc"]
+    subgraph AI["Tầng 3 — Dịch vụ AI (FastAPI / GPU)"]
+        direction LR
+        P1["YOLO\nDetect"]
+        P2["OCR\n(PaddleOCR + VietOCR)"]
+        P3["NER\n(PhoBERT)"]
+        P4["Tra cứu\nthuốc"]
     end
 
     DB[("PostgreSQL")]
-    KG[("Cơ sở dữ liệu thuốc\n& Mô hình AI")]
+    KG[("CSDL thuốc\n& Mô hình AI")]
 
     U --> APP
     APP <--> SRV
@@ -37,7 +36,6 @@ flowchart LR
 
     classDef userNode fill:#fff7e8,stroke:#b7791f,stroke-width:1.5px,color:#111
     classDef dbNode fill:#f0f4ff,stroke:#2457a5,stroke-width:1.5px,color:#111
-    classDef subBox fill:#f9fbfd,stroke:#8aa4c8,stroke-width:1px,color:#333
 
     class U userNode
     class DB,KG dbNode

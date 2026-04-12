@@ -2,17 +2,17 @@
 
 ## Initiative active
 
-`Việt hóa toàn bộ phần hiển thị cho người dùng trong app`
+`Ổn định và tái cấu trúc app nhắc uống thuốc`
 
 ---
 
 ## 0. Lát cắt active hiện tại
 
-`MVT-1 — Manual verify gate cho core flow sau L10N-2 clean pass`
+`REL-1A — Harden local startup và scan runtime detection`
 
-Mục tiêu của lát cắt này là giữ nguyên trạng thái code hiện tại, để user manual verify core flow chính của app sau khi `L10N-2` đã clean pass.
+Mục tiêu của lát cắt này là làm cho local dev path không còn silently rơi sang runtime sai sau cleanup hoặc sau khi port bị chiếm, từ đó giảm lỗi kiểu `không kết nối được với máy chủ` hoặc `scan 0 drugs` do hạ tầng local bị lệch.
 
-Không mở `L10N-3A` cho đến khi manual verify pass hoặc có kết luận rõ ràng rằng cần một hotfix nhỏ trước.
+Lát cắt này chỉ xử lý reliability baseline ở startup/runtime. Không xử lý home logic, branding, history hoặc UX create flow.
 
 ---
 
@@ -23,18 +23,11 @@ Không mở `L10N-3A` cho đến khi manual verify pass hoặc có kết luận 
 3. `APP_ACTIVE_GENERAL_PLAN.md`
 4. `APP_ACTIVE_DETAILED_PLAN.md`
 5. `docs/phase_a_debug_runbook.md`
-6. `mobile/lib/l10n/app_vi.arb`
-7. `mobile/lib/app.dart`
-8. `mobile/lib/shared/widgets/main_shell.dart`
-9. `mobile/lib/features/auth/presentation/login_screen.dart`
-10. `mobile/lib/features/auth/presentation/register_screen.dart`
-11. `mobile/lib/features/home/presentation/home_screen.dart`
-12. `mobile/lib/features/create_plan/presentation/create_plan_screen.dart`
-13. `mobile/lib/features/create_plan/presentation/scan_camera_screen.dart`
-14. `mobile/lib/features/create_plan/presentation/scan_review_screen.dart`
-15. `mobile/lib/features/create_plan/presentation/edit_drugs_screen.dart`
-16. `mobile/lib/features/create_plan/presentation/set_schedule_screen.dart`
-17. `mobile/lib/features/create_plan/presentation/widgets/drug_entry_sheet.dart`
+6. `CLEANUP_REPORT_2026_04_12.md`
+7. `dev.sh`
+8. `scripts/debug_phase_a_checks.sh`
+9. `server/main.py`
+10. `docker-compose.yml`
 
 ---
 
@@ -42,56 +35,50 @@ Không mở `L10N-3A` cho đến khi manual verify pass hoặc có kết luận 
 
 ### In scope
 
-- chuẩn bị checklist manual verify cho user
-- rà lại đúng các màn thuộc core flow đã được Việt hóa
-- tổng hợp expected outcome, pass/fail criteria và residual risks để user test thủ công
+- `dev.sh`
+- `scripts/debug_phase_a_checks.sh`
+- `server/main.py`
+- `docs/phase_a_debug_runbook.md`
 
 ### Out of scope
 
-- mọi code edit vào app ở lát cắt này
+- mọi file mobile UI
 - `server-node/**`
-- `server/**`
 - `core/**`
-- mọi thay đổi schema, database, contract API hoặc business logic chỉ để phục vụ việc dịch chữ
-- `mobile/lib/features/drug/**`
-- `mobile/lib/features/plan/**`
-- `mobile/lib/features/history/**`
-- `mobile/lib/features/settings/**`
-- `mobile/lib/features/pill_verification/**`
 - `scripts/run_pipeline.py`
+- mọi thay đổi business logic scan / OCR / NER
+- mọi thay đổi branding, history, home logic, notifications, create flow UX
 
 ---
 
 ## 3. Bối cảnh đã chốt trước khi vào lát cắt này
 
-- `L10N-1` đã hoàn tất: foundation localization + shared copy
-- `L10N-2A` đã hoàn tất: auth + home + create entry
-- `L10N-2B` đã hoàn tất phần implement chính và đã qua review
-- `L10N-2B-HF1` đã hoàn tất:
-  1. bỏ 2 label `OK` hard-code trong `scan_camera_screen.dart`
-  2. bỏ summary line ghép chuỗi thô trong `set_schedule_screen.dart`
-- `cd mobile && flutter gen-l10n` đã pass
-- `cd mobile && flutter analyze` đã pass
-- `cd mobile && flutter test` đã pass
-- còn 1 residual risk đã biết: `guidance` do server trả về trong scan flow có thể không hoàn toàn localize nếu backend trả text ngoài chuẩn UI
+- `venv/` đã bị xóa trong cleanup
+- `dev.sh` cũ hard-code `venv/bin/activate` và fail giữa chừng
+- local Python AI đã từng không lên, khiến app-path scan rơi sang runtime sai
+- container `medicineapp_ai` từng giữ `:8000` và trả OCR rỗng
+- local Python AI runtime hiện đã được phục hồi thủ công để user test tiếp, nhưng startup path và debug path vẫn chưa được harden ở mức code/script
+- mục tiêu của slice này là làm cho vấn đề đó khó tái diễn và dễ phát hiện hơn
 
 ---
 
 ## 4. Việc phải làm trong lát cắt này
 
-1. chốt checklist manual verify cho user theo đúng flow chính
-2. mô tả expected text/behavior cần nhìn thấy ở từng màn để user test nhanh
-3. nêu rõ pass condition để được mở `L10N-3A`
-4. nêu rõ fail condition để mở lại hotfix nhỏ thay vì nhảy sang slice mới
+1. thêm guard rõ ràng trong `dev.sh` khi thiếu `venv/` hoặc local interpreter phù hợp
+2. thêm check xung đột port `8000` để không silently chạy nhầm runtime/container cũ
+3. cải thiện tín hiệu health/runtime ở `server/main.py` để debug script và dev path phân biệt được trạng thái scan runtime rõ hơn
+4. cập nhật `scripts/debug_phase_a_checks.sh` để failure mode về local Python runtime rõ ràng hơn
+5. cập nhật `docs/phase_a_debug_runbook.md` để phản ánh startup path sau cleanup và các dấu hiệu lỗi runtime đúng tầng
 
 ---
 
 ## 5. Tiêu chí xong
 
-- user có checklist test thủ công rõ ràng và đủ ngắn để đi hết core flow
-- expected outcome ở từng bước đủ rõ để phân biệt pass/fail
-- planner có thể dùng kết quả manual verify để quyết định mở `L10N-3A` hoặc hotfix nhỏ
-- không phát sinh code edit trong lát cắt này
+- `bash dev.sh` khi thiếu `venv/` phải fail fast với hướng dẫn rõ ràng
+- `bash dev.sh` khi `:8000` bị chiếm phải báo đúng conflict thay vì để app-path đi sang runtime sai
+- `scripts/debug_phase_a_checks.sh` phải báo rõ nếu local AI/runtime path không sẵn sàng
+- `curl /api/health` của Python AI phải cho thêm tín hiệu đủ để debug runtime tốt hơn hiện tại
+- không phát sinh sửa ngoài 4 file đã chốt
 
 ---
 
@@ -99,39 +86,50 @@ Không mở `L10N-3A` cho đến khi manual verify pass hoặc có kết luận 
 
 Phải dừng nếu:
 
-1. để trả lời manual gate mà phải sửa code mới
-2. phát hiện issue mới nhưng chưa xác định được là copy/UI hay logic/contract
-3. cần sửa `scripts/run_pipeline.py` hoặc code backend/server để tiếp tục
-4. kết quả manual verify mâu thuẫn hoặc không đủ để quyết định mở slice tiếp theo
+1. để hoàn thành slice này mà phải sửa `core/pipeline.py` hoặc `scripts/run_pipeline.py`
+2. cần thay đổi contract scan giữa mobile / node / python
+3. bắt đầu lan sang mobile UI hoặc create flow UX
+4. failure nằm ở package/runtime host ngoài phạm vi script hardening và chưa có đường vá nhỏ an toàn
+
+Khi dừng phải báo:
+
+1. đã làm gì
+2. file đã sửa
+3. test nào đã chạy
+4. blocker là gì
+5. bước nhỏ nhất tiếp theo
 
 ---
 
 ## 7. Test bắt buộc
 
-### Baseline đã xanh trước khi user test
+### Runtime / scripts
 
 ```bash
-cd mobile && flutter gen-l10n
-cd mobile && flutter analyze
-cd mobile && flutter test
+bash scripts/debug_phase_a_checks.sh --quick
+curl http://127.0.0.1:8000/api/health
+curl http://127.0.0.1:3001/api/health
 ```
 
-### Manual checkpoint user phải chạy
+### Manual smoke sau slice này
 
-1. mở app và đi qua `Đăng nhập/Đăng ký -> Trang chủ -> Tạo kế hoạch`
-2. vào `Quét đơn thuốc`, kiểm tra guide/banner/error không còn English hoặc không dấu
-3. sang `Xác nhận danh sách thuốc`, kiểm tra title, CTA, search hint và empty state đọc tự nhiên
-4. sang `Lập lịch`, kiểm tra section labels, snackbar và dòng summary thuốc đọc tự nhiên bằng tiếng Việt
-5. xác nhận toàn flow không có regression rõ ràng do localization
+1. chạy `bash dev.sh`
+2. xác nhận local stack lên đúng
+3. quét lại 1 ảnh known-good trên điện thoại
+4. xác nhận app không còn rơi vào lỗi runtime silent kiểu `0 drugs` do startup path lệch
 
 ---
 
 ## 8. Sau lát cắt này mở gì tiếp
 
-Chỉ sau khi user báo manual verify pass thì mới mở:
+Song song với execution của `REL-1A`, planner sẽ lấy kết quả từ các track đọc/spec:
 
-- `L10N-3A — Drug + Plan`
-- sau đó mới tới `L10N-3B — History + Settings`
-- `L10N-4` vẫn để hàng chờ cuối
+- `IA-0A` — home/create/history redesign spec
+- `LOCAL-0A` — local-first/reminder architecture audit
+- `BRAND-0A` — branding/copy/naming shortlist
 
-Nếu user báo lỗi ở core flow, phải mở đúng một hotfix nhỏ theo màn bị lỗi thay vì mở `L10N-3A`.
+Sau khi `REL-1A` xong, slice code kế tiếp nên là:
+
+- `REL-1B — Mobile network diagnostics và reconnect UX`
+
+Chỉ sau khi reliability baseline ổn mới nên mở mạnh sang `BRAND-1`, `HOME-1`, `FLOW-1A`.

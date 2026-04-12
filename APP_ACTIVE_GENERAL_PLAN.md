@@ -2,145 +2,226 @@
 
 ## Initiative hiện tại
 
-`Việt hóa toàn bộ phần hiển thị cho người dùng trong app`
+`Ổn định và tái cấu trúc app nhắc uống thuốc`
 
-Mục tiêu của initiative này là đưa toàn bộ app Flutter về một mặt chữ thống nhất, dễ hiểu và đúng tiếng Việt có dấu:
+Mục tiêu của initiative này là đưa app từ trạng thái `scan demo + UI đang vá dần` sang một sản phẩm rõ ràng, ổn định và dễ hiểu cho nhu cầu `lập lịch và nhắc uống thuốc`.
 
-- mọi tiêu đề, nút bấm, helper text, dialog, snackbar, empty state, error state và notification phải là tiếng Việt
-- loại bỏ các chuỗi tiếng Anh hoặc tiếng Việt không dấu như `Thong tin thuoc`, `Da dong bo...`, `Den gio uong thuoc`
-- gom text về một lớp quản lý tập trung thay vì để hard-code rải rác ở từng màn
+Kết quả mong muốn ở mức sản phẩm:
+
+- app local/dev path ổn định, không còn lỗi kiểu `không kết nối được với máy chủ` một cách mơ hồ
+- tên app, copy, launcher label và background/splash nhất quán theo một brand tiếng Việt ngắn gọn
+- màn Home chỉ ưu tiên thuốc `tới giờ uống` và `sắp tới giờ`, không dàn đều toàn bộ dữ liệu trong ngày
+- luồng `Tạo kế hoạch` rõ ràng hơn cho 3 đường: quét đơn, nhập thủ công, dùng lại dữ liệu cũ
+- lịch sử phản ánh hành vi dùng thuốc hợp lý hơn, không để `lịch sử quét` làm trung tâm chính
+- reminder phải nổi ngoài điện thoại khi tới giờ uống
+- các phần phù hợp sẽ đi theo hướng local-first, nhưng scan AI vẫn giữ server-side ở giai đoạn này
 
 ---
 
-## Tiến độ hiện tại
+## Baseline hiện có
 
-### Đã hoàn thành
+### Đã có nền tốt
 
-- `L10N-1` — Foundation localization + shared copy
-- `L10N-2A` — Auth + Home + Create entry
-- `L10N-2B` — Scan + Review + Edit drugs + Schedule đã localize xong, đã qua review và đã được clean pass bằng hotfix nhỏ
+- localization foundation đã có (`L10N-1`)
+- core flow copy đã được làm đáng kể (`L10N-2`)
+- local reminder scheduling cơ bản đã có trong mobile
+- offline queue cho thao tác đánh dấu uống thuốc đã có
+- local Python AI runtime đã được phục hồi để tiếp tục manual verify
 
-### Đang active
+### Vì sao cần reset initiative
 
-- `MVT-1` — Manual verify gate cho core flow sau khi `L10N-2` đã clean pass
+Manual verify vừa qua cho thấy vấn đề không còn nằm trong phạm vi `dịch chữ` nữa.
 
-### Chưa mở
+Các lỗi và khoảng trống hiện tại nằm ở nhiều tầng cùng lúc:
 
-- `L10N-3A` — Drug + Plan
-- `L10N-3B` — History + Settings
-- `L10N-4` — Pill verification + final sweep
-
-### Gating trước khi mở lát cắt tiếp theo
-
-- user phải manual verify lại flow chính `Đăng nhập/Đăng ký -> Trang chủ -> Tạo kế hoạch -> Quét đơn thuốc -> Xác nhận -> Lập lịch`
-- nếu manual verify pass mới mở `L10N-3A`
-- nếu manual verify fail thì phải mở hotfix nhỏ đúng màn bị lỗi, không được nhảy thẳng sang `L10N-3A`
+- runtime / dev reliability
+- home logic
+- history information architecture
+- create flow UX
+- branding / copy / app naming
+- notification delivery
+- local-first data strategy
 
 ---
 
 ## Quyết định sản phẩm đã chốt
 
-### 1. Scope là phần hiển thị user-facing của app
+### 1. Trọng tâm vẫn là Phase A app flow
 
-- ưu tiên `mobile/`
-- không đổi schema, route, contract hay nghiệp vụ backend chỉ để dịch chữ
-- không chạm `scripts/run_pipeline.py`
+- ưu tiên flow chính: `quét đơn -> xác nhận thuốc -> lập lịch -> lưu -> nhắc uống`
+- không để Phase B kéo lệch roadmap chính
 
-### 2. Tiếng Việt có dấu là mặc định bắt buộc
+### 2. Scan AI vẫn giữ server-side ở giai đoạn này
 
-- không để English lẫn trong UI đang ship cho người dùng
-- không để copy kiểu ASCII không dấu trên các màn đã sửa
+- không cố kéo OCR/NER về local device trong đợt này
+- local-first chỉ áp dụng cho phần phù hợp như plan snapshot, today schedule, logs, reminders
 
-### 3. Phase B logic vẫn đứng ngoài initiative này
+### 3. Home phải ưu tiên hành động đúng thời điểm
 
-- chỉ được sửa copy ở các màn Phase B đang lộ trong app nếu cần
-- không mở thêm research hay thay đổi logic verification
+- chỉ foreground các thuốc `tới giờ uống` và `sắp tới giờ`
+- phần đã uống / scan history / CTA phụ không được lấn át nhiệm vụ chính
+
+### 4. History chính phải là lịch sử dùng thuốc
+
+- `lịch sử quét` trở thành lớp phụ để reuse/audit
+- `lịch sử uống thuốc` mới là trọng tâm sản phẩm lâu dài
+
+### 5. Branding phải đổi sang tên tiếng Việt ngắn, dễ hiểu
+
+- working direction trong plan: app name phải xoay quanh `lịch / nhắc uống thuốc`
+- tên cuối cùng sẽ được user chốt trước khi implement branding slice
+
+### 6. Notification ngoài app là yêu cầu bắt buộc
+
+- không chỉ schedule trong app nội bộ
+- phải có đường thông báo nổi ra ngoài thiết bị khi tới giờ uống
 
 ---
 
 ## Vấn đề tổng quát cần giải quyết
 
-### 1. String user-facing đang hard-code rải rác
+### Nhóm 1 — Reliability và local dev/runtime
 
-- text nằm phân tán trong nhiều screen, notifier và service
-- sửa một chỗ khó đảm bảo nhất quán toàn app
+- sau cleanup, local runtime và startup path đã từng gãy
+- lỗi mạng trong app hiện lên nhưng không đủ giúp user/dev biết tầng nào hỏng
 
-### 2. App chưa có nền localization thật sự
+### Nhóm 2 — Branding và copy sản phẩm
 
-- đã có `intl` nhưng chưa có `flutter_localizations`, delegates hay ARB catalog
-- `MaterialApp` chưa khai báo locale support
+- app đang có nhiều tên khác nhau: `medicine_app`, `MedicineApp`, `Thuốc Của Tôi`
+- còn nhiều câu copy vô nghĩa hoặc không cần thiết
+- còn sót nhiều chỗ tiếng Việt không dấu
 
-### 3. Copy hiện tại bị pha tạp
+### Nhóm 3 — Logic màn Home chưa đúng trọng tâm
 
-- có chỗ tiếng Việt có dấu
-- có chỗ tiếng Việt không dấu
-- có chỗ để English kỹ thuật hoặc message thô
+- chưa ưu tiên rõ `tới giờ` và `sắp tới giờ`
+- còn lộ CTA và logic Phase B ở home path
 
-### 4. Error/status/notification copy chưa được chuẩn hóa
+### Nhóm 4 — Luồng Tạo kế hoạch chưa mạch lạc
 
-- cùng một hành vi nhưng mỗi màn dùng một kiểu câu khác nhau
-- một số lỗi đang lộ raw text kém thân thiện
+- `Dùng lại lịch sử` đang đẩy sang history chung, không phải reuse flow đúng nghĩa
+- nhập thủ công còn mỏng và UI/UX chưa hợp lý
+- nhiều chỗ vẫn mang cảm giác `scan-shaped` dù đi manual path
+
+### Nhóm 5 — History chưa phản ánh mô hình sản phẩm mong muốn
+
+- lịch sử quét đang chiếm vai trò quá lớn
+- thiếu một lịch sử hành vi dùng thuốc rõ ràng và có ích hơn cho user
+
+### Nhóm 6 — Reminder chưa đủ tin cậy ngoài app
+
+- mobile đã có local notifications cơ bản
+- nhưng permission, reboot-reschedule, startup integrity và delivery path chưa đủ chặt
+
+### Nhóm 7 — Local-first còn quá mỏng
+
+- hiện mới có local reminder scheduling và offline queue hẹp cho dose logs
+- home, plans, history vẫn phụ thuộc backend là nguồn sự thật duy nhất
 
 ---
 
 ## Nhóm ưu tiên
 
-### Nhóm A — Foundation localization
+### Nhóm A — Reliability baseline
 
-- dựng hạ tầng `l10n` cho Flutter
-- tạo catalog text tập trung
-- trạng thái: `completed`
+- startup/runtime local
+- network/dev diagnostics
+- trạng thái: `active`
 
-### Nhóm B — Global chrome và core flow
+### Nhóm B — Product framing và branding
 
-- app shell, điều hướng, notification
-- auth, home, create plan, scan, review, schedule
-- trạng thái: `code_complete_waiting_user_manual_verify`
-
-### Nhóm C — Surface phụ nhưng vẫn user-facing
-
-- drug search/detail
-- plan list/detail
-- history
-- settings
+- app naming
+- copy cleanup
+- launcher/splash/background
 - trạng thái: `pending`
 
-### Nhóm D — Pill verification và cleanup cuối
+### Nhóm C — Home logic
 
-- copy ở các màn pill verification đang lộ trong app
-- sweep toàn bộ string còn sót lại
+- due now
+- upcoming
+- giảm nhiễu
+- trạng thái: `pending`
+
+### Nhóm D — Create flow UX
+
+- entry hub
+- manual entry
+- reuse flow
+- trạng thái: `pending`
+
+### Nhóm E — History model
+
+- medication behavior history
+- scan history làm lớp phụ
+- trạng thái: `pending`
+
+### Nhóm F — Reminder delivery
+
+- notification nổi ngoài app
+- permission / reschedule / integrity
+- trạng thái: `pending`
+
+### Nhóm G — Local-first data
+
+- local plan snapshot
+- today schedule cache
+- logs cache / sync
 - trạng thái: `pending`
 
 ---
 
 ## Thứ tự xử lý lớn
 
-1. user manual verify lại core flow của Phase A app path sau `L10N-2` clean pass
-2. nếu pass, việt hóa `drug / plan` trong `L10N-3A`
-3. việt hóa `history / settings` trong `L10N-3B`
-4. review sâu các màn đã làm và rà residual risks
-5. việt hóa `pill verification` và chạy final sweep trong `L10N-4`
+1. `REL-1A` — harden local startup và scan runtime detection
+2. `REL-1B` — cải thiện network diagnostics / reconnect UX ở mobile
+3. `BRAND-1` — chốt tên app, copy, launcher/splash/background
+4. `HOME-1` — làm lại Home theo `tới giờ / sắp tới giờ`
+5. `FLOW-1A` — thiết kế lại entry hub và reuse history flow
+6. `FLOW-1B` — sửa manual entry UX
+7. `HISTORY-1` — thiết kế lại lịch sử
+8. `REMIND-1` — hoàn thiện notification ngoài app
+9. `LOCAL-1` — local-first cho plans / home / logs phù hợp
 
 ---
 
-## Quy tắc nghiệm thu trong initiative này
+## Tracks song song được phép chạy ngay
 
-- `MaterialApp` phải có localization delegates và locale support rõ ràng
-- mọi text user-facing trong các file đã chạm phải đi qua lớp localization hoặc message catalog tập trung
-- không còn English hoặc tiếng Việt không dấu trên luồng chính sau khi đóng `L10N-2`
-- `cd mobile && flutter analyze` và `cd mobile && flutter test` phải pass
-- sau khi `L10N-2` được đóng sạch phải manual verify lại các màn chính của Phase A app path
+### Track R1 — Reliability implementation
 
-### Residual risk đã biết
+- model chính: `GPT-5.3 Codex`
+- mục tiêu: implement `REL-1A`
 
-- `guidance` do server trả về ở scan flow có thể vẫn hiển thị text không hoàn toàn localize nếu backend trả chuỗi ngoài chuẩn UI. Điểm này được ghi nhận nhưng không chặn việc mở `L10N-3A` nếu manual verify flow chính vẫn ổn.
+### Track S1 — UX/IA spec
 
-### Tiêu chí hoàn tất general plan
+- model chính: `Claude Sonnet 4.6 Thinking`
+- mục tiêu: spec cho home / create / history / manual / reuse
 
-- `L10N-1`, `L10N-2`, `L10N-3`, `L10N-4` đều hoàn tất
-- không còn chuỗi user-facing tiếng Anh hoặc không dấu trên các route active
-- user xác nhận nghiệm thu hướng Việt hóa UI này trước khi archive
+### Track A1 — Local-first / reminder architecture audit
 
-Plan active trước đó được park tại:
+- model chính: `Gemini 3.1 Pro High`
+- mục tiêu: map phụ thuộc và đề xuất slice kỹ thuật cho local-first + notifications
 
-- `archive/plan_bin/2026-04-12_prescription-plan-group-redesign_superseded/`
+### Track T1 — Branding / copy / remaining issue inventory
+
+- model chính: `Gemini 3 Flash`
+- mục tiêu: triage nhanh naming/copy/asset surface và các chuỗi còn lệch chuẩn
+
+---
+
+## Quy tắc nghiệm thu của initiative này
+
+- local dev path phải lên ổn định cho mobile manual testing
+- app không còn dùng brand/copy mâu thuẫn giữa launcher, login, home và shell
+- các màn user-facing chính không còn tiếng Việt không dấu
+- Home phải giải quyết đúng nhu cầu `uống ngay bây giờ` và `sắp đến giờ`
+- create flow phải mạch lạc cho `scan / manual / reuse`
+- history phải có cấu trúc hợp lý hơn cho việc dùng thuốc hằng ngày
+- notification phải hiện ngoài app khi tới giờ uống
+- local-first phải tăng độ bền của app ở các phần phù hợp mà không kéo scan AI về local
+
+---
+
+## Tiêu chí hoàn tất general plan
+
+- `REL-1`, `BRAND-1`, `HOME-1`, `FLOW-1`, `HISTORY-1`, `REMIND-1`, `LOCAL-1` đều hoàn tất
+- user manual verify lại flow chính và xác nhận app đã rõ ràng, ổn định hơn theo hướng `nhắc uống thuốc`
+- plan active cũ về localization chỉ còn là baseline, không còn blocker chưa xử lý riêng

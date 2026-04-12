@@ -1,14 +1,14 @@
 flowchart TD
-    A["📷 Ảnh đơn thuốc đầu vào"]
-    B["Bước 1: Phát hiện và cắt vùng đơn\n(YOLO)"]
-    C["Bước 2: Tiền xử lý ảnh\n(Chỉnh nghiêng · Hiệu chỉnh hướng)"]
+    A["Ảnh đơn thuốc đầu vào"]
+    B["Bước 1: Phát hiện và cắt vùng đơn thuốc\n(YOLO Detect)"]
+    C["Bước 2: Tiền xử lý ảnh\n(Chỉnh nghiêng · Hiệu chỉnh hướng AI)"]
     QG{"Kiểm tra chất lượng ảnh"}
-    REJ["Từ chối — Yêu cầu\nchụp lại"]
+    REJ["Từ chối — Yêu cầu chụp lại"]
     D["Bước 3: Nhận dạng ký tự quang học\n(PaddleOCR + VietOCR)"]
     E["Bước 4: Trích xuất tên thuốc\n(PhoBERT NER)"]
-    F["Bước 5: Tra cứu và chuẩn hóa tên thuốc\n(Cơ sở dữ liệu 9 284 thuốc)"]
-    G["📋 Danh sách thuốc\n(để người dùng rà soát)"]
-    H["🗓️ Lập lịch dùng thuốc"]
+    F["Bước 5: Tra cứu và chuẩn hóa tên thuốc\n(Cơ sở dữ liệu 9.284 thuốc)"]
+    G["Danh sách thuốc\n(để người dùng rà soát)"]
+    H["Lập lịch dùng thuốc"]
 
     A --> B --> C --> QG
     QG -->|"Đạt yêu cầu"| D

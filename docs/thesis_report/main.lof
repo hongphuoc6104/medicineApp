@@ -4,13 +4,20 @@
 \babel@toc {vietnamese}{}\relax 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Ảnh đơn thuốc thực tế làm đầu vào của hệ thống (đã che thông tin cá nhân)}}{6}{figure.caption.9}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Sơ đồ use case mức hệ thống}}{10}{figure.caption.11}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Kiến trúc tổng thể của hệ thống}}{11}{figure.caption.12}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Sơ đồ tuần tự chức năng quét đơn thuốc}}{12}{figure.caption.13}%
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Sơ đồ luồng xử lý nhận diện đơn thuốc}}{13}{figure.caption.14}%
-\contentsline {figure}{\numberline {3.5}{\ignorespaces Sơ đồ mô hình thực thể liên kết (ERD) cho luồng dữ liệu chính}}{15}{figure.caption.16}%
-\contentsline {figure}{\numberline {3.6}{\ignorespaces Sơ đồ hoạt động cho luồng tạo kế hoạch dùng thuốc}}{16}{figure.caption.17}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Sơ đồ use case mức hệ thống}}{11}{figure.caption.12}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Kiến trúc tổng thể của hệ thống}}{12}{figure.caption.13}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Sơ đồ tuần tự chức năng quét đơn thuốc}}{13}{figure.caption.14}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Sơ đồ luồng xử lý nhận diện đơn thuốc}}{14}{figure.caption.15}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Sơ đồ mô hình thực thể liên kết (ERD) cho luồng dữ liệu chính}}{16}{figure.caption.17}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Sơ đồ hoạt động cho luồng tạo kế hoạch dùng thuốc}}{17}{figure.caption.18}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Kết quả ảnh đơn thuốc sau thao tác cắt nền và nắn chỉnh độ nghiêng}}{20}{figure.caption.20}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Màn hình quét đơn thuốc trên ứng dụng di động}}{22}{figure.caption.22}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Màn hình rà soát danh sách thuốc sau khi quét (có thể chỉnh sửa, thêm hoặc xóa từng mục)}}{22}{figure.caption.23}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Màn hình thiết lập lịch dùng thuốc (chọn khung giờ và số lần uống mỗi ngày)}}{23}{figure.caption.24}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Màn hình trang chủ hiển thị tóm tắt liều uống trong ngày và lịch tuần}}{23}{figure.caption.25}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Minh họa các đa giác phân định vùng văn bản được tìm thấy dựa trên ảnh đầu vào}}{27}{figure.caption.27}%
 \addvspace {10\p@ }
