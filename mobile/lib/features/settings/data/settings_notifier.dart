@@ -27,24 +27,46 @@ class SettingsNotifier extends AsyncNotifier<SettingsState> {
     return SettingsState(remindersEnabled: enabled);
   }
 
-  Future<void> setRemindersEnabled(bool enabled) async {
-    final repo = ref.read(settingsRepositoryProvider);
-    await repo.setRemindersEnabled(enabled);
-    final notificationService = ref.read(notificationServiceProvider);
-    if (!enabled) {
-      await notificationService.cancelAllNotifications();
-    } else {
-      final plansAsync = ref.read(planNotifierProvider);
-      final cachedPlans = plansAsync.asData?.value.plans;
-      if (cachedPlans != null) {
-        await notificationService.rescheduleAllPlans(cachedPlans);
-      } else {
-        final planRepository = ref.read(planRepositoryProvider);
-        final plans = await planRepository.getPlans(activeOnly: true);
-        await notificationService.rescheduleAllPlans(plans);
+  Future<bool> setRemindersEnabled(bool enabled) async {
+    state = AsyncValue.data(state.value!.copyWith(isLoading: true));
+    try {
+      final notificationService = ref.read(notificationServiceProvider);
+
+      if (enabled) {
+        final hasPerm = await notificationService.hasPermissions();
+        if (!hasPerm) {
+          await notificationService.requestPermissions();
+          final hasPermAfter = await notificationService.hasPermissions();
+          if (!hasPermAfter) {
+            state = AsyncValue.data(state.value!.copyWith(isLoading: false));
+            return false;
+          }
+        }
       }
+
+      final repo = ref.read(settingsRepositoryProvider);
+      await repo.setRemindersEnabled(enabled);
+      
+      if (!enabled) {
+        await notificationService.cancelAllNotifications();
+      } else {
+        final plansAsync = ref.read(planNotifierProvider);
+        final cachedPlans = plansAsync.asData?.value.plans;
+        if (cachedPlans != null) {
+          await notificationService.rescheduleAllPlans(cachedPlans);
+        } else {
+          final planRepository = ref.read(planRepositoryProvider);
+          final plans = await planRepository.getPlans(activeOnly: true);
+          await notificationService.rescheduleAllPlans(plans);
+        }
+      }
+      
+      state = AsyncValue.data(SettingsState(remindersEnabled: enabled, isLoading: false));
+      return true;
+    } catch (e) {
+      state = AsyncValue.data(state.value!.copyWith(isLoading: false));
+      return false;
     }
-    state = AsyncValue.data(SettingsState(remindersEnabled: enabled));
   }
 }
 
