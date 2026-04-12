@@ -1,11 +1,26 @@
 flowchart TD
-    A["Anh don thuoc"] --> B["Phat hien va cat vung don"]
-    B --> C["Tien xu ly anh\nchinh nghieng va huong anh"]
-    C --> D["OCR\nPaddleOCR + VietOCR"]
-    D --> E["Tach ten thuoc\nPhoBERT"]
-    E --> F["Doi sanh co so du lieu thuoc"]
-    F --> G["Danh sach thuoc de nguoi dung ra soat"]
-    G --> H["Lap lich dung thuoc"]
+    A["📷 Ảnh đơn thuốc đầu vào"]
+    B["Bước 1: Phát hiện và cắt vùng đơn\n(YOLO)"]
+    C["Bước 2: Tiền xử lý ảnh\n(Chỉnh nghiêng · Hiệu chỉnh hướng)"]
+    QG{"Kiểm tra chất lượng ảnh"}
+    REJ["Từ chối — Yêu cầu\nchụp lại"]
+    D["Bước 3: Nhận dạng ký tự quang học\n(PaddleOCR + VietOCR)"]
+    E["Bước 4: Trích xuất tên thuốc\n(PhoBERT NER)"]
+    F["Bước 5: Tra cứu và chuẩn hóa tên thuốc\n(Cơ sở dữ liệu 9 284 thuốc)"]
+    G["📋 Danh sách thuốc\n(để người dùng rà soát)"]
+    H["🗓️ Lập lịch dùng thuốc"]
 
-    classDef box fill:#f6fbf8,stroke:#2d7a46,stroke-width:1.4px,color:#111;
-    class A,B,C,D,E,F,G,H box;
+    A --> B --> C --> QG
+    QG -->|"Đạt yêu cầu"| D
+    QG -->|"Quá mờ / chói"| REJ
+    D --> E --> F --> G --> H
+
+    classDef mainStep fill:#f0f7f4,stroke:#2d7a46,stroke-width:1.4px,color:#111
+    classDef decision fill:#fff8e1,stroke:#b7791f,stroke-width:1.4px,color:#111
+    classDef reject fill:#fff3f3,stroke:#c53030,stroke-width:1.2px,color:#c53030
+    classDef endpoint fill:#e8f4ff,stroke:#2457a5,stroke-width:1.4px,color:#111
+
+    class A,B,C,D,E,F mainStep
+    class QG decision
+    class REJ reject
+    class G,H endpoint

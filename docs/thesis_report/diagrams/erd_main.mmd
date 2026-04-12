@@ -1,27 +1,29 @@
 erDiagram
-    USERS ||--o{ SCANS : tao
-    USERS ||--o{ SCAN_SESSIONS : tao
-    USERS ||--o{ PRESCRIPTION_PLANS : so_huu
+    USERS ||--o{ SCANS : "tạo"
+    USERS ||--o{ SCAN_SESSIONS : "tạo"
+    USERS ||--o{ PRESCRIPTION_PLANS : "sở hữu"
 
-    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_DRUGS : gom
-    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_SLOTS : gom
-    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_LOGS : ghi_nhat_ky
+    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_DRUGS : "gồm"
+    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_SLOTS : "gồm"
+    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_LOGS : "ghi nhật ký"
 
-    PRESCRIPTION_PLAN_SLOTS ||--o{ PRESCRIPTION_PLAN_SLOT_DRUGS : chua
-    PRESCRIPTION_PLAN_DRUGS ||--o{ PRESCRIPTION_PLAN_SLOT_DRUGS : duoc_gan
+    PRESCRIPTION_PLAN_SLOTS ||--o{ PRESCRIPTION_PLAN_SLOT_DRUGS : "chứa"
+    PRESCRIPTION_PLAN_DRUGS ||--o{ PRESCRIPTION_PLAN_SLOT_DRUGS : "được gán"
 
     USERS {
         uuid id PK
-        varchar email
+        varchar email UK
         varchar name
+        timestamptz created_at
     }
 
     SCANS {
         uuid id PK
         uuid user_id FK
         uuid session_id FK
-        jsonb result
+        varchar quality_status
         integer drug_count
+        jsonb result
         timestamptz scanned_at
     }
 
@@ -31,15 +33,16 @@ erDiagram
         varchar status
         boolean converged
         jsonb merged_result
+        timestamptz created_at
     }
 
     PRESCRIPTION_PLANS {
         uuid id PK
         uuid user_id FK
         varchar title
-        integer total_days
         date start_date
         date end_date
+        integer total_days
         boolean is_active
     }
 
@@ -54,7 +57,7 @@ erDiagram
     PRESCRIPTION_PLAN_SLOTS {
         uuid id PK
         uuid plan_id FK
-        varchar time
+        varchar slot_time
         integer sort_order
     }
 
@@ -68,8 +71,9 @@ erDiagram
     PRESCRIPTION_PLAN_LOGS {
         uuid id PK
         uuid plan_id FK
-        varchar occurrence_id
+        varchar occurrence_id UK
         varchar slot_time
         timestamptz scheduled_time
         varchar status
+        timestamptz logged_at
     }

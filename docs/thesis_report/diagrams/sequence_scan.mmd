@@ -1,18 +1,25 @@
 sequenceDiagram
-    actor U as Nguoi dung
-    participant M as Ung dung di dong
-    participant N as May chu Node.js
-    participant P as Dich vu AI FastAPI
+    autonumber
+    actor U as Người dùng
+    participant M as Ứng dụng di động
+    participant N as Máy chủ Node.js
+    participant P as Dịch vụ AI (FastAPI)
     participant D as PostgreSQL
 
-    U->>M: Chup hoac chon anh don thuoc
-    M->>M: Kiem tra chat luong anh cuc bo
-    M->>N: Gui anh len API quet don
-    N->>P: Chuyen tiep anh den dich vu AI
-    P->>P: Phat hien vung don
-    P->>P: Tien xu ly anh va OCR
-    P->>P: Tach ten thuoc va tra cuu thuoc
-    P-->>N: Tra ve ket qua nhan dien
-    N->>D: Luu lich su quet va ket qua
-    N-->>M: Tra ve danh sach thuoc
-    M-->>U: Hien thi de ra soat
+    U->>M: Chụp hoặc chọn ảnh đơn thuốc
+    M->>M: Kiểm tra chất lượng ảnh cục bộ
+    M->>N: Gửi ảnh lên API quét đơn
+    activate N
+    N->>P: Chuyển tiếp ảnh đến dịch vụ AI
+    activate P
+    P->>P: Phát hiện vùng đơn thuốc (YOLO)
+    P->>P: Tiền xử lý ảnh (deskew, định hướng)
+    P->>P: Nhận dạng ký tự quang học (PaddleOCR + VietOCR)
+    P->>P: Trích xuất tên thuốc (PhoBERT NER)
+    P->>P: Tra cứu và chuẩn hóa tên thuốc
+    P-->>N: Trả về kết quả nhận diện
+    deactivate P
+    N->>D: Lưu lịch sử quét và kết quả
+    N-->>M: Trả về danh sách thuốc
+    deactivate N
+    M-->>U: Hiển thị để rà soát và lập lịch

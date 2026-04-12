@@ -12,41 +12,62 @@ Planner/reviewer là AI điều phối. Root hiện chỉ giữ bộ plan active
 - Trọng tâm là `mobile/`, không phải redesign data model hay backend.
 - Bộ plan active cũ đã được park vào `archive/plan_bin/2026-04-12_prescription-plan-group-redesign_superseded/`.
 - Các file slice legacy còn sót ở root đã được chuyển vào `archive/plan_bin/2026-04-12_legacy_root_slice_plans/`.
+- Trạng thái thực tế đã đi xa hơn plan cũ: `L10N-1` và phần lớn `L10N-2` đã xong.
 
 ---
 
 ## Active execution plans
 
-Hiện tại planner vừa reset plan và chưa tách execution file riêng theo model.
+### Active ngay lúc này
 
-Lát cắt sẵn sàng mở đầu tiên:
-
-- `L10N-1 — Foundation và shared copy`
+- `MVT-1 — Manual verify gate cho core flow sau L10N-2 clean pass`
+- Mục tiêu: chuẩn bị checklist test thủ công và expected outcome để user tự verify core flow
 - Trạng thái: `ready_to_assign`
+- Model khuyến nghị: `Gemini 3.1 Pro`
+
+### Gating sau khi xong lát cắt active
+
+- user chạy manual verify core flow `Đăng nhập/Đăng ký -> Trang chủ -> Tạo kế hoạch -> Quét đơn thuốc -> Xác nhận -> Lập lịch`
+- nếu flow ổn mới mở `L10N-3A`
+- nếu flow lỗi thì mở đúng một hotfix nhỏ theo màn bị lỗi
 
 ---
 
-## Hàng chờ sau đợt này
+## Đã hoàn thành trong initiative hiện tại
 
-### L10N-2
+- `L10N-1A` — Foundation localization
+- `L10N-1B` — Shared copy
+- `L10N-2A` — Auth + Home + Create entry
+- `Analyzer unblock baseline` — lint cleanup để trả `flutter analyze` về xanh
+- `L10N-2B` — Scan + Review + Edit drugs + Schedule đã localize xong và đã qua review
+- `L10N-2B-HF1` — clean pass hotfix sau review
 
-- Core flow `auth -> home -> create plan -> scan -> review -> schedule`
-- Trạng thái: `queued_after_L10N-1`
+---
 
-### L10N-3
+## Hàng chờ sau lát cắt active
 
-- `drug / plan / history / settings`
-- Trạng thái: `queued_after_L10N-2`
+### L10N-3A
+
+- `drug / plan`
+- Trạng thái: `queued_after_manual_verify`
+- Model khuyến nghị: `Gemini 3.1 Pro`
+
+### L10N-3B
+
+- `history / settings`
+- Trạng thái: `queued_after_L10N-3A`
+- Model khuyến nghị: `Gemini 3.1 Pro`
+
+### Claude Opus Thinking
+
+- Review sâu sau khi xong `L10N-3`
+- Trạng thái: `queued_review`
 
 ### L10N-4
 
 - `pill verification` copy + repo-wide sweep cuối
-- Trạng thái: `queued_after_L10N-3`
-
-### Claude Opus Thinking
-
-- Chưa giao việc ở đợt này.
-- Vai trò dự phòng cho blocker khó hoặc review sâu nếu một execution model dừng theo luật stop.
+- Trạng thái: `queued_after_L10N-3_review`
+- Model khuyến nghị: `Claude Sonnet Thinking`
 
 ---
 
@@ -66,4 +87,5 @@ Lát cắt sẵn sàng mở đầu tiên:
 - Không được sửa file nằm ngoài danh sách cho phép trong lát cắt tương ứng.
 - Nếu cần đụng sang backend, Phase B logic hoặc pipeline để hoàn thành việc Việt hóa, phải dừng và trả blocker.
 - Sau mỗi lát cắt, planner/reviewer sẽ nghiệm thu lại copy, phạm vi sửa và test.
-- Sau khi xong `L10N-2`, nên mời user kiểm tra riêng luồng chính trước khi mở rộng ra các màn còn lại.
+- Sau khi xong `L10N-2B-HF1`, phải manual verify lại core flow trước khi mở `L10N-3A`.
+- Chỉ khi toàn initiative hoàn tất và user nghiệm thu mới được archive general plan active.
