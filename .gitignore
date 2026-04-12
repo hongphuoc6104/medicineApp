@@ -139,3 +139,6 @@ htmlcov/
 runs/
 server-node/node_modules/
 server-node/.env
+mobile/.dart_tool/
+docs/thesis_report/diagram_tools/node_modules/
+docs/thesis_report/mcp_tools/node_modules/
