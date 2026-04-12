@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../constants.dart';
+import 'network_error_mapper.dart';
 
 /// Provides a configured Dio instance with auth interceptor.
 final dioProvider = Provider<Dio>((ref) {
@@ -21,6 +22,7 @@ final dioProvider = Provider<Dio>((ref) {
   );
 
   dio.interceptors.add(AuthInterceptor(dio));
+  dio.interceptors.add(NetworkDiagnosticsInterceptor());
   if (kDebugMode) {
     dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
   }
@@ -119,5 +121,21 @@ class AuthInterceptor extends Interceptor {
     await _storage.delete(key: AppConstants.refreshTokenKey);
     await _storage.delete(key: AppConstants.userKey);
     // GoRouter will detect auth state change via Riverpod and redirect
+  }
+}
+
+class NetworkDiagnosticsInterceptor extends Interceptor {
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) {
+    final issue = classifyNetworkIssue(err);
+    err.requestOptions.extra['network_issue_kind'] = issue.name;
+
+    if (kDebugMode) {
+      debugPrint(
+        '[NetworkDiagnostics] ${err.requestOptions.method} ${err.requestOptions.path} -> ${issue.name}',
+      );
+    }
+
+    handler.next(err);
   }
 }

@@ -447,6 +447,8 @@
   "@editDrugsEmptyTitle": {},
   "editDrugsEmptyHint": "Bấm + để thêm thuốc",
   "@editDrugsEmptyHint": {},
+  "editDrugsEmptyAddFirst": "Thêm thuốc đầu tiên",
+  "@editDrugsEmptyAddFirst": {},
   "editDrugsContinue": "Tiếp tục — {count} thuốc",
   "@editDrugsContinue": {
     "placeholders": {

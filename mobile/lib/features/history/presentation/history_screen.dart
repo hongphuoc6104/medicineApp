@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/network/network_error_mapper.dart';
 import '../../../core/theme/app_theme.dart';
 import '../data/medication_logs_notifier.dart';
 import '../data/scan_history_notifier.dart';
@@ -52,6 +53,11 @@ class HistoryScreen extends ConsumerWidget {
                       loading: () =>
                           const Center(child: CircularProgressIndicator()),
                       error: (e, _) => _ScanErrorState(
+                        message: toFriendlyNetworkMessage(
+                          e,
+                          genericMessage:
+                              'Không tải được lịch sử quét. Kéo xuống để thử lại.',
+                        ),
                         onRetry: () => ref
                             .read(scanHistoryNotifierProvider.notifier)
                             .refresh(),
@@ -94,14 +100,22 @@ class HistoryScreen extends ConsumerWidget {
                       loading: () =>
                           const Center(child: CircularProgressIndicator()),
                       error: (e, _) => _ErrorState(
-                        message: 'Không tải được lịch sử uống thuốc.\nKéo xuống để thử lại.',
+                        message: toFriendlyNetworkMessage(
+                          e,
+                          genericMessage:
+                              'Không tải được lịch sử uống thuốc. Kéo xuống để thử lại.',
+                        ),
+                        onRetry: () => ref
+                            .read(medicationLogsNotifierProvider.notifier)
+                            .refresh(),
                       ),
                       data: (page) {
                         if (page.items.isEmpty) {
                           return const _EmptyState(
                             icon: Icons.medication_outlined,
                             message: 'Chưa có lịch sử uống thuốc.',
-                            hint: 'Dữ liệu sẽ xuất hiện khi bạn bắt đầu theo dõi kế hoạch.',
+                            hint:
+                                'Dữ liệu sẽ xuất hiện khi bạn bắt đầu theo dõi kế hoạch.',
                           );
                         }
                         final df = DateFormat('dd/MM/yyyy HH:mm');
@@ -267,7 +281,10 @@ class _ScanHistoryCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: qColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
@@ -339,10 +356,7 @@ class _ScanEmptyState extends StatelessWidget {
                   const Text(
                     'Chưa có đơn thuốc nào được quét',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                   ),
                   const SizedBox(height: 8),
                   const Text(
@@ -371,8 +385,9 @@ class _ScanEmptyState extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _ScanErrorState extends StatelessWidget {
-  const _ScanErrorState({required this.onRetry});
+  const _ScanErrorState({required this.message, required this.onRetry});
 
+  final String message;
   final VoidCallback onRetry;
 
   @override
@@ -399,10 +414,10 @@ class _ScanErrorState extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'Kiểm tra kết nối và thử lại.',
+                  Text(
+                    message,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColors.textMuted),
+                    style: const TextStyle(color: AppColors.textMuted),
                   ),
                   const SizedBox(height: 20),
                   OutlinedButton.icon(
@@ -425,11 +440,7 @@ class _ScanErrorState extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState({
-    required this.icon,
-    required this.message,
-    this.hint,
-  });
+  const _EmptyState({required this.icon, required this.message, this.hint});
 
   final IconData icon;
   final String message;
@@ -480,9 +491,10 @@ class _EmptyState extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _ErrorState extends StatelessWidget {
-  const _ErrorState({required this.message});
+  const _ErrorState({required this.message, required this.onRetry});
 
   final String message;
+  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -493,10 +505,33 @@ class _ErrorState extends StatelessWidget {
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Text(
-                message,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.error),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.wifi_off_outlined,
+                    size: 48,
+                    color: AppColors.textMuted,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Không tải được lịch sử uống thuốc',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: AppColors.textMuted),
+                  ),
+                  const SizedBox(height: 20),
+                  OutlinedButton.icon(
+                    onPressed: onRetry,
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Thử lại'),
+                  ),
+                ],
               ),
             ),
           ),

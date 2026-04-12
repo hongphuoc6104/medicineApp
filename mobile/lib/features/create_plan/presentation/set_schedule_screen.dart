@@ -29,9 +29,17 @@ class _TimeSlot {
 // ---------------------------------------------------------------------------
 
 class SetScheduleScreen extends ConsumerStatefulWidget {
-  const SetScheduleScreen({super.key, required this.drugs});
+  const SetScheduleScreen({
+    super.key,
+    required this.drugs,
+    this.source = 'scan',
+  });
 
   final List<PlanDrugItem> drugs;
+
+  /// Nguồn gọi màn này: 'manual' (từ edit_drugs) hoặc 'scan' (từ scan_review).
+  /// Dùng để điều hướng back đúng context.
+  final String source;
 
   @override
   ConsumerState<SetScheduleScreen> createState() => _SetScheduleScreenState();
@@ -252,23 +260,31 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
     });
   }
 
-  void _goBackToReview() {
-    final drugs = widget.drugs
-        .map(
-          (drug) => DetectedDrug(
-            name: drug.name,
-            dosage: drug.dosage,
-            mappingStatus: 'confirmed',
-            confidence: 1.0,
-            mappedDrugName: drug.name,
-          ),
-        )
-        .toList();
-
-    context.go(
-      '/create/review',
-      extra: ScanResult(scanId: 'schedule-back', drugs: drugs),
-    );
+  void _goBack() {
+    if (widget.source == 'manual') {
+      // Manual path: trở về màn danh sách thuốc với drugs hiện tại.
+      context.go(
+        '/create/edit',
+        extra: widget.drugs,
+      );
+    } else {
+      // Scan path: trở về scan review screen (giữ nguyên behavior cũ).
+      final drugs = widget.drugs
+          .map(
+            (drug) => DetectedDrug(
+              name: drug.name,
+              dosage: drug.dosage,
+              mappingStatus: 'confirmed',
+              confidence: 1.0,
+              mappedDrugName: drug.name,
+            ),
+          )
+          .toList();
+      context.go(
+        '/create/review',
+        extra: ScanResult(scanId: 'schedule-back', drugs: drugs),
+      );
+    }
   }
 
   PrescriptionPlanDraft _buildPlanDraft(String startDateStr) {
@@ -405,7 +421,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       appBar: AppBar(
         title: Text(l10n.scheduleTitle),
         leading: IconButton(
-          onPressed: _goBackToReview,
+          onPressed: _goBack,
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
       ),

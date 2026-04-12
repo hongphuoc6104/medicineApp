@@ -14,17 +14,20 @@ Run:
 """
 
 import os
+
 # PaddlePaddle 3.3.0 fixes — MUST be set before any paddle import
 os.environ.setdefault("FLAGS_enable_pir_api", "0")
-os.environ.setdefault(
-    "PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True"
-)
+os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
 
 import asyncio
 import json
 import logging
+import platform
+import socket
+import sys
 from pathlib import Path
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -38,6 +41,8 @@ DRUG_DB_PATH = ROOT / "server" / "data" / "drug_db.json"
 # Global state
 _drug_service = None
 _pipeline = None
+_pipeline_last_error = None
+_pipeline_loaded_at = None
 
 # VĐ7: Semaphore giới hạn GPU concurrent (RTX 3050 4GB)
 # Chỉ cho phép 1 scan chạy đồng thời để tránh OOM
@@ -67,7 +72,9 @@ async def _enrich_expected_medications(expected_items):
 
     async def enrich_item(item):
         item_copy = dict(item)
-        drug_name = str(item_copy.get("drugName") or item_copy.get("name") or "").strip()
+        drug_name = str(
+            item_copy.get("drugName") or item_copy.get("name") or ""
+        ).strip()
         if not drug_name:
             return item_copy
 
@@ -86,23 +93,61 @@ def _get_drug_service():
     global _drug_service
     if _drug_service is None:
         from server.services.drug_service import DrugService
+
         _drug_service = DrugService()
     return _drug_service
 
 
 def _get_pipeline():
     """Lazy load the AI pipeline (heavy models)."""
-    global _pipeline
+    global _pipeline, _pipeline_last_error, _pipeline_loaded_at
     if _pipeline is None:
         try:
             from core.pipeline import MedicinePipeline
+
             _pipeline = MedicinePipeline()
+            _pipeline_last_error = None
+            _pipeline_loaded_at = datetime.now(timezone.utc).isoformat()
             logger.info("AI pipeline loaded")
         except Exception as e:
-            logger.warning(
-                f"AI pipeline not available: {e}"
-            )
+            _pipeline_last_error = str(e)
+            logger.warning(f"AI pipeline not available: {e}")
     return _pipeline
+
+
+def _runtime_info() -> dict:
+    expected_venv = ROOT / "venv"
+    expected_venv_bin = expected_venv / "bin"
+    expected_venv_resolved = str(expected_venv.resolve())
+    expected_bin_prefix = str(expected_venv_bin.resolve())
+    python_exec_raw = sys.executable
+    python_exec_resolved = str(Path(sys.executable).resolve())
+    sys_prefix_resolved = str(Path(sys.prefix).resolve())
+    using_expected_venv = (
+        sys_prefix_resolved == expected_venv_resolved
+        or sys_prefix_resolved.startswith(f"{expected_venv_resolved}{os.sep}")
+        or python_exec_raw.startswith(f"{expected_bin_prefix}{os.sep}")
+        or python_exec_raw.startswith(expected_bin_prefix)
+    )
+
+    return {
+        "service": "medicineapp-fastapi",
+        "pid": os.getpid(),
+        "hostname": socket.gethostname(),
+        "cwd": str(Path.cwd()),
+        "root_dir": str(ROOT),
+        "python_executable": python_exec_raw,
+        "python_executable_resolved": python_exec_resolved,
+        "python_version": platform.python_version(),
+        "sys_prefix": sys.prefix,
+        "sys_prefix_resolved": sys_prefix_resolved,
+        "virtual_env": os.environ.get("VIRTUAL_ENV"),
+        "is_venv": sys.prefix != sys.base_prefix,
+        "expected_venv": str(expected_venv),
+        "expected_venv_exists": expected_venv.exists(),
+        "using_expected_venv": using_expected_venv,
+        "inside_docker": Path("/.dockerenv").exists(),
+    }
 
 
 @asynccontextmanager
@@ -114,19 +159,13 @@ async def lifespan(app: FastAPI):
     if pipeline:
         try:
             import numpy as np
-            dummy = np.zeros(
-                (100, 100, 3), dtype=np.uint8
-            )
-            pipeline.scan_prescription_app(
-                dummy, skip_yolo=True
-            )
-            logger.info(
-                "✅ Pipeline warmed up successfully"
-            )
+
+            dummy = np.zeros((100, 100, 3), dtype=np.uint8)
+            pipeline.scan_prescription_app(dummy, skip_yolo=True)
+            logger.info("✅ Pipeline warmed up successfully")
         except Exception as e:
             logger.warning(
-                f"⚠️ Warm-up failed: {e} — "
-                f"pipeline will lazy-load on first request"
+                f"⚠️ Warm-up failed: {e} — pipeline will lazy-load on first request"
             )
 
     logger.info("MedicineApp server started")
@@ -136,10 +175,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="MedicineApp API",
-    description=(
-        "AI-powered prescription scanning "
-        "& pill verification"
-    ),
+    description=("AI-powered prescription scanning & pill verification"),
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -154,6 +190,7 @@ app.add_middleware(
 
 # ── Health ────────────────────────────────────────────
 
+
 @app.get("/api/health")
 async def health():
     svc = _get_drug_service()
@@ -162,10 +199,19 @@ async def health():
         "status": "ok",
         "drug_db": svc.count(),
         "ai_ready": pipeline is not None,
+        "runtime": _runtime_info(),
+        "scan_runtime": {
+            "mode": "full_ai" if pipeline is not None else "mock_fallback",
+            "pipeline_loaded": pipeline is not None,
+            "pipeline_loaded_at": _pipeline_loaded_at,
+            "pipeline_last_error": _pipeline_last_error,
+            "scan_semaphore_limit": 1,
+        },
     }
 
 
 # ── Drug Info ─────────────────────────────────────────
+
 
 @app.get("/api/drug-info/{name}")
 async def drug_info(name: str, online: bool = False):
@@ -226,8 +272,7 @@ async def search_drugs_online(q: str, limit: int = 5):
     Free API, no key required.
     """
     if not q or len(q) < 2:
-        raise HTTPException(
-            400, "Query too short (min 2 chars)")
+        raise HTTPException(400, "Query too short (min 2 chars)")
 
     svc = _get_drug_service()
     results = await svc.search_online(q, limit=limit)
@@ -241,8 +286,7 @@ async def search_drugs_online(q: str, limit: int = 5):
                 "query": q,
                 "source": "local",
             }
-        raise HTTPException(
-            404, f"No drugs found for: {q}")
+        raise HTTPException(404, f"No drugs found for: {q}")
 
     return {
         "results": results,
@@ -254,6 +298,7 @@ async def search_drugs_online(q: str, limit: int = 5):
 
 # ── Vietnamese Drug APIs (ddi.lab.io.vn) ──────────────
 
+
 @app.get("/api/drugs/search-vn")
 async def search_vn_drugs(q: str, limit: int = 10):
     """
@@ -264,15 +309,13 @@ async def search_vn_drugs(q: str, limit: int = 10):
     Free API, no key required.
     """
     if not q or len(q) < 2:
-        raise HTTPException(
-            400, "Query too short (min 2 chars)")
+        raise HTTPException(400, "Query too short (min 2 chars)")
 
     svc = _get_drug_service()
     results = await svc.search_vn(q, limit=limit)
 
     if not results:
-        raise HTTPException(
-            404, f"No VN drugs found for: {q}")
+        raise HTTPException(404, f"No VN drugs found for: {q}")
 
     return {
         "results": results,
@@ -290,8 +333,7 @@ async def suggest_vn_drugs(q: str):
     Returns list of matching drug names.
     """
     if not q or len(q) < 2:
-        raise HTTPException(
-            400, "Query too short (min 2 chars)")
+        raise HTTPException(400, "Query too short (min 2 chars)")
 
     svc = _get_drug_service()
     suggestions = await svc.suggest_vn(q)
@@ -307,21 +349,19 @@ async def drug_interactions(ingredient: str):
     Returns interactions grouped by severity.
     """
     if not ingredient or len(ingredient) < 2:
-        raise HTTPException(
-            400, "Ingredient name too short")
+        raise HTTPException(400, "Ingredient name too short")
 
     svc = _get_drug_service()
     result = await svc.interactions(ingredient)
 
     if not result:
-        raise HTTPException(
-            404,
-            f"No interactions found for: {ingredient}")
+        raise HTTPException(404, f"No interactions found for: {ingredient}")
 
     return result
 
 
 # ── Scan Prescription ─────────────────────────────────
+
 
 @app.post("/api/scan-prescription")
 async def scan_prescription(file: UploadFile = File(...)):
@@ -355,10 +395,7 @@ async def scan_prescription(file: UploadFile = File(...)):
                 }
             ],
             "mock": True,
-            "message": (
-                "AI models not loaded. "
-                "Download checkpoint to models/weights/"
-            ),
+            "message": ("AI models not loaded. Download checkpoint to models/weights/"),
         }
 
     # VĐ7: Semaphore — chỉ 1 scan đồng thời trên GPU
@@ -368,6 +405,7 @@ async def scan_prescription(file: UploadFile = File(...)):
 
 
 # ── Scan Pills ────────────────────────────────────────
+
 
 @app.post("/api/scan-pills")
 async def scan_pills(
@@ -459,17 +497,13 @@ async def dose_verification(
                 "totalExpected": len(expected),
                 "withReference": 0,
                 "withoutReference": len(expected),
-                "missingPlanIds": [
-                    str(item.get("planId", "")) for item in expected
-                ],
+                "missingPlanIds": [str(item.get("planId", "")) for item in expected],
                 "missingDrugNames": [
                     str(item.get("drugName", "")) for item in expected
                 ],
             },
             "expectedMedications": expected,
-            "missingReferences": [
-                str(item.get("drugName", "")) for item in expected
-            ],
+            "missingReferences": [str(item.get("drugName", "")) for item in expected],
             "mock": True,
             "message": "AI models not loaded.",
         }

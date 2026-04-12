@@ -1006,6 +1006,12 @@ abstract class AppLocalizations {
   /// **'Bấm + để thêm thuốc'**
   String get editDrugsEmptyHint;
 
+  /// No description provided for @editDrugsEmptyAddFirst.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thêm thuốc đầu tiên'**
+  String get editDrugsEmptyAddFirst;
+
   /// No description provided for @editDrugsContinue.
   ///
   /// In vi, this message translates to:

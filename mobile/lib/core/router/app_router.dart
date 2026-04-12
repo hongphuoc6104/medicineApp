@@ -12,6 +12,7 @@ import '../../features/create_plan/presentation/scan_camera_screen.dart';
 import '../../features/create_plan/presentation/scan_review_screen.dart';
 import '../../features/create_plan/presentation/edit_drugs_screen.dart';
 import '../../features/create_plan/presentation/set_schedule_screen.dart';
+import '../../features/create_plan/presentation/reuse_history_screen.dart';
 import '../../features/create_plan/domain/plan.dart';
 import '../../features/create_plan/domain/scan_result.dart';
 import '../../features/drug/presentation/drug_search_screen.dart';
@@ -76,6 +77,10 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // ── Create Plan Flow (outside bottom nav) ──
       GoRoute(
+        path: '/create/reuse',
+        builder: (context, state) => const ReuseHistoryScreen(),
+      ),
+      GoRoute(
         path: '/create/scan',
         builder: (context, state) => const ScanCameraScreen(),
       ),
@@ -98,8 +103,22 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/create/schedule',
         builder: (context, state) {
-          final drugs = state.extra as List<PlanDrugItem>? ?? [];
-          return SetScheduleScreen(drugs: drugs);
+          final extra = state.extra;
+          // Backward-compat: scan path truyền List<PlanDrugItem> trực tiếp.
+          // Manual path truyền Map {'drugs': List<PlanDrugItem>, 'source': String}.
+          final List<PlanDrugItem> drugs;
+          final String source;
+          if (extra is List<PlanDrugItem>) {
+            drugs = extra;
+            source = 'scan';
+          } else if (extra is Map<String, dynamic>) {
+            drugs = (extra['drugs'] as List<PlanDrugItem>?) ?? [];
+            source = (extra['source'] as String?) ?? 'scan';
+          } else {
+            drugs = [];
+            source = 'scan';
+          }
+          return SetScheduleScreen(drugs: drugs, source: source);
         },
       ),
 
@@ -190,6 +209,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: '/history/scan/:id',
             builder: (context, state) => ScanHistoryDetailScreen(
               scanId: state.pathParameters['id'] ?? '',
+              mode: state.uri.queryParameters['mode'] ?? 'normal',
             ),
           ),
           GoRoute(

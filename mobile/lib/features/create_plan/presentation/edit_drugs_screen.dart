@@ -100,7 +100,13 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
             child: ElevatedButton(
               onPressed: _drugs.isEmpty
                   ? null
-                  : () => context.go('/create/schedule', extra: _drugs),
+                  : () => context.go(
+                        '/create/schedule',
+                        extra: <String, dynamic>{
+                          'drugs': _drugs,
+                          'source': 'manual',
+                        },
+                      ),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),
               ),
@@ -127,6 +133,12 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
           Text(
             l10n.editDrugsEmptyHint,
             style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton.icon(
+            onPressed: _addDrug,
+            icon: const Icon(Icons.add, size: 18),
+            label: Text(l10n.editDrugsEmptyAddFirst),
           ),
         ],
       ),

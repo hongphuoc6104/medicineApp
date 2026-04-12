@@ -12,6 +12,7 @@ import '../../../l10n/app_localizations.dart';
 import '../data/local_quality_gate.dart';
 import '../data/scan_camera_controller.dart';
 import '../data/scan_repository.dart';
+import '../../../core/network/network_error_mapper.dart';
 
 // ---------------------------------------------------------------------------
 // Screen states
@@ -45,6 +46,8 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   String? _error;
   String? _qualityBanner;
   String? _qualityGuidance;
+  Uint8List? _lastUploadBytes;
+  String? _lastUploadFilename;
 
   @override
   void initState() {
@@ -129,7 +132,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
       }
       await _processAndUpload(bytes, picked.name);
     } catch (e) {
-      setState(() => _error = '${l10n.scanCameraGalleryError}: $e');
+      setState(() => _error = l10n.scanCameraGalleryError);
     }
   }
 
@@ -137,32 +140,38 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   // Local quality check → upload → navigate to review
   // -------------------------------------------------------------------------
 
-  Future<void> _processAndUpload(Uint8List bytes, String filename) async {
+  Future<void> _processAndUpload(
+    Uint8List bytes,
+    String filename, {
+    bool skipLocalQualityGate = false,
+  }) async {
     final l10n = AppLocalizations.of(context);
     // Step 1: local quality gate
-    final quality = await assessLocalImageQuality(bytes);
+    final quality = skipLocalQualityGate
+        ? null
+        : await assessLocalImageQuality(bytes);
 
-    if (quality.state == 'REJECT') {
+    if (quality?.state == 'REJECT') {
       setState(() {
         _qualityBanner = 'REJECT';
-        _qualityGuidance = quality.guidance;
+        _qualityGuidance = quality?.guidance;
         _error = null;
       });
       _scanCameraCtrl.startAutoCaptureStream();
       return;
     }
 
-    if (quality.state == 'WARNING') {
+    if (quality?.state == 'WARNING') {
       // Show banner but allow user to choose to proceed or retake
       setState(() {
         _qualityBanner = 'WARNING';
-        _qualityGuidance = quality.guidance;
+        _qualityGuidance = quality?.guidance;
         _error = null;
       });
       // Give user a chance to decide — show bottom sheet
       final shouldProceed = await _showQualityWarning(
-        guidance: quality.guidance,
-        rejectReason: quality.rejectReason,
+        guidance: quality?.guidance,
+        rejectReason: quality?.rejectReason,
       );
       if (!shouldProceed) {
         _scanCameraCtrl.startAutoCaptureStream();
@@ -176,6 +185,9 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
       _error = null;
       _qualityBanner = null;
     });
+
+    _lastUploadBytes = bytes;
+    _lastUploadFilename = filename;
 
     try {
       final repo = ref.read(scanRepositoryProvider);
@@ -193,6 +205,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           _qualityGuidance =
               result.guidance ?? l10n.scanCameraQualityServerReject;
         });
+        _clearLastUploadAttempt();
         _scanCameraCtrl.startAutoCaptureStream();
         return;
       }
@@ -202,28 +215,54 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           _mode = _ScreenMode.cameraPreview;
           _error = l10n.scanCameraNodrugFound;
         });
+        _clearLastUploadAttempt();
         _scanCameraCtrl.startAutoCaptureStream();
         return;
       }
 
+      _clearLastUploadAttempt();
       context.go('/create/review', extra: result);
     } catch (e) {
       if (!mounted) return;
-      var msg = l10n.scanCameraErrorGeneric;
-      if (e.toString().contains('503')) {
-        msg = l10n.scanCameraErrorUnavailable;
-      } else if (e.toString().contains('timeout') ||
-          e.toString().contains('Timeout')) {
-        msg = l10n.scanCameraErrorTimeout;
-      } else if (e.toString().contains('connection')) {
-        msg = l10n.scanCameraErrorConnection;
+      final issue = classifyNetworkIssue(e);
+      var message = l10n.scanCameraErrorGeneric;
+      switch (issue) {
+        case NetworkIssueKind.noConnection:
+          message = l10n.scanCameraErrorConnection;
+          break;
+        case NetworkIssueKind.timeout:
+          message = l10n.scanCameraErrorTimeout;
+          break;
+        case NetworkIssueKind.serviceUnavailable:
+        case NetworkIssueKind.serverError:
+          message = l10n.scanCameraErrorUnavailable;
+          break;
+        case NetworkIssueKind.unauthorized:
+        case NetworkIssueKind.unknown:
+          break;
       }
+
       setState(() {
         _mode = _ScreenMode.cameraPreview;
-        _error = msg;
+        _error = message;
       });
       _scanCameraCtrl.startAutoCaptureStream();
     }
+  }
+
+  void _clearLastUploadAttempt() {
+    _lastUploadBytes = null;
+    _lastUploadFilename = null;
+  }
+
+  Future<void> _retryLastUpload() async {
+    final bytes = _lastUploadBytes;
+    final filename = _lastUploadFilename;
+    if (bytes == null || filename == null) {
+      return;
+    }
+
+    await _processAndUpload(bytes, filename, skipLocalQualityGate: true);
   }
 
   Future<bool> _showQualityWarning({
@@ -695,32 +734,67 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   }
 
   Widget _buildErrorFeedback(String message) {
+    final l10n = AppLocalizations.of(context);
+    final canRetryLastUpload =
+        _lastUploadBytes != null &&
+        _lastUploadFilename != null &&
+        _mode == _ScreenMode.cameraPreview;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.error.withValues(alpha: 0.92),
         borderRadius: BorderRadius.circular(14),
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.error_outline, color: Colors.white, size: 20),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
+          Row(
+            children: [
+              const Icon(Icons.error_outline, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => setState(() => _error = null),
+                child: Text(
+                  l10n.commonOk,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          if (canRetryLastUpload)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _retryLastUpload,
+                  icon: const Icon(
+                    Icons.refresh,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                  label: Text(
+                    l10n.commonRetry,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.white38),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                ),
               ),
             ),
-          ),
-          TextButton(
-            onPressed: () => setState(() => _error = null),
-            child: Text(
-              AppLocalizations.of(context).commonOk,
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
         ],
       ),
     );

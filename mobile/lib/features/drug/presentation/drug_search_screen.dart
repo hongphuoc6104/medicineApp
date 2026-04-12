@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/network/network_error_mapper.dart';
 import '../../../core/theme/app_theme.dart';
 import '../data/drug_repository.dart';
 import '../data/drug_search_notifier.dart';
@@ -35,7 +36,13 @@ class _DrugSearchScreenState extends ConsumerState<DrugSearchScreen> {
     } catch (e) {
       messenger.showSnackBar(
         SnackBar(
-          content: Text('Khong tai duoc thong tin thuoc: $e'),
+          content: Text(
+            toFriendlyNetworkMessage(
+              e,
+              genericMessage:
+                  'Không tải được thông tin thuốc. Vui lòng thử lại.',
+            ),
+          ),
           backgroundColor: AppColors.error,
         ),
       );
@@ -94,11 +101,16 @@ class _DrugSearchScreenState extends ConsumerState<DrugSearchScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 if (state.error != null) {
+                  final friendlyError = toFriendlyNetworkMessage(
+                    state.error!,
+                    genericMessage:
+                        'Không thể tìm thuốc lúc này. Vui lòng thử lại.',
+                  );
                   return Center(
                     child: Padding(
                       padding: const EdgeInsets.all(24),
                       child: Text(
-                        state.error!,
+                        friendlyError,
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: AppColors.error),
                       ),

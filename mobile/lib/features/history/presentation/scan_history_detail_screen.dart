@@ -8,9 +8,18 @@ import '../../create_plan/domain/scan_result.dart';
 import '../data/scan_history_repository.dart';
 
 class ScanHistoryDetailScreen extends ConsumerStatefulWidget {
-  const ScanHistoryDetailScreen({super.key, required this.scanId});
+  const ScanHistoryDetailScreen({
+    super.key,
+    required this.scanId,
+    this.mode = 'normal',
+  });
 
   final String scanId;
+
+  /// 'reuse' khi đến từ /create/reuse, 'normal' khi đến từ /history.
+  final String mode;
+
+  bool get isReuseMode => mode == 'reuse';
 
   @override
   ConsumerState<ScanHistoryDetailScreen> createState() =>
@@ -199,8 +208,16 @@ class _ScanHistoryDetailScreenState
           const SizedBox(height: 8),
           ElevatedButton.icon(
             onPressed: detail.drugs.isEmpty ? null : _recreatePlan,
-            icon: const Icon(Icons.refresh_rounded),
-            label: const Text('Tạo lại kế hoạch từ lần quét này'),
+            icon: Icon(
+              widget.isReuseMode
+                  ? Icons.playlist_add_rounded
+                  : Icons.refresh_rounded,
+            ),
+            label: Text(
+              widget.isReuseMode
+                  ? 'Dùng lại danh sách thuốc này'
+                  : 'Tạo lại kế hoạch từ lần quét này',
+            ),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(

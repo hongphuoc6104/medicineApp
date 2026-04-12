@@ -76,6 +76,15 @@ Các lỗi và khoảng trống hiện tại nằm ở nhiều tầng cùng lúc
 - không chỉ schedule trong app nội bộ
 - phải có đường thông báo nổi ra ngoài thiết bị khi tới giờ uống
 
+### 7. Working defaults để mở batch tiếp theo mà không phải chờ thêm
+
+- Home sẽ **ẩn hoàn toàn** CTA Phase B khỏi path chính
+- `tới giờ uống` được tính theo cửa sổ mặc định `±30 phút`
+- reuse flow sẽ đi theo hướng: `chọn scan cũ -> chọn thuốc -> review/edit -> schedule`
+- history sẽ chuyển sang `lịch sử uống thuốc` là tab đầu tiên
+- bottom nav sẽ **giữ tab `Thuốc`** trong batch này để tránh mở thêm nav migration cùng lúc
+- working name cho brand spec là `Nhắc Thuốc`, nhưng chỉ xem như tên tạm cho planning; chưa coi là quyết định cuối cùng cho implementation branding
+
 ---
 
 ## Vấn đề tổng quát cần giải quyết
@@ -125,7 +134,7 @@ Các lỗi và khoảng trống hiện tại nằm ở nhiều tầng cùng lúc
 
 - startup/runtime local
 - network/dev diagnostics
-- trạng thái: `active`
+- trạng thái: `in_progress`
 
 ### Nhóm B — Product framing và branding
 
@@ -185,25 +194,64 @@ Các lỗi và khoảng trống hiện tại nằm ở nhiều tầng cùng lúc
 
 ## Tracks song song được phép chạy ngay
 
-### Track R1 — Reliability implementation
-
-- model chính: `GPT-5.3 Codex`
-- mục tiêu: implement `REL-1A`
-
-### Track S1 — UX/IA spec
+### Track H1 — Home implementation
 
 - model chính: `Claude Sonnet 4.6 Thinking`
-- mục tiêu: spec cho home / create / history / manual / reuse
+- mục tiêu hiện tại: implement `HOME-1A`
 
-### Track A1 — Local-first / reminder architecture audit
+### Track R2 — Reminder logic implementation
+
+- model chính: `GPT-5.3 Codex`
+- mục tiêu hiện tại: implement `REMIND-1A-R1B`
+
+### Track A2 — History / local-first technical shaping
 
 - model chính: `Gemini 3.1 Pro High`
-- mục tiêu: map phụ thuộc và đề xuất slice kỹ thuật cho local-first + notifications
+- mục tiêu hiện tại: `HISTORY-1A-S1` và chuẩn bị coding path cho `LOCAL-1A`
 
-### Track T1 — Branding / copy / remaining issue inventory
+### Track T2 — Branding / home prioritization prep
 
 - model chính: `Gemini 3 Flash`
-- mục tiêu: triage nhanh naming/copy/asset surface và các chuỗi còn lệch chuẩn
+- mục tiêu hiện tại: prep cho `HOME-1A` và `BRAND-1A`
+
+---
+
+## Tiến độ batch hiện tại
+
+### Đã hoàn thành trong initiative mới
+
+- `REL-1A` — startup/runtime local đã được harden và đã verify pass bằng runbook + health checks
+- `REL-1B` — mobile network diagnostics và reconnect UX
+- `IA-0A` — redesign brief cho Home / History / Create flow
+- `LOCAL-0A` — audit local-first / reminder architecture
+- `BRAND-0A` — inventory branding / copy / naming / asset surface
+- `REL-1B-PREP` — inventory mobile network/reconnect UX
+- `REMIND-1A-PREP` — brief Android reminder delivery
+- `BRAND-1-PREP` — safe rebrand brief với working name `Nhắc Thuốc`
+- `HOME-1A-PREP` — exact file/line brief cho home priority fix
+- `HISTORY-1-DATA-PREP` — assessment giữa mobile-only và backend-touch cho history redesign
+- `LOCAL-1A-PREP` — cache/storage brief cho stale-while-revalidate ở mobile
+- `REMIND-1B-PREP` — permission/recovery UX brief cho reminders
+- `FLOW-1A-PREP` — contract/route brief cho reuse flow
+- `FLOW-1A` — reuse flow implementation
+- `FLOW-1B-PREP` — manual entry UX cleanup brief
+- `FLOW-1B-A` — manual entry routing + empty state fix
+- `FLOW-1B-HF1` — đưa key CTA manual entry về lại ARB/source-of-truth
+
+### Đang mở tiếp
+
+- `HOME-1A` — coding slice active tiếp theo
+- `REMIND-1A-R1B` — logic reschedule đúng khi bật lại reminder
+- `HISTORY-1A-S1` — mobile-only IA shift cho History
+
+### Batch prep tiếp theo có thể chạy song song
+
+- `BRAND-1A-ASSET-PREP` — exact asset pipeline cho launcher/splash/background
+
+### Ghi chú planner
+
+- `REL-1A` đã hoàn tất nhưng không archive thành plan riêng; nó được xem là baseline reliability đã chốt trong cùng initiative.
+- `HOME-1A` được ưu tiên cao nhất trong batch code tiếp theo vì tác động trực tiếp đến giá trị daily-use của app.
 
 ---
 

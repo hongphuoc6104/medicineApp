@@ -1,70 +1,81 @@
 <?xml version='1.0' encoding='utf-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" width="780" height="680" viewBox="0 0 780 680">
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="720" viewBox="0 0 820 720">
   <defs>
-    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-      <polygon points="0 0, 8 3, 0 6" fill="#455a64" />
+    <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#37474f" />
+    </marker>
+    <marker id="arr-b" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#37474f" />
+    </marker>
+    <marker id="arr-start" markerWidth="9" markerHeight="7" refX="1" refY="3.5" orient="auto-start-reverse">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#37474f" />
     </marker>
   </defs>
-  <rect x="0" y="0" width="780" height="680" fill="white" />
   <style>text { font-family: Arial, sans-serif; }</style>
-  <rect x="320" y="30" width="140" height="36" rx="18" fill="#fff7e8" stroke="#b7791f" stroke-width="1.8" />
-  <text x="390" y="53" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#7a4512" font-weight="bold">Người dùng</text>
-  <rect x="40" y="100" width="700" height="130" rx="8" fill="#eef7ff" stroke="#4a90d9" stroke-width="1.5" />
-  <text x="50" y="118" text-anchor="start" font-size="12" font-family="Arial, sans-serif" fill="#2457a5" font-weight="bold">Tầng 1 — Ứng dụng di động (Flutter)</text>
-  <rect x="60" y="135" width="150" height="70" rx="5" fill="#d6eaff" stroke="#4a90d9" stroke-width="1.5" />
-  <text x="135.0" y="170.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">Quét đơn thuốc</text>
-  <rect x="230" y="135" width="150" height="70" rx="5" fill="#d6eaff" stroke="#4a90d9" stroke-width="1.5" />
-  <text x="305.0" y="170.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">Rà soát danh sách</text>
-  <rect x="400" y="135" width="150" height="70" rx="5" fill="#d6eaff" stroke="#4a90d9" stroke-width="1.5" />
-  <text x="475.0" y="170.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">Lập lịch dùng thuốc</text>
-  <rect x="570" y="135" width="150" height="70" rx="5" fill="#d6eaff" stroke="#4a90d9" stroke-width="1.5" />
-  <text x="645.0" y="170.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">Xem lịch hôm nay</text>
-  <rect x="40" y="270" width="700" height="130" rx="8" fill="#f0fff4" stroke="#2d7a46" stroke-width="1.5" />
-  <text x="50" y="288" text-anchor="start" font-size="12" font-family="Arial, sans-serif" fill="#1a5c32" font-weight="bold">Tầng 2 — Máy chủ chính (Node.js / Express)</text>
-  <rect x="60" y="305" width="150" height="70" rx="5" fill="#c3f0d0" stroke="#2d7a46" stroke-width="1.5" />
-  <text x="135.0" y="332.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">Xác thực</text>
-  <text x="135.0" y="347.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">người dùng</text>
-  <rect x="230" y="305" width="150" height="70" rx="5" fill="#c3f0d0" stroke="#2d7a46" stroke-width="1.5" />
-  <text x="305.0" y="332.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">Lịch sử</text>
-  <text x="305.0" y="347.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">quét</text>
-  <rect x="400" y="305" width="150" height="70" rx="5" fill="#c3f0d0" stroke="#2d7a46" stroke-width="1.5" />
-  <text x="475.0" y="332.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">Quản lý</text>
-  <text x="475.0" y="347.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">kế hoạch</text>
-  <rect x="570" y="305" width="150" height="70" rx="5" fill="#c3f0d0" stroke="#2d7a46" stroke-width="1.5" />
-  <text x="645.0" y="332.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">Nhật ký</text>
-  <text x="645.0" y="347.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">uống thuốc</text>
-  <rect x="40" y="440" width="700" height="130" rx="8" fill="#fff8e1" stroke="#b7791f" stroke-width="1.5" />
-  <text x="50" y="458" text-anchor="start" font-size="12" font-family="Arial, sans-serif" fill="#7a4512" font-weight="bold">Tầng 3 — Dịch vụ AI (FastAPI / GPU)</text>
-  <rect x="60" y="475" width="150" height="70" rx="5" fill="#fff0c0" stroke="#b7791f" stroke-width="1.5" />
-  <text x="135.0" y="502.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111">YOLO</text>
-  <text x="135.0" y="517.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111">Detect</text>
-  <rect x="230" y="475" width="150" height="70" rx="5" fill="#fff0c0" stroke="#b7791f" stroke-width="1.5" />
-  <text x="305.0" y="495.0" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111">OCR</text>
-  <text x="305.0" y="510.0" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111">(PaddleOCR</text>
-  <text x="305.0" y="525.0" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111">+VietOCR)</text>
-  <rect x="400" y="475" width="150" height="70" rx="5" fill="#fff0c0" stroke="#b7791f" stroke-width="1.5" />
-  <text x="475.0" y="502.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111">NER</text>
-  <text x="475.0" y="517.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111">(PhoBERT)</text>
-  <rect x="570" y="475" width="150" height="70" rx="5" fill="#fff0c0" stroke="#b7791f" stroke-width="1.5" />
-  <text x="645.0" y="502.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111">Tra cứu</text>
-  <text x="645.0" y="517.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111">thuốc</text>
-  <ellipse cx="220" cy="590.0" rx="68" ry="14" fill="#f0f4ff" stroke="#2457a5" stroke-width="1.5" />
-  <rect x="152" y="590.0" width="136" height="40" fill="#f0f4ff" stroke="none" />
-  <line x1="152" y1="590.0" x2="152" y2="630.0" stroke="#2457a5" stroke-width="1.5" />
-  <line x1="288" y1="590.0" x2="288" y2="630.0" stroke="#2457a5" stroke-width="1.5" />
-  <ellipse cx="220" cy="630.0" rx="68" ry="14" fill="#f0f4ff" stroke="#2457a5" stroke-width="1.5" />
-  <text x="220" y="610.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">PostgreSQL</text>
-  <ellipse cx="560" cy="590.0" rx="90" ry="14" fill="#f0f4ff" stroke="#2457a5" stroke-width="1.5" />
-  <rect x="470" y="590.0" width="180" height="40" fill="#f0f4ff" stroke="none" />
-  <line x1="470" y1="590.0" x2="470" y2="630.0" stroke="#2457a5" stroke-width="1.5" />
-  <line x1="650" y1="590.0" x2="650" y2="630.0" stroke="#2457a5" stroke-width="1.5" />
-  <ellipse cx="560" cy="630.0" rx="90" ry="14" fill="#f0f4ff" stroke="#2457a5" stroke-width="1.5" />
-  <text x="560" y="610.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111">CSDL thuốc &amp; Mô hình AI</text>
-  <path d="M 390 66 L 390 100" fill="none" stroke="#455a64" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 375 230 L 375 270" fill="none" stroke="#455a64" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 405 270 L 405 230" fill="none" stroke="#455a64" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 375 400 L 375 440" fill="none" stroke="#455a64" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 405 440 L 405 400" fill="none" stroke="#455a64" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 220 400 L 220 556" fill="none" stroke="#455a64" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 560 570 L 560 556" fill="none" stroke="#455a64" stroke-width="1.4" marker-end="url(#arr)" />
+  <rect x="0" y="0" width="820" height="720" fill="white" />
+  <rect x="330" y="22" width="160" height="38" rx="19" fill="#fff7e8" stroke="#b7791f" stroke-width="2" />
+  <text x="410" y="46" text-anchor="middle" font-size="14" font-family="Arial, sans-serif" fill="#7a4512" font-weight="bold">Người dùng</text>
+  <rect x="30" y="94" width="760" height="134" rx="8" fill="#e8f3fd" stroke="#3a7ec9" stroke-width="1.8" />
+  <text x="42" y="113" text-anchor="start" font-size="12" font-family="Arial, sans-serif" fill="#1a4a80" font-weight="bold">Tầng 1 — Ứng dụng di động (Flutter)</text>
+  <rect x="53.5" y="129.0" width="175" height="68" rx="5" fill="#c8e4fa" stroke="#3a7ec9" stroke-width="1.3" />
+  <text x="141" y="163.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">Quét đơn thuốc</text>
+  <rect x="228.5" y="129.0" width="175" height="68" rx="5" fill="#c8e4fa" stroke="#3a7ec9" stroke-width="1.3" />
+  <text x="316" y="163.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">Rà soát danh sách</text>
+  <rect x="403.5" y="129.0" width="175" height="68" rx="5" fill="#c8e4fa" stroke="#3a7ec9" stroke-width="1.3" />
+  <text x="491" y="163.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">Lập lịch dùng thuốc</text>
+  <rect x="578.5" y="129.0" width="175" height="68" rx="5" fill="#c8e4fa" stroke="#3a7ec9" stroke-width="1.3" />
+  <text x="666" y="163.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">Xem lịch hôm nay</text>
+  <rect x="30" y="268" width="760" height="134" rx="8" fill="#edfaf3" stroke="#2d7a46" stroke-width="1.8" />
+  <text x="42" y="287" text-anchor="start" font-size="12" font-family="Arial, sans-serif" fill="#1a5c32" font-weight="bold">Tầng 2 — Máy chủ chính (Node.js / Express)</text>
+  <rect x="53.5" y="303.0" width="175" height="68" rx="5" fill="#bef0d0" stroke="#2d7a46" stroke-width="1.3" />
+  <text x="141" y="329.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">Xác thực</text>
+  <text x="141" y="344.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">người dùng</text>
+  <rect x="228.5" y="303.0" width="175" height="68" rx="5" fill="#bef0d0" stroke="#2d7a46" stroke-width="1.3" />
+  <text x="316" y="329.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">Lịch sử</text>
+  <text x="316" y="344.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">quét</text>
+  <rect x="403.5" y="303.0" width="175" height="68" rx="5" fill="#bef0d0" stroke="#2d7a46" stroke-width="1.3" />
+  <text x="491" y="329.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">Quản lý</text>
+  <text x="491" y="344.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">kế hoạch</text>
+  <rect x="578.5" y="303.0" width="175" height="68" rx="5" fill="#bef0d0" stroke="#2d7a46" stroke-width="1.3" />
+  <text x="666" y="329.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">Nhật ký</text>
+  <text x="666" y="344.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">uống thuốc</text>
+  <rect x="30" y="442" width="760" height="138" rx="8" fill="#fffbec" stroke="#c49a00" stroke-width="1.8" />
+  <text x="42" y="461" text-anchor="start" font-size="12" font-family="Arial, sans-serif" fill="#7a5c00" font-weight="bold">Tầng 3 — Dịch vụ AI (FastAPI / GPU RTX 3050)</text>
+  <rect x="53.5" y="476.0" width="175" height="76" rx="5" fill="#fff0b0" stroke="#c49a00" stroke-width="1.3" />
+  <text x="141" y="506.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111111">YOLO</text>
+  <text x="141" y="521.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111111">Detect</text>
+  <rect x="228.5" y="476.0" width="175" height="76" rx="5" fill="#fff0b0" stroke="#c49a00" stroke-width="1.3" />
+  <text x="316" y="499.0" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111111">OCR</text>
+  <text x="316" y="514.0" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111111">(PaddleOCR</text>
+  <text x="316" y="529.0" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111111">+ VietOCR)</text>
+  <rect x="403.5" y="476.0" width="175" height="76" rx="5" fill="#fff0b0" stroke="#c49a00" stroke-width="1.3" />
+  <text x="491" y="506.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111111">NER</text>
+  <text x="491" y="521.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111111">(PhoBERT)</text>
+  <rect x="578.5" y="476.0" width="175" height="76" rx="5" fill="#fff0b0" stroke="#c49a00" stroke-width="1.3" />
+  <text x="666" y="506.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111111">Tra cứu</text>
+  <text x="666" y="521.5" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#111111">thuốc</text>
+  <rect x="132" y="613.0" width="156" height="44" fill="#eef2ff" stroke="none" />
+  <line x1="132" y1="613.0" x2="132" y2="657.0" stroke="#2457a5" stroke-width="1.5" />
+  <line x1="288" y1="613.0" x2="288" y2="657.0" stroke="#2457a5" stroke-width="1.5" />
+  <ellipse cx="210" cy="657.0" rx="78" ry="14" fill="#eef2ff" stroke="#2457a5" stroke-width="1.5" />
+  <ellipse cx="210" cy="613.0" rx="78" ry="14" fill="#eef2ff" stroke="#2457a5" stroke-width="1.5" />
+  <text x="210" y="627.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111" font-weight="bold">PostgreSQL</text>
+  <text x="210" y="642.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">(Dữ liệu hệ thống)</text>
+  <rect x="480" y="613.0" width="200" height="44" fill="#eef2ff" stroke="none" />
+  <line x1="480" y1="613.0" x2="480" y2="657.0" stroke="#2457a5" stroke-width="1.5" />
+  <line x1="680" y1="613.0" x2="680" y2="657.0" stroke="#2457a5" stroke-width="1.5" />
+  <ellipse cx="580" cy="657.0" rx="100" ry="14" fill="#eef2ff" stroke="#2457a5" stroke-width="1.5" />
+  <ellipse cx="580" cy="613.0" rx="100" ry="14" fill="#eef2ff" stroke="#2457a5" stroke-width="1.5" />
+  <text x="580" y="627.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111" font-weight="bold">CSDL thuốc &amp;</text>
+  <text x="580" y="642.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#111111">Mô hình AI</text>
+  <path d="M 410 60 L 410 94" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#arr)" />
+  <path d="M 396 228 L 396 268" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#arr)" />
+  <path d="M 424 268 L 424 228" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#arr)" />
+  <path d="M 396 402 L 396 442" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#arr)" />
+  <path d="M 424 442 L 424 402" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#arr)" />
+  <path d="M 200 402 L 200 599" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#arr)" />
+  <path d="M 220 599 L 220 402" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#arr)" />
+  <text x="252" y="500" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#444444" font-style="italic">Đọc / Ghi</text>
+  <path d="M 580 580 L 580 599" fill="none" stroke="#37474f" stroke-width="1.5" marker-end="url(#arr)" />
+  <text x="626" y="589" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#444444" font-style="italic">Tra cứu</text>
 </svg>

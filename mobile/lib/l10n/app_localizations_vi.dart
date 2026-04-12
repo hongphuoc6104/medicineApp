@@ -510,6 +510,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get editDrugsEmptyHint => 'Bấm + để thêm thuốc';
 
   @override
+  String get editDrugsEmptyAddFirst => 'Thêm thuốc đầu tiên';
+
+  @override
   String editDrugsContinue(int count) {
     return 'Tiếp tục — $count thuốc';
   }

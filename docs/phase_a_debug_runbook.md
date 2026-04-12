@@ -55,9 +55,12 @@ bash dev.sh
 
 Script này sẽ:
 
+- preflight local Python runtime (`venv/bin/python`, Python >= 3.10; khuyến nghị 3.12, có FastAPI/Uvicorn)
+- fail fast nếu `:8000` đang bị chiếm, kèm thông tin listener để tránh chạy nhầm runtime
 - cập nhật `mobile/.env` về `http://127.0.0.1:3001/api`
 - khởi động Node API local ở `3001`
-- khởi động Python AI server
+- khởi động Python AI server bằng interpreter trong `venv`
+- verify `/api/health` của Python có đúng runtime local (`inside_docker=false`, `using_expected_venv=true`, `ai_ready=true`)
 - chạy `adb reverse tcp:3001 tcp:3001`
 
 Kết quả:
@@ -92,6 +95,7 @@ Chạy các kiểm tra nhanh, chi phí thấp hơn:
 
 - `git status --short`
 - `py_compile` cho `core/pipeline.py` và `server/main.py`
+- health check `http://127.0.0.1:8000/api/health` và validate runtime local
 - `server-node` focused tests:
   - `tests/unit/scan.service.test.js`
   - `tests/integration/scan.routes.test.js`
@@ -159,11 +163,28 @@ Khả năng cao lỗi ở:
 - `server/main.py`
 - app-path scan response shape
 
+Hoặc lỗi runtime local bị lệch:
+
+- `:8000` trỏ vào runtime/container sai
+- Python không chạy từ `venv` trong repo
+- API lên được nhưng `ai_ready=false` (scan fallback mock)
+
 Ưu tiên kiểm tra:
 
 - `scan_prescription_app()`
 - API endpoint scan
 - field `medications`, `mapping_status`, `ocr_text`
+- payload `GET /api/health`:
+  - `runtime.inside_docker`
+  - `runtime.using_expected_venv`
+  - `scan_runtime.mode`
+  - `scan_runtime.pipeline_last_error`
+
+Lệnh nhanh:
+
+```bash
+curl http://127.0.0.1:8000/api/health
+```
 
 ### 5.4 Nếu tất cả test pass nhưng app flow vẫn tệ
 

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import 'package:medicine_app/l10n/app_localizations.dart';
 
+import '../../../core/network/network_error_mapper.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../create_plan/data/offline_dose_queue.dart';
 import '../../create_plan/domain/plan.dart';
@@ -55,7 +56,10 @@ class HomeScreen extends ConsumerWidget {
       body: plansAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => _ErrorView(
-          error: e.toString(),
+          message: toFriendlyNetworkMessage(
+            e,
+            genericMessage: 'Không tải được dữ liệu hôm nay. Vui lòng thử lại.',
+          ),
           onRetry: () => ref.read(planNotifierProvider.notifier).refresh(),
         ),
         data: (state) {
@@ -75,9 +79,9 @@ class HomeScreen extends ConsumerWidget {
 }
 
 class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.error, required this.onRetry});
+  const _ErrorView({required this.message, required this.onRetry});
 
-  final String error;
+  final String message;
   final VoidCallback onRetry;
 
   @override
@@ -91,11 +95,13 @@ class _ErrorView extends StatelessWidget {
         Text(
           'Không tải được dữ liệu hôm nay',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
         ),
         const SizedBox(height: 8),
         Text(
-          error,
+          message,
           textAlign: TextAlign.center,
           style: const TextStyle(color: AppColors.textSecondary),
         ),
@@ -157,7 +163,10 @@ class _OnboardingView extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 AppLocalizations.of(context).homeOnboardingSubtitle,
-                style: const TextStyle(color: AppColors.textSecondary, height: 1.45),
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  height: 1.45,
+                ),
               ),
               const SizedBox(height: 18),
               ElevatedButton.icon(
@@ -172,7 +181,9 @@ class _OnboardingView extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/create/edit'),
                       icon: const Icon(Icons.edit_note),
-                      label: Text(AppLocalizations.of(context).homeActionManual),
+                      label: Text(
+                        AppLocalizations.of(context).homeActionManual,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -180,7 +191,9 @@ class _OnboardingView extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/history'),
                       icon: const Icon(Icons.history_outlined),
-                      label: Text(AppLocalizations.of(context).homeActionHistory),
+                      label: Text(
+                        AppLocalizations.of(context).homeActionHistory,
+                      ),
                     ),
                   ),
                 ],
@@ -193,7 +206,9 @@ class _OnboardingView extends StatelessWidget {
           actions: [
             _QuickActionItem(
               title: AppLocalizations.of(context).homeActionDrugLookup,
-              subtitle: AppLocalizations.of(context).homeActionDrugLookupSubtitle,
+              subtitle: AppLocalizations.of(
+                context,
+              ).homeActionDrugLookupSubtitle,
               icon: Icons.search_rounded,
               onTap: () => context.go('/drugs'),
             ),
@@ -261,7 +276,11 @@ class _DashboardView extends ConsumerWidget {
         todayAsync.when(
           loading: () => const _TodayLoadingCard(),
           error: (e, _) => _TodayErrorCard(
-            message: e.toString(),
+            message: toFriendlyNetworkMessage(
+              e,
+              genericMessage:
+                  'Không tải được lịch uống thuốc hôm nay. Vui lòng thử lại.',
+            ),
             onRetry: () =>
                 ref.read(todayScheduleNotifierProvider.notifier).refresh(),
           ),
@@ -316,7 +335,9 @@ class _DashboardView extends ConsumerWidget {
                           SnackBar(
                             content: Text(
                               ok
-                                  ? l10n.homeDoseSkippedStatus(dose.primaryTitle)
+                                  ? l10n.homeDoseSkippedStatus(
+                                      dose.primaryTitle,
+                                    )
                                   : l10n.homeDoseOfflineStatus,
                             ),
                             backgroundColor: ok
@@ -336,7 +357,11 @@ class _DashboardView extends ConsumerWidget {
                   TextButton.icon(
                     onPressed: () => context.go('/plans'),
                     icon: const Icon(Icons.open_in_new),
-                    label: Text(AppLocalizations.of(context).homeViewAllPlans(plans.length)),
+                    label: Text(
+                      AppLocalizations.of(
+                        context,
+                      ).homeViewAllPlans(plans.length),
+                    ),
                   ),
                 ],
               ],
@@ -494,7 +519,9 @@ class _HeroTodayCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context).homeHeroTotalDoses(today.summary.total),
+            AppLocalizations.of(
+              context,
+            ).homeHeroTotalDoses(today.summary.total),
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w900,
@@ -503,9 +530,18 @@ class _HeroTodayCard extends StatelessWidget {
           const SizedBox(height: 18),
           Row(
             children: [
-              _HeroMetric(label: AppLocalizations.of(context).homeHeroTaken, value: '${today.summary.taken}'),
-              _HeroMetric(label: AppLocalizations.of(context).homeHeroPending, value: '${today.summary.pending}'),
-              _HeroMetric(label: AppLocalizations.of(context).homeHeroSkipped, value: '${today.summary.skipped}'),
+              _HeroMetric(
+                label: AppLocalizations.of(context).homeHeroTaken,
+                value: '${today.summary.taken}',
+              ),
+              _HeroMetric(
+                label: AppLocalizations.of(context).homeHeroPending,
+                value: '${today.summary.pending}',
+              ),
+              _HeroMetric(
+                label: AppLocalizations.of(context).homeHeroSkipped,
+                value: '${today.summary.skipped}',
+              ),
               _HeroMetric(
                 label: AppLocalizations.of(context).homeHeroMissed,
                 value: '${today.summary.missed}',

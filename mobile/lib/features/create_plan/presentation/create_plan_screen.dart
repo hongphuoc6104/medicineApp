@@ -69,7 +69,7 @@ class CreatePlanScreen extends StatelessWidget {
               title: l10n.createPlanHistoryTitle,
               subtitle: l10n.createPlanHistorySubtitle,
               color: AppColors.success,
-              onTap: () => context.go('/history'),
+              onTap: () => context.go('/create/reuse'),
             ),
           ],
         ),

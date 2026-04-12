@@ -4,6 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VENV_PY="$ROOT_DIR/venv/bin/python"
+PYTHON_HEALTH_URL="http://127.0.0.1:8000/api/health"
 
 MODE="quick"
 RUN_SCAN_SMOKE=0
@@ -90,6 +91,59 @@ run_in_dir() {
   (cd "$dir" && "$@")
 }
 
+verify_python_runtime_health() {
+  local health_json
+
+  if ! health_json="$(curl -sf "$PYTHON_HEALTH_URL")"; then
+    echo ""
+    echo "❌ Python runtime health check failed: $PYTHON_HEALTH_URL is unreachable."
+    echo "Failure mode: local AI runtime is not running (or wrong process bound to :8000)."
+    echo "Fix path: start local stack with 'bash dev.sh' and re-run this script."
+    exit 1
+  fi
+
+  if ! HEALTH_JSON="$health_json" "$VENV_PY" - <<'PY'
+import json
+import os
+import sys
+
+payload = json.loads(os.environ["HEALTH_JSON"])
+runtime = payload.get("runtime")
+scan_runtime = payload.get("scan_runtime") or {}
+
+if not isinstance(runtime, dict):
+    print("❌ Health payload missing 'runtime' block.")
+    print("Failure mode: Python server is outdated or not the hardened local runtime.")
+    sys.exit(1)
+
+if runtime.get("inside_docker"):
+    print("❌ Runtime mismatch: inside_docker=true for /api/health on :8000.")
+    print("Failure mode: app-path may be hitting container runtime instead of local venv runtime.")
+    sys.exit(1)
+
+if not runtime.get("using_expected_venv"):
+    print("❌ Runtime mismatch: python executable is not from repo venv.")
+    print(f"python_executable={runtime.get('python_executable')}")
+    print(f"expected_venv={runtime.get('expected_venv')}")
+    print("Failure mode: wrong interpreter can produce scan drift or missing dependencies.")
+    sys.exit(1)
+
+if not payload.get("ai_ready"):
+    print("❌ ai_ready=false on /api/health.")
+    print("Failure mode: API is up but scan runtime is not ready; requests may fall back to mock mode.")
+    last_error = scan_runtime.get("pipeline_last_error")
+    if last_error:
+        print(f"pipeline_last_error={last_error}")
+    sys.exit(1)
+
+mode = scan_runtime.get("mode")
+print(f"✅ Python runtime health OK (mode={mode})")
+PY
+  then
+    exit 1
+  fi
+}
+
 section "Phase A debug checks: $MODE"
 section "Workspace summary"
 run_in_dir "$ROOT_DIR" git status --short || true
@@ -102,6 +156,9 @@ if [[ "$RUN_PYTHON" -eq 1 ]]; then
 
   section "Python compile checks"
   run_in_dir "$ROOT_DIR" "$VENV_PY" -m py_compile core/pipeline.py server/main.py
+
+  section "Python runtime health checks"
+  verify_python_runtime_health
 
   if [[ "$RUN_SCAN_SMOKE" -eq 1 && -f "$ROOT_DIR/scripts/tests/test_phase_a_api_alignment.py" ]]; then
     section "Python scan app-path smoke"
