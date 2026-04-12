@@ -61,7 +61,10 @@ data/input/
 # ============================================
 Zero-PIMA/
 YOLO11-Seg-Label-Detector-main/
-archive/
+archive/*
+!archive/README.md
+!archive/plan_bin/
+!archive/plan_bin/**
 
 # ============================================
 # Generated output & debug

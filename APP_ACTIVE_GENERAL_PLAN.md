@@ -2,90 +2,105 @@
 
 ## Initiative hiện tại
 
-`Prescription Plan Group Redesign`
+`Việt hóa toàn bộ phần hiển thị cho người dùng trong app`
 
-Mục tiêu là bỏ mô hình cũ `1 plan = 1 thuốc` và chuyển app sang mô hình đúng với cách người dùng nghĩ:
+Mục tiêu của initiative này là đưa toàn bộ app Flutter về một mặt chữ thống nhất, dễ hiểu và đúng tiếng Việt có dấu:
 
-- `1 kế hoạch`
-- có `1 hoặc nhiều khung giờ uống`
-- mỗi khung giờ có `1 hoặc nhiều loại thuốc`
-- mỗi thuốc trong khung giờ có `số lượng riêng`
+- mọi tiêu đề, nút bấm, helper text, dialog, snackbar, empty state, error state và notification phải là tiếng Việt
+- loại bỏ các chuỗi tiếng Anh hoặc tiếng Việt không dấu như `Thong tin thuoc`, `Da dong bo...`, `Den gio uong thuoc`
+- gom text về một lớp quản lý tập trung thay vì để hard-code rải rác ở từng màn
 
 ---
 
 ## Quyết định sản phẩm đã chốt
 
-### 1. Không giữ dữ liệu cũ như ràng buộc
+### 1. Scope là phần hiển thị user-facing của app
 
-- không cần tương thích ngược với schema cũ ở mức nghiệp vụ
-- có thể bỏ cách hiểu cũ `medication_plans = từng thuốc`
-- có thể dùng schema mới và route/service mới trong cùng app
+- ưu tiên `mobile/`
+- không đổi schema, route, contract hay nghiệp vụ backend chỉ để dịch chữ
+- không chạm `scripts/run_pipeline.py`
 
-### 2. Một lần uống là một khung giờ có nhiều thuốc
+### 2. Tiếng Việt có dấu là mặc định bắt buộc
 
-- home/today phải xoay quanh `dose slot`
-- không xoay quanh từng thuốc riêng lẻ nữa
+- không để English lẫn trong UI đang ship cho người dùng
+- không để copy kiểu ASCII không dấu trên các màn đã sửa
 
-### 3. Phase B tiếp tục đứng ngoài luồng này
+### 3. Phase B logic vẫn đứng ngoài initiative này
 
-- không mở Phase B trong initiative này
+- chỉ được sửa copy ở các màn Phase B đang lộ trong app nếu cần
+- không mở thêm research hay thay đổi logic verification
 
 ---
 
 ## Vấn đề tổng quát cần giải quyết
 
-### 1. Data model hiện tại sai với nghiệp vụ thật
+### 1. String user-facing đang hard-code rải rác
 
-- đang lưu theo từng thuốc riêng
-- người dùng nghĩ theo từng đơn/kế hoạch có nhiều thuốc
+- text nằm phân tán trong nhiều screen, notifier và service
+- sửa một chỗ khó đảm bảo nhất quán toàn app
 
-### 2. Màn lập lịch bị bó buộc bởi model cũ
+### 2. App chưa có nền localization thật sự
 
-- chỉ mới vá được số viên theo từng giờ
-- chưa phản ánh đúng `1 kế hoạch nhiều thuốc nhiều khung giờ`
+- đã có `intl` nhưng chưa có `flutter_localizations`, delegates hay ARB catalog
+- `MaterialApp` chưa khai báo locale support
 
-### 3. Home / plan list / plan detail vẫn đang lộ mô hình cũ
+### 3. Copy hiện tại bị pha tạp
 
-- chưa nhìn ra đúng một kế hoạch tổng thể
+- có chỗ tiếng Việt có dấu
+- có chỗ tiếng Việt không dấu
+- có chỗ để English kỹ thuật hoặc message thô
+
+### 4. Error/status/notification copy chưa được chuẩn hóa
+
+- cùng một hành vi nhưng mỗi màn dùng một kiểu câu khác nhau
+- một số lỗi đang lộ raw text kém thân thiện
 
 ---
 
 ## Nhóm ưu tiên
 
-### Nhóm A — Backend foundation mới
+### Nhóm A — Foundation localization
 
-- schema mới cho plan group
-- service mới cho create/read/update/log/today
+- dựng hạ tầng `l10n` cho Flutter
+- tạo catalog text tập trung
 
-### Nhóm B — Mobile domain/repository mới
+### Nhóm B — Global chrome và core flow
 
-- mobile hiểu plan group mới
+- app shell, điều hướng, notification
+- auth, home, create plan, scan, review, schedule
 
-### Nhóm C — Schedule screen mới
+### Nhóm C — Surface phụ nhưng vẫn user-facing
 
-- schedule xoay quanh `khung giờ -> thuốc -> số viên`
+- drug search/detail
+- plan list/detail
+- history
+- settings
 
-### Nhóm D — Home / plan list / plan detail mới
+### Nhóm D — Pill verification và cleanup cuối
 
-- hiển thị đúng theo kế hoạch nhóm
+- copy ở các màn pill verification đang lộ trong app
+- sweep toàn bộ string còn sót lại
 
 ---
 
 ## Thứ tự xử lý lớn
 
-1. backend foundation mới
-2. mobile domain/repository mới
-3. schedule screen save theo plan group
-4. user test create/save
-5. home/today/list/detail theo model mới
+1. dựng foundation localization và entry wiring trong app
+2. chuyển shared UI, app shell và notification copy sang lớp tập trung
+3. việt hóa luồng chính `auth -> home -> create plan -> scan -> review -> schedule`
+4. việt hóa các màn `drug / plan / history / settings`
+5. việt hóa `pill verification` ở mức copy và chạy sweep cuối để loại bỏ text sót
 
 ---
 
 ## Quy tắc nghiệm thu trong initiative này
 
-- sau khi xong phần `backend + mobile domain + schedule save`, phải dừng để user test
-- chỉ khi user xác nhận flow create/save ổn mới mở tiếp phần `home/list/detail`
+- `MaterialApp` phải có localization delegates và locale support rõ ràng
+- mọi text user-facing trong các file đã chạm phải đi qua lớp localization hoặc message catalog tập trung
+- không còn English hoặc tiếng Việt không dấu trên luồng chính
+- `cd mobile && flutter analyze` và `cd mobile && flutter test` phải pass
+- sau batch core flow phải manual verify lại các màn chính của Phase A app path
 
-Batch cũ đã hoàn thành và được archive tại:
+Plan active trước đó được park tại:
 
-- `archive/plan_bin/2026-04-10_phase-a_master/APP_REBUILD_GENERAL_PLAN.md`
+- `archive/plan_bin/2026-04-12_prescription-plan-group-redesign_superseded/`

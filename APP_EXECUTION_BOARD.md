@@ -2,71 +2,68 @@
 
 File này dùng để điều phối execution model cho từng lát cắt đang chạy.
 
-Planner/reviewer là AI điều phối. Các file dưới đây là plan chi tiết theo từng model.
+Planner/reviewer là AI điều phối. Root hiện chỉ giữ bộ plan active mới nhất để tránh đọc nhầm scope.
 
 ---
 
 ## Trạng thái hiện tại
 
-- Batch cũ Phase A đã hoàn thành và đã archive.
-- Initiative active hiện tại: `Prescription Plan Group Redesign`.
-- Mục tiêu đang triển khai: bỏ hẳn mô hình `1 plan = 1 thuốc`, chuyển sang `1 kế hoạch nhiều thuốc nhiều khung giờ`.
+- Initiative active hiện tại: `Việt hóa toàn bộ phần hiển thị cho người dùng trong app`.
+- Trọng tâm là `mobile/`, không phải redesign data model hay backend.
+- Bộ plan active cũ đã được park vào `archive/plan_bin/2026-04-12_prescription-plan-group-redesign_superseded/`.
+- Các file slice legacy còn sót ở root đã được chuyển vào `archive/plan_bin/2026-04-12_legacy_root_slice_plans/`.
 
 ---
 
 ## Active execution plans
 
-Hiện tại planner đang trực tiếp triển khai nền tảng cho initiative mới (9A/9B/9C hợp nhất) để tạo được flow khả dụng trước khi chia lại cho execution models.
+Hiện tại planner vừa reset plan và chưa tách execution file riêng theo model.
+
+Lát cắt sẵn sàng mở đầu tiên:
+
+- `L10N-1 — Foundation và shared copy`
+- Trạng thái: `ready_to_assign`
 
 ---
 
 ## Hàng chờ sau đợt này
+
+### L10N-2
+
+- Core flow `auth -> home -> create plan -> scan -> review -> schedule`
+- Trạng thái: `queued_after_L10N-1`
+
+### L10N-3
+
+- `drug / plan / history / settings`
+- Trạng thái: `queued_after_L10N-2`
+
+### L10N-4
+
+- `pill verification` copy + repo-wide sweep cuối
+- Trạng thái: `queued_after_L10N-3`
 
 ### Claude Opus Thinking
 
 - Chưa giao việc ở đợt này.
 - Vai trò dự phòng cho blocker khó hoặc review sâu nếu một execution model dừng theo luật stop.
 
-### Lát cắt 6
-
-- `create entry + history reuse`
-- `6A`, `6B`, `6C` đều đã hoàn thành và đã được archive.
-
-### Lát cắt 9A / 9B / 9C
-
-- Backend foundation plan group mới
-- Mobile domain/repository mới
-- Schedule screen save theo plan group mới
-- Trạng thái: `in_progress`
-
-### Lát cắt 9D
-
-- Home / plan list / detail theo model mới
-- Trạng thái: `partially_in_progress`
-
-### Lát cắt 10
-
-- Prescription-first UX sâu hơn
-- Chưa mở
-
 ---
 
-## Completed in previous batches
+## Archive tham chiếu
 
-- `APP_DETAIL_GEMINI_3_1_PRO_SLICE_3.md`
-- `APP_DETAIL_CLAUDE_SONNET_THINKING_SLICE_4.md`
-- `APP_DETAIL_CLAUDE_SONNET_THINKING_HOTFIX_ANALYZE.md`
-- `APP_DETAIL_GPT_5_3_CODEX_SLICE_5.md`
-- `APP_DETAIL_GPT_5_3_CODEX_SLICE_6A_CREATE_ENTRY.md`
-- `APP_DETAIL_GEMINI_3_1_PRO_SLICE_6B_SCAN_HISTORY_REUSE.md`
-- `APP_DETAIL_CLAUDE_SONNET_THINKING_SLICE_6C_HISTORY_LIST.md`
+- `archive/plan_bin/2026-04-12_prescription-plan-group-redesign_superseded/APP_ACTIVE_GENERAL_PLAN.md`
+- `archive/plan_bin/2026-04-12_prescription-plan-group-redesign_superseded/APP_ACTIVE_DETAILED_PLAN.md`
+- `archive/plan_bin/2026-04-12_legacy_root_slice_plans/APP_DETAIL_GEMINI_3_1_PRO_SLICE_7A_SCAN_AUTO.md`
+- `archive/plan_bin/2026-04-12_legacy_root_slice_plans/APP_DETAIL_CLAUDE_SONNET_THINKING_SLICE_7B_DRUG_ENTRY_STABLE.md`
+- `archive/plan_bin/2026-04-12_legacy_root_slice_plans/APP_DETAIL_GPT_5_3_CODEX_SLICE_7C_SIMPLE_SCHEDULE.md`
 
 ---
 
 ## Quy tắc điều phối
 
-- Mỗi execution model chỉ làm đúng file plan của mình.
-- Không được sửa file nằm ngoài danh sách cho phép trong plan model tương ứng.
-- Nếu cần đụng sang file đang thuộc model khác, phải dừng và trả blocker.
-- Sau khi xong, planner/reviewer sẽ nghiệm thu từng lát cắt.
-- Sau khi đủ `7A + 7B + 7C`, planner mới mời user test gộp một lần.
+- Mỗi execution model chỉ làm đúng một lát cắt `L10N-x` đã được giao.
+- Không được sửa file nằm ngoài danh sách cho phép trong lát cắt tương ứng.
+- Nếu cần đụng sang backend, Phase B logic hoặc pipeline để hoàn thành việc Việt hóa, phải dừng và trả blocker.
+- Sau mỗi lát cắt, planner/reviewer sẽ nghiệm thu lại copy, phạm vi sửa và test.
+- Sau khi xong `L10N-2`, nên mời user kiểm tra riêng luồng chính trước khi mở rộng ra các màn còn lại.
