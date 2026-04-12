@@ -197,6 +197,70 @@ class NotificationService {
     }
   }
 
+  Future<bool> hasPermissions() async {
+    if (kIsWeb) {
+      return false;
+    }
+    await initialize();
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      if (androidPlugin == null) {
+        return false;
+      }
+
+      final notificationsEnabled =
+          await androidPlugin.areNotificationsEnabled() ?? false;
+      if (!notificationsEnabled) {
+        return false;
+      }
+
+      final exactAlarmsEnabled =
+          await androidPlugin.canScheduleExactNotifications() ?? false;
+      if (!exactAlarmsEnabled) {
+        return false;
+      }
+
+      return true;
+    }
+    return true;
+  }
+
+  Future<void> requestPermissions() async {
+    if (kIsWeb) {
+      return;
+    }
+    await initialize();
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+      if (androidPlugin == null) {
+        return;
+      }
+
+      final notificationsEnabled =
+          await androidPlugin.areNotificationsEnabled() ?? false;
+      if (!notificationsEnabled) {
+        await androidPlugin.requestNotificationsPermission();
+      }
+
+      final exactAlarmsEnabled =
+          await androidPlugin.canScheduleExactNotifications() ?? false;
+      if (!exactAlarmsEnabled) {
+        await androidPlugin.requestExactAlarmsPermission();
+      }
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      final iosPlugin = _plugin.resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>();
+      await iosPlugin?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+  }
   Future<void> cancelAllNotifications() async {
     await initialize();
     if (kIsWeb) {
