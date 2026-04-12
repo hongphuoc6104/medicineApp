@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/widgets.dart';
@@ -24,6 +25,8 @@ class NotificationService {
       channelDescription: _l10n.notificationChannelDescription,
       importance: Importance.max,
       priority: Priority.high,
+      // Wake device screen to show heads-up notification
+      fullScreenIntent: true,
     );
   }
 
@@ -136,18 +139,33 @@ class NotificationService {
             : (plan.drugName.isNotEmpty
                   ? '${plan.drugName} ($pills viên)'
                   : l10n.notificationDefaultBody);
-        await _plugin.zonedSchedule(
-          id,
-          l10n.notificationDefaultTitle,
-          body,
-          tz.TZDateTime.from(scheduled, tz.local),
-          NotificationDetails(
-            android: _androidDetails(),
-            iOS: DarwinNotificationDetails(),
-          ),
-          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-          payload: 'plan:${plan.id}',
-        );
+        try {
+          await _plugin.zonedSchedule(
+            id,
+            l10n.notificationDefaultTitle,
+            body,
+            tz.TZDateTime.from(scheduled, tz.local),
+            NotificationDetails(
+              android: _androidDetails(),
+              iOS: DarwinNotificationDetails(),
+            ),
+            // exactAllowWhileIdle delivers at the exact scheduled time even
+            // when the device is in idle/Doze mode. Falls back gracefully if
+            // OS denies exact-alarm permission (caught below).
+            androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+            payload: 'plan:${plan.id}',
+          );
+        } on PlatformException catch (e) {
+          // SecurityException is surfaced as PlatformException when the OS
+          // has not granted SCHEDULE_EXACT_ALARM / USE_EXACT_ALARM.
+          // Log and skip this slot rather than crashing the app.
+          if (kDebugMode) {
+            debugPrint(
+              '[NotificationService] zonedSchedule skipped for '
+              '${plan.id} @ ${scheduled.toIso8601String()}: ${e.message}',
+            );
+          }
+        }
       }
     }
   }

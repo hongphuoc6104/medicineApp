@@ -1,11 +1,11 @@
 {
-    "name": "medicine_app",
-    "short_name": "medicine_app",
+    "name": "Nhắc Thuốc",
+    "short_name": "Nhắc Thuốc",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Nhắc Thuốc - Ứng dụng nhắc uống thuốc hằng ngày.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

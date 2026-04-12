@@ -23,7 +23,7 @@ Planner/reviewer là AI điều phối. Root hiện giữ initiative active mớ
 - Model khuyến nghị: `Claude Sonnet 4.6 Thinking`
 
 - `REMIND-1A-R1B — reschedule đúng khi bật lại reminder`
-- Trạng thái: `ready_to_assign`
+- Trạng thái: `completed`
 - Model khuyến nghị: `GPT-5.3 Codex`
 
 ### 2. Parallel research / spec slices
@@ -112,7 +112,7 @@ Planner/reviewer là AI điều phối. Root hiện giữ initiative active mớ
 - Model khuyến nghị: `Gemini 3.1 Pro High`
 
 - `HISTORY-1A-S1 — mobile-only IA shift`
-- Trạng thái: `ready_to_assign`
+- Trạng thái: `completed`
 - Model khuyến nghị: `Gemini 3.1 Pro High`
 
 ### Reminders / Local-first
@@ -160,6 +160,8 @@ Planner/reviewer là AI điều phối. Root hiện giữ initiative active mớ
 - `HOME-1A-PREP` — exact file/line brief cho home priority fix
 - `LOCAL-1A-PREP` — exact cache/storage brief cho stale-while-revalidate
 - `REMIND-1B-PREP` — permission/recovery UX brief cho reminders
+- `REMIND-1A-R1B` — reschedule đúng khi bật lại reminder
+- `HISTORY-1A-S1` — mobile-only IA shift cho History
 
 ---
 

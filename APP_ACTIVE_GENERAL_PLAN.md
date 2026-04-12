@@ -237,12 +237,12 @@ Các lỗi và khoảng trống hiện tại nằm ở nhiều tầng cùng lúc
 - `FLOW-1B-PREP` — manual entry UX cleanup brief
 - `FLOW-1B-A` — manual entry routing + empty state fix
 - `FLOW-1B-HF1` — đưa key CTA manual entry về lại ARB/source-of-truth
+- `REMIND-1A-R1B` — logic reschedule đúng khi bật lại reminder
+- `HISTORY-1A-S1` — mobile-only IA shift cho History
 
 ### Đang mở tiếp
 
 - `HOME-1A` — coding slice active tiếp theo
-- `REMIND-1A-R1B` — logic reschedule đúng khi bật lại reminder
-- `HISTORY-1A-S1` — mobile-only IA shift cho History
 
 ### Batch prep tiếp theo có thể chạy song song
 

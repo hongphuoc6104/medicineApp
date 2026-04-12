@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_theme.dart';
@@ -21,6 +22,8 @@ class DrugEntrySheet extends StatefulWidget {
 class _DrugEntrySheetState extends State<DrugEntrySheet> {
   late final TextEditingController _nameCtrl;
   late final TextEditingController _dosageCtrl;
+  late final TextEditingController _pillsCtrl;
+  late final TextEditingController _daysCtrl;
   Timer? _debounceTimer;
 
   List<DrugSearchItem> _suggestions = [];
@@ -35,6 +38,12 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
     super.initState();
     _nameCtrl = TextEditingController(text: widget.initial?.name ?? '');
     _dosageCtrl = TextEditingController(text: widget.initial?.dosage ?? '');
+    _pillsCtrl = TextEditingController(
+      text: (widget.initial?.pillsPerDose ?? 1).toString(),
+    );
+    _daysCtrl = TextEditingController(
+      text: (widget.initial?.totalDays ?? 7).toString(),
+    );
   }
 
   @override
@@ -42,6 +51,8 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
     _debounceTimer?.cancel();
     _nameCtrl.dispose();
     _dosageCtrl.dispose();
+    _pillsCtrl.dispose();
+    _daysCtrl.dispose();
     super.dispose();
   }
 
@@ -119,16 +130,20 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
   void _submit() {
     final name = _nameCtrl.text.trim();
     if (name.isEmpty) return;
+
+    final pillsValue = int.tryParse(_pillsCtrl.text) ?? 1;
+    final daysValue = int.tryParse(_daysCtrl.text) ?? 7;
+
     final initial = widget.initial;
     Navigator.pop(
       context,
       PlanDrugItem(
         name: name,
         dosage: _dosageCtrl.text.trim(),
-        pillsPerDose: initial?.pillsPerDose ?? 1,
+        pillsPerDose: pillsValue < 1 ? 1 : pillsValue,
         frequency: initial?.frequency ?? 'daily',
         times: initial?.times,
-        totalDays: initial?.totalDays ?? 7,
+        totalDays: daysValue < 1 ? 1 : daysValue,
         notes: initial?.notes ?? '',
       ),
     );
@@ -148,77 +163,109 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
         top: 20,
         bottom: MediaQuery.of(context).viewInsets.bottom + 20,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Title
-          Text(
-            widget.initial == null
-                ? l10n.drugEntrySheetAddTitle
-                : l10n.drugEntrySheetEditTitle,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
-          ),
-          const SizedBox(height: 16),
-
-          // Drug name field
-          TextField(
-            controller: _nameCtrl,
-            autofocus: true,
-            onChanged: _onNameChanged,
-            decoration: InputDecoration(
-              labelText: l10n.drugEntrySheetNameLabel,
-              hintText: l10n.drugEntrySheetNameHint,
-              prefixIcon: const Icon(Icons.medication_outlined),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Title
+            Text(
+              widget.initial == null
+                  ? l10n.drugEntrySheetAddTitle
+                  : l10n.drugEntrySheetEditTitle,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
             ),
-          ),
+            const SizedBox(height: 16),
 
-          // ── Suggestion zone ──────────────────────────────────────────────
-          // AnimatedSize keeps the zone height stable while content changes,
-          // preventing the layout from jumping when suggestions appear/vanish.
-          AnimatedSize(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOut,
-            alignment: Alignment.topCenter,
-            child: _buildSuggestionZone(l10n),
-          ),
-
-          const SizedBox(height: 12),
-
-          // Dosage field
-          TextField(
-            controller: _dosageCtrl,
-            decoration: InputDecoration(
-              labelText: l10n.drugEntrySheetDosageLabel,
-              hintText: l10n.drugEntrySheetDosageHint,
-              prefixIcon: const Icon(Icons.scale_outlined),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Action buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(l10n.drugEntrySheetCancel),
-                ),
+            // Drug name field
+            TextField(
+              controller: _nameCtrl,
+              autofocus: true,
+              onChanged: _onNameChanged,
+              decoration: InputDecoration(
+                labelText: l10n.drugEntrySheetNameLabel,
+                hintText: l10n.drugEntrySheetNameHint,
+                prefixIcon: const Icon(Icons.medication_outlined),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _submit,
-                  child: Text(
-                    widget.initial == null
-                        ? l10n.drugEntrySheetAdd
-                        : l10n.drugEntrySheetSave,
+            ),
+
+            // ── Suggestion zone ──────────────────────────────────────────────
+            // AnimatedSize keeps the zone height stable while content changes,
+            // preventing the layout from jumping when suggestions appear/vanish.
+            AnimatedSize(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              alignment: Alignment.topCenter,
+              child: _buildSuggestionZone(l10n),
+            ),
+
+            const SizedBox(height: 12),
+
+            // Dosage field
+            TextField(
+              controller: _dosageCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.drugEntrySheetDosageLabel,
+                hintText: l10n.drugEntrySheetDosageHint,
+                prefixIcon: const Icon(Icons.scale_outlined),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Pills/Dose and Total Days Row
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _pillsCtrl,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    decoration: InputDecoration(
+                      labelText: l10n.drugEntrySheetPillsPerDoseLabel,
+                      prefixIcon: const Icon(Icons.pin_outlined),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    controller: _daysCtrl,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    decoration: InputDecoration(
+                      labelText: l10n.drugEntrySheetTotalDaysLabel,
+                      prefixIcon: const Icon(Icons.calendar_today_outlined),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(l10n.drugEntrySheetCancel),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _submit,
+                    child: Text(
+                      widget.initial == null
+                          ? l10n.drugEntrySheetAdd
+                          : l10n.drugEntrySheetSave,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

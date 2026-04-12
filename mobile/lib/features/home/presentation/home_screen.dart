@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.authLoginTitle),
+        title: Text(l10n.appTitle),
         actions: [
           IconButton(
             onPressed: () => context.go('/settings'),
@@ -285,69 +285,78 @@ class _DashboardView extends ConsumerWidget {
                 ref.read(todayScheduleNotifierProvider.notifier).refresh(),
           ),
           data: (today) {
+            final now = DateTime.now();
+            final dueNow = today.doses.where((d) => d.isDueNow(now)).toList();
+            final upcoming = today.doses
+                .where((d) => d.status == 'pending' && !d.isDueNow(now))
+                .toList();
+
+            Widget doseTile(TodayDose dose) => _TodayDoseTile(
+              dose: dose,
+              canMark: canMark,
+              onTaken: () async {
+                final ok = await ref
+                    .read(todayScheduleNotifierProvider.notifier)
+                    .markDose(dose: dose, status: 'taken');
+                if (!context.mounted) return;
+                final l10n = AppLocalizations.of(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      ok
+                          ? l10n.homeDoseTakenStatus(dose.primaryTitle)
+                          : l10n.homeDoseOfflineStatus,
+                    ),
+                    backgroundColor: ok ? AppColors.success : AppColors.warning,
+                  ),
+                );
+              },
+              onSkipped: () async {
+                final ok = await ref
+                    .read(todayScheduleNotifierProvider.notifier)
+                    .markDose(dose: dose, status: 'skipped');
+                if (!context.mounted) return;
+                final l10n = AppLocalizations.of(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      ok
+                          ? l10n.homeDoseSkippedStatus(dose.primaryTitle)
+                          : l10n.homeDoseOfflineStatus,
+                    ),
+                    backgroundColor: AppColors.warning,
+                  ),
+                );
+              },
+            );
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _HeroTodayCard(today: today),
                 const SizedBox(height: 16),
-                _SectionLabel(
-                  title: AppLocalizations.of(context).homeTodayDrugs,
-                  actionLabel: AppLocalizations.of(context).homeActionPlans,
-                  onAction: () => context.go('/plans'),
-                ),
-                const SizedBox(height: 10),
                 if (today.doses.isEmpty)
                   const _TodayEmptyCard()
-                else
-                  ...today.doses.map(
-                    (dose) => _TodayDoseTile(
-                      dose: dose,
-                      canMark: canMark,
-                      onEnrollReference: () =>
-                          context.push('/pill-reference/enroll', extra: dose),
-                      onVerify: () => context.go('/pill-verify', extra: dose),
-                      onTaken: () async {
-                        final ok = await ref
-                            .read(todayScheduleNotifierProvider.notifier)
-                            .markDose(dose: dose, status: 'taken');
-                        if (!context.mounted) return;
-                        final l10n = AppLocalizations.of(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              ok
-                                  ? l10n.homeDoseTakenStatus(dose.primaryTitle)
-                                  : l10n.homeDoseOfflineStatus,
-                            ),
-                            backgroundColor: ok
-                                ? AppColors.success
-                                : AppColors.warning,
-                          ),
-                        );
-                      },
-                      onSkipped: () async {
-                        final ok = await ref
-                            .read(todayScheduleNotifierProvider.notifier)
-                            .markDose(dose: dose, status: 'skipped');
-                        if (!context.mounted) return;
-                        final l10n = AppLocalizations.of(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              ok
-                                  ? l10n.homeDoseSkippedStatus(
-                                      dose.primaryTitle,
-                                    )
-                                  : l10n.homeDoseOfflineStatus,
-                            ),
-                            backgroundColor: ok
-                                ? AppColors.warning
-                                : AppColors.warning,
-                          ),
-                        );
-                      },
+                else ...[
+                  if (dueNow.isNotEmpty) ...[
+                    _SectionLabel(
+                      title: AppLocalizations.of(context).homeSectionDueNow,
                     ),
-                  ),
+                    const SizedBox(height: 10),
+                    ...dueNow.map(doseTile),
+                    const SizedBox(height: 8),
+                  ],
+                  if (upcoming.isNotEmpty) ...[
+                    _SectionLabel(
+                      title: AppLocalizations.of(context).homeSectionUpcoming,
+                    ),
+                    const SizedBox(height: 10),
+                    ...upcoming.map(doseTile),
+                    const SizedBox(height: 8),
+                  ],
+                  if (dueNow.isEmpty && upcoming.isEmpty)
+                    const _TodayEmptyCard(),
+                ],
                 const SizedBox(height: 18),
                 _SectionLabel(title: AppLocalizations.of(context).homeInUse),
                 const SizedBox(height: 10),
@@ -585,24 +594,15 @@ class _HeroMetric extends StatelessWidget {
 }
 
 class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.title, this.actionLabel, this.onAction});
+  const _SectionLabel({required this.title});
 
   final String title;
-  final String? actionLabel;
-  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
-        ),
-        const Spacer(),
-        if (actionLabel != null && onAction != null)
-          TextButton(onPressed: onAction, child: Text(actionLabel!)),
-      ],
+    return Text(
+      title,
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900),
     );
   }
 }
@@ -879,16 +879,12 @@ class _TodayDoseTile extends StatelessWidget {
   const _TodayDoseTile({
     required this.dose,
     required this.canMark,
-    required this.onEnrollReference,
-    required this.onVerify,
     required this.onTaken,
     required this.onSkipped,
   });
 
   final TodayDose dose;
   final bool canMark;
-  final VoidCallback onEnrollReference;
-  final VoidCallback onVerify;
   final VoidCallback onTaken;
   final VoidCallback onSkipped;
 
@@ -896,8 +892,6 @@ class _TodayDoseTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = dose.status;
     final pending = status == 'pending';
-    final missingReference = !dose.hasReferenceProfile;
-    final verificationDisabled = missingReference || !dose.verificationReady;
     final statusMeta = switch (status) {
       'taken' => ('Đã uống', AppColors.success, Icons.check_circle_rounded),
       'skipped' => ('Bỏ qua', AppColors.warning, Icons.remove_circle_rounded),
@@ -991,35 +985,6 @@ class _TodayDoseTile extends StatelessWidget {
           ),
           if (pending) ...[
             const SizedBox(height: 14),
-            if (missingReference)
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: AppColors.warning.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  dose.missingReferenceDrugNames.isNotEmpty
-                      ? 'Thiếu ảnh mẫu cho: ${dose.missingReferenceDrugNames.join(', ')}. Hãy chụp mẫu để xác minh chính xác.'
-                      : 'Bạn chưa có ảnh mẫu viên thuốc cho liều này. Hãy chụp mẫu để tăng độ chính xác khi xác minh.',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
-            if (missingReference)
-              OutlinedButton.icon(
-                onPressed: canMark ? onEnrollReference : null,
-                icon: const Icon(Icons.add_a_photo_outlined),
-                label: const Text('Chụp mẫu viên thuốc'),
-              ),
-            if (missingReference) const SizedBox(height: 8),
-            OutlinedButton.icon(
-              onPressed: canMark && !verificationDisabled ? onVerify : null,
-              icon: const Icon(Icons.photo_camera_back_outlined),
-              label: const Text('Xác minh liều này'),
-            ),
-            const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(

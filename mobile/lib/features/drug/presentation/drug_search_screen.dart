@@ -54,7 +54,7 @@ class _DrugSearchScreenState extends ConsumerState<DrugSearchScreen> {
     final state = ref.watch(drugSearchNotifierProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Thong tin thuoc')),
+      appBar: AppBar(title: const Text('Thông tin thuốc')),
       body: Column(
         children: [
           Container(
@@ -87,7 +87,7 @@ class _DrugSearchScreenState extends ConsumerState<DrugSearchScreen> {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Tim theo ten thuoc hoac hoat chat de xem thong tin nhanh.',
+                  'Tìm theo tên thuốc hoặc hoạt chất để xem thông tin nhanh.',
                   style: TextStyle(color: AppColors.textSecondary),
                 ),
               ],
@@ -170,7 +170,7 @@ class _DrugSearchScreenState extends ConsumerState<DrugSearchScreen> {
                                   Text(
                                     item.activeIngredient?.isNotEmpty == true
                                         ? item.activeIngredient!
-                                        : 'Khong ro hoat chat',
+                                        : 'Không rõ hoạt chất',
                                     style: const TextStyle(
                                       color: AppColors.textSecondary,
                                     ),
@@ -241,12 +241,12 @@ class _SearchHint extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             const Text(
-              'Nhap it nhat 2 ky tu de tim thuoc',
+              'Nhập ít nhất 2 ký tự để tìm thuốc',
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
             ),
             const SizedBox(height: 8),
             const Text(
-              'Ban co the tim theo ten thuoc, ten thuong mai hoac hoat chat.',
+              'Bạn có thể tìm theo tên thuốc, tên thương mại hoặc hoạt chất.',
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.textSecondary),
             ),
@@ -264,7 +264,7 @@ class _EmptyResult extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        'Khong tim thay ket qua phu hop',
+        'Không tìm thấy kết quả phù hợp',
         style: TextStyle(color: AppColors.textSecondary),
       ),
     );

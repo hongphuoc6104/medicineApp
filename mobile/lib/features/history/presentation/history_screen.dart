@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/network/network_error_mapper.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../create_plan/domain/medication_log.dart';
 import '../data/medication_logs_notifier.dart';
 import '../data/scan_history_notifier.dart';
 
@@ -35,15 +36,112 @@ class HistoryScreen extends ConsumerWidget {
               labelColor: AppColors.primary,
               unselectedLabelColor: AppColors.textMuted,
               tabs: const [
-                Tab(text: 'Đơn thuốc đã quét'),
                 Tab(text: 'Lịch sử uống thuốc'),
+                Tab(text: 'Đơn thuốc đã quét'),
               ],
             ),
             Expanded(
               child: TabBarView(
                 children: [
                   // -------------------------------------------------------
-                  // Tab 1: Scan history
+                  // Tab 1: Medication logs
+                  // -------------------------------------------------------
+                  RefreshIndicator(
+                    onRefresh: () => ref
+                        .read(medicationLogsNotifierProvider.notifier)
+                        .refresh(),
+                    child: logAsync.when(
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (e, _) => _ErrorState(
+                        message: toFriendlyNetworkMessage(
+                          e,
+                          genericMessage:
+                              'Không tải được lịch sử uống thuốc. Kéo xuống để thử lại.',
+                        ),
+                        onRetry: () => ref
+                            .read(medicationLogsNotifierProvider.notifier)
+                            .refresh(),
+                      ),
+                      data: (page) {
+                        if (page.items.isEmpty) {
+                          return const _EmptyState(
+                            icon: Icons.medication_outlined,
+                            message: 'Chưa có lịch sử uống thuốc.',
+                            hint:
+                                'Dữ liệu sẽ xuất hiện khi bạn bắt đầu theo dõi kế hoạch.',
+                          );
+                        }
+                        
+                        final sortedItems = page.items.toList()
+                          ..sort((a, b) => b.scheduledTime.compareTo(a.scheduledTime));
+
+                        final groupedLogs = <DateTime, List<MedicationLogEntry>>{};
+                        for (final log in sortedItems) {
+                          final localTime = log.scheduledTime.toLocal();
+                          final dateKey = DateTime(
+                              localTime.year, localTime.month, localTime.day);
+                          groupedLogs.putIfAbsent(dateKey, () => []).add(log);
+                        }
+
+                        final dfDay = DateFormat('dd/MM/yyyy');
+                        final dfTime = DateFormat('HH:mm');
+
+                        final listItems = <Widget>[];
+                        final now = DateTime.now();
+                        final today = DateTime(now.year, now.month, now.day);
+                        final yesterday =
+                            today.subtract(const Duration(days: 1));
+
+                        for (final entry in groupedLogs.entries) {
+                          final date = entry.key;
+                          final logs = entry.value;
+
+                          String headerText;
+                          if (date == today) {
+                            headerText = 'Hôm nay';
+                          } else if (date == yesterday) {
+                            headerText = 'Hôm qua';
+                          } else {
+                            headerText = dfDay.format(date);
+                          }
+
+                          listItems.add(
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+                              child: Text(
+                                headerText,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 15,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ),
+                          );
+
+                          for (final log in logs) {
+                            listItems.add(
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 4),
+                                child: _LogEntryCard(log: log, timeFormat: dfTime),
+                              ),
+                            );
+                          }
+                        }
+
+                        return ListView.builder(
+                          padding: const EdgeInsets.only(bottom: 24),
+                          itemCount: listItems.length,
+                          itemBuilder: (context, index) => listItems[index],
+                        );
+                      },
+                    ),
+                  ),
+
+                  // -------------------------------------------------------
+                  // Tab 2: Scan history
                   // -------------------------------------------------------
                   RefreshIndicator(
                     onRefresh: () => ref
@@ -82,70 +180,6 @@ class HistoryScreen extends ConsumerWidget {
                               qualityState: item.qualityState,
                               onTap: () =>
                                   context.go('/history/scan/${item.id}'),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-
-                  // -------------------------------------------------------
-                  // Tab 2: Medication logs
-                  // -------------------------------------------------------
-                  RefreshIndicator(
-                    onRefresh: () => ref
-                        .read(medicationLogsNotifierProvider.notifier)
-                        .refresh(),
-                    child: logAsync.when(
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                      error: (e, _) => _ErrorState(
-                        message: toFriendlyNetworkMessage(
-                          e,
-                          genericMessage:
-                              'Không tải được lịch sử uống thuốc. Kéo xuống để thử lại.',
-                        ),
-                        onRetry: () => ref
-                            .read(medicationLogsNotifierProvider.notifier)
-                            .refresh(),
-                      ),
-                      data: (page) {
-                        if (page.items.isEmpty) {
-                          return const _EmptyState(
-                            icon: Icons.medication_outlined,
-                            message: 'Chưa có lịch sử uống thuốc.',
-                            hint:
-                                'Dữ liệu sẽ xuất hiện khi bạn bắt đầu theo dõi kế hoạch.',
-                          );
-                        }
-                        final df = DateFormat('dd/MM/yyyy HH:mm');
-                        return ListView.separated(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: page.items.length,
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 8),
-                          itemBuilder: (context, index) {
-                            final log = page.items[index];
-                            return ListTile(
-                              tileColor: AppColors.surface,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              leading: Icon(
-                                _statusIcon(log.status),
-                                color: _statusColor(log.status),
-                              ),
-                              title: Text(log.drugName ?? 'Không rõ tên thuốc'),
-                              subtitle: Text(
-                                df.format(log.scheduledTime.toLocal()),
-                              ),
-                              trailing: Text(
-                                _statusLabel(log.status),
-                                style: TextStyle(
-                                  color: _statusColor(log.status),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
                             );
                           },
                         );
@@ -537,6 +571,98 @@ class _ErrorState extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Log entry card - displays one medication log history record
+// ---------------------------------------------------------------------------
+
+class _LogEntryCard extends StatelessWidget {
+  const _LogEntryCard({required this.log, required this.timeFormat});
+
+  final MedicationLogEntry log;
+  final DateFormat timeFormat;
+
+  @override
+  Widget build(BuildContext context) {
+    final statusColor = HistoryScreen._statusColor(log.status);
+    final statusIcon = HistoryScreen._statusIcon(log.status);
+    final statusLabel = HistoryScreen._statusLabel(log.status);
+    final pillsText = log.pillsPerDose != null ? '${log.pillsPerDose} viên' : '';
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          // Time
+          SizedBox(
+            width: 50,
+            child: Text(
+              timeFormat.format(log.scheduledTime.toLocal()),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
+          ),
+          // Divider
+          Container(
+            width: 3,
+            height: 32,
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          // Content
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  log.drugName ?? 'Thuốc không tên',
+                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                ),
+                if (pillsText.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    pillsText,
+                    style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          // Status badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: statusColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(statusIcon, size: 14, color: statusColor),
+                const SizedBox(width: 4),
+                Text(
+                  statusLabel,
+                  style: TextStyle(
+                    color: statusColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

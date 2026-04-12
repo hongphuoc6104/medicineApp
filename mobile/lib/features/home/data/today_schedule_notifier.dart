@@ -3,12 +3,63 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../create_plan/data/offline_dose_queue.dart';
 import '../../create_plan/data/plan_repository.dart';
 import '../domain/today_schedule.dart';
+import 'today_schedule_cache.dart';
 
 class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
   @override
   Future<TodaySchedule> build() async {
-    final repo = ref.read(planRepositoryProvider);
-    return repo.getTodaySchedule();
+    return _loadAndRevalidate();
+  }
+
+  Future<TodaySchedule> _loadAndRevalidate() async {
+    final cache = ref.read(todayScheduleCacheProvider);
+    final cached = await cache.load();
+
+    if (cached != null) {
+      state = AsyncValue.data(await _applyOfflineQueue(cached));
+    }
+
+    try {
+      await flushOfflineQueue();
+      final repo = ref.read(planRepositoryProvider);
+      final fresh = await repo.getTodaySchedule();
+
+      await cache.save(fresh);
+
+      final finalFresh = await _applyOfflineQueue(fresh);
+      return finalFresh;
+    } catch (e, st) {
+      if (cached != null) {
+        return await _applyOfflineQueue(cached);
+      }
+      Error.throwWithStackTrace(e, st);
+    }
+  }
+
+  Future<TodaySchedule> _applyOfflineQueue(TodaySchedule schedule) async {
+    final queue = ref.read(offlineDoseQueueProvider);
+    final pendingLogs = await queue.getPendingLogs();
+
+    if (pendingLogs.isEmpty) return schedule;
+
+    final logMap = { for (var e in pendingLogs) e.occurrenceId : e };
+
+    final updatedDoses = schedule.doses.map((d) {
+      if (logMap.containsKey(d.occurrenceId)) {
+        return d.copyWith(status: logMap[d.occurrenceId]!.status);
+      }
+      return d;
+    }).toList();
+
+    final updatedSummary = TodaySummary(
+      total: updatedDoses.length,
+      taken: updatedDoses.where((d) => d.status == 'taken').length,
+      pending: updatedDoses.where((d) => d.status == 'pending').length,
+      skipped: updatedDoses.where((d) => d.status == 'skipped').length,
+      missed: updatedDoses.where((d) => d.status == 'missed').length,
+    );
+
+    return schedule.copyWith(doses: updatedDoses, summary: updatedSummary);
   }
 
   Future<int> flushOfflineQueue() async {
@@ -21,7 +72,12 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
     state = await AsyncValue.guard(() async {
       await flushOfflineQueue();
       final repo = ref.read(planRepositoryProvider);
-      return repo.getTodaySchedule();
+      final fresh = await repo.getTodaySchedule();
+      
+      final cache = ref.read(todayScheduleCacheProvider);
+      await cache.save(fresh);
+      
+      return await _applyOfflineQueue(fresh);
     });
   }
 
@@ -56,26 +112,7 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
       if (current != null) {
         final updatedDoses = current.doses.map((d) {
           if (d.occurrenceId == dose.occurrenceId) {
-            return TodayDose(
-              occurrenceId: d.occurrenceId,
-              planId: d.planId,
-              title: d.title,
-              drugName: d.drugName,
-              time: d.time,
-              scheduledTime: d.scheduledTime,
-              status: status,
-              dosage: d.dosage,
-              pillsPerDose: d.pillsPerDose,
-              notes: d.notes,
-              takenAt: d.takenAt,
-              note: d.note,
-              hasReferenceProfile: d.hasReferenceProfile,
-              referenceProfileStatus: d.referenceProfileStatus,
-              verificationReady: d.verificationReady,
-              expectedMedications: d.expectedMedications,
-              missingReferenceDrugNames: d.missingReferenceDrugNames,
-              medications: d.medications,
-            );
+            return d.copyWith(status: status);
           }
           return d;
         }).toList();
@@ -89,8 +126,7 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
         );
 
         state = AsyncValue.data(
-          TodaySchedule(
-            date: current.date,
+          current.copyWith(
             doses: updatedDoses,
             summary: updatedSummary,
           ),

@@ -25,7 +25,7 @@ class DrugDetailScreen extends StatelessWidget {
     final registration = raw['soDangKy']?.toString();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Thong tin thuoc')),
+      appBar: AppBar(title: const Text('Thông tin thuốc')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
         children: [
@@ -77,37 +77,37 @@ class DrugDetailScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _InfoCard(
             background: AppColors.infoCard,
-            title: 'Thong tin co ban',
+            title: 'Thông tin cơ bản',
             children: [
-              _InfoLine(label: 'Nguon', value: details.source ?? 'local'),
+              _InfoLine(label: 'Nguồn', value: details.source ?? 'local'),
               if (registration != null && registration.isNotEmpty)
-                _InfoLine(label: 'So dang ky', value: registration),
+                _InfoLine(label: 'Số đăng ký', value: registration),
               if (manufacturer != null && manufacturer.isNotEmpty)
-                _InfoLine(label: 'Co so dang ky', value: manufacturer),
+                _InfoLine(label: 'Cơ sở đăng ký', value: manufacturer),
               if (activeIngredient != null && activeIngredient!.isNotEmpty)
-                _InfoLine(label: 'Hoat chat', value: activeIngredient!),
+                _InfoLine(label: 'Hoạt chất', value: activeIngredient!),
             ],
           ),
           const SizedBox(height: 14),
           _InfoCard(
-            title: 'Cach dung',
+            title: 'Cách dùng',
             children: [
               Text(
                 dosageInfo != null && dosageInfo.trim().isNotEmpty
                     ? dosageInfo
-                    : 'Chua co thong tin lieu dung chi tiet.',
+                    : 'Chưa có thông tin liều dùng chi tiết.',
                 style: const TextStyle(height: 1.5),
               ),
             ],
           ),
           const SizedBox(height: 14),
           _InfoCard(
-            title: 'Chi dinh',
+            title: 'Chỉ định',
             children: [
               Text(
                 usage != null && usage.trim().isNotEmpty
                     ? usage
-                    : 'Chua co thong tin chi dinh chi tiet.',
+                    : 'Chưa có thông tin chỉ định chi tiết.',
                 style: const TextStyle(height: 1.5),
               ),
             ],
@@ -115,7 +115,7 @@ class DrugDetailScreen extends StatelessWidget {
           if (sideEffects != null && sideEffects.trim().isNotEmpty) ...[
             const SizedBox(height: 14),
             _InfoCard(
-              title: 'Tac dung phu',
+              title: 'Tác dụng phụ',
               children: [
                 Text(sideEffects, style: const TextStyle(height: 1.5)),
               ],

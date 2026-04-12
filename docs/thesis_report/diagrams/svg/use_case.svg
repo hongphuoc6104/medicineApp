@@ -1,70 +1,68 @@
 <?xml version='1.0' encoding='utf-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" width="860" height="580" viewBox="0 0 860 580">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620">
   <defs>
-    <marker id="arr" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
-      <polygon points="0 0, 9 3.5, 0 7" fill="#37474f" />
+    <marker id="arr" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+      <polygon points="0 0, 8 3.5, 0 7" fill="#37474f" />
     </marker>
-    <marker id="arr-dash" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
-      <polygon points="0 0, 9 3.5, 0 7" fill="#37474f" />
+    <marker id="arr-dash" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto">
+      <polygon points="0 0, 8 3.5, 0 7" fill="#37474f" />
     </marker>
   </defs>
   <style>
   text { font-family: Arial, sans-serif; }
-  .boundary-title { font-size: 13px; font-weight: bold; fill: #1a3a6e; }
+  .bnd-title { font-size: 14px; font-weight: bold; fill: #1a3a6e; }
 </style>
-  <rect x="0" y="0" width="860" height="580" fill="white" />
-  <rect x="165" y="28" width="670" height="522" rx="6" ry="6" fill="#f8fafd" stroke="#7a9abf" stroke-width="1.8" />
-  <text x="500.0" y="48" class="boundary-title" text-anchor="middle">Hệ thống Hỗ trợ Quản lý Thuốc</text>
-  <ellipse cx="390" cy="100" rx="108" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
-  <text x="390" y="100" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
-    <tspan x="390" dy="0">Đăng nhập / Đăng ký</tspan>
+  <rect x="0" y="0" width="900" height="620" fill="white" />
+  <rect x="170" y="24" width="710" height="574" rx="6" ry="6" fill="#f8fafd" stroke="#7a9abf" stroke-width="1.8" />
+  <text x="525.0" y="46" class="bnd-title" text-anchor="middle">Hệ thống Hỗ trợ Quản lý Đơn Thuốc</text>
+  <ellipse cx="420" cy="100" rx="112" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
+  <text x="420" y="100" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
+    <tspan x="420" dy="0">Đăng nhập / Đăng ký</tspan>
   </text>
-  <ellipse cx="390" cy="192" rx="108" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
-  <text x="390" y="192" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
-    <tspan x="390" dy="0">Quét đơn thuốc</tspan>
+  <ellipse cx="420" cy="200" rx="112" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
+  <text x="420" y="200" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
+    <tspan x="420" dy="0">Quét đơn thuốc</tspan>
   </text>
-  <ellipse cx="390" cy="290" rx="108" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
-  <text x="390" y="290" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
-    <tspan x="390" dy="0">Rà soát danh sách thuốc</tspan>
+  <ellipse cx="420" cy="300" rx="112" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
+  <text x="420" y="300" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
+    <tspan x="420" dy="0">Rà soát danh sách thuốc</tspan>
   </text>
-  <ellipse cx="390" cy="388" rx="108" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
-  <text x="390" y="388" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
-    <tspan x="390" dy="0">Lập lịch dùng thuốc</tspan>
+  <ellipse cx="420" cy="400" rx="112" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
+  <text x="420" y="400" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
+    <tspan x="420" dy="0">Lập lịch dùng thuốc</tspan>
   </text>
-  <ellipse cx="390" cy="486" rx="108" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
-  <text x="390" y="486" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
-    <tspan x="390" dy="0">Xem lịch hôm nay</tspan>
+  <ellipse cx="420" cy="500" rx="112" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
+  <text x="420" y="500" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
+    <tspan x="420" dy="0">Xem lịch hôm nay</tspan>
   </text>
-  <ellipse cx="660" cy="388" rx="108" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
-  <text x="660" y="388" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
-    <tspan x="660" dy="-8">Ghi nhận đã uống</tspan>
-    <tspan x="660" dy="16">/ bỏ qua</tspan>
+  <ellipse cx="710" cy="395" rx="112" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
+  <text x="710" y="395" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
+    <tspan x="710" dy="-9">Ghi nhận trạng thái</tspan>
+    <tspan x="710" dy="18">uống thuốc</tspan>
   </text>
-  <ellipse cx="660" cy="486" rx="108" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
-  <text x="660" y="486" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
-    <tspan x="660" dy="0">Xem lịch sử quét</tspan>
+  <ellipse cx="710" cy="505" rx="112" ry="30" fill="#eef3fb" stroke="#2457a5" stroke-width="2.0" />
+  <text x="710" y="505" text-anchor="middle" dominant-baseline="central" font-size="13" font-family="Arial, sans-serif" fill="#0d1f40">
+    <tspan x="710" dy="0">Xem lịch sử quét</tspan>
   </text>
-  <circle cx="80" cy="173" r="18" fill="white" stroke="#333333" stroke-width="1.8" />
-  <line x1="80" y1="191" x2="80" y2="235" stroke="#333333" stroke-width="1.8" />
-  <line x1="52" y1="205" x2="108" y2="205" stroke="#333333" stroke-width="1.8" />
-  <line x1="80" y1="235" x2="58" y2="265" stroke="#333333" stroke-width="1.8" />
-  <line x1="80" y1="235" x2="102" y2="265" stroke="#333333" stroke-width="1.8" />
-  <text x="80" y="283" text-anchor="middle" font-size="14" font-family="Arial, sans-serif" font-weight="bold" fill="#222222">
-    <tspan x="80" dy="0">Người dùng</tspan>
-  </text>
-  <path d="M 108 205 L 325.42005639349907 124.04572368327162" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 108 205 L 283.457228257604 196.911546215075" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 108 205 L 316.8104502875568 267.93932012213594" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 108 205 L 347.5003731887737 360.42045494165103" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 108 205 L 360.99900124842634 457.1018416695312" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 108 205 L 590.6378603912868 365.0049428471114" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 108 205 L 608.2682118174023 459.66552087081527" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
-  <path d="M 412.0 222.0 L 412.0 260.0" fill="none" stroke="#37474f" stroke-width="1.3" stroke-dasharray="7,4" marker-end="url(#arr-dash)" />
-  <text x="442.0" y="241.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#555555" font-style="italic">«include»</text>
-  <path d="M 412.0 320.0 L 412.0 358.0" fill="none" stroke="#37474f" stroke-width="1.3" stroke-dasharray="7,4" marker-end="url(#arr-dash)" />
-  <text x="442.0" y="339.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#555555" font-style="italic">«include»</text>
-  <path d="M 412.0 418.0 L 412.0 456.0" fill="none" stroke="#37474f" stroke-width="1.3" stroke-dasharray="7,4" marker-end="url(#arr-dash)" />
-  <text x="442.0" y="437.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#555555" font-style="italic">«include»</text>
-  <path d="M 455.6370910645987 462.17616694692344 L 594.3629089354014 411.82383305307656" fill="none" stroke="#37474f" stroke-width="1.3" stroke-dasharray="7,4" marker-end="url(#arr-dash)" />
-  <text x="525.0" y="427.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#555555" font-style="italic">«extend»</text>
+  <circle cx="82" cy="176" r="16" fill="white" stroke="#222222" stroke-width="1.8" />
+  <line x1="82" y1="192" x2="82" y2="234" stroke="#222222" stroke-width="1.8" />
+  <line x1="56" y1="206" x2="108" y2="206" stroke="#222222" stroke-width="1.8" />
+  <line x1="82" y1="234" x2="62" y2="262" stroke="#222222" stroke-width="1.8" />
+  <line x1="82" y1="234" x2="102" y2="262" stroke="#222222" stroke-width="1.8" />
+  <text x="82" y="282" text-anchor="middle" font-size="14" font-family="Arial, sans-serif" font-weight="bold" fill="#222222">Người dùng</text>
+  <path d="M 108.0 192.0 L 344.7 122.2" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
+  <path d="M 108.0 209.8 L 308.8 203.5" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
+  <path d="M 108.0 227.6 L 335.4 280.3" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
+  <path d="M 108.0 245.3 L 366.8 373.6" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
+  <path d="M 108.0 263.1 L 382.7 471.7" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
+  <path d="M 108.0 244.4 L 628.1 374.5" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
+  <path d="M 108.0 264.0 L 647.7 480.1" fill="none" stroke="#37474f" stroke-width="1.4" marker-end="url(#arr)" />
+  <path d="M 456.4 229.9 L 456.4 270.1" fill="none" stroke="#37474f" stroke-width="1.3" stroke-dasharray="7,4" marker-end="url(#arr-dash)" />
+  <text x="494.376474203063" y="250.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#444444" font-style="italic">«include»</text>
+  <path d="M 456.4 329.9 L 456.4 370.1" fill="none" stroke="#37474f" stroke-width="1.3" stroke-dasharray="7,4" marker-end="url(#arr-dash)" />
+  <text x="494.376474203063" y="350.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#444444" font-style="italic">«include»</text>
+  <path d="M 456.4 429.9 L 456.4 470.1" fill="none" stroke="#37474f" stroke-width="1.3" stroke-dasharray="7,4" marker-end="url(#arr-dash)" />
+  <text x="494.376474203063" y="450.0" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#444444" font-style="italic">«include»</text>
+  <path d="M 486.6 475.9 L 643.4 419.1" fill="none" stroke="#37474f" stroke-width="1.3" stroke-dasharray="7,4" marker-end="url(#arr-dash)" />
+  <text x="565.0" y="437.5" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#444444" font-style="italic">«extend»</text>
 </svg>

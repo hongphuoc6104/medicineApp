@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// Application title displayed in app bar and task switcher
   ///
   /// In vi, this message translates to:
-  /// **'Thuốc Của Tôi'**
+  /// **'Nhắc Thuốc'**
   String get appTitle;
 
   /// Bottom navigation label for Home tab
@@ -253,7 +253,7 @@ abstract class AppLocalizations {
   /// No description provided for @authLoginTitle.
   ///
   /// In vi, this message translates to:
-  /// **'MedicineApp'**
+  /// **'Nhắc Thuốc'**
   String get authLoginTitle;
 
   /// No description provided for @authLoginSubtitle.
@@ -639,6 +639,18 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Không tải được lịch hôm nay'**
   String get homeErrorLoadSchedule;
+
+  /// No description provided for @homeSectionDueNow.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đến giờ uống'**
+  String get homeSectionDueNow;
+
+  /// No description provided for @homeSectionUpcoming.
+  ///
+  /// In vi, this message translates to:
+  /// **'Sắp tới trong ngày'**
+  String get homeSectionUpcoming;
 
   /// No description provided for @createPlanTitle.
   ///

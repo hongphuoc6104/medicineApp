@@ -87,6 +87,10 @@ class OfflineDoseQueue {
     await _saveQueue(deduped);
   }
 
+  Future<List<PendingDoseLog>> getPendingLogs() async {
+    return _loadQueue();
+  }
+
   Future<int> pendingCount() async {
     final queue = await _loadQueue();
     return queue.length;

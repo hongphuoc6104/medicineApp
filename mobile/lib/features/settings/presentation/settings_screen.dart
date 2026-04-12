@@ -38,7 +38,7 @@ class SettingsScreen extends ConsumerWidget {
             SwitchListTile(
               secondary: const Icon(Icons.notifications_outlined),
               title: const Text('Nhắc uống thuốc'),
-              subtitle: const Text('Tat se huy nhac local tren thiet bi nay'),
+              subtitle: const Text('Tắt sẽ hủy nhắc trên thiết bị này'),
               value: settingsState.remindersEnabled,
               thumbColor: WidgetStateProperty.all(AppColors.primary),
               onChanged: settingsAsync.isLoading
@@ -52,8 +52,8 @@ class SettingsScreen extends ConsumerWidget {
                         SnackBar(
                           content: Text(
                             v
-                                ? 'Da bat nhac uong thuoc tren thiet bi nay'
-                                : 'Da tat nhac uong thuoc tren thiet bi nay',
+                                ? 'Đã bật nhắc uống thuốc trên thiết bị này'
+                                : 'Đã tắt nhắc uống thuốc trên thiết bị này',
                           ),
                         ),
                       );
@@ -61,9 +61,9 @@ class SettingsScreen extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.sync_outlined),
-              title: const Text('Dong bo ngay'),
+              title: const Text('Đồng bộ ngay'),
               subtitle: const Text(
-                'Tai lai ke hoach hom nay va flush log offline',
+                'Tải lại kế hoạch hôm nay và đồng bộ log offline',
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
@@ -73,7 +73,7 @@ class SettingsScreen extends ConsumerWidget {
                     .refresh();
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Da dong bo du lieu hien tai')),
+                  const SnackBar(content: Text('Đã đồng bộ dữ liệu hiện tại')),
                 );
               },
             ),
@@ -81,7 +81,7 @@ class SettingsScreen extends ConsumerWidget {
           _buildSection('Ứng dụng', [
             ListTile(
               leading: const Icon(Icons.info_outline),
-              title: const Text('Phiên bản'),
+              title: const Text('Phiên bản ứng dụng'),
               trailing: Text(
                 '1.0.0',
                 style: TextStyle(color: AppColors.textMuted),

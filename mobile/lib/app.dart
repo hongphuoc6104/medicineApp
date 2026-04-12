@@ -20,7 +20,7 @@ class MedicineApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      title: 'Thuốc Của Tôi',
+      title: 'Nhắc Thuốc',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       routerConfig: router,

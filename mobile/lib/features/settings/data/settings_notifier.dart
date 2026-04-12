@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/notifications/notification_service.dart';
+import '../../create_plan/data/plan_repository.dart';
 import '../../home/data/plan_notifier.dart';
 import 'settings_repository.dart';
 
@@ -33,7 +34,15 @@ class SettingsNotifier extends AsyncNotifier<SettingsState> {
     if (!enabled) {
       await notificationService.cancelAllNotifications();
     } else {
-      await ref.read(planNotifierProvider.notifier).refresh();
+      final plansAsync = ref.read(planNotifierProvider);
+      final cachedPlans = plansAsync.asData?.value.plans;
+      if (cachedPlans != null) {
+        await notificationService.rescheduleAllPlans(cachedPlans);
+      } else {
+        final planRepository = ref.read(planRepositoryProvider);
+        final plans = await planRepository.getPlans(activeOnly: true);
+        await notificationService.rescheduleAllPlans(plans);
+      }
     }
     state = AsyncValue.data(SettingsState(remindersEnabled: enabled));
   }

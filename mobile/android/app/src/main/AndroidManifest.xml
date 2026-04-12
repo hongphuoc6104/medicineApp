@@ -1,8 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Required for reboot recovery: reschedules alarms after device restart -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Required for exact alarm scheduling on Android 12+ (API 31+) -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!-- Alternative exact alarm permission on Android 13+ (API 33+): no runtime prompt needed -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <application
-        android:label="medicine_app"
+        android:label="Nhắc Thuốc"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -32,6 +38,19 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- Reschedules notifications after device reboot or app update.
+             Required because flutter_local_notifications v19.x does not
+             auto-register this receiver in its own AndroidManifest.xml. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

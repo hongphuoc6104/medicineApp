@@ -21,6 +21,14 @@ class DoseExpectedMedication {
         dosage: json['dosage'] as String?,
         pillsPerDose: json['pillsPerDose'] as int?,
       );
+
+  Map<String, dynamic> toJson() => {
+    'planId': planId,
+    'drugName': drugName,
+    if (occurrenceId != null) 'occurrenceId': occurrenceId,
+    if (dosage != null) 'dosage': dosage,
+    if (pillsPerDose != null) 'pillsPerDose': pillsPerDose,
+  };
 }
 
 class TodayDoseMedication {
@@ -41,6 +49,12 @@ class TodayDoseMedication {
         pills: json['pills'] as int? ?? 1,
         dosage: json['dosage'] as String?,
       );
+
+  Map<String, dynamic> toJson() => {
+    'drugName': drugName,
+    'pills': pills,
+    if (dosage != null) 'dosage': dosage,
+  };
 }
 
 class TodayDose {
@@ -89,6 +103,20 @@ class TodayDose {
   String get primaryTitle =>
       (title != null && title!.trim().isNotEmpty) ? title!.trim() : drugName;
 
+  /// Returns true when this pending dose falls within a ±30-minute window of
+  /// [now]. Non-pending doses always return false.
+  bool isDueNow(DateTime now) {
+    if (status != 'pending') return false;
+    DateTime? scheduled;
+    try {
+      scheduled = DateTime.parse(scheduledTime).toLocal();
+    } catch (_) {
+      return false;
+    }
+    final diff = now.difference(scheduled).inMinutes.abs();
+    return diff <= 30;
+  }
+
   factory TodayDose.fromJson(Map<String, dynamic> json) => TodayDose(
     occurrenceId: json['occurrenceId'] as String? ?? '',
     planId: json['planId'] as String? ?? '',
@@ -119,6 +147,69 @@ class TodayDose {
         .map((e) => TodayDoseMedication.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
+
+  Map<String, dynamic> toJson() => {
+    'occurrenceId': occurrenceId,
+    'planId': planId,
+    if (title != null) 'title': title,
+    'drugName': drugName,
+    'time': time,
+    'scheduledTime': scheduledTime,
+    'status': status,
+    if (dosage != null) 'dosage': dosage,
+    if (pillsPerDose != null) 'pillsPerDose': pillsPerDose,
+    if (notes != null) 'notes': notes,
+    if (takenAt != null) 'takenAt': takenAt,
+    if (note != null) 'note': note,
+    'hasReferenceProfile': hasReferenceProfile,
+    if (referenceProfileStatus != null) 'referenceProfileStatus': referenceProfileStatus,
+    'verificationReady': verificationReady,
+    'expectedMedications': expectedMedications.map((e) => e.toJson()).toList(),
+    'missingReferenceDrugNames': missingReferenceDrugNames,
+    'medications': medications.map((e) => e.toJson()).toList(),
+  };
+
+  TodayDose copyWith({
+    String? occurrenceId,
+    String? planId,
+    String? title,
+    String? drugName,
+    String? time,
+    String? scheduledTime,
+    String? status,
+    String? dosage,
+    int? pillsPerDose,
+    String? notes,
+    String? takenAt,
+    String? note,
+    bool? hasReferenceProfile,
+    String? referenceProfileStatus,
+    bool? verificationReady,
+    List<DoseExpectedMedication>? expectedMedications,
+    List<String>? missingReferenceDrugNames,
+    List<TodayDoseMedication>? medications,
+  }) {
+    return TodayDose(
+      occurrenceId: occurrenceId ?? this.occurrenceId,
+      planId: planId ?? this.planId,
+      title: title ?? this.title,
+      drugName: drugName ?? this.drugName,
+      time: time ?? this.time,
+      scheduledTime: scheduledTime ?? this.scheduledTime,
+      status: status ?? this.status,
+      dosage: dosage ?? this.dosage,
+      pillsPerDose: pillsPerDose ?? this.pillsPerDose,
+      notes: notes ?? this.notes,
+      takenAt: takenAt ?? this.takenAt,
+      note: note ?? this.note,
+      hasReferenceProfile: hasReferenceProfile ?? this.hasReferenceProfile,
+      referenceProfileStatus: referenceProfileStatus ?? this.referenceProfileStatus,
+      verificationReady: verificationReady ?? this.verificationReady,
+      expectedMedications: expectedMedications ?? this.expectedMedications,
+      missingReferenceDrugNames: missingReferenceDrugNames ?? this.missingReferenceDrugNames,
+      medications: medications ?? this.medications,
+    );
+  }
 }
 
 class TodaySummary {
@@ -143,6 +234,14 @@ class TodaySummary {
     skipped: json['skipped'] as int? ?? 0,
     missed: json['missed'] as int? ?? 0,
   );
+
+  Map<String, dynamic> toJson() => {
+    'total': total,
+    'taken': taken,
+    'pending': pending,
+    'skipped': skipped,
+    'missed': missed,
+  };
 }
 
 class TodaySchedule {
@@ -176,4 +275,22 @@ class TodaySchedule {
       (json['summary'] as Map<String, dynamic>? ?? const {}),
     ),
   );
+
+  Map<String, dynamic> toJson() => {
+    'date': date,
+    'doses': doses.map((e) => e.toJson()).toList(),
+    'summary': summary.toJson(),
+  };
+
+  TodaySchedule copyWith({
+    String? date,
+    List<TodayDose>? doses,
+    TodaySummary? summary,
+  }) {
+    return TodaySchedule(
+      date: date ?? this.date,
+      doses: doses ?? this.doses,
+      summary: summary ?? this.summary,
+    );
+  }
 }

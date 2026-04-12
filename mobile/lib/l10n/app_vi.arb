@@ -1,7 +1,7 @@
 {
   "@@locale": "vi",
 
-  "appTitle": "Thuốc Của Tôi",
+  "appTitle": "Nhắc Thuốc",
   "@appTitle": {
     "description": "Application title displayed in app bar and task switcher"
   },
@@ -131,7 +131,7 @@
     "description": "Title shown on 404/unknown route fallback screen"
   },
 
-  "authLoginTitle": "MedicineApp",
+  "authLoginTitle": "Nhắc Thuốc",
   "@authLoginTitle": {},
   "authLoginSubtitle": "Quản lý đơn thuốc thông minh",
   "@authLoginSubtitle": {},
@@ -305,6 +305,10 @@
   "@homeLoadingToday": {},
   "homeErrorLoadSchedule": "Không tải được lịch hôm nay",
   "@homeErrorLoadSchedule": {},
+  "homeSectionDueNow": "Đến giờ uống",
+  "@homeSectionDueNow": {},
+  "homeSectionUpcoming": "Sắp tới trong ngày",
+  "@homeSectionUpcoming": {},
 
   "createPlanTitle": "Tạo kế hoạch",
   "@createPlanTitle": {},
@@ -588,5 +592,9 @@
   "drugEntrySheetSave": "Lưu",
   "@drugEntrySheetSave": {},
   "drugEntrySheetSearching": "Đang tìm gợi ý...",
-  "@drugEntrySheetSearching": {}
+  "@drugEntrySheetSearching": {},
+  "drugEntrySheetPillsPerDoseLabel": "Số viên/lần",
+  "@drugEntrySheetPillsPerDoseLabel": {},
+  "drugEntrySheetTotalDaysLabel": "Số ngày uống",
+  "@drugEntrySheetTotalDaysLabel": {}
 }
