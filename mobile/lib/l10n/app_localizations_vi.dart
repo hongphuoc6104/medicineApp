@@ -9,7 +9,7 @@ class AppLocalizationsVi extends AppLocalizations {
   AppLocalizationsVi([String locale = 'vi']) : super(locale);
 
   @override
-  String get appTitle => 'Nhắc Thuốc';
+  String get appTitle => 'Uống thuốc';
 
   @override
   String get navHome => 'Trang chủ';
@@ -90,7 +90,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get routeFallbackTitle => 'Trang không tìm thấy';
 
   @override
-  String get authLoginTitle => 'Nhắc Thuốc';
+  String get authLoginTitle => 'Uống thuốc';
 
   @override
   String get authLoginSubtitle => 'Quản lý đơn thuốc thông minh';
@@ -679,4 +679,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get drugEntrySheetSearching => 'Đang tìm gợi ý...';
+
+  @override
+  String get drugEntrySheetPillsPerDoseLabel => 'Số viên/lần';
+
+  @override
+  String get drugEntrySheetTotalDaysLabel => 'Số ngày uống';
 }

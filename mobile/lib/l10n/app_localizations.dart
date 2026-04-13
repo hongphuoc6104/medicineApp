@@ -97,7 +97,7 @@ abstract class AppLocalizations {
   /// Application title displayed in app bar and task switcher
   ///
   /// In vi, this message translates to:
-  /// **'Nhắc Thuốc'**
+  /// **'Uống thuốc'**
   String get appTitle;
 
   /// Bottom navigation label for Home tab
@@ -253,7 +253,7 @@ abstract class AppLocalizations {
   /// No description provided for @authLoginTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Nhắc Thuốc'**
+  /// **'Uống thuốc'**
   String get authLoginTitle;
 
   /// No description provided for @authLoginSubtitle.
@@ -1299,6 +1299,18 @@ abstract class AppLocalizations {
   /// In vi, this message translates to:
   /// **'Đang tìm gợi ý...'**
   String get drugEntrySheetSearching;
+
+  /// No description provided for @drugEntrySheetPillsPerDoseLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số viên/lần'**
+  String get drugEntrySheetPillsPerDoseLabel;
+
+  /// No description provided for @drugEntrySheetTotalDaysLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số ngày uống'**
+  String get drugEntrySheetTotalDaysLabel;
 }
 
 class _AppLocalizationsDelegate

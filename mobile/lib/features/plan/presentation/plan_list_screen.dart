@@ -46,8 +46,8 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final activePlans = _plans.where((plan) => plan.isActive).toList();
-    final inactivePlans = _plans.where((plan) => !plan.isActive).toList();
+    final activePlans = _plans.where((plan) => plan.isCurrentPlan).toList();
+    final inactivePlans = _plans.where((plan) => plan.hasEnded).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -259,8 +259,8 @@ class _PlanTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statusColor = plan.isActive ? AppColors.success : AppColors.textMuted;
-    final statusLabel = plan.isActive ? 'Đang chạy' : 'Đã kết thúc';
+    final statusColor = plan.isCurrentPlan ? AppColors.success : AppColors.textMuted;
+    final statusLabel = plan.isCurrentPlan ? 'Đang chạy' : 'Đã kết thúc';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),

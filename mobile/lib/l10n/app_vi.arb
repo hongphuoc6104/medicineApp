@@ -1,7 +1,7 @@
 {
   "@@locale": "vi",
 
-  "appTitle": "Nhắc Thuốc",
+  "appTitle": "Uống thuốc",
   "@appTitle": {
     "description": "Application title displayed in app bar and task switcher"
   },
@@ -131,7 +131,7 @@
     "description": "Title shown on 404/unknown route fallback screen"
   },
 
-  "authLoginTitle": "Nhắc Thuốc",
+  "authLoginTitle": "Uống thuốc",
   "@authLoginTitle": {},
   "authLoginSubtitle": "Quản lý đơn thuốc thông minh",
   "@authLoginSubtitle": {},

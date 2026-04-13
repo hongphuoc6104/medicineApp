@@ -15,6 +15,14 @@ function normalizeTime(value) {
   return /^([01]\d|2[0-3]):[0-5]\d$/.test(time) ? time : null;
 }
 
+function buildScheduledIso(dateKey, time) {
+  const normalizedTime = normalizeTime(time);
+  if (!normalizedTime) return null;
+  const dt = new Date(`${dateKey}T${normalizedTime}:00+07:00`);
+  if (Number.isNaN(dt.getTime())) return null;
+  return dt.toISOString();
+}
+
 function buildOccurrenceId(planId, scheduledTime, providedOccurrenceId) {
   if (providedOccurrenceId && typeof providedOccurrenceId === 'string') {
     const cleaned = providedOccurrenceId.trim();
@@ -182,7 +190,13 @@ export async function getUserPlans(userId, { page = 1, limit = 20, activeOnly = 
   const offset = (page - 1) * limit;
   const result = await query(
     `SELECT * FROM prescription_plans
-     WHERE user_id = $1 AND ($2::boolean IS FALSE OR is_active = true)
+     WHERE user_id = $1
+       AND (
+         $2::boolean IS FALSE OR (
+           is_active = true
+           AND (end_date IS NULL OR end_date >= CURRENT_DATE)
+         )
+       )
      ORDER BY created_at DESC
      LIMIT $3 OFFSET $4`,
     [userId, activeOnly, limit, offset],
@@ -190,7 +204,13 @@ export async function getUserPlans(userId, { page = 1, limit = 20, activeOnly = 
 
   const countResult = await query(
     `SELECT COUNT(*) FROM prescription_plans
-     WHERE user_id = $1 AND ($2::boolean IS FALSE OR is_active = true)`,
+     WHERE user_id = $1
+       AND (
+         $2::boolean IS FALSE OR (
+           is_active = true
+           AND (end_date IS NULL OR end_date >= CURRENT_DATE)
+         )
+       )`,
     [userId, activeOnly],
   );
 
@@ -362,7 +382,8 @@ export async function getTodaySchedule(userId, { date = null } = {}) {
   for (const row of plansResult.rows) {
     const plan = await hydratePlanRow(row);
     for (const slot of plan.slots) {
-      const scheduledTime = `${dateKey}T${slot.time}:00.000Z`;
+      const scheduledTime = buildScheduledIso(dateKey, slot.time);
+      if (!scheduledTime) continue;
       doses.push({
         occurrenceId: `${plan.id}:${dateKey}:${slot.time}`,
         planId: plan.id,

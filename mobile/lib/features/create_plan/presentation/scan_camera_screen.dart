@@ -54,15 +54,6 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _scanCameraCtrl.addListener(_onCameraStateChanged);
-    _scanCameraCtrl.onAutoCaptured = (bytes) {
-      if (mounted) {
-        _processAndUpload(
-          bytes,
-          'auto_capture_${DateTime.now().millisecondsSinceEpoch}.jpg',
-        );
-      }
-    };
-    // Camera preview must open immediately on screen entry (plan §3.2 / §6.2)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && !kIsWeb) {
         _openCamera();
@@ -157,7 +148,6 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
         _qualityGuidance = quality?.guidance;
         _error = null;
       });
-      _scanCameraCtrl.startAutoCaptureStream();
       return;
     }
 
@@ -174,7 +164,6 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
         rejectReason: quality?.rejectReason,
       );
       if (!shouldProceed) {
-        _scanCameraCtrl.startAutoCaptureStream();
         return;
       }
     }
@@ -206,7 +195,6 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
               result.guidance ?? l10n.scanCameraQualityServerReject;
         });
         _clearLastUploadAttempt();
-        _scanCameraCtrl.startAutoCaptureStream();
         return;
       }
 
@@ -216,7 +204,6 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
           _error = l10n.scanCameraNodrugFound;
         });
         _clearLastUploadAttempt();
-        _scanCameraCtrl.startAutoCaptureStream();
         return;
       }
 
@@ -246,7 +233,6 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
         _mode = _ScreenMode.cameraPreview;
         _error = message;
       });
-      _scanCameraCtrl.startAutoCaptureStream();
     }
   }
 

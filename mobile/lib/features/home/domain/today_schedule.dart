@@ -58,6 +58,9 @@ class TodayDoseMedication {
 }
 
 class TodayDose {
+  static const Duration reminderLeadTime = Duration(minutes: 30);
+  static const Duration missedAfter = Duration(minutes: 45);
+
   const TodayDose({
     required this.occurrenceId,
     required this.planId,
@@ -103,18 +106,59 @@ class TodayDose {
   String get primaryTitle =>
       (title != null && title!.trim().isNotEmpty) ? title!.trim() : drugName;
 
-  /// Returns true when this pending dose falls within a ±30-minute window of
-  /// [now]. Non-pending doses always return false.
+  DateTime? get scheduledLocalDateTime {
+    final parsed = DateTime.tryParse(scheduledTime);
+    return parsed?.toLocal();
+  }
+
+  String effectiveStatus(DateTime now) {
+    if (status != 'pending') return status;
+    if (shouldAutoMiss(now)) return 'missed';
+    return 'pending';
+  }
+
+  bool isUpcomingSoon(DateTime now) {
+    if (effectiveStatus(now) != 'pending') return false;
+    final scheduled = scheduledLocalDateTime;
+    if (scheduled == null) return false;
+    final diff = scheduled.difference(now).inMinutes;
+    return diff >= 0 && diff <= reminderLeadTime.inMinutes;
+  }
+
   bool isDueNow(DateTime now) {
+    if (effectiveStatus(now) != 'pending') return false;
+    final scheduled = scheduledLocalDateTime;
+    if (scheduled == null) return false;
+    return !now.isBefore(scheduled) &&
+        !now.isAfter(scheduled.add(missedAfter));
+  }
+
+  bool shouldAutoMiss(DateTime now) {
     if (status != 'pending') return false;
-    DateTime? scheduled;
-    try {
-      scheduled = DateTime.parse(scheduledTime).toLocal();
-    } catch (_) {
-      return false;
-    }
-    final diff = now.difference(scheduled).inMinutes.abs();
-    return diff <= 30;
+    final scheduled = scheduledLocalDateTime;
+    if (scheduled == null) return false;
+    return now.isAfter(scheduled.add(missedAfter));
+  }
+
+  int comparePriority(TodayDose other, DateTime now) {
+    final selfRank = _priorityRank(now);
+    final otherRank = other._priorityRank(now);
+    if (selfRank != otherRank) return selfRank.compareTo(otherRank);
+
+    final selfScheduled =
+        scheduledLocalDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+    final otherScheduled =
+        other.scheduledLocalDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+    return selfScheduled.compareTo(otherScheduled);
+  }
+
+  int _priorityRank(DateTime now) {
+    final currentStatus = effectiveStatus(now);
+    if (currentStatus == 'pending' && isDueNow(now)) return 0;
+    if (currentStatus == 'pending' && isUpcomingSoon(now)) return 1;
+    if (currentStatus == 'pending') return 2;
+    if (currentStatus == 'missed') return 3;
+    return 4;
   }
 
   factory TodayDose.fromJson(Map<String, dynamic> json) => TodayDose(
@@ -291,6 +335,31 @@ class TodaySchedule {
       date: date ?? this.date,
       doses: doses ?? this.doses,
       summary: summary ?? this.summary,
+    );
+  }
+
+  TodaySchedule recount([DateTime? now]) {
+    final current = now ?? DateTime.now();
+    final counts = <String, int>{
+      'taken': 0,
+      'pending': 0,
+      'skipped': 0,
+      'missed': 0,
+    };
+
+    for (final dose in doses) {
+      final status = dose.effectiveStatus(current);
+      counts[status] = (counts[status] ?? 0) + 1;
+    }
+
+    return copyWith(
+      summary: TodaySummary(
+        total: doses.length,
+        taken: counts['taken'] ?? 0,
+        pending: counts['pending'] ?? 0,
+        skipped: counts['skipped'] ?? 0,
+        missed: counts['missed'] ?? 0,
+      ),
     );
   }
 }

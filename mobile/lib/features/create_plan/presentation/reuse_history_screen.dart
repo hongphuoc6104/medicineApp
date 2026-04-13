@@ -4,67 +4,101 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../history/data/scan_history_notifier.dart';
+import '../data/plan_repository.dart';
+import '../domain/plan.dart';
 
-/// Screen: Dùng lại đơn thuốc đã quét trước đây.
-///
-/// Hiển thị danh sách các lần quét cũ (mới nhất trước).
-/// Tap vào → sang ScanHistoryDetailScreen với mode=reuse để user xác nhận
-/// và tiến vào review/schedule flow.
+/// Screen: Dùng lại từ kế hoạch cũ đã hoàn thành hoặc đã kết thúc.
 class ReuseHistoryScreen extends ConsumerWidget {
   const ReuseHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scanAsync = ref.watch(scanHistoryNotifierProvider);
+    final plansFuture = ref.watch(_archivedPlansProvider.future);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dùng lại đơn đã quét'),
+        title: const Text('Dùng lại kế hoạch cũ'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/create'),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: () =>
-            ref.read(scanHistoryNotifierProvider.notifier).refresh(),
-        child: scanAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => _ErrorState(
-            onRetry: () =>
-                ref.read(scanHistoryNotifierProvider.notifier).refresh(),
-          ),
-          data: (page) {
-            if (page.items.isEmpty) {
-              return _EmptyState(
-                onScanNow: () => context.go('/create/scan'),
-              );
-            }
+      body: FutureBuilder<List<Plan>>(
+        future: plansFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            final df = DateFormat('dd/MM/yyyy HH:mm');
-            return ListView.separated(
+          if (snapshot.hasError) {
+            return _ErrorState(onRetry: () => ref.invalidate(_archivedPlansProvider));
+          }
+
+          final plans = snapshot.data ?? const <Plan>[];
+          if (plans.isEmpty) {
+            return _EmptyState(onScanNow: () => context.go('/create'));
+          }
+
+          final df = DateFormat('dd/MM/yyyy');
+          return RefreshIndicator(
+            onRefresh: () async => ref.invalidate(_archivedPlansProvider),
+            child: ListView.separated(
               padding: const EdgeInsets.all(16),
-              itemCount: page.items.length,
+              itemCount: plans.length,
               separatorBuilder: (_, i) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
-                final item = page.items[index];
+                final plan = plans[index];
                 return _ReuseCard(
-                  drugCount: item.drugCount,
-                  scannedAt: df.format(item.scannedAt.toLocal()),
-                  qualityState: item.qualityState,
-                  canReuse: item.drugCount > 0,
-                  onTap: () =>
-                      context.go('/history/scan/${item.id}?mode=reuse'),
+                  drugCount: plan.drugs.length,
+                  scannedAt: _planDateRange(plan, df),
+                  qualityState: plan.hasEnded ? 'DONE' : 'ACTIVE',
+                  canReuse: plan.drugs.isNotEmpty,
+                  title: plan.drugName,
+                  subtitle: plan.scheduleSummary,
+                  onTap: () => context.go(
+                    '/create/edit',
+                    extra: plan.drugs
+                        .map(
+                          (drug) => PlanDrugItem(
+                            name: drug.drugName,
+                            dosage: drug.dosage ?? '',
+                            totalDays: plan.totalDays ?? 7,
+                            notes: drug.notes ?? '',
+                          ),
+                        )
+                        .toList(),
+                  ),
                 );
               },
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
+
+  static String _planDateRange(Plan plan, DateFormat df) {
+    final start = plan.parsedStartDate;
+    final end = plan.parsedEndDate;
+    if (start == null && end == null) return 'Không rõ thời gian';
+    if (start != null && end != null) {
+      return '${df.format(start)} - ${df.format(end)}';
+    }
+    return df.format((start ?? end)!.toLocal());
+  }
 }
+
+final _archivedPlansProvider = FutureProvider<List<Plan>>((ref) async {
+  final repo = ref.read(planRepositoryProvider);
+  final plans = await repo.getPlans(activeOnly: false);
+  final archived = plans.where((plan) => plan.hasEnded).toList()
+    ..sort((a, b) {
+      final aDate = a.parsedEndDate ?? a.parsedStartDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+      final bDate = b.parsedEndDate ?? b.parsedStartDate ?? DateTime.fromMillisecondsSinceEpoch(0);
+      return bDate.compareTo(aDate);
+    });
+  return archived;
+});
 
 // ---------------------------------------------------------------------------
 // Reuse card — 1 lần quét trong danh sách
@@ -72,6 +106,8 @@ class ReuseHistoryScreen extends ConsumerWidget {
 
 class _ReuseCard extends StatelessWidget {
   const _ReuseCard({
+    required this.title,
+    required this.subtitle,
     required this.drugCount,
     required this.scannedAt,
     required this.qualityState,
@@ -79,6 +115,8 @@ class _ReuseCard extends StatelessWidget {
     required this.onTap,
   });
 
+  final String title;
+  final String subtitle;
   final int drugCount;
   final String scannedAt;
   final String qualityState;
@@ -128,15 +166,23 @@ class _ReuseCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    drugCount > 0
-                        ? '$drugCount thuốc'
-                        : 'Không nhận diện được thuốc',
+                    title,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
                       color: canReuse
                           ? AppColors.textPrimary
                           : AppColors.textMuted,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    '$drugCount thuốc · $subtitle',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
                     ),
                   ),
                   const SizedBox(height: 3),
@@ -188,14 +234,12 @@ class _ReuseCard extends StatelessWidget {
 
   static (String, Color) _qualityInfo(String state) {
     switch (state) {
-      case 'GOOD':
-        return ('Ảnh tốt', AppColors.success);
-      case 'WARNING':
-        return ('Ảnh mờ', AppColors.warning);
-      case 'REJECT':
-        return ('Ảnh kém', AppColors.error);
+      case 'DONE':
+        return ('Kế hoạch cũ', AppColors.success);
+      case 'ACTIVE':
+        return ('Đang chạy', AppColors.warning);
       default:
-        return ('Đã quét', AppColors.textMuted);
+        return ('Kế hoạch', AppColors.textMuted);
     }
   }
 }
@@ -228,7 +272,7 @@ class _EmptyState extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Chưa có đơn thuốc nào được quét',
+                    'Chưa có kế hoạch cũ nào',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
@@ -237,15 +281,15 @@ class _EmptyState extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Quét đơn thuốc lần đầu để lưu và dùng lại sau.',
+                    'Sau khi một kế hoạch kết thúc, bạn có thể dùng lại danh sách thuốc ở đây.',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: AppColors.textMuted),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed: onScanNow,
-                    icon: const Icon(Icons.camera_alt_outlined),
-                    label: const Text('Quét đơn thuốc ngay'),
+                    icon: const Icon(Icons.add_circle_outline),
+                    label: const Text('Tạo kế hoạch mới'),
                   ),
                 ],
               ),
@@ -285,7 +329,7 @@ class _ErrorState extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    'Không tải được lịch sử quét',
+                    'Không tải được kế hoạch cũ',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.w700),
                   ),

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 
@@ -25,12 +23,6 @@ class ScanCameraController extends ChangeNotifier {
   CameraController? get cameraController => _cameraController;
   String? get errorMessage => _errorMessage;
 
-  /// Optional callback to notify the UI that an auto-capture was performed.
-  Function(Uint8List bytes)? onAutoCaptured;
-
-  bool _isEvaluatingFrame = false;
-  DateTime _lastEvaluateTime = DateTime.now();
-
   bool get isReady =>
       _state == ScanCameraState.ready &&
       _cameraController != null &&
@@ -54,8 +46,6 @@ class ScanCameraController extends ChangeNotifier {
         orElse: () => cameras.first,
       );
 
-      // Note: Do not force ImageFormatGroup.jpeg since we want to use startImageStream.
-      // Flutter will use YUV420 on Android and BGRA8888 on iOS by default.
       final controller = CameraController(
         camera,
         ResolutionPreset.max,
@@ -67,9 +57,6 @@ class ScanCameraController extends ChangeNotifier {
       _cameraController = controller;
       _errorMessage = null;
       _setState(ScanCameraState.ready);
-
-      // Start the auto-capture stream
-      await startAutoCaptureStream();
     } on CameraException catch (e) {
       if (e.code == 'CameraAccessDenied' ||
           e.code == 'CameraAccessDeniedWithoutPrompt' ||
@@ -123,64 +110,6 @@ class ScanCameraController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> startAutoCaptureStream() async {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) return;
-    if (_cameraController!.value.isStreamingImages) return;
-
-    try {
-      await _cameraController!.startImageStream((CameraImage image) {
-        if (_state != ScanCameraState.ready) return;
-        if (_isEvaluatingFrame) return;
-
-        // Limiting frame evaluation rate to 1 FPS
-        if (DateTime.now().difference(_lastEvaluateTime).inMilliseconds < 1000) return;
-
-        _isEvaluatingFrame = true;
-        _lastEvaluateTime = DateTime.now();
-
-        final formatType = image.format.group == ImageFormatGroup.bgra8888 ? 1 : 0;
-        final data = {
-          'width': image.width,
-          'height': image.height,
-          'bytes': image.planes[0].bytes,
-          'format': formatType,
-        };
-
-        compute(_evaluateImageFrame, data).then((result) async {
-          if (_state != ScanCameraState.ready) {
-            _isEvaluatingFrame = false;
-            return;
-          }
-
-          final double edgeScore = result['edgeScore'] as double;
-          final double glareRatio = result['glareRatio'] as double;
-
-          // Auto-capture criteria
-          if (edgeScore >= 16.0 && glareRatio < 0.1) {
-            _setState(ScanCameraState.capturing);
-            try {
-              await _cameraController!.stopImageStream();
-              await Future.delayed(const Duration(milliseconds: 200));
-              final xfile = await _cameraController!.takePicture();
-              final bytes = await xfile.readAsBytes();
-              _setState(ScanCameraState.ready);
-              onAutoCaptured?.call(bytes);
-            } catch (e) {
-              _errorMessage = 'Lỗi tự động chụp: $e';
-              _setState(ScanCameraState.ready);
-              startAutoCaptureStream(); // Restart stream on failure
-            }
-          }
-          _isEvaluatingFrame = false;
-        }).catchError((_) {
-          _isEvaluatingFrame = false;
-        });
-      });
-    } catch (e) {
-      // Ignored if stream fails
-    }
-  }
-
   @override
   void dispose() {
     if (_cameraController?.value.isStreamingImages == true) {
@@ -189,44 +118,4 @@ class ScanCameraController extends ChangeNotifier {
     _cameraController?.dispose();
     super.dispose();
   }
-}
-
-// Runs in an isolate to prevent UI stutters
-Map<String, dynamic> _evaluateImageFrame(Map<String, dynamic> data) {
-  final int width = data['width'];
-  final int height = data['height'];
-  final Uint8List bytes = data['bytes'];
-  final int format = data['format']; // 0 for YUV (plane 0 is Y), 1 for BGRA
-
-  int brightPixels = 0;
-  double edgeSum = 0;
-  int count = 0;
-
-  // Sample every 4th pixel to make it extremely fast
-  for (int y = 5; y < height - 5; y += 4) {
-    for (int x = 5; x < width - 5; x += 4) {
-      int val = 0;
-      int left = 0;
-      if (format == 0) {
-        // YUV: Plane 0 is pure Luminance (Y)
-        int idx = y * width + x;
-        val = bytes[idx];
-        left = bytes[idx - 1]; // pixel to the left
-      } else {
-        // BGRA: Plane 0 is interleaved B G R A
-        int idx = (y * width + x) * 4;
-        val = (0.299 * bytes[idx + 2] + 0.587 * bytes[idx + 1] + 0.114 * bytes[idx]).round();
-        left = (0.299 * bytes[idx - 4 + 2] + 0.587 * bytes[idx - 4 + 1] + 0.114 * bytes[idx - 4]).round();
-      }
-
-      if (val >= 245) brightPixels++;
-      edgeSum += (val - left).abs();
-      count++;
-    }
-  }
-
-  return {
-    'glareRatio': brightPixels / count,
-    'edgeScore': edgeSum / count,
-  };
 }

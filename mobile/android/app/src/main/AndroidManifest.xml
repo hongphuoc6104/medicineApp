@@ -8,7 +8,7 @@
     <!-- Alternative exact alarm permission on Android 13+ (API 33+): no runtime prompt needed -->
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <application
-        android:label="Nhắc Thuốc"
+        android:label="Uống thuốc"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

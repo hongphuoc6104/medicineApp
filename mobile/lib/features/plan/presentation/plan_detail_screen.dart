@@ -72,6 +72,13 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
     }
   }
 
+  void _openDrugEditor() {
+    final current = _plan;
+    if (current == null) return;
+
+    context.go('/create/edit', extra: PlanEditFlowArgs.fromPlan(current));
+  }
+
   void _applyPlan(Plan plan) {
     _drugCtrl.text = plan.drugName;
     _dosageCtrl.text = plan.dosage ?? '';
@@ -377,7 +384,16 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
 
     if (_plan!.drugs.length > 1) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Chi tiết kế hoạch')),
+        appBar: AppBar(
+          title: const Text('Chi tiết kế hoạch'),
+          actions: [
+            IconButton(
+              onPressed: _openDrugEditor,
+              icon: const Icon(Icons.edit_note_rounded),
+              tooltip: 'Sửa thuốc và lịch',
+            ),
+          ],
+        ),
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
@@ -439,6 +455,12 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
               const SizedBox(height: 8),
               Text(_plan!.notes!),
             ],
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: _openDrugEditor,
+              icon: const Icon(Icons.edit_note_rounded),
+              label: const Text('Chỉnh sửa thuốc và lịch'),
+            ),
             const SizedBox(height: 20),
             if (_error != null)
               Padding(
@@ -484,7 +506,16 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Chi tiết kế hoạch')),
+      appBar: AppBar(
+        title: const Text('Chi tiết kế hoạch'),
+        actions: [
+          IconButton(
+            onPressed: _openDrugEditor,
+            icon: const Icon(Icons.edit_note_rounded),
+            tooltip: 'Sửa thuốc và lịch',
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -675,6 +706,12 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
                   )
                 : const Icon(Icons.save_outlined),
             label: const Text('Lưu thay đổi'),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: _openDrugEditor,
+            icon: const Icon(Icons.edit_note_rounded),
+            label: const Text('Chỉnh sửa thuốc và lịch'),
           ),
           const SizedBox(height: 8),
           if (_plan!.isActive)

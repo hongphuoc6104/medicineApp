@@ -78,13 +78,12 @@ class AuthRepository {
 
   /// Logout — clear all tokens locally, then revoke on server.
   Future<void> logout() async {
-    // Clear local first — even if server call fails, user is logged out locally
-    await _clearAll();
-
     try {
       await _dio.post('/auth/logout-all');
     } catch (_) {
       // Server call may fail if token already expired — that's OK
+    } finally {
+      await _clearAll();
     }
   }
 

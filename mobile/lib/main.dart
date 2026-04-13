@@ -10,7 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
   await initializeDateFormatting('vi_VN');
-  await NotificationService().initialize();
+  await NotificationService.instance.initialize();
 
   runApp(const ProviderScope(child: MedicineApp()));
 }

@@ -33,6 +33,7 @@ class SetScheduleScreen extends ConsumerStatefulWidget {
     super.key,
     required this.drugs,
     this.source = 'scan',
+    this.existingPlan,
   });
 
   final List<PlanDrugItem> drugs;
@@ -40,6 +41,7 @@ class SetScheduleScreen extends ConsumerStatefulWidget {
   /// Nguồn gọi màn này: 'manual' (từ edit_drugs) hoặc 'scan' (từ scan_review).
   /// Dùng để điều hướng back đúng context.
   final String source;
+  final Plan? existingPlan;
 
   @override
   ConsumerState<SetScheduleScreen> createState() => _SetScheduleScreenState();
@@ -54,9 +56,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
   bool _isSaving = false;
 
   // Time slots — default 3 common slots
-  final List<_TimeSlot> _slots = _defaultSlotTimes
-      .map((time) => _TimeSlot(time: time))
-      .toList();
+  final List<_TimeSlot> _slots = [];
 
   // Per-drug per-slot pills (drug index -> {slot index: pills})
   late List<Map<int, int>> _dosePillsByDrugSlot;
@@ -67,20 +67,80 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
   @override
   void initState() {
     super.initState();
-    _startDate = DateTime.now();
-    final firstDays = widget.drugs.isEmpty ? 7 : widget.drugs.first.totalDays;
-    _totalDays = firstDays;
-    _endDate = _startDate.add(Duration(days: _totalDays - 1));
+    _initializeDraft();
+  }
+
+  void _initializeDraft() {
+    final existingPlan = widget.existingPlan;
+    if (existingPlan == null) {
+      _startDate = DateTime.now();
+      final firstDays = widget.drugs.isEmpty ? 7 : widget.drugs.first.totalDays;
+      _totalDays = firstDays;
+      _endDate = _startDate.add(Duration(days: _totalDays - 1));
+      _slots
+        ..clear()
+        ..addAll(_defaultSlotTimes.map((time) => _TimeSlot(time: time)));
+      _drugSlotIndices = List<Set<int>>.generate(
+        widget.drugs.length,
+        (_) => _slots.isEmpty ? <int>{} : <int>{0},
+      );
+      _dosePillsByDrugSlot = List<Map<int, int>>.generate(
+        widget.drugs.length,
+        (index) => _slots.isEmpty
+            ? <int, int>{}
+            : <int, int>{0: widget.drugs[index].pillsPerDose},
+      );
+      return;
+    }
+
+    final parsedStart = existingPlan.parsedStartDate ?? DateTime.now();
+    final parsedEnd =
+        existingPlan.parsedEndDate ??
+        parsedStart.add(Duration(days: (existingPlan.totalDays ?? 7) - 1));
+    _startDate = DateTime(parsedStart.year, parsedStart.month, parsedStart.day);
+    _endDate = DateTime(parsedEnd.year, parsedEnd.month, parsedEnd.day);
+    _totalDays =
+        existingPlan.totalDays ?? _endDate.difference(_startDate).inDays + 1;
+
+    final existingTimes = existingPlan.slots.isEmpty
+        ? _defaultSlotTimes
+        : existingPlan.slots.map((slot) => slot.time).toList();
+    _slots
+      ..clear()
+      ..addAll(existingTimes.map((time) => _TimeSlot(time: time)));
+
     _drugSlotIndices = List<Set<int>>.generate(
       widget.drugs.length,
-      (_) => _slots.isEmpty ? <int>{} : <int>{0},
+      (_) => <int>{},
     );
     _dosePillsByDrugSlot = List<Map<int, int>>.generate(
       widget.drugs.length,
-      (index) => _slots.isEmpty
-          ? <int, int>{}
-          : <int, int>{0: widget.drugs[index].pillsPerDose},
+      (_) => <int, int>{},
     );
+
+    for (var drugIndex = 0; drugIndex < widget.drugs.length; drugIndex++) {
+      final currentDrug = widget.drugs[drugIndex];
+      for (
+        var slotIndex = 0;
+        slotIndex < existingPlan.slots.length;
+        slotIndex++
+      ) {
+        final slot = existingPlan.slots[slotIndex];
+        for (final item in slot.items) {
+          if (item.drugName.trim().toLowerCase() ==
+              currentDrug.name.trim().toLowerCase()) {
+            _drugSlotIndices[drugIndex].add(slotIndex);
+            _dosePillsByDrugSlot[drugIndex][slotIndex] = item.pills;
+            break;
+          }
+        }
+      }
+
+      if (_drugSlotIndices[drugIndex].isEmpty && _slots.isNotEmpty) {
+        _drugSlotIndices[drugIndex].add(0);
+        _dosePillsByDrugSlot[drugIndex][0] = currentDrug.pillsPerDose;
+      }
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -261,12 +321,11 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
   }
 
   void _goBack() {
-    if (widget.source == 'manual') {
+    if (widget.source == 'plan_edit' && widget.existingPlan != null) {
+      context.go('/plans/${widget.existingPlan!.id}');
+    } else if (widget.source == 'manual') {
       // Manual path: trở về màn danh sách thuốc với drugs hiện tại.
-      context.go(
-        '/create/edit',
-        extra: widget.drugs,
-      );
+      context.go('/create/edit', extra: widget.drugs);
     } else {
       // Scan path: trở về scan review screen (giữ nguyên behavior cũ).
       final drugs = widget.drugs
@@ -289,6 +348,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
 
   PrescriptionPlanDraft _buildPlanDraft(String startDateStr) {
     final l10n = AppLocalizations.of(context);
+    final endDateStr = DateFormat('yyyy-MM-dd').format(_endDate);
     final drugs = widget.drugs.asMap().entries.map((entry) {
       final index = entry.key;
       final drug = entry.value;
@@ -343,6 +403,7 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       slots: slots,
       totalDays: _totalDays,
       startDate: startDateStr,
+      endDate: endDateStr,
     );
   }
 
@@ -357,22 +418,43 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       final remindersEnabled = await settingsRepo.getRemindersEnabled();
 
       final draft = _buildPlanDraft(startDateStr);
-      final created = await repo.createPlan(draft);
+      final savedPlan = widget.existingPlan == null
+          ? await repo.createPlan(draft)
+          : await repo.updatePlan(
+              widget.existingPlan!.id,
+              widget.existingPlan!.copyWith(
+                title: draft.title ?? widget.existingPlan!.title,
+                drugs: draft.drugs,
+                slots: draft.slots,
+                totalDays: draft.totalDays,
+                startDate: draft.startDate,
+                endDate: draft.endDate,
+                notes: draft.notes,
+              ),
+            );
       if (remindersEnabled) {
         try {
-          await notificationService.schedulePlanNotifications(created);
+          await notificationService.schedulePlanNotifications(savedPlan);
         } catch (e) {
           if (kDebugMode) {
             debugPrint('[SetScheduleScreen] Notification error: $e');
           }
         }
+      } else if (widget.existingPlan != null) {
+        await notificationService.cancelPlanNotifications(
+          widget.existingPlan!.id,
+        );
       }
 
       if (!mounted) return;
       ref.invalidate(planNotifierProvider);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(l10n.scheduleSaveSuccess),
+          content: Text(
+            widget.existingPlan == null
+                ? l10n.scheduleSaveSuccess
+                : 'Đã cập nhật kế hoạch uống thuốc',
+          ),
           backgroundColor: AppColors.success,
         ),
       );

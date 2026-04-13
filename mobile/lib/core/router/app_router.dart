@@ -75,7 +75,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RegisterScreen(),
       ),
 
-      // ── Create Plan Flow (outside bottom nav) ──
+      // ── Secondary flows (outside bottom nav) ──
+      GoRoute(
+        path: '/create',
+        builder: (context, state) => const CreatePlanScreen(),
+      ),
       GoRoute(
         path: '/create/reuse',
         builder: (context, state) => const ReuseHistoryScreen(),
@@ -87,7 +91,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/create/edit',
         builder: (context, state) {
-          final drugs = state.extra as List<PlanDrugItem>? ?? [];
+          final extra = state.extra;
+          if (extra is PlanEditFlowArgs) {
+            return EditDrugsScreen(
+              initialDrugs: extra.drugs,
+              existingPlan: extra.existingPlan,
+            );
+          }
+          final drugs = extra as List<PlanDrugItem>? ?? [];
           return EditDrugsScreen(initialDrugs: drugs);
         },
       ),
@@ -108,21 +119,48 @@ final routerProvider = Provider<GoRouter>((ref) {
           // Manual path truyền Map {'drugs': List<PlanDrugItem>, 'source': String}.
           final List<PlanDrugItem> drugs;
           final String source;
+          Plan? existingPlan;
           if (extra is List<PlanDrugItem>) {
             drugs = extra;
             source = 'scan';
+          } else if (extra is PlanEditFlowArgs) {
+            drugs = extra.drugs;
+            source = extra.source;
+            existingPlan = extra.existingPlan;
           } else if (extra is Map<String, dynamic>) {
             drugs = (extra['drugs'] as List<PlanDrugItem>?) ?? [];
             source = (extra['source'] as String?) ?? 'scan';
+            existingPlan = extra['existingPlan'] as Plan?;
           } else {
             drugs = [];
             source = 'scan';
           }
-          return SetScheduleScreen(drugs: drugs, source: source);
+          return SetScheduleScreen(
+            drugs: drugs,
+            source: source,
+            existingPlan: existingPlan,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/drugs',
+        builder: (context, state) => const DrugSearchScreen(),
+      ),
+      GoRoute(
+        path: '/drugs/detail',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          final details = extra?['details'];
+          return DrugDetailScreen(
+            details: details is DrugDetails
+                ? details
+                : const DrugDetails(name: 'Thông tin thuốc'),
+            activeIngredient: extra?['activeIngredient'] as String?,
+          );
         },
       ),
 
-      // ── Main Shell (Bottom Nav — 4 tabs) ──
+      // ── Main Shell (Bottom Nav — 3 tabs) ──
       ShellRoute(
         builder: (context, state, child) => MainShell(child: child),
         routes: [
@@ -130,11 +168,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: '/home',
             pageBuilder: (context, state) =>
                 const NoTransitionPage(child: HomeScreen()),
-          ),
-          GoRoute(
-            path: '/create',
-            pageBuilder: (context, state) =>
-                const NoTransitionPage(child: CreatePlanScreen()),
           ),
           GoRoute(
             path: '/plans',
@@ -179,24 +212,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                       scheduledTime: '',
                       status: 'pending',
                     ),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/drugs',
-            pageBuilder: (context, state) =>
-                const NoTransitionPage(child: DrugSearchScreen()),
-          ),
-          GoRoute(
-            path: '/drugs/detail',
-            builder: (context, state) {
-              final extra = state.extra as Map<String, dynamic>?;
-              final details = extra?['details'];
-              return DrugDetailScreen(
-                details: details is DrugDetails
-                    ? details
-                    : const DrugDetails(name: 'Thông tin thuốc'),
-                activeIngredient: extra?['activeIngredient'] as String?,
               );
             },
           ),

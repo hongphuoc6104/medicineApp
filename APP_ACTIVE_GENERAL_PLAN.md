@@ -1,275 +1,122 @@
 # Active General Plan
 
-## Initiative hiện tại
+## Initiative active
 
-`Ổn định và tái cấu trúc app nhắc uống thuốc`
+`Ổn định logic và UI/UX app mobile sau đợt audit`
 
-Mục tiêu của initiative này là đưa app từ trạng thái `scan demo + UI đang vá dần` sang một sản phẩm rõ ràng, ổn định và dễ hiểu cho nhu cầu `lập lịch và nhắc uống thuốc`.
+Initiative này thay thế batch plan cũ vốn đang bị lệch trọng tâm sang reminder-only và các lát cắt nhỏ rời rạc.
 
-Kết quả mong muốn ở mức sản phẩm:
+Trọng tâm mới là đưa app mobile về trạng thái:
 
-- app local/dev path ổn định, không còn lỗi kiểu `không kết nối được với máy chủ` một cách mơ hồ
-- tên app, copy, launcher label và background/splash nhất quán theo một brand tiếng Việt ngắn gọn
-- màn Home chỉ ưu tiên thuốc `tới giờ uống` và `sắp tới giờ`, không dàn đều toàn bộ dữ liệu trong ngày
-- luồng `Tạo kế hoạch` rõ ràng hơn cho 3 đường: quét đơn, nhập thủ công, dùng lại dữ liệu cũ
-- lịch sử phản ánh hành vi dùng thuốc hợp lý hơn, không để `lịch sử quét` làm trung tâm chính
-- reminder phải nổi ngoài điện thoại khi tới giờ uống
-- các phần phù hợp sẽ đi theo hướng local-first, nhưng scan AI vẫn giữ server-side ở giai đoạn này
+- hành vi trong app phản ánh đúng trạng thái thật của dữ liệu
+- điều hướng, back flow và CTA không gây hiểu nhầm
+- flow `quét đơn -> review -> lập lịch -> nhắc uống` mạch lạc và đáng tin hơn
+- các vấn đề UI/UX được xử lý theo mức ưu tiên sản phẩm, không vá rời từng màn
 
 ---
 
-## Baseline hiện có
+## Những vấn đề đã được xác nhận từ audit
 
-### Đã có nền tốt
+### Nhóm 1 — Truthfulness của state và sync
 
-- localization foundation đã có (`L10N-1`)
-- core flow copy đã được làm đáng kể (`L10N-2`)
-- local reminder scheduling cơ bản đã có trong mobile
-- offline queue cho thao tác đánh dấu uống thuốc đã có
-- local Python AI runtime đã được phục hồi để tiếp tục manual verify
+- đánh dấu liều khi offline đang báo thành công như thể đã sync xong
+- token hết hạn có thể xóa storage nhưng không đẩy app về trạng thái logout đúng lúc
+- tạo plan mới xong chưa chắc làm tươi `today schedule`
+- end/reactivate plan chưa chặt với reschedule/cancel notification
 
-### Vì sao cần reset initiative
+### Nhóm 2 — Điều hướng và information architecture
 
-Manual verify vừa qua cho thấy vấn đề không còn nằm trong phạm vi `dịch chữ` nữa.
+- `/settings` đang ăn vào index của `History` trong shell
+- back từ Settings đang nhảy cứng về `/home`
+- một số flow đang dùng `context.go(...)` làm mất ngữ cảnh thay vì quay lại đúng stack
 
-Các lỗi và khoảng trống hiện tại nằm ở nhiều tầng cùng lúc:
+### Nhóm 3 — Create flow và scan/reuse clarity
 
-- runtime / dev reliability
-- home logic
-- history information architecture
-- create flow UX
-- branding / copy / app naming
-- notification delivery
-- local-first data strategy
+- reuse flow đang dễ làm đẹp hóa dữ liệu scan cũ
+- scan review có sort item cần review nhưng thiếu tín hiệu rõ ràng cho user
+- camera flow chưa hướng dẫn framing tốt và dễ kích hoạt chụp ngoài ý muốn
 
----
+### Nhóm 4 — Data scale và state completeness
 
-## Quyết định sản phẩm đã chốt
+- search thuốc không debounce/cancel request
+- history và logs mới chỉ nối tới page đầu
+- home có thể rơi vào empty state sai khi user đã xử lý hết liều trong ngày
 
-### 1. Trọng tâm vẫn là Phase A app flow
+### Nhóm 5 — UI/UX polish nền
 
-- ưu tiên flow chính: `quét đơn -> xác nhận thuốc -> lập lịch -> lưu -> nhắc uống`
-- không để Phase B kéo lệch roadmap chính
+- copy và l10n còn trộn giữa ARB với hardcoded text
+- accessibility semantics gần như chưa có cho custom controls
+- nhiều loading/error/empty state chưa thống nhất
+- còn dead-end như `Hồ sơ` trong Settings
 
-### 2. Scan AI vẫn giữ server-side ở giai đoạn này
+### Nhóm 6 — Phase B / pill verification
 
-- không cố kéo OCR/NER về local device trong đợt này
-- local-first chỉ áp dụng cho phần phù hợp như plan snapshot, today schedule, logs, reminders
+- route và màn đã tồn tại nhưng chưa được nối vào path chính
+- cần quyết định rõ: ẩn hẳn khỏi flow chính hay hoàn thiện như một flow thật
 
-### 3. Home phải ưu tiên hành động đúng thời điểm
+### Nhóm 7 — Test coverage
 
-- chỉ foreground các thuốc `tới giờ uống` và `sắp tới giờ`
-- phần đã uống / scan history / CTA phụ không được lấn át nhiệm vụ chính
-
-### 4. History chính phải là lịch sử dùng thuốc
-
-- `lịch sử quét` trở thành lớp phụ để reuse/audit
-- `lịch sử uống thuốc` mới là trọng tâm sản phẩm lâu dài
-
-### 5. Branding phải đổi sang tên tiếng Việt ngắn, dễ hiểu
-
-- working direction trong plan: app name phải xoay quanh `lịch / nhắc uống thuốc`
-- tên cuối cùng sẽ được user chốt trước khi implement branding slice
-
-### 6. Notification ngoài app là yêu cầu bắt buộc
-
-- không chỉ schedule trong app nội bộ
-- phải có đường thông báo nổi ra ngoài thiết bị khi tới giờ uống
-
-### 7. Working defaults để mở batch tiếp theo mà không phải chờ thêm
-
-- Home sẽ **ẩn hoàn toàn** CTA Phase B khỏi path chính
-- `tới giờ uống` được tính theo cửa sổ mặc định `±30 phút`
-- reuse flow sẽ đi theo hướng: `chọn scan cũ -> chọn thuốc -> review/edit -> schedule`
-- history sẽ chuyển sang `lịch sử uống thuốc` là tab đầu tiên
-- bottom nav sẽ **giữ tab `Thuốc`** trong batch này để tránh mở thêm nav migration cùng lúc
-- working name cho brand spec là `Nhắc Thuốc`, nhưng chỉ xem như tên tạm cho planning; chưa coi là quyết định cuối cùng cho implementation branding
+- `mobile/test/widget_test.dart` hiện chưa bảo vệ được regression thực tế của app
 
 ---
 
-## Vấn đề tổng quát cần giải quyết
+## Quyết định sản phẩm đã khóa cho batch này
 
-### Nhóm 1 — Reliability và local dev/runtime
-
-- sau cleanup, local runtime và startup path đã từng gãy
-- lỗi mạng trong app hiện lên nhưng không đủ giúp user/dev biết tầng nào hỏng
-
-### Nhóm 2 — Branding và copy sản phẩm
-
-- app đang có nhiều tên khác nhau: `medicine_app`, `MedicineApp`, `Thuốc Của Tôi`
-- còn nhiều câu copy vô nghĩa hoặc không cần thiết
-- còn sót nhiều chỗ tiếng Việt không dấu
-
-### Nhóm 3 — Logic màn Home chưa đúng trọng tâm
-
-- chưa ưu tiên rõ `tới giờ` và `sắp tới giờ`
-- còn lộ CTA và logic Phase B ở home path
-
-### Nhóm 4 — Luồng Tạo kế hoạch chưa mạch lạc
-
-- `Dùng lại lịch sử` đang đẩy sang history chung, không phải reuse flow đúng nghĩa
-- nhập thủ công còn mỏng và UI/UX chưa hợp lý
-- nhiều chỗ vẫn mang cảm giác `scan-shaped` dù đi manual path
-
-### Nhóm 5 — History chưa phản ánh mô hình sản phẩm mong muốn
-
-- lịch sử quét đang chiếm vai trò quá lớn
-- thiếu một lịch sử hành vi dùng thuốc rõ ràng và có ích hơn cho user
-
-### Nhóm 6 — Reminder chưa đủ tin cậy ngoài app
-
-- mobile đã có local notifications cơ bản
-- nhưng permission, reboot-reschedule, startup integrity và delivery path chưa đủ chặt
-
-### Nhóm 7 — Local-first còn quá mỏng
-
-- hiện mới có local reminder scheduling và offline queue hẹp cho dose logs
-- home, plans, history vẫn phụ thuộc backend là nguồn sự thật duy nhất
+1. Phase A app flow vẫn là trọng tâm chính.
+2. Sửa `logic đúng sự thật` và `navigation clarity` trước khi làm visual polish.
+3. Không mở rộng Phase B trong batch này nếu chưa chốt được entry path rõ ràng.
+4. Root chỉ nên giữ các plan active thật sự cần đọc; không duy trì board dài dòng cũ ở thư mục gốc.
+5. Mọi text user-facing mới hoặc sửa lại phải là tiếng Việt có dấu và nên đi qua l10n khi phạm vi cho phép.
 
 ---
 
 ## Nhóm ưu tiên
 
-### Nhóm A — Reliability baseline
+### P0 — Reliability và state correctness
 
-- startup/runtime local
-- network/dev diagnostics
-- trạng thái: `in_progress`
+- auth expiry
+- offline/sync truthfulness
+- plan/today/reminder consistency
+- settings/navigation correctness
 
-### Nhóm B — Product framing và branding
+### P1 — Flow clarity và UI/UX nền
 
-- app naming
-- copy cleanup
-- launcher/splash/background
-- trạng thái: `pending`
+- create/scan/reuse clarity
+- search/history scale
+- empty/error/loading consistency
+- copy/l10n/accessibility cleanup
 
-### Nhóm C — Home logic
+### P2 — Product shaping và hardening
 
-- due now
-- upcoming
-- giảm nhiễu
-- trạng thái: `pending`
-
-### Nhóm D — Create flow UX
-
-- entry hub
-- manual entry
-- reuse flow
-- trạng thái: `pending`
-
-### Nhóm E — History model
-
-- medication behavior history
-- scan history làm lớp phụ
-- trạng thái: `pending`
-
-### Nhóm F — Reminder delivery
-
-- notification nổi ngoài app
-- permission / reschedule / integrity
-- trạng thái: `pending`
-
-### Nhóm G — Local-first data
-
-- local plan snapshot
-- today schedule cache
-- logs cache / sync
-- trạng thái: `pending`
+- quyết định số phận Phase B mobile entry
+- widget/integration tests cho các flow chính
 
 ---
 
 ## Thứ tự xử lý lớn
 
-1. `REL-1A` — harden local startup và scan runtime detection
-2. `REL-1B` — cải thiện network diagnostics / reconnect UX ở mobile
-3. `BRAND-1` — chốt tên app, copy, launcher/splash/background
-4. `HOME-1` — làm lại Home theo `tới giờ / sắp tới giờ`
-5. `FLOW-1A` — thiết kế lại entry hub và reuse history flow
-6. `FLOW-1B` — sửa manual entry UX
-7. `HISTORY-1` — thiết kế lại lịch sử
-8. `REMIND-1` — hoàn thiện notification ngoài app
-9. `LOCAL-1` — local-first cho plans / home / logs phù hợp
+1. `MOBILE-P0-A` — truthful state và navigation baseline
+2. `MOBILE-P0-B` — plan/today/reminder consistency
+3. `MOBILE-P1-A` — create/scan/reuse clarity
+4. `MOBILE-P1-B` — search/history completeness và state UX
+5. `MOBILE-P1-C` — copy, l10n, accessibility, responsive cleanup
+6. `MOBILE-P2-A` — Phase B entry decision trên mobile
+7. `MOBILE-P2-B` — widget/integration regression tests
 
 ---
 
-## Tracks song song được phép chạy ngay
+## Definition of done cho initiative này
 
-### Track H1 — Home implementation
-
-- model chính: `Claude Sonnet 4.6 Thinking`
-- mục tiêu hiện tại: implement `HOME-1A`
-
-### Track R2 — Reminder logic implementation
-
-- model chính: `GPT-5.3 Codex`
-- mục tiêu hiện tại: implement `REMIND-1A-R1B`
-
-### Track A2 — History / local-first technical shaping
-
-- model chính: `Gemini 3.1 Pro High`
-- mục tiêu hiện tại: `HISTORY-1A-S1` và chuẩn bị coding path cho `LOCAL-1A`
-
-### Track T2 — Branding / home prioritization prep
-
-- model chính: `Gemini 3 Flash`
-- mục tiêu hiện tại: prep cho `HOME-1A` và `BRAND-1A`
+- các lỗi P0 không còn làm app nói sai trạng thái thật với user
+- flow Settings/Home/Create/Plans/History không còn back behavior gây lạc hướng
+- search/history xử lý được các trạng thái cơ bản thay vì chỉ page đầu + spinner
+- copy và affordance trên các màn chính nhất quán hơn
+- có test đủ để chặn regression cho các flow đã sửa
 
 ---
 
-## Tiến độ batch hiện tại
+## Không làm trong initiative này
 
-### Đã hoàn thành trong initiative mới
-
-- `REL-1A` — startup/runtime local đã được harden và đã verify pass bằng runbook + health checks
-- `REL-1B` — mobile network diagnostics và reconnect UX
-- `IA-0A` — redesign brief cho Home / History / Create flow
-- `LOCAL-0A` — audit local-first / reminder architecture
-- `BRAND-0A` — inventory branding / copy / naming / asset surface
-- `REL-1B-PREP` — inventory mobile network/reconnect UX
-- `REMIND-1A-PREP` — brief Android reminder delivery
-- `BRAND-1-PREP` — safe rebrand brief với working name `Nhắc Thuốc`
-- `HOME-1A-PREP` — exact file/line brief cho home priority fix
-- `HISTORY-1-DATA-PREP` — assessment giữa mobile-only và backend-touch cho history redesign
-- `LOCAL-1A-PREP` — cache/storage brief cho stale-while-revalidate ở mobile
-- `REMIND-1B-PREP` — permission/recovery UX brief cho reminders
-- `FLOW-1A-PREP` — contract/route brief cho reuse flow
-- `FLOW-1A` — reuse flow implementation
-- `FLOW-1B-PREP` — manual entry UX cleanup brief
-- `FLOW-1B-A` — manual entry routing + empty state fix
-- `FLOW-1B-HF1` — đưa key CTA manual entry về lại ARB/source-of-truth
-- `REMIND-1A-R1B` — logic reschedule đúng khi bật lại reminder
-- `HISTORY-1A-S1` — mobile-only IA shift cho History
-
-### Đang mở tiếp
-
-- `HOME-1A` — coding slice active tiếp theo
-
-### Batch prep tiếp theo có thể chạy song song
-
-- `BRAND-1A-ASSET-PREP` — exact asset pipeline cho launcher/splash/background
-
-### Ghi chú planner
-
-- `REL-1A` đã hoàn tất nhưng không archive thành plan riêng; nó được xem là baseline reliability đã chốt trong cùng initiative.
-- `HOME-1A` được ưu tiên cao nhất trong batch code tiếp theo vì tác động trực tiếp đến giá trị daily-use của app.
-
----
-
-## Quy tắc nghiệm thu của initiative này
-
-- local dev path phải lên ổn định cho mobile manual testing
-- app không còn dùng brand/copy mâu thuẫn giữa launcher, login, home và shell
-- các màn user-facing chính không còn tiếng Việt không dấu
-- Home phải giải quyết đúng nhu cầu `uống ngay bây giờ` và `sắp đến giờ`
-- create flow phải mạch lạc cho `scan / manual / reuse`
-- history phải có cấu trúc hợp lý hơn cho việc dùng thuốc hằng ngày
-- notification phải hiện ngoài app khi tới giờ uống
-- local-first phải tăng độ bền của app ở các phần phù hợp mà không kéo scan AI về local
-
----
-
-## Tiêu chí hoàn tất general plan
-
-- `REL-1`, `BRAND-1`, `HOME-1`, `FLOW-1`, `HISTORY-1`, `REMIND-1`, `LOCAL-1` đều hoàn tất
-- user manual verify lại flow chính và xác nhận app đã rõ ràng, ổn định hơn theo hướng `nhắc uống thuốc`
-- plan active cũ về localization chỉ còn là baseline, không còn blocker chưa xử lý riêng
+- thay đổi Phase A Python pipeline
+- mở rộng backend lớn nếu chỉ để polish UI nhỏ
+- biến Phase B thành epic chính trong khi flow core của app chưa ổn định

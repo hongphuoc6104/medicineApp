@@ -82,6 +82,35 @@ class PlanDrugItem {
   }
 }
 
+class PlanEditFlowArgs {
+  const PlanEditFlowArgs({
+    required this.drugs,
+    this.existingPlan,
+    this.source = 'manual',
+  });
+
+  final List<PlanDrugItem> drugs;
+  final Plan? existingPlan;
+  final String source;
+
+  factory PlanEditFlowArgs.fromPlan(Plan plan, {String source = 'plan_edit'}) {
+    return PlanEditFlowArgs(
+      source: source,
+      existingPlan: plan,
+      drugs: plan.drugs
+          .map(
+            (drug) => PlanDrugItem(
+              name: drug.drugName,
+              dosage: drug.dosage ?? '',
+              totalDays: plan.totalDays ?? 7,
+              notes: drug.notes ?? '',
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
 class PlanMedication {
   final String id;
   final String drugName;
@@ -226,6 +255,24 @@ class Plan {
     this.isActive = true,
     this.notes,
   });
+
+  DateTime? get parsedStartDate => DateTime.tryParse(startDate);
+
+  DateTime? get parsedEndDate => endDate == null || endDate!.trim().isEmpty
+      ? null
+      : DateTime.tryParse(endDate!);
+
+  bool get hasEnded {
+    final end = parsedEndDate;
+    if (end == null) return !isActive;
+
+    final today = DateTime.now();
+    final todayKey = DateTime(today.year, today.month, today.day);
+    final endKey = DateTime(end.year, end.month, end.day);
+    return !isActive || endKey.isBefore(todayKey);
+  }
+
+  bool get isCurrentPlan => isActive && !hasEnded;
 
   String get drugName {
     if (title.trim().isNotEmpty) return title;

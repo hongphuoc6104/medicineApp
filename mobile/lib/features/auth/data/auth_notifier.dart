@@ -41,6 +41,11 @@ class AuthState {
 class AuthNotifier extends Notifier<AuthState> {
   @override
   AuthState build() {
+    ref.listen<AuthStatus>(authStateProvider, (previous, next) {
+      if (next == AuthStatus.unauthenticated) {
+        state = const AuthState();
+      }
+    });
     // Schedule restore AFTER build() returns — avoids calling ref during build.
     Future.microtask(_restoreSession);
     return const AuthState(isLoading: true);

@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../constants.dart';
 import 'network_error_mapper.dart';
+import '../router/app_router.dart';
 
 /// Provides a configured Dio instance with auth interceptor.
 final dioProvider = Provider<Dio>((ref) {
@@ -21,7 +22,7 @@ final dioProvider = Provider<Dio>((ref) {
     ),
   );
 
-  dio.interceptors.add(AuthInterceptor(dio));
+  dio.interceptors.add(AuthInterceptor(dio, ref));
   dio.interceptors.add(NetworkDiagnosticsInterceptor());
   if (kDebugMode) {
     dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
@@ -33,9 +34,10 @@ final dioProvider = Provider<Dio>((ref) {
 /// Auth interceptor: attaches JWT, auto-refreshes on 401.
 class AuthInterceptor extends Interceptor {
   final Dio _dio;
+  final Ref _ref;
   static const _storage = FlutterSecureStorage();
 
-  AuthInterceptor(this._dio);
+  AuthInterceptor(this._dio, this._ref);
 
   @override
   void onRequest(
@@ -120,7 +122,7 @@ class AuthInterceptor extends Interceptor {
     await _storage.delete(key: AppConstants.accessTokenKey);
     await _storage.delete(key: AppConstants.refreshTokenKey);
     await _storage.delete(key: AppConstants.userKey);
-    // GoRouter will detect auth state change via Riverpod and redirect
+    _ref.read(authStateProvider.notifier).setUnauthenticated();
   }
 }
 

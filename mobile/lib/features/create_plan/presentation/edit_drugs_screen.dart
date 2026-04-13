@@ -13,8 +13,13 @@ import 'widgets/drug_entry_sheet.dart';
 class EditDrugsScreen extends ConsumerStatefulWidget {
   /// Pre-filled drugs từ OCR hoặc trống cho nhập tay.
   final List<PlanDrugItem> initialDrugs;
+  final Plan? existingPlan;
 
-  const EditDrugsScreen({super.key, this.initialDrugs = const []});
+  const EditDrugsScreen({
+    super.key,
+    this.initialDrugs = const [],
+    this.existingPlan,
+  });
 
   @override
   ConsumerState<EditDrugsScreen> createState() => _EditDrugsScreenState();
@@ -72,7 +77,9 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
         title: Text(l10n.editDrugsTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/create'),
+          onPressed: () => widget.existingPlan != null
+              ? context.go('/plans/${widget.existingPlan!.id}')
+              : context.go('/create'),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -101,12 +108,15 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
               onPressed: _drugs.isEmpty
                   ? null
                   : () => context.go(
-                        '/create/schedule',
-                        extra: <String, dynamic>{
-                          'drugs': _drugs,
-                          'source': 'manual',
-                        },
+                      '/create/schedule',
+                      extra: PlanEditFlowArgs(
+                        drugs: _drugs,
+                        existingPlan: widget.existingPlan,
+                        source: widget.existingPlan == null
+                            ? 'manual'
+                            : 'plan_edit',
                       ),
+                    ),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),
               ),

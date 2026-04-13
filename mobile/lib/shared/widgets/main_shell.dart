@@ -12,11 +12,9 @@ class MainShell extends StatelessWidget {
   int _currentIndex(BuildContext context) {
     final location = GoRouterState.of(context).matchedLocation;
     if (location.startsWith('/home')) return 0;
-    if (location.startsWith('/create')) return 2;
-    if (location.startsWith('/plans')) return 3;
-    if (location.startsWith('/drugs')) return 1;
+    if (location.startsWith('/plans')) return 1;
     if (location.startsWith('/history') || location.startsWith('/settings')) {
-      return 4;
+      return 2;
     }
     return 0;
   }
@@ -46,7 +44,7 @@ class MainShell extends StatelessWidget {
               ],
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _NavItem(
                   selected: current == 0,
@@ -56,22 +54,12 @@ class MainShell extends StatelessWidget {
                 ),
                 _NavItem(
                   selected: current == 1,
-                  icon: Icons.medication_rounded,
-                  label: l10n.navDrug,
-                  onTap: () => context.go('/drugs'),
-                ),
-                _CenterAction(
-                  selected: current == 2,
-                  onTap: () => context.go('/create'),
-                ),
-                _NavItem(
-                  selected: current == 3,
                   icon: Icons.calendar_month_rounded,
                   label: l10n.navPlan,
                   onTap: () => context.go('/plans'),
                 ),
                 _NavItem(
-                  selected: current == 4,
+                  selected: current == 2,
                   icon: Icons.history_rounded,
                   label: l10n.navHistory,
                   onTap: () => context.go('/history'),
@@ -121,37 +109,6 @@ class _NavItem extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _CenterAction extends StatelessWidget {
-  const _CenterAction({required this.selected, required this.onTap});
-
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        width: 58,
-        height: 58,
-        decoration: BoxDecoration(
-          color: selected ? AppColors.primaryDark : AppColors.primary,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.3),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: const Icon(Icons.add_rounded, color: Colors.white, size: 30),
       ),
     );
   }

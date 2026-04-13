@@ -47,7 +47,7 @@ class HomeScreen extends ConsumerWidget {
         title: Text(l10n.appTitle),
         actions: [
           IconButton(
-            onPressed: () => context.go('/settings'),
+            onPressed: () => context.push('/settings'),
             icon: const Icon(Icons.settings_outlined),
           ),
           const SizedBox(width: 6),
@@ -189,7 +189,7 @@ class _OnboardingView extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => context.go('/history'),
+                      onPressed: () => context.go('/create/reuse'),
                       icon: const Icon(Icons.history_outlined),
                       label: Text(
                         AppLocalizations.of(context).homeActionHistory,
@@ -286,41 +286,73 @@ class _DashboardView extends ConsumerWidget {
           ),
           data: (today) {
             final now = DateTime.now();
-            final dueNow = today.doses.where((d) => d.isDueNow(now)).toList();
-            final upcoming = today.doses
-                .where((d) => d.status == 'pending' && !d.isDueNow(now))
+            final sortedDoses = List<TodayDose>.from(today.doses)
+              ..sort((a, b) => a.comparePriority(b, now));
+            final dueNow = sortedDoses.where((d) => d.isDueNow(now)).toList();
+            final upcoming = sortedDoses
+                .where((d) => d.isUpcomingSoon(now))
+                .toList();
+            final laterToday = sortedDoses
+                .where(
+                  (d) =>
+                      d.effectiveStatus(now) == 'pending' &&
+                      !d.isDueNow(now) &&
+                      !d.isUpcomingSoon(now),
+                )
                 .toList();
 
             Widget doseTile(TodayDose dose) => _TodayDoseTile(
               dose: dose,
               canMark: canMark,
               onTaken: () async {
-                final ok = await ref
+                final result = await ref
                     .read(todayScheduleNotifierProvider.notifier)
                     .markDose(dose: dose, status: 'taken');
                 if (!context.mounted) return;
                 final l10n = AppLocalizations.of(context);
+
+                if (result == MarkDoseResult.failed) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Lỗi lưu liều uống. Vui lòng thử lại.'),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                  return;
+                }
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      ok
+                      result == MarkDoseResult.synced
                           ? l10n.homeDoseTakenStatus(dose.primaryTitle)
                           : l10n.homeDoseOfflineStatus,
                     ),
-                    backgroundColor: ok ? AppColors.success : AppColors.warning,
+                    backgroundColor: result == MarkDoseResult.synced ? AppColors.success : AppColors.warning,
                   ),
                 );
               },
               onSkipped: () async {
-                final ok = await ref
+                final result = await ref
                     .read(todayScheduleNotifierProvider.notifier)
                     .markDose(dose: dose, status: 'skipped');
                 if (!context.mounted) return;
                 final l10n = AppLocalizations.of(context);
+
+                if (result == MarkDoseResult.failed) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Lỗi lưu liều uống. Vui lòng thử lại.'),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                  return;
+                }
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      ok
+                      result == MarkDoseResult.synced
                           ? l10n.homeDoseSkippedStatus(dose.primaryTitle)
                           : l10n.homeDoseOfflineStatus,
                     ),
@@ -354,7 +386,13 @@ class _DashboardView extends ConsumerWidget {
                     ...upcoming.map(doseTile),
                     const SizedBox(height: 8),
                   ],
-                  if (dueNow.isEmpty && upcoming.isEmpty)
+                  if (laterToday.isNotEmpty) ...[
+                    const _SectionLabel(title: 'Các liều còn lại hôm nay'),
+                    const SizedBox(height: 10),
+                    ...laterToday.map(doseTile),
+                    const SizedBox(height: 8),
+                  ],
+                  if (dueNow.isEmpty && upcoming.isEmpty && laterToday.isEmpty)
                     const _TodayEmptyCard(),
                 ],
                 const SizedBox(height: 18),
@@ -890,12 +928,23 @@ class _TodayDoseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final status = dose.status;
+    final now = DateTime.now();
+    final status = dose.effectiveStatus(now);
     final pending = status == 'pending';
     final statusMeta = switch (status) {
       'taken' => ('Đã uống', AppColors.success, Icons.check_circle_rounded),
       'skipped' => ('Bỏ qua', AppColors.warning, Icons.remove_circle_rounded),
-      'missed' => ('Không uống', AppColors.error, Icons.error_rounded),
+      'missed' => ('Đã quên', AppColors.error, Icons.error_rounded),
+      _ when dose.isDueNow(now) => (
+        'Đến giờ uống',
+        AppColors.primaryDark,
+        Icons.alarm_rounded,
+      ),
+      _ when dose.isUpcomingSoon(now) => (
+        'Sắp đến giờ',
+        AppColors.info,
+        Icons.notifications_active_rounded,
+      ),
       _ => ('Chờ đến giờ', AppColors.primaryDark, Icons.schedule_rounded),
     };
 
@@ -978,12 +1027,40 @@ class _TodayDoseTile extends StatelessWidget {
                         ),
                       ),
                     ),
+                    if (dose.isUpcomingSoon(now)) ...[
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Thông báo trước 30 phút đã được lên lịch.',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ] else if (dose.isDueNow(now)) ...[
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Nếu chưa uống, hệ thống sẽ nhắc lại mỗi 15 phút.',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ] else if (status == 'missed') ...[
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Liều này đã quá 45 phút nên được chuyển sang trạng thái quên.',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
             ],
           ),
-          if (pending) ...[
+          if (pending && dose.isDueNow(now)) ...[
             const SizedBox(height: 14),
             Row(
               children: [

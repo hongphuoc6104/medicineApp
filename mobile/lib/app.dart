@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/notifications/notification_service.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/data/auth_notifier.dart';
+import 'features/home/data/today_schedule_notifier.dart';
 import 'l10n/app_localizations.dart';
 
 /// Root app widget with Riverpod + GoRouter + healthcare light theme.
@@ -20,14 +24,115 @@ class MedicineApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      title: 'Nhắc Thuốc',
+      title: 'Uống thuốc',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       routerConfig: router,
+      builder: (context, child) =>
+          _NotificationActionBridge(child: child ?? const SizedBox.shrink()),
       // ── Localization ──────────────────────────────────────────────
       locale: const Locale('vi'),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
     );
+  }
+}
+
+class _NotificationActionBridge extends ConsumerStatefulWidget {
+  const _NotificationActionBridge({required this.child});
+
+  final Widget child;
+
+  @override
+  ConsumerState<_NotificationActionBridge> createState() =>
+      _NotificationActionBridgeState();
+}
+
+class _NotificationActionBridgeState
+    extends ConsumerState<_NotificationActionBridge> {
+  final List<NotificationActionEvent> _pendingEvents = [];
+  StreamSubscription<NotificationActionEvent>? _subscription;
+  bool _isProcessing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final notificationService = ref.read(notificationServiceProvider);
+    _subscription = notificationService.actionEvents.listen(_enqueueEvent);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final event in notificationService.takePendingLaunchEvents()) {
+        _enqueueEvent(event);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  void _enqueueEvent(NotificationActionEvent event) {
+    if (!event.isTakenAction) {
+      return;
+    }
+    _pendingEvents.add(event);
+    _drainPendingEvents();
+  }
+
+  Future<void> _drainPendingEvents() async {
+    if (!mounted || _isProcessing) {
+      return;
+    }
+    if (ref.read(authStateProvider) != AuthStatus.authenticated) {
+      return;
+    }
+
+    _isProcessing = true;
+    while (mounted && _pendingEvents.isNotEmpty) {
+      final event = _pendingEvents.removeAt(0);
+      final result = await ref
+          .read(todayScheduleNotifierProvider.notifier)
+          .markDoseFromNotification(event);
+      if (!mounted) {
+        break;
+      }
+
+      final messenger = ScaffoldMessenger.maybeOf(context);
+      if (messenger == null) {
+        continue;
+      }
+
+      final (message, backgroundColor) = switch (result) {
+        MarkDoseResult.synced => (
+          'Đã ghi nhận uống thuốc: ${event.title}',
+          Colors.green,
+        ),
+        MarkDoseResult.queuedOffline => (
+          'Đã lưu tạm offline: ${event.title}',
+          Colors.orange,
+        ),
+        MarkDoseResult.failed => (
+          'Không ghi nhận được liều uống từ thông báo.',
+          Colors.red,
+        ),
+      };
+
+      messenger.showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: backgroundColor),
+      );
+    }
+    _isProcessing = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen<AuthStatus>(authStateProvider, (_, next) {
+      if (next == AuthStatus.authenticated) {
+        _drainPendingEvents();
+      }
+    });
+    return widget.child;
   }
 }
