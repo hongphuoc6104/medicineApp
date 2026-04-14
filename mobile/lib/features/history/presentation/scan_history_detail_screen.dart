@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../create_plan/domain/scan_result.dart';
 import '../data/scan_history_repository.dart';
+import '../../reconciliation/data/reconciliation_repository.dart';
+import '../../reconciliation/domain/reconciliation_result.dart';
+import '../../reconciliation/presentation/transition_of_care_cards.dart';
 
 class ScanHistoryDetailScreen extends ConsumerStatefulWidget {
   const ScanHistoryDetailScreen({
@@ -31,6 +34,7 @@ class _ScanHistoryDetailScreenState
   bool _isLoading = true;
   String? _error;
   ScanHistoryDetail? _detail;
+  ReconciliationResult? _reconciliation;
 
   @override
   void initState() {
@@ -45,9 +49,20 @@ class _ScanHistoryDetailScreenState
     });
     try {
       final repo = ref.read(scanHistoryRepositoryProvider);
+      final reconRepo = ref.read(reconciliationRepositoryProvider);
+      
       final detail = await repo.getHistoryDetail(widget.scanId);
+      
+      ReconciliationResult? recon;
+      try {
+        recon = await reconRepo.compareScanVsActivePlan(widget.scanId);
+      } catch (e) {
+        debugPrint('Reconciliation load error: $e');
+      }
+
       setState(() {
         _detail = detail;
+        _reconciliation = recon;
         _isLoading = false;
       });
     } catch (e) {
@@ -156,6 +171,10 @@ class _ScanHistoryDetailScreenState
             ),
           ),
           const SizedBox(height: 16),
+          if (_reconciliation != null && _reconciliation!.summary.hasChanges)
+            TransitionOfCareWidget(
+              transitionOfCare: _reconciliation!.transitionOfCare,
+            ),
           const Text(
             'Danh sách thuốc',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),

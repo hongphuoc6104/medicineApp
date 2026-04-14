@@ -3,8 +3,14 @@
  */
 import { pool } from '../helpers/db.js';
 import * as drugService from '../../src/services/drug.service.js';
+import { seedTestDrugs, cleanupTestDrugs } from '../helpers/seed_test_drugs.js';
+
+beforeAll(async () => {
+  await seedTestDrugs();
+});
 
 afterAll(async () => {
+  await cleanupTestDrugs();
   await pool.end();
 });
 

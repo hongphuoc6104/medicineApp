@@ -218,6 +218,12 @@ class _OnboardingView extends StatelessWidget {
               icon: Icons.calendar_month_rounded,
               onTap: () => context.go('/plans'),
             ),
+            _QuickActionItem(
+              title: 'Kiểm tra bao bì',
+              subtitle: 'Đối chiếu thuốc với toa',
+              icon: Icons.fact_check_outlined,
+              onTap: () => context.go('/create/scan?mode=dispensed'),
+            ),
           ],
         ),
       ],

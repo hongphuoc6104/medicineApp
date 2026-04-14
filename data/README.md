@@ -1,54 +1,26 @@
-# Data — Dữ Liệu I/O
+# Data
 
-## Input
+Thư mục này chứa dataset, database files và các output script liên quan đến việc nhận dạng và quản lý đơn thuốc.
 
-| Thư mục | Mô tả |
-|---------|-------|
-| `input/` | Đặt ảnh đơn thuốc (.jpg, .png) vào đây → pipeline xử lý |
+## Cấu Trúc Chung
+- `input/`: Các file ảnh test đơn thuốc người dùng nạp vào. Để rỗng dần cũng được.
+- `output/phase_a/`: Dữ liệu đầu ra sinh tự động từ các luồng test pipeline. Mỗi lần run script test pipeline, thư mục con theo tên ảnh sẽ sinh ra. **Đây là file generated sinh tự động và hoàn toàn có thể xóa an toàn (Safe to delete).**
+- `pres/` và `pills/`: Dữ liệu test nội bộ, được giữ lại cho các bài benchmark đánh giá model Pipeline và thử nghiệm nhận dạng ảnh Phase B.
 
-## Output (tự động tạo khi chạy pipeline)
+## Databases & Nguồn Dữ Liệu Thuốc (Source-of-Truth)
 
-| Thư mục | Mô tả |
-|---------|-------|
-| `output/phase_a/<tên_ảnh>/` | Kết quả Phase A — mỗi ảnh 1 folder riêng chứa `summary.json`, `step-*.json/jpg` |
-| `output/phase_b/<tên_ảnh>/` | Kết quả Phase B — pill detection + matching |
+Hệ thống sử dụng các database tĩnh dạng JSON/CSV phân loại như sau (Database thật nằm trên Postgres, đây là kho metadata tra cứu của AI Python):
 
-## Drug Database
+1. **`drug_db_vn_full.json` (Database Chính)**: 
+   - Đây là CSDL gốc của toàn bộ sản phẩm. File có kích thước lớn, chứa hơn 9,284 loại thuốc lưu hành tại Việt Nam. AI Pipeline (Phase A) sử dụng bảng này nội bộ để fuzzy-search nhận diện tên hoạt chất / thuốc thương mại và sửa sai chính tả.
+   - Nó thay thế cho tệp `drug_db_vn.csv` (316 bản ghi cũ) hồi MVP ban đầu. Mọi update cần focus vào file này hoặc gọi crawler API nếu thêm.
+2. `vaipe_drugs_kb.json`:
+   - Knowledge Base bóc tách từ tập VAIPE cũ, không còn là CSDL cốt lõi của MedicineApp. Nó được giữ lại để tham khảo chéo kiến trúc cũ và làm lookup bổ trợ, nếu cần nhưng không phải DB tìm kiếm chính.
 
-| File | Mô tả | Nguồn gốc |
-|------|-------|-----------|
-| `vaipe_drugs_kb.json` | **107 loại thuốc** VAIPE — trích từ training data. Chứa name, brand, dosage, sample_texts, count | Từ VAIPE dataset |
-| `drug_db_vn.csv` | 316 dòng (192 thuốc phổ biến + 124 VAIPE). Columns: brand_name, generic_name, dosage, category | ⚠️ AI-generated, cần verify |
-| `pill_info_vn.csv` | 126 dòng — thêm color, shape so với drug_db_vn.csv | ⚠️ AI-generated, cần verify |
+## Training Datasets
 
-> [!NOTE]
-> **Khuyến nghị**: Nên dùng `vaipe_drugs_kb.json` (từ dữ liệu training thật) làm drug DB chính thức.
-> Các file CSV hiện tại do AI generate, chưa được xác minh với nguồn y tế chính thống.
+- `synthetic_train/`: **Dataset Train NER quan trọng nhất hiện tại**. Bộ ảnh giả lập 938 ảnh có nhãn đã được chuẩn hóa mô phỏng đúng cấu trúc gãy dòng, cách trình bày y hệt bảng thuốc ngoài đời thực (Có số thứ tự, Tên, Số lượng, Lời dặn). PhoBERT sử dụng tập này để bóc tách 1 cột chữ nối liền thành Tên thuốc/Cách dùng chính xác.
+- `ner_dataset/`: Tập train PhoBERT cũ hơn tạo từ dữ liệu VAIPE gốc, cấu trúc từng ô rời rạc.
 
-## Training Data
-
-| Thư mục | Mô tả |
-|---------|-------|
-| `pills/` | Dataset ảnh viên thuốc — `train/` + `test/` (từ Kaggle VAIPE) |
-| `pres/` | Dataset đơn thuốc JSON — `train/` + `test/` + `test_custom/` |
-| `synthetic_train/` | Dữ liệu BVĐK synthetic — 938 train prescriptions, 118 test. Chứa PDF mẫu in thử (`print_20_samples.pdf`), zip archives (`pres_images_train.zip` ~153MB, `pres_labels_train.zip` ~1.4MB) |
-
-## Tools
-
-| Thư mục | Mô tả |
-|---------|-------|
-| `createPrescription/` | **Tool tạo đơn thuốc format BVĐK Cần Thơ**. Xem chi tiết: `createPrescription/prescription_generator/README.md` |
-
-### createPrescription — Chi tiết
-
-Bộ công cụ sinh đơn thuốc synthetic dùng cho training, gồm:
-
-| File | Chức năng |
-|------|----------|
-| `prescription_generator/data_generator.py` | Sinh dữ liệu JSON từ Medical Knowledge Base (105 VAIPE drug classes) |
-| `prescription_generator/generate_vaipe_data.py` | Inject thuốc VAIPE vào format đơn thuốc |
-| `prescription_generator/generate_prescription.py` | Chuyển JSON → DOCX/PDF theo mẫu BVĐK Cần Thơ |
-| `prescription_generator/error_injector.py` | Tiêm lỗi y khoa (sai liều, tương tác thuốc, chống chỉ định) |
-| `prescription_generator/append_complex_cases.py` | Thêm ca bệnh phức tạp (đa bệnh lý) |
-
-Xem hướng dẫn đầy đủ: [prescription_generator/README.md](createPrescription/prescription_generator/README.md)
+## Generator Scripts
+- `createPrescription/prescription_generator/README.md`: Hướng dẫn script lập trình tự sinh ảnh đơn thuốc giả lập để bổ sung vào `synthetic_train`.

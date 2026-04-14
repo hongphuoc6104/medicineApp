@@ -5,6 +5,7 @@ import request from 'supertest';
 import app from '../../src/app.js';
 import { cleanTestUsers, pool } from '../helpers/db.js';
 import * as authService from '../../src/services/auth.service.js';
+import { seedTestDrugs, cleanupTestDrugs } from '../helpers/seed_test_drugs.js';
 
 const PREFIX = 'test_ci_route_drug_';
 const EMAIL = `${PREFIX}user@example.com`;
@@ -15,10 +16,12 @@ beforeAll(async () => {
   await authService.register({ email: EMAIL, password: 'Test1234!', name: 'Drug Route Test' });
   const tokens = await authService.login({ email: EMAIL, password: 'Test1234!' });
   accessToken = tokens.accessToken;
+  await seedTestDrugs();
 });
 
 afterAll(async () => {
   await cleanTestUsers(PREFIX);
+  await cleanupTestDrugs();
   await pool.end();
 });
 

@@ -1,55 +1,57 @@
-# MedicineApp — Project Status (Updated 2026-03-14)
+# MedicineApp — Project Status (Active)
 
-## ✅ Đã hoàn thành
+Bảng theo dõi trạng thái hiện tại của dự án theo từng trục sản phẩm. Đã cập nhật lại toàn bộ tiến độ tính đến hiện tại.
 
-| Việc | File/Path chính | Ngày |
-|------|----------------|------|
-| YOLO11-seg detection model | `models/yolo/best.pt` | — |
-| Hybrid OCR (PaddleOCR + VietOCR) | `core/phase_a/s3_ocr/` | — |
-| **PhoBERT NER Classify** (thay GCN) | `core/phase_a/s5_classify/ner_extractor.py` | — |
-| Drug Search (fuzzy match DB) | `core/phase_a/s6_drug_search/` | — |
-| **Full inference pipeline (Phase A)** | `scripts/run_pipeline.py` | — |
-| FastAPI server | `server/main.py` | — |
-| VAIPE dataset (21.9GB) | Kaggle `kusnguyen/full-vaipe` | — |
-| Zero-PIMA train 50 epoch (VAIPE) | `models/zero_pima/zero_pima_best.pth` | — |
-| PhoBERT NER train (F1=100%) | `models/phobert_ner_model/` | — |
-| Pipeline test 50 ảnh | 5-13 thuốc/ảnh, ~6.8s/ảnh | 2026-03-10 |
-| OCR Polygon Unwarp (Perspective Transform) | `core/phase_a/s3_ocr/ocr_engine.py` | — |
-| **Fix bug `force_portrait()` xoay sai ảnh YOLO-crop** | `core/phase_a/s2_preprocess/orientation.py` | 2026-03-14 |
-| **`merge_into_lines()` — gộp OCR blocks thành dòng** | `core/phase_a/s3_ocr/ocr_engine.py` | 2026-03-14 |
-| **DrugLookup nâng cấp → 9,284 thuốc VN** | `core/phase_a/s6_drug_search/drug_lookup.py` | 2026-03-14 |
-| **Drug Search Step 5 tích hợp vào run_pipeline.py** | `scripts/run_pipeline.py` | 2026-03-14 |
+## 1. Trạng thái theo trục sản phẩm
 
-## ⚠️ Quy tắc quan trọng — KHÔNG sai lần nữa
+### ⏰ Reminder Core
+- **Trạng thái:** Đã hoạt động tốt (Mobile + Backend)
+- **Hoàn thành:** 
+  - Đăng nhập, xác thực hệ thống.
+  - Quản lý lịch nhắc nhở uống thuốc (Create Plan + Home Screen hiển thị Dose list).
+  - Đánh dấu trạng thái lịch uống (Skipped/Taken/Snoozed).
+  - Local caching (SWR) cho các query trên màn hình chính.
+- **Blocker / Tiếp tục theo dõi:** 
+  - Notification trên một số dòng máy Android vẫn cần test kỹ hơn về auto-denial permissions.
 
-| Quy tắc | Giải thích |
-|---------|-----------|
-| **KHÔNG dùng `force_portrait()`** | Xoay sai ảnh YOLO-crop landscape → OCR chỉ ra ký tự đơn → 0 drugs |
-| **Dùng `fix_orientation_ai()`** | PP-LCNet phân loại 4 góc (0°/90°/180°/270°) → xoay đúng |
-| **Gọi `merge_into_lines()` sau OCR** | Gộp blocks cùng dòng Y-axis → NER nhận đúng tên thuốc nhiều từ |
-| **DrugLookup dùng JSON** | `drug_db_vn_full.json` (9,284 thuốc), không phải CSV (316 thuốc cũ) |
-| **Step 5 là Drug Search** | Có `step-5_drug_search.json` trong output, không phải optional nữa |
+### 📸 Scan Journey (Phase A)
+- **Trạng thái:** Hoàn tất luồng back-end AI, Mobile đã tích hợp một phần
+- **Hoàn thành:** 
+  - Python AI Pipeline mượt mà 5 bước: YOLO crop → AI Orientation → OCR → Group by STT → NER & Drug Search trên 9,284 loại.
+  - Node Backend đã lo việc proxy/lưu trữ session scan.
+  - Giao diện mobile hiển thị History chi tiết.
+- **Phần Backend xong nhưng thiếu Mobile Integration thực tế:**
+  - Chức năng tự tay mapping, chỉnh sửa thuốc nếu kết quả AI bị sai lệch (Scan Editing).
+  - Lưu bản ghi xác nhận Scan (Confirm Scan).
 
-## 📦 Archived (không còn sử dụng trong Phase A)
+### 🛡 Medication Safety Expansion (Reconciliation)
+- **Trạng thái:** Đang tích hợp UI/Tối ưu
+- **Hoàn thành:** 
+  - Chức năng kiểm tra tương tác thuốc, sinh thẻ an toàn (Transition-of-Care cards).
+  - Bộ câu hỏi Know/Check/Ask checklist cho bệnh nhân.
+- **Phần cần nâng cấp:**
+  - Logic backend đã có nhưng chưa liên kết hoàn chỉnh cảnh báo vào mọi ngóc ngách của Create Plan flow.
 
-| Module | Lý do | Vị trí |
-|--------|-------|--------|
-| `s4_grouping/` | NER classify trực tiếp OCR output | `archive/deprecated_gcn/` |
-| `gcn_classifier.py` | Thay bằng PhoBERT NER | `archive/deprecated_gcn/` |
-| `evaluate.py` | Script đánh giá GCN | `archive/deprecated_gcn/` |
-| `force_portrait()` trong orientation.py | Gây bug xoay sai YOLO crop — **vẫn còn trong code nhưng KHÔNG được gọi** | `core/phase_a/s2_preprocess/orientation.py` |
+### 📊 Adherence & History
+- **Trạng thái:** Có API, thiếu UI chuyên sâu
+- **Hoàn thành:** API backend trả về lịch sử uống thuốc và độ tuân thủ hàng ngày.
+- **Thiếu Mobile Integration:** Màn hình Dashboard phân tích quá trình uống thuốc theo tuần/tháng (Chưa làm UI).
 
-## ⚠️ Phase B — Chưa hoạt động
+### 💊 Phase B (Xác minh viên thuốc)
+- **Trạng thái:** HOLD (Tạm ngưng / Experimental)
+- **Thực tế:** Các endpoint verification đã có, code Zero-PIMA model đã chạy thử nghiệm MVP, nhưng định hướng product hiện tại ưu tiên Reminder và Scan đơn. Phase B chỉ xem như một tính năng Reference hỗ trợ.
 
-- Code có sẵn: `core/phase_b/` (FRCNN detect + GCN match)
-- Thiếu contrastive matching (patched `roi_heads.py`)
-- Giữ nguyên, chờ nâng cấp riêng
+---
 
-## ❌ Chưa làm (theo ưu tiên)
+## 2. Các Chính sách Hệ thống Cần Nhớ (System Evaluation)
 
-| # | Việc | Ưu tiên |
-|---|------|---------| 
-| 1 | End-to-end test (In → Chụp → Pipeline) | 🟡 TB |
-| 2 | Phase B activation (đang hold) | 🟡 TB |
-| 3 | Flutter App integration với backend | 🟢 Thấp |
-| 4 | Tinh chỉnh Drug Search: ưu tiên tên thương mại hơn generic | 🟡 TB |
+Để dự án vận hành an toàn và chuẩn Y tế, các thành viên cần tuân thủ cấu trúc sau khi phát triển tính năng:
+
+1. **Severity Policy cho Cảnh báo (Interaction Warning):** 
+   - Mọi tương tác thuốc mức độ *Nghiêm trọng* không được hiển thị mờ nhạt. Bắt buộc phải là màn hình đỏ/popup Blocking UI cảnh báo, ép user ấn "Tôi đã hiểu" trước khi bỏ qua.
+2. **Chính sách Lưu giữ Dữ liệu (Data Retention):** 
+   - Ảnh chụp đơn thuốc là thông tin y tế nhạy cảm. Backend cần cơ chế cronjob tự động xóa file ảnh khỏi storage sau 30 ngày, chỉ lưu lại metadata văn bản để giảm rủi ro pháp lý.
+3. **Chiến lược Giải quyết Xung đột (Sync Conflict Policy):** 
+   - Do mobile app có cache offline SWR, khi có Sync Conflict giữa local và remote (nhiều thiết bị), hiện tại dùng chiến lược "Last-write-wins" (phiên bản có thời gian update mới nhất) hoặc ưu tiên dữ liệu từ Server đè xuống.
+4. **Trách nhiệm và Pháp lý (Disclaimer):** 
+   - Trong màn hình hiển thị kết quả Scan (Scan Review Screen), **luôn phải có** dòng "Kết quả OCR/AI có thể không chính xác 100%. Thông tin mang tính chất tham khảo, không dùng thay thế tư vấn bác sĩ hoặc dược sĩ chuyên môn."

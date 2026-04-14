@@ -94,6 +94,23 @@ Ràng buộc v1:
 - chỉ so sánh chắc tay theo `tên`, `hoạt chất`, `strength nếu có`, `dosage form nếu có`
 - không làm loose-pill identification hoặc open-world pill recognition trong nhánh này
 
+Trạng thái hiện tại:
+
+- đã hoàn thành backend foundation cho `canonical medication snapshot`
+- đã hoàn thành backend `medication reconciliation engine v1`
+- đã có `transition-of-care safety payload` ở tầng API
+- đã có `dispensed text-first compare API` ở tầng backend
+- đã có mobile integration cơ bản cho reconciliation ở `scan review` và `scan history`
+- đã có flow cơ bản `scan -> OCR -> dispensed review -> compare` dùng lại scan path hiện có
+- `transition-of-care` mới hoàn thành một phần ở UI, chưa render đầy đủ `Know / Check / Ask` và CTA theo tình huống
+- `dispensed text-first` mới hoàn thành một phần ở UI, chưa surface đầy đủ các bucket kết quả và candidate states
+- `interaction warning` trong flow review/lưu plan vẫn chưa được tích hợp
+
+Trạng thái thực thi hiện tại của nhánh này:
+
+- đã hoàn thành phần nền backend + integration mobile cơ bản
+- chưa hoàn thành end-to-end theo definition of done của `TOC-SAFETY`, `DISPENSED-TEXT`, và `REGRESSION-GUARDS`
+
 ### D. Adherence And History Depth
 
 Mục tiêu:
@@ -150,6 +167,13 @@ Now trong nhánh mở rộng medication safety:
 3. `Transition-of-care Safety Mode`
 4. `Prescription -> Dispensed Reconciliation` bản text-first
 
+Tiến độ hiện tại của nhóm `Now`:
+
+1. `Canonical Medication Snapshot` — backend done
+2. `Medication Reconciliation Engine` — backend done + mobile integration cơ bản ở `scan review` / `scan history`
+3. `Transition-of-care Safety Mode` — API payload done + widget integration một phần, chưa đủ definition of done
+4. `Prescription -> Dispensed Reconciliation` — compare engine done + flow cơ bản có thật, nhưng UI result surface chưa đủ definition of done
+
 Next:
 
 1. `JITI-lite` rule-based only
@@ -157,6 +181,29 @@ Next:
 Later:
 
 1. `Personal Pill Passport`
+
+Next build focus ngay bây giờ:
+
+1. hoàn thiện `transition-of-care` để render đủ `Know / Check / Ask` và CTA theo tình huống
+2. hoàn thiện `dispensed text-first` để hiển thị rõ `matched / possible_substitution / missing_from_purchase / unverified_package`
+3. sửa các gap UX của flow `dispensed`: error state rỗng, vị trí shortcut, và dùng raw OCR semantics nhất quán hơn
+4. nối `interaction warning` vào flow review trước khi lưu plan
+5. mở rộng `Regression Guards` cho mobile beyond parser-only tests
+
+Checklist phần còn lại của nhánh `Medication Safety Expansion`:
+
+1. render đầy đủ `Know / Check / Ask` trên UI thay vì chỉ `riskCards + check`
+2. thêm CTA/context rõ cho `transition-of-care` theo từng tình huống sử dụng
+3. hiển thị rõ các bucket kết quả của `dispensed text-first`
+4. hiển thị candidate/manual-review states thay vì chỉ danh sách text quét được
+5. xử lý error/empty state tử tế cho `ScanDispensedReviewScreen`
+6. đặt điểm vào `Kiểm tra bao bì` ở vị trí đúng hơn trong flow có active plan
+7. dùng `ocrText/raw text` nhất quán trong payload `dispensed-text-vs-active-plan`
+8. nối `interaction warning` vào `scan review` / trước khi lưu plan
+9. mở rộng contract tests mobile cho shape `diff`, `candidate`, `baseline`
+10. thêm widget/integration tests cho flow reconciliation trên mobile
+11. dọn 2 issue hiện có từ `flutter analyze`
+12. chạy regression lại cho flow `scan -> review -> reconciliation -> create plan`
 
 ## 6. Definition Of Done
 

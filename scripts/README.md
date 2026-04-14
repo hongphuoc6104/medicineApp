@@ -1,28 +1,27 @@
-# Scripts
+# Scripts Toàn Tập (Môi Trường Python)
 
-| Script | Lệnh chạy | Mô tả |
-|--------|----------|-------|
-| `run_pipeline.py` | `python scripts/run_pipeline.py --image data/input/IMG.jpg` | Chạy Phase A cho 1 ảnh |
-| `debug_phase_a_checks.sh` | `bash scripts/debug_phase_a_checks.sh --quick` | Chạy bộ kiểm tra nhanh cho flow Phase A |
-| `build_drug_db.py` | `python scripts/build_drug_db.py` | Build drug database CSV |
-| `train_ner.py` | `python scripts/train_ner.py` | Train PhoBERT NER model |
-| `prepare_ner_data.py` | `python scripts/prepare_ner_data.py` | Chuẩn bị data NER từ VAIPE |
+## Protected Pipeline (Luồng Tự Nổ)
 
-### Tham số `run_pipeline.py`
+File quan trọng nhất và đang được Lock logic (Không được thay đổi luồng trừ khi tạo test script pass trước).
 
-```bash
-# 1 ảnh
-python scripts/run_pipeline.py --image data/input/IMG_20260209_180420.jpg
+1. `run_pipeline.py`: Pipeline chạy đầy đủ Phase A qua 5 bước. Cú pháp chạy:
+   ```bash
+   python scripts/run_pipeline.py --image <path>
+   python scripts/run_pipeline.py --dir <path>
+   python scripts/run_pipeline.py --all
+   ```
 
-# 1 folder ảnh
-python scripts/run_pipeline.py --dir data/input/prescription_3
+## Test & Debug Scripts
 
-# Tất cả ảnh trong data/input/ (recursive)
-python scripts/run_pipeline.py --all
+Dùng để cô lập hoặc review các đoạn component con để xem có phải lỗi từ pipeline không:
+- `test_preprocess_robustness.py`: Benchmark cho logic nắn ảnh và Modulo 90, tự động xoay ngang/dọc/lộn ngược ảnh gốc (Desktop test OCR accuracy).
 
-# Giới hạn số ảnh
-python scripts/run_pipeline.py --all --limit 5
+## Database / Knowledge Base Scripts
+Các Script dùng để Update CSDL, crawler data về thuốc:
+- `crawl_drug_vn.py`: Crawl hơn 9k đơn thuốc từ `ddi.lab.io.vn`
+- `build_full_drug_db.py`: Bóc tách và kết xuất JSON `drug_db_vn_full.json`.
+- `build_drug_db.py`: Trình biên dịch CSV dự phòng.
 
-# Bỏ qua NER (fallback mode)
-python scripts/run_pipeline.py --all --no-ner
-```
+## Data Preparation (Trí tuệ nhân tạo)
+- `train_ner.py`: Dùng để train Model PhoBERT phân rã.
+- `prepare_ner_data.py`: Trích xuất NER nhãn (BIO format) từ database (Dành cho bản VAIPE Cũ). Đã được thay thế bằng synthetic sequence nhưng vẫn giữ vì code logic.

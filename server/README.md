@@ -1,43 +1,32 @@
-# Server — FastAPI
+# Server (FastAPI / AI Bridge)
 
-### Khởi chạy
+ĐÂY LÀ AI BRIDGE DÀNH RIÊNG CHO VIỆC CHẠY MODEL (Python). **Đây không phải Backend của ứng dụng sản phẩm chính**. 
+API Backend xử lý business logic và mobile request chủ yếu nằm ở thư mục `server-node/` (Node.js). Node.js sẽ đại diện cho client gọi sang FastAPI proxy này mỗi khi cần kích hoạt chức năng AI (như OCR, NER).
+
+## Cấu Hình Dev
+
+FastAPI Server chạy cục bộ tại port mặc định là `8100`.
 
 ```bash
-# Bước 1: Activate môi trường
-source venv/bin/activate
-
-# Bước 2: Start server
-uvicorn server.main:app --reload --host 0.0.0.0 --port 8000
+# Khởi động (Môi trường Dev local)
+source ../venv/bin/activate
+python -m uvicorn main:app --host 0.0.0.0 --port 8100 --reload
 ```
+Swagger UI có tại: `http://localhost:8100/docs`.
 
-### Endpoints
+## Các Route Chính (Active API)
 
-| Method | Path | Mô tả |
-|--------|------|-------|
-| GET | `/api/health` | Health check — trạng thái server |
-| POST | `/api/scan-prescription` | Phase A: quét ảnh đơn thuốc → danh sách thuốc |
-| POST | `/api/scan-pills` | Phase B: xác minh viên thuốc với đơn thuốc |
+| Endpoint | Method | Mô tả | Trạng thái |
+|----------|--------|-------|------------|
+| `/api/scan-prescription` | `POST` | Chạy toàn bộ Pipeline Phase A (Crop -> Deskew -> OCR -> NER -> Drug Match) trả về danh sách các loại thuốc đọc được từ ảnh. | Hoạt động chính |
+| `/api/dose-verification` | `POST` | Xác minh liều lượng thuốc / Tương tác thuốc logic nâng cao hoặc phân tích thành phần viên thuốc Phase B (Hình ảnh). | Hold/Thực nghiệm |
+| `/api/drug-metadata/{name}` | `GET` | (Dành cho AI Bridge tra cứu) Lấy thông tin Metadata chi tiết từ database nội bộ AI pipeline để trả về. | Internal bridge |
+| `/api/drugs/search-vn` | `GET` | Tìm thuốc VN (Fallback route crawler python). Thường tính năng này đã dời qua Node. | Thường trú báo lỗi |
+| `/api/drugs/search-online` | `GET` | Tìm thuốc Online. | Fallback |
+| `/api/drugs/suggest-vn` | `GET` | Auto-complete suggest cho tên thuốc (Fuzzy search). | Hoạt động |
+| `/api/drugs/interactions` | `POST` | Route tra cứu nhanh tương tác thuốc chéo dựa trên tên hoạt chất/thuốc (Python logic). | Hoạt động |
 
-### Drug Info APIs
+*(Note: Những endpoint cũ như `/api/scan-pills`, `/api/drug-info/{name}`, `/api/drugs-vn`, `/api/drugs-online` đã được deprecate hoặc routing logic đã thay thế).*
 
-| Method | Path | Mô tả |
-|--------|------|-------|
-| GET | `/api/drug-info/{name}` | Tra cứu thuốc theo tên (local DB + optional online) |
-| GET | `/api/drugs?q=...&limit=20` | Tìm kiếm / liệt kê drug DB local |
-| GET | `/api/drugs-online?q=...` | Tìm kiếm thuốc qua OpenFDA API |
-| GET | `/api/drugs-vn?q=...` | Tìm kiếm thuốc VN (ddi.lab.io.vn) |
-| GET | `/api/drugs-vn/suggest?q=...` | Autocomplete tên thuốc VN |
-| GET | `/api/drugs-vn/interactions?ingredient=...` | Tương tác thuốc (VN database) |
-
-### Cấu trúc
-
-```
-server/
-├── main.py            # FastAPI app + tất cả endpoints
-├── data/
-│   ├── drug_db.json       # Drug database (190+ thuốc)
-│   └── drug_db_full.json  # Drug database mở rộng (830KB)
-├── routers/           # (reserved)
-├── schemas/           # (reserved)
-└── services/          # Business logic services
-```
+## Cold Start & Concurrency
+Vì model AI như YOLOv11 và PhoBERT khá nặng, khi request đầu tiên tới `scan-prescription` có thể bị độ trễ ~15s (Model Loading warm-up). Nếu GPU mem giới hạn ~4GB (RTX 3050), server được set Semaphore giới hạn 1 concurrent connection để chặn OOM.

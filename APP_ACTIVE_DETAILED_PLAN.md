@@ -127,6 +127,23 @@ Done khi:
 - scan item và active plan item được chuẩn hóa về cùng một cấu trúc
 - reconciliation engine có thể chạy trên snapshot mà không phải đọc shape gốc của từng nguồn
 
+Trạng thái:
+
+- backend foundation đã hoàn thành
+- đã chuẩn hóa `scan`, `active_plan`, `dispensed_text` về snapshot chung
+- chưa có mobile/domain model dùng lại trực tiếp snapshot này
+
+Đã xong:
+
+1. tạo snapshot chung ở backend
+2. chuẩn hóa `scan -> snapshot`
+3. chuẩn hóa `active_plan -> snapshot`
+4. chuẩn hóa `dispensed_text -> snapshot`
+
+Còn lại:
+
+1. thêm mobile/domain model hoặc parser dùng lại snapshot nếu cần ở app layer
+
 ### WS3B — `RECONCILIATION`
 
 Mục tiêu:
@@ -155,6 +172,26 @@ Done khi:
 - có backend service + API đầu tiên cho compare scan với baseline phù hợp
 - có test fixtures cho case thêm thuốc, ngừng thuốc, đổi brand cùng hoạt chất, strength mismatch, unresolved OCR, duplicate active ingredient
 
+Trạng thái:
+
+- backend service đã hoàn thành
+- API đầu tiên đã có cho `scan vs active plan` và `scan vs previous scan`
+- unit/integration tests cho các case chính đã có
+- đã có mobile integration cơ bản trong `scan review` và `scan history`
+- mobile mới dùng `summary + transitionOfCare` là chính, chưa surface đầy đủ `diff/candidate/baseline`
+
+Đã xong:
+
+1. service reconciliation v1
+2. route `scan-vs-active-plan`
+3. route `scan-vs-previous-scan`
+4. test case cho thêm thuốc, ngừng thuốc, đổi brand cùng hoạt chất, strength mismatch, unresolved OCR, duplicate active ingredient
+
+Còn lại:
+
+1. surface `diff` rõ hơn ở app layer khi cần
+2. dùng `candidate/baseline` hoặc buckets tương đương ở UI thay vì chỉ `summary + transitionOfCare`
+
 ### WS3C — `TOC-SAFETY`
 
 Mục tiêu:
@@ -172,6 +209,26 @@ Done khi:
 
 - UI hoặc API response đủ rõ để user nhìn phát hiểu có gì thay đổi
 - không cần model mới
+
+Trạng thái:
+
+- API payload đã có sẵn trong kết quả reconciliation
+- đã có widget dùng lại trong `scan review`, `scan history`, và `dispensed review`
+- mới render được `riskCards` và `check`
+- chưa render đầy đủ `know`, `ask`, và CTA theo tình huống trên mobile
+
+Đã xong:
+
+1. `transition-of-care payload` ở tầng API
+2. surface `riskCards` trong UI reconciliation
+3. surface checklist `check` trong UI reconciliation
+
+Còn lại:
+
+1. render `know` rõ ràng trên UI
+2. render `ask` rõ ràng trên UI
+3. thêm CTA/context theo tình huống `toa mới`, `tái khám`, `ra viện`, `mua thuốc ngoài`
+4. rà lại copy và hierarchy để user hiểu được thay đổi gì chỉ trong một màn
 
 ### WS3D — `DISPENSED-TEXT`
 
@@ -197,6 +254,35 @@ Done khi:
 - OCR text được normalize sang expected meds
 - output có ít nhất `matched`, `possible_substitution`, `missing_from_purchase`, `unverified_package`
 - mọi kết quả yếu đều hiện là candidate, không ép confirmed
+
+Trạng thái:
+
+- có route + mode `dispensed` trong camera flow
+- có `ScanDispensedReviewScreen` gọi `dispensed-text-vs-active-plan`
+- đang dùng lại OCR scan path hiện có để làm compare cơ bản
+- chưa surface đầy đủ kết quả `diff` ra UI
+- chưa có error/empty state đủ rõ cho màn review này
+- shortcut `Kiểm tra bao bì` hiện mới xuất hiện ở onboarding state, chưa phải vị trí tốt nhất cho user đã có active plan
+
+Đã xong:
+
+1. compare engine backend cho input text-first
+2. route `dispensed-text-vs-active-plan`
+3. backend test cho text-first package compare
+4. flow cơ bản `scan -> OCR -> dispensed review -> compare`
+5. mobile repository + parser cho API reconciliation
+6. UI shell `ScanDispensedReviewScreen`
+
+Còn lại:
+
+1. render rõ `matched`
+2. render rõ `possible_substitution`
+3. render rõ `missing_from_purchase`
+4. render rõ `unverified_package`
+5. render candidate/manual-review states thay vì chỉ danh sách text
+6. thêm error state / retry state tử tế cho `ScanDispensedReviewScreen`
+7. dùng `ocrText/raw text` nhất quán hơn trong payload gửi backend
+8. đặt entry point `Kiểm tra bao bì` hợp lý hơn trong flow có active plan
 
 ### WS4 — `ADHERENCE`
 
@@ -257,6 +343,13 @@ Done khi:
 - các flow P0/P1 chính có test bảo vệ tương xứng
 - direct-only / experimental routes được tách khỏi release gate chính
 
+Trạng thái:
+
+- full Node test suite hiện đang pass (`82 tests`)
+- mobile contract test cho reconciliation parser đang pass
+- `flutter analyze` vẫn còn `2` issues nhỏ
+- chưa có widget/integration coverage đủ rộng cho flow reconciliation mobile
+
 ## 4. Thứ tự thực thi
 
 1. `WS1 — CORE-TRUTH`
@@ -269,6 +362,50 @@ Done khi:
 8. `WS4 — ADHERENCE`
 9. `WS5 — PILL-ASSIST`
 10. `WS6 — REGRESSION-GUARDS`
+
+Immediate next execution slices:
+
+1. `WS3C` render đủ `Know / Check / Ask` và CTA theo tình huống
+2. `WS3D` surface đầy đủ diff buckets trong `dispensed review`
+3. `WS3D` sửa error state + raw OCR semantics + entry point của flow `dispensed`
+4. `WS3` interaction warnings trong flow review/lưu plan
+5. `WS6` mở rộng test mobile beyond parser-only và dọn `flutter analyze`
+
+Execution summary hiện tại cho nhánh mới:
+
+Đã hoàn thành thật ở nhánh mới:
+
+1. cập nhật general plan
+2. cập nhật detailed plan
+3. cập nhật review checklist
+4. thêm backend `canonical medication snapshot`
+5. chuẩn hóa `scan -> snapshot`
+6. chuẩn hóa `active_plan -> snapshot`
+7. chuẩn hóa `dispensed_text -> snapshot`
+8. thêm `reconciliation engine v1`
+9. thêm reconciliation routes và nối vào app
+10. thêm unit + integration tests cho reconciliation backend
+11. thêm mobile repository/parser cho reconciliation API
+12. nối `scan history detail` với compare API
+13. nối `scan review` với compare API
+14. thêm flow cơ bản `mode=dispensed` trong camera path
+15. thêm `ScanDispensedReviewScreen` dùng reconciliation API
+16. thêm mobile contract test cho reconciliation parser
+17. xác nhận full Node suite đang xanh
+
+Còn lại chưa done theo definition of done:
+
+1. `WS3C` render đủ `Know / Check / Ask`
+2. `WS3C` CTA/context theo tình huống
+3. `WS3D` hiển thị đầy đủ `matched / possible_substitution / missing_from_purchase / unverified_package`
+4. `WS3D` hiển thị candidate/manual-review states rõ ràng
+5. `WS3D` error/empty/retry state tử tế cho `ScanDispensedReviewScreen`
+6. `WS3D` chỉnh raw OCR semantics trong payload `dispensed`
+7. `WS3D` đặt entry point `Kiểm tra bao bì` hợp lý hơn
+8. `WS3` surface `interaction warning`
+9. `WS6` mở rộng mobile regression tests beyond parser-only
+10. `WS6` dọn `flutter analyze` còn `2` issues
+11. chạy regression lại cho flow `scan -> review -> reconciliation -> create plan`
 
 Quy tắc:
 

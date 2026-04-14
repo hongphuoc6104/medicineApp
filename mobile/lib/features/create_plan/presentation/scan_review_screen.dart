@@ -7,6 +7,9 @@ import '../../../l10n/app_localizations.dart';
 import '../domain/plan.dart';
 import '../domain/scan_result.dart';
 import 'widgets/drug_entry_sheet.dart';
+import '../../reconciliation/data/reconciliation_repository.dart';
+import '../../reconciliation/domain/reconciliation_result.dart';
+import '../../reconciliation/presentation/transition_of_care_cards.dart';
 
 class ScanReviewScreen extends ConsumerStatefulWidget {
   const ScanReviewScreen({super.key, required this.result});
@@ -20,11 +23,34 @@ class ScanReviewScreen extends ConsumerStatefulWidget {
 class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
   late List<DetectedDrug> _drugs;
   final _searchCtrl = TextEditingController();
+  ReconciliationResult? _reconciliation;
+  bool _isLoadingReconciliation = false;
 
   @override
   void initState() {
     super.initState();
     _drugs = List<DetectedDrug>.from(widget.result.drugs);
+    _loadReconciliation();
+  }
+
+  Future<void> _loadReconciliation() async {
+    if (widget.result.scanId.isEmpty) return;
+    setState(() => _isLoadingReconciliation = true);
+    try {
+      final repo = ref.read(reconciliationRepositoryProvider);
+      final result = await repo.compareScanVsActivePlan(widget.result.scanId);
+      if (mounted) {
+        setState(() {
+          _reconciliation = result;
+        });
+      }
+    } catch (e) {
+      debugPrint('Reconciliation fetch failed: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isLoadingReconciliation = false);
+      }
+    }
   }
 
   @override
@@ -169,6 +195,18 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
               ],
             ),
           ),
+          if (_isLoadingReconciliation)
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: LinearProgressIndicator(),
+            ),
+          if (_reconciliation != null && _reconciliation!.summary.hasChanges)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TransitionOfCareWidget(
+                transitionOfCare: _reconciliation!.transitionOfCare,
+              ),
+            ),
           Expanded(
             child: visible.isEmpty
                 ? Center(

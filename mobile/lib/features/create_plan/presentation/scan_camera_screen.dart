@@ -31,7 +31,8 @@ enum _ScreenMode {
 // ---------------------------------------------------------------------------
 
 class ScanCameraScreen extends ConsumerStatefulWidget {
-  const ScanCameraScreen({super.key});
+  const ScanCameraScreen({super.key, this.mode = 'plan'});
+  final String mode;
 
   @override
   ConsumerState<ScanCameraScreen> createState() => _ScanCameraScreenState();
@@ -208,7 +209,11 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
       }
 
       _clearLastUploadAttempt();
-      context.go('/create/review', extra: result);
+      if (widget.mode == 'dispensed') {
+        context.go('/create/scan_dispensed_review', extra: result);
+      } else {
+        context.go('/create/review', extra: result);
+      }
     } catch (e) {
       if (!mounted) return;
       final issue = classifyNetworkIssue(e);

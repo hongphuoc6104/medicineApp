@@ -35,8 +35,8 @@
    └──────┬───────────┘
           ▼
    ┌──────────────────┐
-   │ 3.5 merge_lines  │  Gộp OCR blocks cùng dòng Y-axis
-   │    → 1 block/dòng │  VD: 29 blocks → 13 dòng
+   │ 3.5 Group by STT │  Gom tất cả text block nằm giữa 2 STT liên tiếp
+   │    → 1 text/dòng  │  Đưa về định dạng training sequence
    └──────┬───────────┘
           ▼
    ┌──────────────────┐
@@ -51,11 +51,11 @@
           ▼
    📋 Danh sách thuốc
 
- PHASE B: XÁC MINH THUỐC (chưa hoạt động)
+ PHASE B: XÁC MINH THUỐC (hold)
  ──────────────────────────────────────────
-   ⚠️ Code có sẵn nhưng chưa functional.
+   ⚠️ Code dose verification (Phase B) có sẵn nhưng hiện đang hold,
+   không thuộc flow sản phẩm chính của ứng dụng.
    Dùng Zero-PIMA: FRCNN detect pills + GCN match.
-   Cần patched roi_heads.py để chạy contrastive matching.
 ```
 
 ## Code Mapping
@@ -67,7 +67,7 @@
 | 2.1 | Quality Gate | `core/phase_a/s2_preprocess/quality_gate.py` | ✅ |
 | 2.2 | Table ROI YOLO | `core/pipeline.py::_detect_table_roi` | ✅ (optional) |
 | 3 | OCR | `core/phase_a/s3_ocr/` | ✅ |
-| 3.5 | **merge_into_lines()** | `core/phase_a/s3_ocr/ocr_engine.py` | ✅ |
+| 3.5 | **Group by STT** | `core/phase_a/s3_ocr/ocr_engine.py` | ✅ |
 | 4 | NER Classify | `core/phase_a/s5_classify/ner_extractor.py` | ✅ |
 | 5 | **Drug Search** | `core/phase_a/s6_drug_search/drug_lookup.py` | ✅ (9,284 thuốc) |
 
@@ -100,7 +100,7 @@
 | YOLO detect+crop | ~2s | best.pt (6MB), fallback to full image nếu fail |
 | Preprocess | <1s | Deskew + AI orientation (PP-LCNet 0°/90°/180°/270°) — **bỏ force_portrait()** |
 | OCR (Hybrid) | ~5s | PaddleOCR detect + VietOCR recognize (perspective crop) |
-| merge_into_lines | <0.1s | Gộp blocks cùng dòng Y-axis (VD: 29→13) |
+| Group by STT     | <0.1s | Gom nhóm các khối text dựa theo khoảng STT |
 | NER classify | ~1s | PhoBERT model |
 | Drug Search | ~0.1s | Fuzzy match 9,284 thuốc (rapidfuzz) |
 | **Tổng (warm)** | **~8s** | Sau warm-up |

@@ -22,6 +22,7 @@ import '../../features/history/presentation/history_screen.dart';
 import '../../features/history/presentation/scan_history_detail_screen.dart';
 import '../../features/plan/presentation/plan_detail_screen.dart';
 import '../../features/plan/presentation/plan_list_screen.dart';
+import '../../features/reconciliation/presentation/scan_dispensed_review_screen.dart';
 import '../../features/pill_verification/presentation/pill_verification_screen.dart';
 import '../../features/pill_verification/presentation/pill_reference_enrollment_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
@@ -86,7 +87,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/create/scan',
-        builder: (context, state) => const ScanCameraScreen(),
+        builder: (context, state) => ScanCameraScreen(
+          mode: state.uri.queryParameters['mode'] ?? 'plan',
+        ),
+      ),
+      GoRoute(
+        path: '/create/scan_dispensed_review',
+        builder: (context, state) {
+          final result = state.extra as ScanResult?;
+          return ScanDispensedReviewScreen(
+            result: result ?? const ScanResult(scanId: '', drugs: []),
+          );
+        },
       ),
       GoRoute(
         path: '/create/edit',
