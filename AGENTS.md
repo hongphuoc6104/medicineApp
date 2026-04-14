@@ -241,7 +241,10 @@ archive/
 | File | Đọc khi nào |
 |------|------------|
 | `AGENTS.md` (file này) | **Luôn đọc đầu tiên** |
+| `APP_ACTIVE_GENERAL_PLAN.md` | Khi cần biết kế hoạch phát triển active của app/product |
+| `APP_ACTIVE_DETAILED_PLAN.md` | Khi cần biết workstream active, phạm vi thực thi, luật dừng |
 | `PIPELINE_STATUS.md` | Khi cần biết chi tiết kỹ thuật từng bước, args, versions |
+| `docs/UONG_THUOC_FULL_TEST_PLAN.md` | Khi cần release gate và test matrix cho flow chính |
 | `docs/project_status.md` | Khi cần checklist tiến độ (Đã làm / Chưa làm) |
 | `docs/master_plan.md` | Khi cần hiểu bức tranh tổng thể thiết kế ban đầu |
 | `models/README.md` | Khi cần biết weights nào, dung lượng, load ở đâu |

@@ -1,7 +1,7 @@
 #!/bin/bash
 # ============================================
-# MedicineApp Dev Startup Script
-# Khởi động stack dev ổn định cho Android thật qua USB + adb reverse.
+# MedicineApp Experimental Dev Startup Script
+# Khởi động stack dev độc lập cho bản copy thử nghiệm qua USB + adb reverse.
 # PostgreSQL chạy bằng Docker, còn Node API và Python AI chạy local.
 # Usage: bash dev.sh
 # ============================================
@@ -12,9 +12,12 @@ PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MOBILE_ENV="$PROJECT_DIR/mobile/.env"
 VENV_DIR="$PROJECT_DIR/venv"
 VENV_PY="$VENV_DIR/bin/python"
-NODE_PORT=3001
-PYTHON_PORT=8000
+NODE_PORT=3101
+PYTHON_PORT=8100
+POSTGRES_PORT=55432
 DEVICE_ID="${ANDROID_DEVICE_ID:-}"
+NODE_LOG="/tmp/medicine-node-experimental.log"
+PYTHON_LOG="/tmp/python-ai-experimental.log"
 
 fail() {
   echo ""
@@ -73,8 +76,11 @@ assert_local_python_ready() {
   fi
 }
 
-assert_python_port_free() {
-  if ! "$VENV_PY" - "$PYTHON_PORT" <<'PY'
+assert_tcp_port_free() {
+  local port="$1"
+  local service_name="$2"
+
+  if ! "$VENV_PY" - "$port" <<'PY'
 import socket
 import sys
 
@@ -89,10 +95,10 @@ finally:
 PY
   then
     echo ""
-    echo "❌ Port ${PYTHON_PORT} is already in use."
-    echo "This script refuses to continue to avoid silently using the wrong scan runtime."
-    echo "Stop the listener on :${PYTHON_PORT}, then run: bash dev.sh"
-    print_port_debug "$PYTHON_PORT"
+    echo "❌ Port ${port} for ${service_name} is already in use by another process."
+    echo "This script refuses to continue to avoid mixing the experimental stack with another runtime."
+    echo "Stop the listener on :${port}, then run: bash dev.sh"
+    print_port_debug "$port"
     exit 1
   fi
 }
@@ -165,7 +171,8 @@ echo "=========================="
 [[ -d "$PROJECT_DIR/server-node" ]] || fail "Missing server-node directory at $PROJECT_DIR/server-node"
 
 assert_local_python_ready
-assert_python_port_free
+assert_tcp_port_free "$NODE_PORT" "Node.js API"
+assert_tcp_port_free "$PYTHON_PORT" "Python AI"
 
 # 1. Update mobile/.env to localhost for adb reverse workflow
 sed -i "s|API_BASE_URL=.*|API_BASE_URL=http://127.0.0.1:${NODE_PORT}/api|" "$MOBILE_ENV"
@@ -173,7 +180,7 @@ echo "✅ Updated $MOBILE_ENV → API_BASE_URL=http://127.0.0.1:${NODE_PORT}/api
 
 # 2. Start PostgreSQL only via Docker
 echo ""
-echo "🐳 Starting Docker services (postgres only)..."
+echo "🐳 Starting Docker services (experimental postgres only)..."
 docker compose -f "$PROJECT_DIR/docker-compose.yml" up -d postgres
 echo "✅ PostgreSQL started"
 
@@ -185,24 +192,16 @@ echo "🗄️  Running migrations..."
 # 4. Start Node API locally
 echo ""
 echo "🧩 Starting Node.js API locally..."
-if command -v fuser >/dev/null 2>&1; then
-  fuser -k ${NODE_PORT}/tcp 2>/dev/null || true
-elif command -v lsof >/dev/null 2>&1; then
-  lsof -ti tcp:${NODE_PORT} | xargs -r kill -9 2>/dev/null || true
-else
-  pkill -f "node --watch src/server.js\|node src/server.js" 2>/dev/null || true
-fi
-sleep 1
 pushd "$PROJECT_DIR/server-node" >/dev/null
-nohup node src/server.js > /tmp/medicine-node.log 2>&1 &
+nohup node src/server.js > "$NODE_LOG" 2>&1 &
 NODE_PID=$!
 popd >/dev/null
-echo "📝 Node logs: /tmp/medicine-node.log (PID: $NODE_PID)"
+echo "📝 Node logs: $NODE_LOG (PID: $NODE_PID)"
 
 echo "⏳ Waiting for Node.js to be healthy..."
 if ! wait_for_health "http://127.0.0.1:${NODE_PORT}/api/health" 12 2; then
   echo "⚠️ Node.js did not become healthy in time. Last log lines:"
-  tail -n 40 /tmp/medicine-node.log || true
+  tail -n 40 "$NODE_LOG" || true
   fail "Node.js API failed to start on :${NODE_PORT}"
 fi
 echo "✅ Node.js API ready at http://127.0.0.1:${NODE_PORT}"
@@ -211,15 +210,15 @@ echo "✅ Node.js API ready at http://127.0.0.1:${NODE_PORT}"
 echo ""
 echo "🤖 Starting Python AI server (local venv)..."
 pushd "$PROJECT_DIR" >/dev/null
-nohup "$VENV_PY" -m uvicorn server.main:app --host 0.0.0.0 --port ${PYTHON_PORT} > /tmp/python-ai.log 2>&1 &
+nohup "$VENV_PY" -m uvicorn server.main:app --host 0.0.0.0 --port ${PYTHON_PORT} > "$PYTHON_LOG" 2>&1 &
 AI_PID=$!
 popd >/dev/null
-echo "📝 Python AI logs: /tmp/python-ai.log (PID: $AI_PID)"
+echo "📝 Python AI logs: $PYTHON_LOG (PID: $AI_PID)"
 
 echo "⏳ Waiting for Python AI health..."
 if ! wait_for_health "http://127.0.0.1:${PYTHON_PORT}/api/health" 20 1; then
   echo "⚠️ Python AI did not become healthy in time. Last log lines:"
-  tail -n 60 /tmp/python-ai.log || true
+  tail -n 60 "$PYTHON_LOG" || true
   fail "Python AI server failed to start on :${PYTHON_PORT}"
 fi
 verify_python_runtime_health
@@ -245,7 +244,7 @@ fi
 echo ""
 echo "============================================"
 echo "✅ All services started!"
-echo "  PostgreSQL  : localhost:5432 (Docker)"
+echo "  PostgreSQL  : localhost:${POSTGRES_PORT} (Docker, experimental DB)"
 echo "  Node.js API : http://127.0.0.1:${NODE_PORT} (local, PID: $NODE_PID)"
 echo "  Python AI   : http://127.0.0.1:${PYTHON_PORT} (local venv, PID: $AI_PID)"
 echo "  Mobile .env : API_BASE_URL=http://127.0.0.1:${NODE_PORT}/api"

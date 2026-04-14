@@ -20,33 +20,54 @@ H = 620
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
+
 def svg_root(w, h):
-    el = ET.Element("svg", xmlns="http://www.w3.org/2000/svg",
-                    width=str(w), height=str(h),
-                    viewBox=f"0 0 {w} {h}")
+    el = ET.Element(
+        "svg",
+        xmlns="http://www.w3.org/2000/svg",
+        width=str(w),
+        height=str(h),
+        viewBox=f"0 0 {w} {h}",
+    )
     return el
+
 
 def mk(parent, tag, **attrs):
     clean = {k.replace("_", "-"): str(v) for k, v in attrs.items()}
     return ET.SubElement(parent, tag, **clean)
 
+
 def add_defs(svg):
     defs = ET.SubElement(svg, "defs")
     # mũi tên đặc (actor → use case)
-    m1 = ET.SubElement(defs, "marker", id="arr",
-                       markerWidth="8", markerHeight="7",
-                       refX="7", refY="3.5", orient="auto")
-    ET.SubElement(m1, "polygon", points="0 0, 8 3.5, 0 7",
-                  fill="#37474f")
+    m1 = ET.SubElement(
+        defs,
+        "marker",
+        id="arr",
+        markerWidth="8",
+        markerHeight="7",
+        refX="7",
+        refY="3.5",
+        orient="auto",
+    )
+    ET.SubElement(m1, "polygon", points="0 0, 8 3.5, 0 7", fill="#37474f")
     # mũi tên nét đứt (include / extend)
-    m2 = ET.SubElement(defs, "marker", id="arr-dash",
-                       markerWidth="8", markerHeight="7",
-                       refX="7", refY="3.5", orient="auto")
-    ET.SubElement(m2, "polygon", points="0 0, 8 3.5, 0 7",
-                  fill="#37474f")
+    m2 = ET.SubElement(
+        defs,
+        "marker",
+        id="arr-dash",
+        markerWidth="8",
+        markerHeight="7",
+        refX="7",
+        refY="3.5",
+        orient="auto",
+    )
+    ET.SubElement(m2, "polygon", points="0 0, 8 3.5, 0 7", fill="#37474f")
     return defs
 
+
 # ─── Điểm cắt biên oval ───────────────────────────────────────────────────────
+
 
 def ellipse_edge(cx, cy, rx, ry, toward_x, toward_y):
     """Tìm điểm trên viền oval theo hướng tới (toward_x, toward_y)."""
@@ -57,48 +78,74 @@ def ellipse_edge(cx, cy, rx, ry, toward_x, toward_y):
     angle = math.atan2(dy * rx, dx * ry)
     return cx + rx * math.cos(angle), cy + ry * math.sin(angle)
 
+
 # ─── Actor ────────────────────────────────────────────────────────────────────
+
 
 def draw_actor(svg, cx, top_y, label):
     """Người dùng dạng que chuẩn UML."""
-    R  = 16          # bán kính đầu
-    hy = top_y + R   # tâm đầu
-    bt = hy + R      # đỉnh thân
-    bb = bt + 42     # đáy thân
-    ay = bt + 14     # ngang tay
-    ls = 20          # độ mở chân
+    R = 16  # bán kính đầu
+    hy = top_y + R  # tâm đầu
+    bt = hy + R  # đỉnh thân
+    bb = bt + 42  # đáy thân
+    ay = bt + 14  # ngang tay
+    ls = 20  # độ mở chân
 
     props = dict(stroke="#222222", stroke_width="1.8")
-    mk(svg, "circle", cx=cx, cy=hy, r=R,
-       fill="white", **props)
+    mk(svg, "circle", cx=cx, cy=hy, r=R, fill="white", **props)
     mk(svg, "line", x1=cx, y1=bt, x2=cx, y2=bb, **props)
     mk(svg, "line", x1=cx - 26, y1=ay, x2=cx + 26, y2=ay, **props)
     mk(svg, "line", x1=cx, y1=bb, x2=cx - ls, y2=bb + 28, **props)
     mk(svg, "line", x1=cx, y1=bb, x2=cx + ls, y2=bb + 28, **props)
 
     foot_y = bb + 28
-    lbl_y  = foot_y + 20
-    t = mk(svg, "text", x=cx, y=lbl_y,
-           text_anchor="middle", font_size="14",
-           font_family="Arial, sans-serif",
-           font_weight="bold", fill="#222222")
+    lbl_y = foot_y + 20
+    t = mk(
+        svg,
+        "text",
+        x=cx,
+        y=lbl_y,
+        text_anchor="middle",
+        font_size="14",
+        font_family="Arial, sans-serif",
+        font_weight="bold",
+        fill="#222222",
+    )
     t.text = label
 
-    return ay, cx + 26, lbl_y + 6   # (arm_y, right_x, bottom_y)
+    return ay, cx + 26, lbl_y + 6  # (arm_y, right_x, bottom_y)
+
 
 # ─── Use Case oval ────────────────────────────────────────────────────────────
 
 UC_RX = 112
 UC_RY = 30
 
+
 def draw_usecase(svg, cx, cy, lines, rx=UC_RX, ry=UC_RY):
-    mk(svg, "ellipse", cx=cx, cy=cy, rx=rx, ry=ry,
-       fill="#eef3fb", stroke="#2457a5", stroke_width="2.0")
+    mk(
+        svg,
+        "ellipse",
+        cx=cx,
+        cy=cy,
+        rx=rx,
+        ry=ry,
+        fill="#eef3fb",
+        stroke="#2457a5",
+        stroke_width="2.0",
+    )
     n = len(lines)
-    t = mk(svg, "text", x=cx, y=cy,
-           text_anchor="middle", dominant_baseline="central",
-           font_size="13", font_family="Arial, sans-serif",
-           fill="#0d1f40")
+    t = mk(
+        svg,
+        "text",
+        x=cx,
+        y=cy,
+        text_anchor="middle",
+        dominant_baseline="central",
+        font_size="13",
+        font_family="Arial, sans-serif",
+        fill="#0d1f40",
+    )
     for i, ln in enumerate(lines):
         if n == 1:
             ts = ET.SubElement(t, "tspan", x=str(cx), dy="0")
@@ -110,35 +157,57 @@ def draw_usecase(svg, cx, cy, lines, rx=UC_RX, ry=UC_RY):
             ts = ET.SubElement(t, "tspan", x=str(cx), dy=offsets[i])
         else:
             dy_val = str(round((i - (n - 1) / 2) * 15))
-            ts = ET.SubElement(t, "tspan", x=str(cx),
-                               dy=(dy_val if i == 0 else "15"))
+            ts = ET.SubElement(t, "tspan", x=str(cx), dy=(dy_val if i == 0 else "15"))
         ts.text = ln
+
 
 # ─── Mũi tên ─────────────────────────────────────────────────────────────────
 
+
 def solid_arrow(svg, x1, y1, x2, y2):
-    mk(svg, "path", d=f"M {x1:.1f} {y1:.1f} L {x2:.1f} {y2:.1f}",
-       fill="none", stroke="#37474f", stroke_width="1.4",
-       marker_end="url(#arr)")
+    mk(
+        svg,
+        "path",
+        d=f"M {x1:.1f} {y1:.1f} L {x2:.1f} {y2:.1f}",
+        fill="none",
+        stroke="#37474f",
+        stroke_width="1.4",
+        marker_end="url(#arr)",
+    )
+
 
 def dashed_arrow(svg, x1, y1, x2, y2, label=""):
-    mk(svg, "path", d=f"M {x1:.1f} {y1:.1f} L {x2:.1f} {y2:.1f}",
-       fill="none", stroke="#37474f", stroke_width="1.3",
-       stroke_dasharray="7,4",
-       marker_end="url(#arr-dash)")
+    mk(
+        svg,
+        "path",
+        d=f"M {x1:.1f} {y1:.1f} L {x2:.1f} {y2:.1f}",
+        fill="none",
+        stroke="#37474f",
+        stroke_width="1.3",
+        stroke_dasharray="7,4",
+        marker_end="url(#arr-dash)",
+    )
     if label:
         mx = (x1 + x2) / 2
         my = (y1 + y2) / 2
         # offset nhãn: nếu đường thẳng đứng → sang phải; nếu nằm ngang → lên trên
-        if abs(x2 - x1) < 8:      # gần thẳng đứng
+        if abs(x2 - x1) < 8:  # gần thẳng đứng
             lx, ly = mx + 38, my
-        else:                      # nằm ngang
+        else:  # nằm ngang
             lx, ly = mx, my - 10
-        t = mk(svg, "text", x=lx, y=ly,
-               text_anchor="middle", font_size="11",
-               font_family="Arial, sans-serif",
-               fill="#444444", font_style="italic")
+        t = mk(
+            svg,
+            "text",
+            x=lx,
+            y=ly,
+            text_anchor="middle",
+            font_size="11",
+            font_family="Arial, sans-serif",
+            fill="#444444",
+            font_style="italic",
+        )
         t.text = label
+
 
 # ─── Build diagram ────────────────────────────────────────────────────────────
 
@@ -158,12 +227,27 @@ mk(svg, "rect", x=0, y=0, width=W, height=H, fill="white")
 BX, BY = 170, 24
 BW, BH = 710, 574
 
-mk(svg, "rect", x=BX, y=BY, width=BW, height=BH,
-   rx=6, ry=6,
-   fill="#f8fafd", stroke="#7a9abf", stroke_width="1.8")
+mk(
+    svg,
+    "rect",
+    x=BX,
+    y=BY,
+    width=BW,
+    height=BH,
+    rx=6,
+    ry=6,
+    fill="#f8fafd",
+    stroke="#7a9abf",
+    stroke_width="1.8",
+)
 
-title_t = mk(svg, "text", x=BX + BW / 2, y=BY + 22,
-             **{"class": "bnd-title", "text-anchor": "middle"})
+title_t = mk(
+    svg,
+    "text",
+    x=BX + BW / 2,
+    y=BY + 22,
+    **{"class": "bnd-title", "text-anchor": "middle"},
+)
 title_t.text = "Hệ thống Hỗ trợ Quản lý Đơn Thuốc"
 
 # ── Bố cục use cases ─────────────────────────────────────────────────────────
@@ -174,18 +258,18 @@ title_t.text = "Hệ thống Hỗ trợ Quản lý Đơn Thuốc"
 #  Include đi theo trục dọc phụ (x offset = +30) tránh overlap actor arrows
 #  Extend đi theo trục ngang
 
-COL_L = 420     # x trung tâm cột trái
-COL_R = 710     # x trung tâm cột phải
+COL_L = 420  # x trung tâm cột trái
+COL_R = 710  # x trung tâm cột phải
 
 uc_data = [
     # (id, cx, cy, label_lines)
-    ("uc1", COL_L, 100,  ["Đăng nhập / Đăng ký"]),
-    ("uc2", COL_L, 200,  ["Quét đơn thuốc"]),
-    ("uc3", COL_L, 300,  ["Rà soát danh sách thuốc"]),
-    ("uc4", COL_L, 400,  ["Lập lịch dùng thuốc"]),
-    ("uc5", COL_L, 500,  ["Xem lịch hôm nay"]),
-    ("uc6", COL_R, 395,  ["Ghi nhận trạng thái", "uống thuốc"]),
-    ("uc7", COL_R, 505,  ["Xem lịch sử quét"]),
+    ("uc1", COL_L, 100, ["Đăng nhập / Đăng ký"]),
+    ("uc2", COL_L, 200, ["Quét đơn thuốc"]),
+    ("uc3", COL_L, 300, ["Rà soát danh sách thuốc"]),
+    ("uc4", COL_L, 400, ["Lập lịch dùng thuốc"]),
+    ("uc5", COL_L, 500, ["Xem lịch hôm nay"]),
+    ("uc6", COL_R, 395, ["Ghi nhận trạng thái", "uống thuốc"]),
+    ("uc7", COL_R, 505, ["Xem lịch sử quét"]),
 ]
 
 uc_map = {uid: (cx, cy) for uid, cx, cy, _ in uc_data}
@@ -194,11 +278,11 @@ for uid, cx, cy, lbls in uc_data:
     draw_usecase(svg, cx, cy, lbls)
 
 # ── Actor ─────────────────────────────────────────────────────────────────────
-ACTOR_CX  = 82
+ACTOR_CX = 82
 ACTOR_TOP = 160
 
 arm_y, actor_right, actor_bottom = draw_actor(svg, ACTOR_CX, ACTOR_TOP, "Người dùng")
-actor_top_y = ACTOR_TOP + 32   # khoảng y phần thân actor
+actor_top_y = ACTOR_TOP + 32  # khoảng y phần thân actor
 
 # ── Nối actor → use cases ─────────────────────────────────────────────────────
 # Phân bổ điểm xuất phát theo y của use case (giữa đầu và chân actor)
@@ -215,7 +299,7 @@ for uid, cx, cy, _ in uc_data:
 
 # ── Include (chuỗi dọc) ───────────────────────────────────────────────────────
 # Đường đi: từ đáy oval src → đỉnh oval dst, lệch sang phải 28px
-INCL_OFF = 28   # offset ngang để tránh arrow actor
+INCL_OFF = 28  # offset ngang để tránh arrow actor
 
 include_pairs = [
     ("uc2", "uc3", "«include»"),
@@ -247,10 +331,12 @@ dashed_arrow(svg, ex5, ey5, ex6, ey6, "«extend»")
 tree = ET.ElementTree(svg)
 ET.indent(tree, space="  ")
 
-DIAG   = "/home/hongphuoc/Desktop/medicineApp/docs/thesis_report/diagrams"
-ASSETS = "/home/hongphuoc/Desktop/medicineApp/docs/thesis_report/assets/diagrams"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DIAG = BASE_DIR
+ASSETS = os.path.normpath(os.path.join(BASE_DIR, "../assets/diagrams"))
 
 os.makedirs(f"{DIAG}/svg", exist_ok=True)
+os.makedirs(ASSETS, exist_ok=True)
 out1 = f"{DIAG}/svg/use_case.svg"
 out2 = f"{ASSETS}/use_case.svg"
 tree.write(out1, xml_declaration=True, encoding="unicode")
@@ -259,6 +345,7 @@ print(f"SVG: {out1}")
 print(f"SVG: {out2}")
 
 import cairosvg
+
 for sv, pn in [
     (out1, f"{DIAG}/png/use_case.png"),
     (out2, f"{ASSETS}/use_case.png"),

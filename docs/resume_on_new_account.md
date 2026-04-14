@@ -13,7 +13,7 @@
 1. **Tạo notebook mới** trên Colab Pro
 2. **Runtime → Change runtime type → L4 GPU (hoặc T4)**
 3. **Runtime → Enable High-RAM** (nếu có option)
-4. **Upload** file [resume_zero_pima_pro.ipynb](file:///home/hongphuoc/Desktop/medicineApp/notebooks/resume_zero_pima_pro.ipynb)
+4. **Upload** file `notebooks/resume_zero_pima_pro.ipynb` từ chính repo hiện tại
 
 ## Chạy theo thứ tự
 

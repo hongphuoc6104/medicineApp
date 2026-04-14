@@ -14,16 +14,16 @@ description: how to run the FastAPI server and test endpoints
 python -m server.main
 ```
 
-3. Server chạy tại: `http://localhost:8000`
-4. Swagger docs đầy đủ: `http://localhost:8000/docs`
+3. Server chạy tại: `http://localhost:8100`
+4. Swagger docs đầy đủ: `http://localhost:8100/docs`
 
 ## Xử lý sự cố
 
-### Lỗi: Port 8000 already in use
+### Lỗi: Port 8100 already in use
 // turbo
-5. Kill port 8000:
+5. Kill port 8100:
 ```bash
-fuser -k 8000/tcp
+fuser -k 8100/tcp
 ```
 Sau đó chạy lại lệnh (2).
 
@@ -32,14 +32,14 @@ Sau đó chạy lại lệnh (2).
 // turbo
 6. Kiểm tra server up và AI sẵn sàng:
 ```bash
-curl -X GET http://localhost:8000/api/health
+curl -X GET http://localhost:8100/api/health
 ```
 Response mẫu: `{"status": "ok", "drug_db": 107, "ai_ready": true}`
 
 // turbo
 7. Tìm kiếm thuốc trong DB local:
 ```bash
-curl "http://localhost:8000/api/drugs?q=paracetamol"
+curl "http://localhost:8100/api/drugs?q=paracetamol"
 ```
 
 ## Các Endpoints Chính

@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VENV_PY="$ROOT_DIR/venv/bin/python"
-PYTHON_HEALTH_URL="http://127.0.0.1:8000/api/health"
+PYTHON_HEALTH_URL="http://127.0.0.1:8100/api/health"
 
 MODE="quick"
 RUN_SCAN_SMOKE=0

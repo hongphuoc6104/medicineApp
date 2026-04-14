@@ -20,6 +20,7 @@ import authRoutes from './routes/auth.routes.js';
 import drugRoutes from './routes/drug.routes.js';
 import scanRoutes from './routes/scan.routes.js';
 import planRoutes from './routes/plan.routes.js';
+import reconciliationRoutes from './routes/reconciliation.routes.js';
 import pillVerificationRoutes from './routes/pillVerification.routes.js';
 import pillReferenceRoutes from './routes/pillReference.routes.js';
 
@@ -52,6 +53,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/drugs', drugRoutes);
 app.use('/api/scan', scanRoutes);
 app.use('/api/plans', planRoutes);
+app.use('/api/reconciliation', reconciliationRoutes);
 app.use('/api/pill-verifications', pillVerificationRoutes);
 app.use('/api/pill-references', pillReferenceRoutes);
 

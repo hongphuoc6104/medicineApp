@@ -12,7 +12,7 @@ import '../router/app_router.dart';
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:3001/api',
+      baseUrl: dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:3101/api',
       connectTimeout: AppConstants.apiTimeout,
       receiveTimeout: AppConstants.apiTimeout,
       headers: {

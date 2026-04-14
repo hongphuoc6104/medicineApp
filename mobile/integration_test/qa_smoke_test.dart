@@ -14,6 +14,10 @@ class _QaUser {
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  setUpAll(() async {
+    await binding.convertFlutterSurfaceToImage();
+  });
+
   Future<void> pumpApp(WidgetTester tester) async {
     app.main();
     await tester.pumpAndSettle(const Duration(seconds: 4));
@@ -33,6 +37,11 @@ void main() {
       }
     }
     expect(finder, findsWidgets);
+  }
+
+  Future<void> launchToLogin(WidgetTester tester) async {
+    await pumpApp(tester);
+    await waitFor(tester, find.byType(TextField));
   }
 
   Future<void> screenshot(String name) async {
@@ -99,14 +108,33 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
-  testWidgets('QA smoke with screenshots', (tester) async {
+  Future<void> goToShellTab(WidgetTester tester, String label) async {
+    final end = DateTime.now().add(const Duration(seconds: 20));
+    while (DateTime.now().isBefore(end)) {
+      final tab = find.text(label);
+      if (tab.evaluate().isNotEmpty) {
+        await tester.tap(tab.last, warnIfMissed: false);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+        return;
+      }
+
+      final back = find.byIcon(Icons.arrow_back);
+      if (back.evaluate().isNotEmpty) {
+        await tester.tap(back.first, warnIfMissed: false);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+        continue;
+      }
+
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+
+    expect(find.text(label), findsWidgets);
+  }
+
+  testWidgets('QA smoke empty user shell states', (tester) async {
     final emptyUser = userFromEnv('QA_EMPTY');
-    final populatedUser = userFromEnv('QA_FULL');
 
-    await binding.convertFlutterSurfaceToImage();
-    await pumpApp(tester);
-
-    await waitFor(tester, find.byType(TextField));
+    await launchToLogin(tester);
     expect(find.text('Quản lý đơn thuốc thông minh'), findsOneWidget);
     await screenshot('02_login_default');
 
@@ -120,17 +148,21 @@ void main() {
     expect(find.textContaining('Bắt đầu quản lý thuốc'), findsOneWidget);
     await screenshot('05_home_empty');
 
-    await tester.tap(find.text('Kế hoạch').last);
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await goToShellTab(tester, 'Kế hoạch');
     await screenshot('09_plans_list_empty');
 
-    await tester.tap(find.text('Lịch sử').last);
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await goToShellTab(tester, 'Lịch sử');
     expect(find.textContaining('Chưa có kế hoạch cũ nào'), findsOneWidget);
     await screenshot('13_history_empty');
 
     await logoutFromSettings(tester);
     expect(find.text('Uống thuốc'), findsOneWidget);
+  });
+
+  testWidgets('QA smoke populated user shell states', (tester) async {
+    final populatedUser = userFromEnv('QA_FULL');
+
+    await launchToLogin(tester);
 
     await loginWithUi(tester, populatedUser);
     await waitFor(tester, find.text('Trang chủ'));
@@ -142,8 +174,7 @@ void main() {
       await screenshot('06_home_after_taken');
     }
 
-    await tester.tap(find.text('Kế hoạch').last);
-    await tester.pumpAndSettle(const Duration(seconds: 3));
+    await goToShellTab(tester, 'Kế hoạch');
     expect(find.text('Paracetamol demo'), findsOneWidget);
     await screenshot('09_plans_list');
 
@@ -159,7 +190,30 @@ void main() {
     await tapMaterialBack(tester);
     await tapMaterialBack(tester);
 
-    await tester.tap(find.byIcon(Icons.add_circle_outline).first);
+    await goToShellTab(tester, 'Lịch sử');
+    expect(find.text('Kế hoạch cũ'), findsOneWidget);
+    await screenshot('14_history_week_grid');
+
+    await tester.tap(find.byIcon(Icons.settings_outlined).first);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    expect(find.text('Cài đặt'), findsOneWidget);
+    await screenshot('23_settings');
+  });
+
+  testWidgets('QA smoke create reuse flow', (tester) async {
+    final populatedUser = userFromEnv('QA_FULL');
+
+    await launchToLogin(tester);
+
+    await loginWithUi(tester, populatedUser);
+    await waitFor(tester, find.text('Trang chủ'));
+
+    await goToShellTab(tester, 'Kế hoạch');
+
+    final createPlanFab = find.byType(FloatingActionButton);
+    expect(createPlanFab, findsOneWidget);
+    await tester.ensureVisible(createPlanFab);
+    await tester.tap(createPlanFab.first, warnIfMissed: false);
     await tester.pumpAndSettle(const Duration(seconds: 2));
     await waitFor(tester, find.textContaining('Quét'));
     await screenshot('15_create_plan_options');
@@ -168,22 +222,17 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 3));
     expect(find.textContaining('Dùng lại kế hoạch cũ'), findsOneWidget);
     await screenshot('18_reuse_old_plan');
+  });
 
-    await tapMaterialBack(tester);
+  testWidgets('QA smoke drug lookup flow', (tester) async {
+    final populatedUser = userFromEnv('QA_FULL');
 
-    await tester.tap(find.text('Lịch sử').last);
-    await tester.pumpAndSettle(const Duration(seconds: 3));
-    expect(find.text('Kế hoạch cũ'), findsOneWidget);
-    await screenshot('14_history_week_grid');
+    await launchToLogin(tester);
 
-    await tester.tap(find.byIcon(Icons.settings_outlined).first);
-    await tester.pumpAndSettle(const Duration(seconds: 2));
-    expect(find.text('Cài đặt'), findsOneWidget);
-    await screenshot('23_settings');
+    await loginWithUi(tester, populatedUser);
+    await waitFor(tester, find.text('Trang chủ'));
 
-    await tapMaterialBack(tester);
-    await tester.tap(find.text('Trang chủ').last);
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await goToShellTab(tester, 'Trang chủ');
 
     final drugLookup = find.textContaining('Tra cứu thuốc');
     expect(drugLookup, findsWidgets);

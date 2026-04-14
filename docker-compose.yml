@@ -15,16 +15,16 @@ services:
   # ── PostgreSQL 16 ──
   postgres:
     image: postgres:16-alpine
-    container_name: medicineapp_db
+    container_name: medicineapp_db_experimental
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "55432:5432"
     environment:
       POSTGRES_USER: medicineapp
       POSTGRES_PASSWORD: medicineapp_dev_2026
-      POSTGRES_DB: medicineapp
+      POSTGRES_DB: medicineapp_experimental
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata_experimental:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U medicineapp"]
       interval: 5s
@@ -36,17 +36,17 @@ services:
     build:
       context: ./server-node
       dockerfile: Dockerfile
-    container_name: medicineapp_node
+    container_name: medicineapp_node_experimental
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3101:3000"
     depends_on:
       postgres:
         condition: service_healthy
     environment:
       PORT: 3000
       NODE_ENV: development
-      DATABASE_URL: postgresql://medicineapp:medicineapp_dev_2026@postgres:5432/medicineapp
+      DATABASE_URL: postgresql://medicineapp:medicineapp_dev_2026@postgres:5432/medicineapp_experimental
       JWT_SECRET: your-super-secret-key-change-in-production-2026
       JWT_EXPIRES_IN: 15m
       JWT_REFRESH_EXPIRES_IN: 7d
@@ -63,10 +63,10 @@ services:
     build:
       context: .
       dockerfile: server/Dockerfile
-    container_name: medicineapp_ai
+    container_name: medicineapp_ai_experimental
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8100:8000"
     environment:
       # Disable PaddlePaddle OneDNN/PIR to avoid ConvertPirAttribute error in Docker
       FLAGS_use_mkldnn: "0"
@@ -77,7 +77,7 @@ services:
     volumes:
       - ./models:/app/models:ro
       - ./data:/app/data:ro
-      - vietocr_cache:/root/.cache    # Cache VietOCR weights (no re-download on restart)
+      - vietocr_cache_experimental:/root/.cache    # Cache VietOCR weights (no re-download on restart)
     deploy:
       resources:
         reservations:
@@ -87,5 +87,5 @@ services:
               capabilities: [gpu]
 
 volumes:
-  pgdata:
-  vietocr_cache:
+  pgdata_experimental:
+  vietocr_cache_experimental:

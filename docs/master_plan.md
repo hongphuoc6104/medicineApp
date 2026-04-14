@@ -3,7 +3,7 @@
 > [!WARNING]
 > Tài liệu này là bản kế hoạch cũ để tham khảo lịch sử kiến trúc.
 > Không dùng làm nguồn trạng thái hiện tại.
-> Nguồn ưu tiên hiện tại: `AGENTS.md` → `PIPELINE_STATUS.md` → `docs/MASTER_PLAN.md`.
+> Nguồn ưu tiên hiện tại: `AGENTS.md` → `APP_ACTIVE_GENERAL_PLAN.md` → `APP_ACTIVE_DETAILED_PLAN.md` → `PIPELINE_STATUS.md` → `docs/MASTER_PLAN.md`.
 
 > [!IMPORTANT]
 > Trạng thái hiện tại của dự án tập trung Phase A. Phase B đang hold và chưa active trong luồng vận hành chính.
@@ -83,14 +83,14 @@
 
 - Chạy backend:
   - PostgreSQL: `docker compose up -d postgres`
-  - Python API: `source venv/bin/activate && uvicorn server.main:app --host 0.0.0.0 --port 8000`
-  - Node API: `cd server-node && PORT=3001 PYTHON_API_URL=http://127.0.0.1:8000 npm run dev`
+  - Python API: `source venv/bin/activate && uvicorn server.main:app --host 0.0.0.0 --port 8100`
+  - Node API: `cd server-node && PORT=3101 PYTHON_API_URL=http://127.0.0.1:8100 npm run dev`
 - Cấu hình mobile qua USB reverse:
-  - `adb reverse tcp:3001 tcp:3001`
-  - `adb reverse tcp:8000 tcp:8000`
-  - `mobile/.env` dùng `API_BASE_URL=http://127.0.0.1:3001/api`
+  - `adb reverse tcp:3101 tcp:3101`
+  - `adb reverse tcp:8100 tcp:8100`
+  - `mobile/.env` dùng `API_BASE_URL=http://127.0.0.1:3101/api`
 - Chạy app:
-  - `cd mobile && flutter run -d <device_id> --dart-define=API_BASE_URL=http://127.0.0.1:3001/api`
+  - `cd mobile && flutter run -d <device_id> --dart-define=API_BASE_URL=http://127.0.0.1:3101/api`
 - Kịch bản xác nhận tính năng mới:
   - Home có lịch -> thấy “Kế hoạch hôm nay” + nút `Đã uống/Bỏ qua`
   - Bấm `Đã uống/Bỏ qua` khi online -> cập nhật ngay và ghi log server

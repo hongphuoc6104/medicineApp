@@ -138,18 +138,6 @@ class NotificationService {
       _queueNotificationEvent(launchResponse);
     }
 
-    final androidPlugin = _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >();
-    await androidPlugin?.requestNotificationsPermission();
-
-    final iosPlugin = _plugin
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >();
-    await iosPlugin?.requestPermissions(alert: true, badge: true, sound: true);
-
     _initialized = true;
   }
 
@@ -424,8 +412,10 @@ class NotificationService {
     await initialize();
 
     if (defaultTargetPlatform == TargetPlatform.android) {
-      final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final androidPlugin = _plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
       if (androidPlugin == null) {
         return false;
       }
@@ -454,8 +444,10 @@ class NotificationService {
     await initialize();
 
     if (defaultTargetPlatform == TargetPlatform.android) {
-      final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+      final androidPlugin = _plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
       if (androidPlugin == null) {
         return;
       }
@@ -472,8 +464,10 @@ class NotificationService {
         await androidPlugin.requestExactAlarmsPermission();
       }
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-      final iosPlugin = _plugin.resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>();
+      final iosPlugin = _plugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >();
       await iosPlugin?.requestPermissions(
         alert: true,
         badge: true,

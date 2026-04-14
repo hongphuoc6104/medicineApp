@@ -4,7 +4,7 @@ import { z } from 'zod';
 dotenv.config();
 
 const envSchema = z.object({
-  PORT: z.coerce.number().default(3000),
+  PORT: z.coerce.number().default(3101),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 
   DATABASE_URL: z.string().min(10, 'DATABASE_URL required'),
@@ -13,7 +13,7 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 
-  PYTHON_API_URL: z.string().url().default('http://localhost:8000'),
+  PYTHON_API_URL: z.string().url().default('http://localhost:8100'),
   DDI_API_BASE: z.string().url().default('https://ddi.lab.io.vn/api'),
 
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(900_000),

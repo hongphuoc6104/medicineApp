@@ -44,19 +44,20 @@ class SettingsScreen extends ConsumerWidget {
               onChanged: settingsAsync.isLoading
                   ? null
                   : (v) async {
-                      await ref
+                      final success = await ref
                           .read(settingsNotifierProvider.notifier)
                           .setRemindersEnabled(v);
                       if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            v
+                      final message = success
+                          ? (v
                                 ? 'Đã bật nhắc uống thuốc trên thiết bị này'
-                                : 'Đã tắt nhắc uống thuốc trên thiết bị này',
-                          ),
-                        ),
-                      );
+                                : 'Đã tắt nhắc uống thuốc trên thiết bị này')
+                          : (v
+                                ? 'Chưa thể bật nhắc uống thuốc vì chưa có quyền thông báo'
+                                : 'Không thể cập nhật cài đặt nhắc uống thuốc');
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(message)));
                     },
             ),
             ListTile(

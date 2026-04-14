@@ -4,6 +4,9 @@
 > **Trạng thái:** Đang thực hiện  
 > **Nguyên tắc:** Mỗi phần phải có xử lý ngoại lệ, bảo mật, và tests trước khi chuyển sang phần tiếp.
 
+> **Nguồn plan active hiện tại:** `APP_ACTIVE_GENERAL_PLAN.md` và `APP_ACTIVE_DETAILED_PLAN.md` ở root.
+> File này giữ bối cảnh kiến trúc và lịch sử triển khai ở mức hệ thống, không phải execution plan active.
+
 > **Cập nhật 2026-03-14 (Adaptive Scan P0):**
 > - Đã triển khai 2 YOLO trong Phase A: detect đơn thuốc lớn + detect bảng thuốc ROI trước OCR (optional fallback).
 > - Đã thêm quality gate Python + precheck cục bộ Flutter trước upload.
@@ -171,8 +174,8 @@ python scripts/run_pipeline.py --all > data/output/after_fix.json   # SAU
 # Số drugs detected phải tăng, đặc biệt IMG_180633
 
 # Test API server 
-python -m server.main &
-curl -X POST http://localhost:8000/api/scan-prescription -F "file=@data/input/prescription_3/IMG_20260209_180505.jpg"
+python -m uvicorn server.main:app --host 0.0.0.0 --port 8100 &
+curl -X POST http://localhost:8100/api/scan-prescription -F "file=@data/input/prescription_3/IMG_20260209_180505.jpg"
 ```
 
 **✅ Tiêu chí hoàn thành:**
@@ -609,15 +612,15 @@ services:
       POSTGRES_DB: medicineapp
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports: ["5432:5432"]
+    ports: ["55432:5432"]
     volumes: ["pgdata:/var/lib/postgresql/data"]
 
   node-api:
     build: ./server-node
-    ports: ["3000:3000"]
+    ports: ["3101:3000"]
     environment:
-      DATABASE_URL: postgresql://admin:${DB_PASSWORD}@postgres:5432/medicineapp
-      PYTHON_API_URL: http://host.docker.internal:8001
+      DATABASE_URL: postgresql://admin:${DB_PASSWORD}@postgres:5432/medicineapp_experimental
+      PYTHON_API_URL: http://host.docker.internal:8100
     depends_on: [postgres]
 ```
 
