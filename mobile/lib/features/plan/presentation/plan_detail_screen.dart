@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/session/current_user_store.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../create_plan/data/plan_repository.dart';
 import '../../create_plan/domain/plan.dart';
+import '../../home/data/plan_cache.dart';
 import '../../home/data/plan_notifier.dart';
 import '../../home/data/today_schedule_notifier.dart';
 
@@ -59,12 +61,42 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
     try {
       final repo = ref.read(planRepositoryProvider);
       final plan = await repo.getPlanById(widget.planId);
+      final userStore = ref.read(currentUserStoreProvider);
+      final userId = await userStore.getCurrentUserId();
+      if (userId != null && userId.isNotEmpty) {
+        final cache = ref.read(planCacheProvider);
+        final cachedAll = await cache.load(userId: userId, activeOnly: false);
+        final mergedById = <String, Plan>{
+          for (final item in cachedAll) item.id: item,
+        };
+        mergedById[plan.id] = plan;
+        final merged = mergedById.values.toList();
+        await cache.save(userId: userId, activeOnly: false, plans: merged);
+      }
       _applyPlan(plan);
       setState(() {
         _plan = plan;
         _isLoading = false;
       });
     } catch (e) {
+      final userStore = ref.read(currentUserStoreProvider);
+      final userId = await userStore.getCurrentUserId();
+      if (userId != null && userId.isNotEmpty) {
+        final cache = ref.read(planCacheProvider);
+        final cached = await cache.load(userId: userId, activeOnly: false);
+        final matched = cached.where((item) => item.id == widget.planId);
+        if (matched.isNotEmpty) {
+          final offlinePlan = matched.first;
+          _applyPlan(offlinePlan);
+          setState(() {
+            _plan = offlinePlan;
+            _error = 'Đang hiển thị dữ liệu offline cho kế hoạch này.';
+            _isLoading = false;
+          });
+          return;
+        }
+      }
+
       setState(() {
         _error = e.toString();
         _isLoading = false;
@@ -77,6 +109,14 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
     if (current == null) return;
 
     context.go('/create/edit', extra: PlanEditFlowArgs.fromPlan(current));
+  }
+
+  void _handleBack() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+      return;
+    }
+    context.go('/plans');
   }
 
   void _applyPlan(Plan plan) {
@@ -126,77 +166,96 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
       context: context,
       isScrollControlled: true,
       builder: (ctx) {
-        return StatefulBuilder(
-          builder: (ctx, setModalState) {
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Chọn giờ uống',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    ...draft.asMap().entries.map((entry) {
-                      final idx = entry.key;
-                      final value = entry.value;
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: const Icon(Icons.access_time),
-                        title: Text(value),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.edit_outlined),
-                          onPressed: () async {
-                            final parts = value.split(':');
-                            final picked = await showTimePicker(
-                              context: ctx,
-                              initialTime: TimeOfDay(
-                                hour: int.parse(parts[0]),
-                                minute: int.parse(parts[1]),
-                              ),
-                            );
-                            if (picked != null) {
-                              setModalState(() {
-                                draft[idx] =
-                                    '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
-                              });
-                            }
-                          },
-                        ),
-                      );
-                    }),
-                    const SizedBox(height: 8),
-                    Row(
+        return DraggableScrollableSheet(
+          initialChildSize: 0.55,
+          minChildSize: 0.35,
+          maxChildSize: 0.9,
+          expand: false,
+          builder: (context, scrollController) {
+            return StatefulBuilder(
+              builder: (ctx, setModalState) {
+                return SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        OutlinedButton.icon(
-                          onPressed: draft.length < 4
-                              ? () => setModalState(() => draft.add('21:00'))
-                              : null,
-                          icon: const Icon(Icons.add),
-                          label: const Text('Thêm giờ'),
+                        const Text(
+                          'Chọn giờ uống',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                        const Spacer(),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              _times = draft;
-                              _syncDoseScheduleWithTimes();
-                            });
-                            Navigator.pop(ctx);
-                          },
-                          child: const Text('Lưu'),
+                        const SizedBox(height: 12),
+                        Expanded(
+                          child: ListView(
+                            controller: scrollController,
+                            children: [
+                              ...draft.asMap().entries.map((entry) {
+                                final idx = entry.key;
+                                final value = entry.value;
+                                return ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: const Icon(Icons.access_time),
+                                  title: Text(
+                                    value,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.edit_outlined),
+                                    onPressed: () async {
+                                      final parts = value.split(':');
+                                      final picked = await showTimePicker(
+                                        context: ctx,
+                                        initialTime: TimeOfDay(
+                                          hour: int.parse(parts[0]),
+                                          minute: int.parse(parts[1]),
+                                        ),
+                                      );
+                                      if (picked != null) {
+                                        setModalState(() {
+                                          draft[idx] =
+                                              '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+                                        });
+                                      }
+                                    },
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            OutlinedButton.icon(
+                              onPressed: draft.length < 4
+                                  ? () =>
+                                        setModalState(() => draft.add('21:00'))
+                                  : null,
+                              icon: const Icon(Icons.add),
+                              label: const Text('Thêm giờ'),
+                            ),
+                            const Spacer(),
+                            ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _times = draft;
+                                  _syncDoseScheduleWithTimes();
+                                });
+                                Navigator.pop(ctx);
+                              },
+                              child: const Text('Lưu'),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             );
           },
         );
@@ -321,12 +380,12 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
       builder: (ctx) => AlertDialog(
         title: const Text('Kết thúc kế hoạch?'),
         content: const Text(
-          'Ke hoach se duoc ngung kich hoat va khong nhac nua.',
+          'Kế hoạch sẽ được ngừng kích hoạt và không nhắc nữa.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Huy'),
+            child: const Text('Hủy'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -377,137 +436,24 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
 
     if (_plan == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Chi tiết kế hoạch')),
-        body: Center(child: Text(_error ?? 'Không tải được kế hoạch')),
-      );
-    }
-
-    if (_plan!.drugs.length > 1) {
-      return Scaffold(
         appBar: AppBar(
           title: const Text('Chi tiết kế hoạch'),
-          actions: [
-            IconButton(
-              onPressed: _openDrugEditor,
-              icon: const Icon(Icons.edit_note_rounded),
-              tooltip: 'Sửa thuốc và lịch',
-            ),
-          ],
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: _handleBack,
+          ),
         ),
-        body: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(
-              _plan!.drugName,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Từ ${DateFormat('dd/MM/yyyy').format(_startDate)} • $_totalDays ngày',
-              style: const TextStyle(color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 16),
-            _sectionLabel('THUỐC TRONG KẾ HOẠCH'),
-            const SizedBox(height: 8),
-            ..._plan!.drugs.map(
-              (drug) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.medication_outlined),
-                title: Text(drug.drugName),
-                subtitle: drug.dosage != null ? Text(drug.dosage!) : null,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _sectionLabel('LỊCH UỐNG'),
-            const SizedBox(height: 8),
-            ..._plan!.slots.map(
-              (slot) => Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.surfaceHigh),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      slot.time,
-                      style: const TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                    const SizedBox(height: 8),
-                    ...slot.items.map(
-                      (item) => Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text('${item.drugName}: ${item.pills} viên'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            if ((_plan!.notes ?? '').trim().isNotEmpty) ...[
-              const SizedBox(height: 8),
-              _sectionLabel('GHI CHÚ'),
-              const SizedBox(height: 8),
-              Text(_plan!.notes!),
-            ],
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              onPressed: _openDrugEditor,
-              icon: const Icon(Icons.edit_note_rounded),
-              label: const Text('Chỉnh sửa thuốc và lịch'),
-            ),
-            const SizedBox(height: 20),
-            if (_error != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Text(
-                  _error!,
-                  style: const TextStyle(color: AppColors.error),
-                ),
-              ),
-            if (_plan!.isActive)
-              OutlinedButton.icon(
-                onPressed: _deactivate,
-                icon: const Icon(
-                  Icons.pause_circle_outline,
-                  color: AppColors.error,
-                ),
-                label: const Text(
-                  'Kết thúc kế hoạch',
-                  style: TextStyle(color: AppColors.error),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppColors.error),
-                ),
-              )
-            else
-              OutlinedButton.icon(
-                onPressed: _reactivate,
-                icon: const Icon(
-                  Icons.play_circle_outline,
-                  color: AppColors.success,
-                ),
-                label: const Text(
-                  'Kích hoạt lại',
-                  style: TextStyle(color: AppColors.success),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppColors.success),
-                ),
-              ),
-          ],
-        ),
+        body: Center(child: Text(_error ?? 'Không tải được kế hoạch')),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chi tiết kế hoạch'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: _handleBack,
+        ),
         actions: [
           IconButton(
             onPressed: _openDrugEditor,
@@ -519,196 +465,135 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          TextField(
-            controller: _drugCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Tên thuốc',
-              prefixIcon: Icon(Icons.medication_outlined),
-            ),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _dosageCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Liều lượng',
-              prefixIcon: Icon(Icons.scale_outlined),
-            ),
-          ),
-          const SizedBox(height: 16),
-          _sectionLabel('TẦN SUẤT'),
-          const SizedBox(height: 8),
-          SegmentedButton<String>(
-            segments: const [
-              ButtonSegment(value: 'daily', label: Text('1 lần')),
-              ButtonSegment(value: 'twice_daily', label: Text('2 lần')),
-              ButtonSegment(value: 'three_daily', label: Text('3 lần')),
-            ],
-            selected: {_frequency},
-            onSelectionChanged: (value) => setState(() {
-              _frequency = value.first;
-              switch (_frequency) {
-                case 'daily':
-                  _times = ['07:00'];
-                  break;
-                case 'twice_daily':
-                  _times = ['07:00', '19:00'];
-                  break;
-                case 'three_daily':
-                  _times = ['07:00', '12:00', '19:00'];
-                  break;
-              }
-              _syncDoseScheduleWithTimes();
-            }),
-          ),
-          const SizedBox(height: 16),
-          InkWell(
-            onTap: _editTimes,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.surfaceHigh),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.access_time),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text(_times.join(', '))),
-                  const Icon(Icons.chevron_right),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child:
-                    _doseSchedule.map((item) => item.pills).toSet().length > 1
-                    ? Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: AppColors.surface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.surfaceHigh),
-                        ),
-                        child: Column(
-                          children: [
-                            const Text(
-                              'Số viên theo từng giờ',
-                              style: TextStyle(color: AppColors.textSecondary),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              _doseSchedule
-                                  .map(
-                                    (item) =>
-                                        '${item.time}: ${item.pills} viên',
-                                  )
-                                  .join(' · '),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      )
-                    : _StepperField(
-                        label: 'Viên/lần',
-                        value: _pillsPerDose,
-                        onMinus: _pillsPerDose > 1
-                            ? () => setState(() {
-                                _pillsPerDose--;
-                                _doseSchedule = _doseSchedule
-                                    .map(
-                                      (item) =>
-                                          item.copyWith(pills: _pillsPerDose),
-                                    )
-                                    .toList();
-                              })
-                            : null,
-                        onPlus: _pillsPerDose < 20
-                            ? () => setState(() {
-                                _pillsPerDose++;
-                                _doseSchedule = _doseSchedule
-                                    .map(
-                                      (item) =>
-                                          item.copyWith(pills: _pillsPerDose),
-                                    )
-                                    .toList();
-                              })
-                            : null,
-                      ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _StepperField(
-                  label: 'Số ngày',
-                  value: _totalDays,
-                  onMinus: _totalDays > 1
-                      ? () => setState(() => _totalDays--)
-                      : null,
-                  onPlus: _totalDays < 365
-                      ? () => setState(() => _totalDays++)
-                      : null,
+          _sectionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _plan!.drugName,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                Text(
+                  'Từ ${DateFormat('dd/MM/yyyy').format(_startDate)} • $_totalDays ngày',
+                  style: const TextStyle(color: AppColors.textSecondary),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    _pill(
+                      'Thuốc ${_plan!.drugs.length}',
+                      AppColors.primaryDark,
+                    ),
+                    _pill('Giờ ${_plan!.slots.length}', AppColors.info),
+                    _pill(
+                      _plan!.isActive ? 'Đang chạy' : 'Đã kết thúc',
+                      _plan!.isActive ? AppColors.success : AppColors.textMuted,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
-          InkWell(
-            onTap: _pickStartDate,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.surfaceHigh),
-              ),
+          _sectionLabel('THUỐC TRONG KẾ HOẠCH'),
+          const SizedBox(height: 8),
+          ..._plan!.drugs.map(
+            (drug) => _sectionCard(
+              margin: const EdgeInsets.only(bottom: 10),
               child: Row(
                 children: [
-                  const Icon(Icons.calendar_month_outlined),
+                  const Icon(
+                    Icons.medication_outlined,
+                    color: AppColors.primaryDark,
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(DateFormat('dd/MM/yyyy').format(_startDate)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          drug.drugName,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (drug.dosage != null) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            drug.dosage!,
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
-                  const Icon(Icons.chevron_right),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _notesCtrl,
-            minLines: 2,
-            maxLines: 4,
-            decoration: const InputDecoration(
-              labelText: 'Ghi chú',
-              alignLabelWithHint: true,
+          const SizedBox(height: 6),
+          _sectionLabel('LỊCH UỐNG'),
+          const SizedBox(height: 8),
+          ..._plan!.slots.map(
+            (slot) => _sectionCard(
+              margin: const EdgeInsets.only(bottom: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        size: 18,
+                        color: AppColors.primaryDark,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        slot.time,
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  ...slot.items.map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        '${item.drugName}: ${item.pills} viên',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          if (_error != null) ...[
-            const SizedBox(height: 12),
-            Text(_error!, style: const TextStyle(color: AppColors.error)),
+          if ((_plan!.notes ?? '').trim().isNotEmpty) ...[
+            const SizedBox(height: 6),
+            _sectionLabel('GHI CHÚ'),
+            const SizedBox(height: 8),
+            _sectionCard(child: Text(_plan!.notes!)),
           ],
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
+          if (_error != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(
+                _error!,
+                style: const TextStyle(color: AppColors.error),
+              ),
+            ),
           ElevatedButton.icon(
-            onPressed: _isSaving ? null : _save,
-            icon: _isSaving
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.save_outlined),
-            label: const Text('Lưu thay đổi'),
-          ),
-          const SizedBox(height: 8),
-          OutlinedButton.icon(
             onPressed: _openDrugEditor,
             icon: const Icon(Icons.edit_note_rounded),
             label: const Text('Chỉnh sửa thuốc và lịch'),
@@ -745,6 +630,39 @@ class _PlanDetailScreenState extends ConsumerState<PlanDetailScreen> {
               ),
             ),
         ],
+      ),
+    );
+  }
+
+  Widget _sectionCard({required Widget child, EdgeInsetsGeometry? margin}) {
+    return Container(
+      margin: margin,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.surfaceHigh),
+      ),
+      child: child,
+    );
+  }
+
+  Widget _pill(String label, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: color,
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+        ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

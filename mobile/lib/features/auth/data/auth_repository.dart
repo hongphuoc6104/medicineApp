@@ -9,6 +9,9 @@ import '../domain/user.dart';
 class AuthRepository {
   final Dio _dio;
   static const _storage = FlutterSecureStorage();
+  static const _clearSessionOnBoot = bool.fromEnvironment(
+    'QA_RESET_SESSION_ON_BOOT',
+  );
 
   AuthRepository(this._dio);
 
@@ -62,6 +65,11 @@ class AuthRepository {
   /// Try restoring user from secure storage (cold start).
   /// Returns null if tokens are missing.
   Future<User?> restoreUser() async {
+    if (_clearSessionOnBoot) {
+      await _clearAll();
+      return null;
+    }
+
     final userData = await _storage.read(key: AppConstants.userKey);
     final accessToken = await _storage.read(key: AppConstants.accessTokenKey);
 

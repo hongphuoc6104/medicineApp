@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/network/network_error_mapper.dart';
+import '../../../core/session/current_user_store.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../create_plan/data/plan_repository.dart';
 import '../../create_plan/domain/plan.dart';
+import '../../home/data/plan_cache.dart';
 
 class PlanListScreen extends ConsumerStatefulWidget {
   const PlanListScreen({super.key});
@@ -17,6 +20,7 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
   bool _isLoading = true;
   String? _error;
   List<Plan> _plans = const [];
+  bool _isOfflineData = false;
 
   @override
   void initState() {
@@ -28,17 +32,49 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
     setState(() {
       _isLoading = true;
       _error = null;
+      _isOfflineData = false;
     });
     try {
       final repo = ref.read(planRepositoryProvider);
       final plans = await repo.getPlans(activeOnly: false);
+      final userStore = ref.read(currentUserStoreProvider);
+      final userId = await userStore.getCurrentUserId();
+      if (userId != null && userId.isNotEmpty) {
+        final cache = ref.read(planCacheProvider);
+        await cache.save(userId: userId, activeOnly: false, plans: plans);
+      }
       setState(() {
         _plans = plans;
+        _isOfflineData = false;
         _isLoading = false;
       });
     } catch (e) {
+      final userStore = ref.read(currentUserStoreProvider);
+      final userId = await userStore.getCurrentUserId();
+      if (userId != null && userId.isNotEmpty) {
+        final cache = ref.read(planCacheProvider);
+        final cached = await cache.load(userId: userId, activeOnly: false);
+        if (cached.isNotEmpty) {
+          setState(() {
+            _plans = cached;
+            _isOfflineData = true;
+            _error = toFriendlyNetworkMessage(
+              e,
+              genericMessage:
+                  'Không tải được dữ liệu mới, đang dùng dữ liệu offline.',
+            );
+            _isLoading = false;
+          });
+          return;
+        }
+      }
+
       setState(() {
-        _error = e.toString();
+        _error = toFriendlyNetworkMessage(
+          e,
+          genericMessage:
+              'Không tải được danh sách kế hoạch. Vui lòng thử lại.',
+        );
         _isLoading = false;
       });
     }
@@ -47,7 +83,10 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
   @override
   Widget build(BuildContext context) {
     final activePlans = _plans.where((plan) => plan.isCurrentPlan).toList();
-    final inactivePlans = _plans.where((plan) => plan.hasEnded).toList();
+    final activeSlots = activePlans.fold<int>(
+      0,
+      (sum, plan) => sum + plan.slots.length,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +94,7 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline),
-            onPressed: () => context.go('/create'),
+            onPressed: () => context.push('/plans/create'),
           ),
         ],
       ),
@@ -70,7 +109,7 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
                   ),
                 ],
               )
-            : _error != null
+            : _error != null && _plans.isEmpty
             ? ListView(
                 children: [
                   SizedBox(
@@ -98,9 +137,33 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
             : ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
+                  if (_isOfflineData)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.warning.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.cloud_off_outlined,
+                            color: AppColors.warning,
+                          ),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Bạn đang xem dữ liệu offline đã lưu trên thiết bị.',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   _SummaryHeader(
                     activeCount: activePlans.length,
-                    totalCount: _plans.length,
+                    totalCount: activePlans.length,
+                    totalSlots: activeSlots,
                   ),
                   const SizedBox(height: 20),
                   _SectionTitle(
@@ -117,27 +180,12 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
                     )
                   else
                     ...activePlans.map((plan) => _PlanTile(plan: plan)),
-                  const SizedBox(height: 20),
-                  _SectionTitle(
-                    title: 'Đã kết thúc',
-                    subtitle: inactivePlans.isEmpty
-                        ? 'Chưa có kế hoạch đã kết thúc'
-                        : '${inactivePlans.length} kế hoạch lưu trong lịch sử',
-                  ),
-                  const SizedBox(height: 10),
-                  if (inactivePlans.isEmpty)
-                    _EmptyPlanCard(
-                      message:
-                          'Kế hoạch kết thúc sẽ xuất hiện ở đây để bạn xem lại.',
-                    )
-                  else
-                    ...inactivePlans.map((plan) => _PlanTile(plan: plan)),
                   const SizedBox(height: 16),
                 ],
               ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.go('/create'),
+        onPressed: () => context.push('/plans/create'),
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add),
         label: const Text('Tạo kế hoạch'),
@@ -147,10 +195,15 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
 }
 
 class _SummaryHeader extends StatelessWidget {
-  const _SummaryHeader({required this.activeCount, required this.totalCount});
+  const _SummaryHeader({
+    required this.activeCount,
+    required this.totalCount,
+    required this.totalSlots,
+  });
 
   final int activeCount;
   final int totalCount;
+  final int totalSlots;
 
   @override
   Widget build(BuildContext context) {
@@ -170,10 +223,7 @@ class _SummaryHeader extends StatelessWidget {
             child: _SummaryMetric(label: 'Tổng', value: '$totalCount'),
           ),
           Expanded(
-            child: _SummaryMetric(
-              label: 'Trạng thái',
-              value: activeCount > 0 ? 'Có kế hoạch' : 'Trống',
-            ),
+            child: _SummaryMetric(label: 'Khung giờ', value: '$totalSlots'),
           ),
         ],
       ),
@@ -259,7 +309,9 @@ class _PlanTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final statusColor = plan.isCurrentPlan ? AppColors.success : AppColors.textMuted;
+    final statusColor = plan.isCurrentPlan
+        ? AppColors.success
+        : AppColors.textMuted;
     final statusLabel = plan.isCurrentPlan ? 'Đang chạy' : 'Đã kết thúc';
 
     return Container(
@@ -294,13 +346,21 @@ class _PlanTile extends ConsumerWidget {
             Text(
               statusLabel,
               style: TextStyle(color: statusColor, fontSize: 12),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 4),
-            Text(
-              plan.hasVariableDoseSchedule
-                  ? 'Số viên theo từng giờ'
-                  : plan.scheduleSummary,
-              style: const TextStyle(fontSize: 12),
+            SizedBox(
+              width: 120,
+              child: Text(
+                plan.hasVariableDoseSchedule
+                    ? 'Số viên theo từng giờ'
+                    : plan.scheduleSummary,
+                style: const TextStyle(fontSize: 12),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+              ),
             ),
           ],
         ),

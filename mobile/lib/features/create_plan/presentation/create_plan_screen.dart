@@ -8,17 +8,37 @@ import '../../../core/theme/app_theme.dart';
 class CreatePlanScreen extends StatelessWidget {
   const CreatePlanScreen({super.key});
 
+  void _handleBack(BuildContext context) {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+      return;
+    }
+
+    final location = GoRouterState.of(context).matchedLocation;
+    if (location.startsWith('/plans/')) {
+      context.go('/plans');
+      return;
+    }
+    context.go('/home');
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.createPlanTitle)),
-      body: Padding(
+      appBar: AppBar(
+        title: Text(l10n.createPlanTitle),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => _handleBack(context),
+        ),
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 32),
+            const SizedBox(height: 12),
             Text(
               l10n.createPlanStartTitle,
               style: Theme.of(
@@ -30,22 +50,9 @@ class CreatePlanScreen extends StatelessWidget {
               l10n.createPlanStartSubtitle,
               style: const TextStyle(color: AppColors.textSecondary),
             ),
-            const SizedBox(height: 14),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceSoft,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
-              ),
-              child: Text(
-                l10n.createPlanDisclaimer,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // ── Option 1: Scan ──
+            const SizedBox(height: 12),
+            const _CreatePlanNote(),
+            const SizedBox(height: 20),
             _OptionCard(
               icon: Icons.document_scanner_outlined,
               title: l10n.createPlanScanTitle,
@@ -54,8 +61,6 @@ class CreatePlanScreen extends StatelessWidget {
               onTap: () => context.go('/create/scan'),
             ),
             const SizedBox(height: 16),
-
-            // ── Option 2: Manual ──
             _OptionCard(
               icon: Icons.edit_note,
               title: l10n.createPlanManualTitle,
@@ -71,8 +76,29 @@ class CreatePlanScreen extends StatelessWidget {
               color: AppColors.success,
               onTap: () => context.go('/create/reuse'),
             ),
+            const SizedBox(height: 12),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _CreatePlanNote extends StatelessWidget {
+  const _CreatePlanNote();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceSoft,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: const Text(
+        'Chọn 1 cách bắt đầu. Mọi cách đều đi vào cùng một luồng tạo kế hoạch.',
+        style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
       ),
     );
   }
@@ -127,6 +153,8 @@ class _OptionCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -135,6 +163,8 @@ class _OptionCard extends StatelessWidget {
                       fontSize: 13,
                       color: AppColors.textSecondary,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

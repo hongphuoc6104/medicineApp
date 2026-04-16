@@ -133,8 +133,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.result.guidance ??
-                      l10n.scanReviewDefaultGuidance,
+                  widget.result.guidance ?? l10n.scanReviewDefaultGuidance,
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
@@ -146,6 +145,11 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                       label: l10n.scanReviewDrugCount(_drugs.length),
                       color: AppColors.primary,
                     ),
+                    if ((widget.result.guidance ?? '').isNotEmpty)
+                      _StatusChip(
+                        label: 'Gợi ý: ${widget.result.guidance}',
+                        color: AppColors.info,
+                      ),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -153,7 +157,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                   controller: _searchCtrl,
                   onChanged: (_) => setState(() {}),
                   decoration: InputDecoration(
-                    hintText: l10n.scanReviewSearchHint,
+                    hintText: 'Tìm thuốc trong danh sách',
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchCtrl.text.isNotEmpty
                         ? IconButton(
@@ -184,13 +188,11 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                         const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final drug = visible[index];
-                      // §9.2: extracted name is always the primary display
                       final hasDbSuggestion =
                           drug.mappedDrugName != null &&
                           drug.mappedDrugName!.isNotEmpty &&
                           drug.mappedDrugName!.toLowerCase().trim() !=
                               drug.name.toLowerCase().trim();
-                      // §3.3: show friendly label, not raw confidence number
                       return Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
@@ -214,7 +216,6 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                                 ),
                               ],
                             ),
-                            // DB suggestion — optional secondary info
                             if (hasDbSuggestion) ...[
                               const SizedBox(height: 4),
                               Row(
@@ -227,12 +228,15 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                                   const SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
-                                      l10n.scanReviewStandardName(drug.mappedDrugName!),
+                                      l10n.scanReviewStandardName(
+                                        drug.mappedDrugName!,
+                                      ),
                                       style: const TextStyle(
                                         color: AppColors.info,
                                         fontSize: 12,
                                       ),
                                       overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
                                   ),
                                 ],
@@ -243,11 +247,13 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                                     drug.name.toLowerCase().trim()) ...[
                               const SizedBox(height: 4),
                               Text(
-                                l10n.scanReviewOcrRaw(drug.ocrText),
+                                'OCR: ${drug.ocrText}',
                                 style: const TextStyle(
                                   color: AppColors.textSecondary,
                                   fontSize: 12,
                                 ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                             const SizedBox(height: 10),

@@ -63,6 +63,21 @@ class HomeScreen extends ConsumerWidget {
           onRetry: () => ref.read(planNotifierProvider.notifier).refresh(),
         ),
         data: (state) {
+          final stateError = state.error == null
+              ? null
+              : Exception(state.error);
+
+          if (!state.hasPlans && state.error != null) {
+            return _ErrorView(
+              message: toFriendlyNetworkMessage(
+                stateError!,
+                genericMessage:
+                    'Không tải được dữ liệu hôm nay. Vui lòng thử lại.',
+              ),
+              onRetry: () => ref.read(planNotifierProvider.notifier).refresh(),
+            );
+          }
+
           return RefreshIndicator(
             onRefresh: () async {
               await ref.read(planNotifierProvider.notifier).refresh();
@@ -70,7 +85,7 @@ class HomeScreen extends ConsumerWidget {
             },
             child: state.hasPlans
                 ? _DashboardView(plans: state.plans, todayAsync: todayAsync)
-                : const _OnboardingView(),
+                : _OnboardingView(isOfflineCache: state.isFromCache),
           );
         },
       ),
@@ -117,13 +132,36 @@ class _ErrorView extends StatelessWidget {
 }
 
 class _OnboardingView extends StatelessWidget {
-  const _OnboardingView();
+  const _OnboardingView({this.isOfflineCache = false});
+
+  final bool isOfflineCache;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 120),
       children: [
+        if (isOfflineCache)
+          Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.warning.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.cloud_off_outlined, color: AppColors.warning),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Đang dùng dữ liệu offline. Kéo xuống để thử đồng bộ lại.',
+                  ),
+                ),
+              ],
+            ),
+          ),
         const _DateHeader(),
         const SizedBox(height: 18),
         Container(
@@ -155,14 +193,14 @@ class _OnboardingView extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Text(
-                AppLocalizations.of(context).homeOnboardingTitle,
+                l10n.homeOnboardingTitle,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                AppLocalizations.of(context).homeOnboardingSubtitle,
+                l10n.homeOnboardingSubtitle,
                 style: const TextStyle(
                   color: AppColors.textSecondary,
                   height: 1.45,
@@ -172,7 +210,7 @@ class _OnboardingView extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: () => context.go('/create/scan'),
                 icon: const Icon(Icons.document_scanner_outlined),
-                label: Text(AppLocalizations.of(context).homeActionScan),
+                label: Text(l10n.homeActionScan),
               ),
               const SizedBox(height: 10),
               Row(
@@ -181,9 +219,7 @@ class _OnboardingView extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/create/edit'),
                       icon: const Icon(Icons.edit_note),
-                      label: Text(
-                        AppLocalizations.of(context).homeActionManual,
-                      ),
+                      label: Text(l10n.homeActionManual),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -191,9 +227,7 @@ class _OnboardingView extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => context.go('/create/reuse'),
                       icon: const Icon(Icons.history_outlined),
-                      label: Text(
-                        AppLocalizations.of(context).homeActionHistory,
-                      ),
+                      label: Text(l10n.homeActionHistory),
                     ),
                   ),
                 ],
@@ -201,22 +235,24 @@ class _OnboardingView extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 18),
+        _LookupPrimaryCard(onTap: () => context.go('/lookup')),
+        const SizedBox(height: 14),
+        const _SectionLabel(title: 'Lối tắt'),
+        const SizedBox(height: 10),
         _QuickActionGrid(
           actions: [
             _QuickActionItem(
-              title: AppLocalizations.of(context).homeActionDrugLookup,
-              subtitle: AppLocalizations.of(
-                context,
-              ).homeActionDrugLookupSubtitle,
-              icon: Icons.search_rounded,
-              onTap: () => context.go('/drugs'),
-            ),
-            _QuickActionItem(
-              title: AppLocalizations.of(context).homeActionPlans,
-              subtitle: AppLocalizations.of(context).homeActionPlansSubtitle,
+              title: l10n.homeActionPlans,
+              subtitle: l10n.homeActionPlansSubtitle,
               icon: Icons.calendar_month_rounded,
               onTap: () => context.go('/plans'),
+            ),
+            _QuickActionItem(
+              title: l10n.homeActionDrugLookup,
+              subtitle: l10n.homeActionDrugLookupSubtitle,
+              icon: Icons.search_rounded,
+              onTap: () => context.go('/lookup'),
             ),
           ],
         ),
@@ -300,6 +336,13 @@ class _DashboardView extends ConsumerWidget {
                       !d.isUpcomingSoon(now),
                 )
                 .toList();
+            final featuredDose = dueNow.isNotEmpty
+                ? dueNow.first
+                : upcoming.isNotEmpty
+                ? upcoming.first
+                : laterToday.isNotEmpty
+                ? laterToday.first
+                : null;
 
             Widget doseTile(TodayDose dose) => _TodayDoseTile(
               dose: dose,
@@ -328,7 +371,9 @@ class _DashboardView extends ConsumerWidget {
                           ? l10n.homeDoseTakenStatus(dose.primaryTitle)
                           : l10n.homeDoseOfflineStatus,
                     ),
-                    backgroundColor: result == MarkDoseResult.synced ? AppColors.success : AppColors.warning,
+                    backgroundColor: result == MarkDoseResult.synced
+                        ? AppColors.success
+                        : AppColors.warning,
                   ),
                 );
               },
@@ -365,38 +410,59 @@ class _DashboardView extends ConsumerWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _HeroTodayCard(today: today),
+                _HeroTodayCard(today: today, featuredDose: featuredDose),
+                const SizedBox(height: 16),
+                _QuickActionGrid(
+                  actions: [
+                    _QuickActionItem(
+                      title: AppLocalizations.of(context).homeActionScan,
+                      subtitle: 'Quét đơn để tạo kế hoạch mới',
+                      icon: Icons.document_scanner_outlined,
+                      onTap: () => context.go('/create/scan'),
+                    ),
+                    _QuickActionItem(
+                      title: AppLocalizations.of(context).homeActionManual,
+                      subtitle: 'Nhập tay nếu không có ảnh',
+                      icon: Icons.edit_note,
+                      onTap: () => context.go('/create/edit'),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 16),
                 if (today.doses.isEmpty)
-                  const _TodayEmptyCard()
+                  _TodayEmptyCard(
+                    onScan: () => context.go('/create/scan'),
+                    onCreatePlan: () => context.go('/create/edit'),
+                    onViewPlans: () => context.go('/plans'),
+                  )
                 else ...[
                   if (dueNow.isNotEmpty) ...[
-                    _SectionLabel(
-                      title: AppLocalizations.of(context).homeSectionDueNow,
-                    ),
+                    const _SectionLabel(title: 'Đến giờ uống'),
                     const SizedBox(height: 10),
                     ...dueNow.map(doseTile),
                     const SizedBox(height: 8),
                   ],
                   if (upcoming.isNotEmpty) ...[
-                    _SectionLabel(
-                      title: AppLocalizations.of(context).homeSectionUpcoming,
-                    ),
+                    const _SectionLabel(title: 'Sắp đến giờ'),
                     const SizedBox(height: 10),
                     ...upcoming.map(doseTile),
                     const SizedBox(height: 8),
                   ],
                   if (laterToday.isNotEmpty) ...[
-                    const _SectionLabel(title: 'Các liều còn lại hôm nay'),
+                    const _SectionLabel(title: 'Còn lại hôm nay'),
                     const SizedBox(height: 10),
                     ...laterToday.map(doseTile),
                     const SizedBox(height: 8),
                   ],
                   if (dueNow.isEmpty && upcoming.isEmpty && laterToday.isEmpty)
-                    const _TodayEmptyCard(),
+                    _TodayEmptyCard(
+                      onScan: () => context.go('/create/scan'),
+                      onCreatePlan: () => context.go('/create/edit'),
+                      onViewPlans: () => context.go('/plans'),
+                    ),
                 ],
                 const SizedBox(height: 18),
-                _SectionLabel(title: AppLocalizations.of(context).homeInUse),
+                const _SectionLabel(title: 'Kế hoạch đang chạy'),
                 const SizedBox(height: 10),
                 ...plans.take(3).map((plan) => _PlanCard(plan: plan)),
                 if (plans.length > 3) ...[
@@ -424,13 +490,74 @@ final _pendingCountProvider = FutureProvider<int>((ref) async {
   return ref.read(offlineDoseQueueProvider).pendingCount();
 });
 
+String _formatHomeDate(DateTime date) {
+  return DateFormat('d MMMM, yyyy', 'vi_VN').format(date);
+}
+
+String _doseSummaryText(TodayDose dose) {
+  final medications = dose.medications
+      .where((item) => item.drugName.trim().isNotEmpty)
+      .toList();
+
+  if (medications.isNotEmpty) {
+    if (medications.length == 1) {
+      final item = medications.first;
+      return '${item.drugName}: ${item.pills} viên';
+    }
+
+    final preview = medications
+        .take(2)
+        .map((item) => item.drugName.trim())
+        .join(', ');
+    final extra = medications.length - 2;
+    final totalPills = medications.fold<int>(
+      0,
+      (sum, item) => sum + item.pills,
+    );
+    return extra > 0
+        ? '$preview và $extra thuốc khác • $totalPills viên'
+        : '$preview • $totalPills viên';
+  }
+
+  final dosage = dose.dosage?.trim();
+  if (dosage != null && dosage.isNotEmpty) {
+    return dosage;
+  }
+
+  return '${dose.pillsPerDose ?? 1} viên/liều';
+}
+
+String _planFrequencyLabel(BuildContext context, String freq) {
+  switch (freq) {
+    case 'twice_daily':
+      return AppLocalizations.of(context).homeFreqDaily2;
+    case 'three_daily':
+      return AppLocalizations.of(context).homeFreqDaily3;
+    case 'weekly':
+      return AppLocalizations.of(context).homeFreqWeekly;
+    default:
+      return AppLocalizations.of(context).homeFreqDaily1;
+  }
+}
+
+String _planSubtitleText(BuildContext context, Plan plan) {
+  final freq = _planFrequencyLabel(context, plan.frequency);
+  final times = plan.times.join(', ');
+
+  if (plan.hasVariableDoseSchedule) {
+    return '$freq · ${AppLocalizations.of(context).homeFreqHourly} · $times';
+  }
+
+  return '$freq · ${plan.pillsPerDose} viên · $times';
+}
+
 class _DateHeader extends StatelessWidget {
   const _DateHeader();
 
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final dateLabel = DateFormat('d MMMM, yyyy').format(now);
+    final dateLabel = _formatHomeDate(now);
     return Row(
       children: [
         Expanded(
@@ -537,62 +664,129 @@ class _WeekStrip extends StatelessWidget {
 }
 
 class _HeroTodayCard extends StatelessWidget {
-  const _HeroTodayCard({required this.today});
+  const _HeroTodayCard({required this.today, required this.featuredDose});
 
   final TodaySchedule today;
+  final TodayDose? featuredDose;
+
+  String _formatCountdown(DateTime scheduled, DateTime now) {
+    final diff = scheduled.difference(now);
+    if (diff.inMinutes > 0) {
+      if (diff.inHours > 0) {
+        return 'Còn ${diff.inHours} giờ ${diff.inMinutes.remainder(60)} phút';
+      }
+      return 'Còn ${diff.inMinutes} phút';
+    }
+    final overdue = diff.abs();
+    if (overdue.inHours > 0) {
+      return 'Trễ ${overdue.inHours} giờ ${overdue.inMinutes.remainder(60)} phút';
+    }
+    return 'Trễ ${overdue.inMinutes} phút';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
+    final scheduled = featuredDose?.scheduledLocalDateTime;
+    final title = featuredDose == null
+        ? 'Hôm nay chưa có liều nào'
+        : featuredDose!.primaryTitle;
+    final subtitle = featuredDose == null
+        ? 'Bạn có thể tạo kế hoạch mới hoặc dùng lại kế hoạch cũ'
+        : '${featuredDose!.time} • ${scheduled == null ? 'Đang chờ' : _formatCountdown(scheduled, now)}';
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF58D5D4), Color(0xFF85E6E2)],
+          colors: [Color(0xFFEFFAF9), Color(0xFFF9FFFE)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(
+                  Icons.medication_liquid_rounded,
+                  color: AppColors.primaryDark,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hôm nay',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: AppColors.primaryDark,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      AppLocalizations.of(context).homeHeroTitle,
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
           Text(
-            AppLocalizations.of(context).homeHeroTitle,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+            title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w900,
+              color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(
-              context,
-            ).homeHeroTotalDoses(today.summary.total),
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w900,
-            ),
+            subtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: AppColors.textSecondary, height: 1.4),
           ),
-          const SizedBox(height: 18),
-          Row(
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
             children: [
-              _HeroMetric(
-                label: AppLocalizations.of(context).homeHeroTaken,
-                value: '${today.summary.taken}',
+              _HeroChip(
+                label: 'Tổng ${today.summary.total}',
+                color: AppColors.primaryDark,
               ),
-              _HeroMetric(
-                label: AppLocalizations.of(context).homeHeroPending,
-                value: '${today.summary.pending}',
+              _HeroChip(
+                label: 'Đã uống ${today.summary.taken}',
+                color: AppColors.success,
               ),
-              _HeroMetric(
-                label: AppLocalizations.of(context).homeHeroSkipped,
-                value: '${today.summary.skipped}',
+              _HeroChip(
+                label: 'Còn ${today.summary.pending}',
+                color: AppColors.info,
               ),
-              _HeroMetric(
-                label: AppLocalizations.of(context).homeHeroMissed,
-                value: '${today.summary.missed}',
-              ),
+              if (today.summary.missed > 0)
+                _HeroChip(
+                  label: 'Quên ${today.summary.missed}',
+                  color: AppColors.error,
+                ),
             ],
           ),
         ],
@@ -601,31 +795,109 @@ class _HeroTodayCard extends StatelessWidget {
   }
 }
 
-class _HeroMetric extends StatelessWidget {
-  const _HeroMetric({required this.label, required this.value});
+class _LookupPrimaryCard extends StatelessWidget {
+  const _LookupPrimaryCard({required this.onTap});
 
-  final String label;
-  final String value;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
+    final l10n = AppLocalizations.of(context);
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(26),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF2AD1C9), Color(0xFF59D8D3)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(26),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.18),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(color: Colors.white70, fontSize: 11),
-          ),
-        ],
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.20),
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: const Icon(
+                Icons.search_rounded,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.homeActionDrugLookup,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    l10n.homeActionDrugLookupSubtitle,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      height: 1.35,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: Colors.white,
+              size: 30,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HeroChip extends StatelessWidget {
+  const _HeroChip({required this.label, required this.color});
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: color,
+          fontWeight: FontWeight.w800,
+          fontSize: 12,
+        ),
       ),
     );
   }
@@ -652,13 +924,17 @@ class _QuickActionGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.sizeOf(context).width;
+    final crossAxisCount = width < 360 ? 1 : 2;
+    final childAspectRatio = crossAxisCount == 1 ? 2.55 : 1.05;
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: actions.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.05,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        childAspectRatio: childAspectRatio,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
       ),
@@ -689,11 +965,15 @@ class _QuickActionGrid extends StatelessWidget {
                 const Spacer(),
                 Text(
                   item.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   item.subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
@@ -761,6 +1041,8 @@ class _PlanCard extends StatelessWidget {
                 children: [
                   Text(
                     plan.drugName,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 15,
@@ -768,9 +1050,9 @@ class _PlanCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    plan.hasVariableDoseSchedule
-                        ? '${_freqLabel(context, plan.frequency)} · ${AppLocalizations.of(context).homeFreqHourly} · ${plan.times.join(', ')}'
-                        : '${_freqLabel(context, plan.frequency)} · ${plan.pillsPerDose} viên · ${plan.times.join(', ')}',
+                    _planSubtitleText(context, plan),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 12,
@@ -798,19 +1080,6 @@ class _PlanCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  static String _freqLabel(BuildContext context, String freq) {
-    switch (freq) {
-      case 'twice_daily':
-        return AppLocalizations.of(context).homeFreqDaily2;
-      case 'three_daily':
-        return AppLocalizations.of(context).homeFreqDaily3;
-      case 'weekly':
-        return AppLocalizations.of(context).homeFreqWeekly;
-      default:
-        return AppLocalizations.of(context).homeFreqDaily1;
-    }
   }
 }
 
@@ -878,7 +1147,15 @@ class _TodayErrorCard extends StatelessWidget {
 }
 
 class _TodayEmptyCard extends StatelessWidget {
-  const _TodayEmptyCard();
+  const _TodayEmptyCard({
+    required this.onScan,
+    required this.onCreatePlan,
+    required this.onViewPlans,
+  });
+
+  final VoidCallback onScan;
+  final VoidCallback onCreatePlan;
+  final VoidCallback onViewPlans;
 
   @override
   Widget build(BuildContext context) {
@@ -889,23 +1166,53 @@ class _TodayEmptyCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: AppColors.border),
       ),
-      child: const Column(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Icon(
+          const Icon(
             Icons.event_available_rounded,
             color: AppColors.primaryDark,
             size: 36,
           ),
-          SizedBox(height: 10),
-          Text(
+          const SizedBox(height: 10),
+          const Text(
             'Hôm nay không có liều uống nào.',
+            textAlign: TextAlign.center,
             style: TextStyle(fontWeight: FontWeight.w800),
           ),
-          SizedBox(height: 4),
-          Text(
-            'Bạn có thể xem lịch sử hoặc kiểm tra các kế hoạch đang chạy.',
+          const SizedBox(height: 4),
+          const Text(
+            'Bạn có thể quét đơn mới, nhập tay kế hoạch hoặc mở danh sách kế hoạch đang chạy.',
             style: TextStyle(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: onScan,
+              icon: const Icon(Icons.document_scanner_outlined),
+              label: const Text('Quét đơn'),
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: onCreatePlan,
+              icon: const Icon(Icons.edit_note),
+              label: const Text('Tạo kế hoạch'),
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: TextButton.icon(
+              onPressed: onViewPlans,
+              icon: const Icon(Icons.view_list_outlined),
+              label: const Text('Xem kế hoạch'),
+            ),
           ),
         ],
       ),
@@ -983,31 +1290,20 @@ class _TodayDoseTile extends StatelessWidget {
                   children: [
                     Text(
                       dose.primaryTitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 16,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    if (dose.medications.isNotEmpty)
-                      ...dose.medications.map(
-                        (item) => Padding(
-                          padding: const EdgeInsets.only(bottom: 2),
-                          child: Text(
-                            '${item.drugName}: ${item.pills} viên',
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ),
-                      )
-                    else
-                      Text(
-                        dose.dosage?.isNotEmpty == true
-                            ? dose.dosage!
-                            : '${dose.pillsPerDose ?? 1} viên/liều',
-                        style: const TextStyle(color: AppColors.textSecondary),
-                      ),
+                    Text(
+                      _doseSummaryText(dose),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: AppColors.textSecondary),
+                    ),
                     const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(

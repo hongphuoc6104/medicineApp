@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../create_plan/data/plan_repository.dart';
 import '../../home/data/today_schedule_notifier.dart';
 import '../../home/domain/today_schedule.dart';
 import '../data/pill_verification_repository.dart';
@@ -154,21 +153,34 @@ class _PillVerificationScreenState
     try {
       final repo = ref.read(pillVerificationRepositoryProvider);
       await repo.confirm(session.sessionId);
-      final planRepo = ref.read(planRepositoryProvider);
-      await planRepo.logDose(
-        planId: widget.dose.planId,
-        scheduledTime: widget.dose.scheduledTime,
-        status: 'taken',
-        occurrenceId: widget.dose.occurrenceId,
-      );
-      await ref.read(todayScheduleNotifierProvider.notifier).refresh();
+      final result = await ref
+          .read(todayScheduleNotifierProvider.notifier)
+          .markDose(dose: widget.dose, status: 'taken');
+
+      if (result == MarkDoseResult.synced) {
+        await ref.read(todayScheduleNotifierProvider.notifier).refresh();
+      }
+
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Đã xác minh viên thuốc và đánh dấu đã uống'),
+        SnackBar(
+          content: Text(
+            result == MarkDoseResult.synced
+                ? 'Đã xác minh viên thuốc và đánh dấu đã uống'
+                : result == MarkDoseResult.queuedOffline
+                ? 'Đã xác minh viên thuốc, trạng thái sẽ đồng bộ khi có mạng'
+                : 'Không thể lưu trạng thái liều thuốc',
+          ),
+          backgroundColor: result == MarkDoseResult.failed
+              ? AppColors.error
+              : result == MarkDoseResult.queuedOffline
+              ? AppColors.warning
+              : AppColors.success,
         ),
       );
-      context.go('/home');
+      if (result != MarkDoseResult.failed) {
+        context.go('/home');
+      }
     } on DioException catch (e) {
       setState(() {
         _error = e.message ?? 'Không thể xác nhận';

@@ -47,8 +47,7 @@ class MedicinePipeline:
         from core.config import YOLO_WEIGHTS, ZERO_PIMA_WEIGHTS
 
         self._yolo_path = yolo_weights or str(ROOT / YOLO_WEIGHTS)
-        self._zpima_path = zero_pima_weights or str(
-            ROOT / ZERO_PIMA_WEIGHTS)
+        self._zpima_path = zero_pima_weights or str(ROOT / ZERO_PIMA_WEIGHTS)
         self._device = device
 
         # Lazy-loaded modules
@@ -69,6 +68,7 @@ class MedicinePipeline:
             from core.phase_a.s1_detect.detector import (
                 PrescriptionDetector,
             )
+
             self._detector = PrescriptionDetector(self._yolo_path)
             logger.info("YOLO detector loaded")
         return self._detector
@@ -77,13 +77,12 @@ class MedicinePipeline:
         if self._ocr is None:
             from core.phase_a.s3_ocr.ocr_engine import HybridOcrModule
             import torch
+
             # Ưu tiên device được truyền vào, fallback theo CUDA
             if self._device is not None:
                 device = self._device
             else:
-                device = (
-                    "gpu" if torch.cuda.is_available() else "cpu"
-                )
+                device = "gpu" if torch.cuda.is_available() else "cpu"
             self._ocr = HybridOcrModule(device=device)
             logger.info("HybridOCR loaded")
         return self._ocr
@@ -93,6 +92,7 @@ class MedicinePipeline:
             from core.phase_a.s5_classify.ner_extractor import (
                 NerExtractor,
             )
+
             self._classifier = NerExtractor()
             logger.info("PhoBERT NER extractor loaded")
         return self._classifier
@@ -102,6 +102,7 @@ class MedicinePipeline:
             from core.phase_b.s1_pill_detect.pill_detector import (
                 PillDetector,
             )
+
             self._pill_det = PillDetector(
                 weights_path=self._zpima_path,
                 device=self._device,
@@ -114,6 +115,7 @@ class MedicinePipeline:
             from core.phase_a.s6_drug_search.drug_lookup import (
                 DrugLookup,
             )
+
             self._drug_mapper = DrugLookup()
             logger.info("Drug mapper loaded")
         return self._drug_mapper
@@ -121,6 +123,7 @@ class MedicinePipeline:
     def _get_matcher(self):
         if self._matcher is None:
             from core.phase_b.s2_match.gcn_matcher import GcnMatcher
+
             self._matcher = GcnMatcher()
             logger.info("GCN matcher loaded")
         return self._matcher
@@ -130,6 +133,7 @@ class MedicinePipeline:
             from core.phase_b.s2_match.reference_matcher import (
                 ReferenceMatcher,
             )
+
             self._reference_matcher = ReferenceMatcher()
             logger.info("Reference matcher loaded")
         return self._reference_matcher
@@ -151,7 +155,7 @@ class MedicinePipeline:
             img = cv2.imread(image)
             if img is None:
                 return {"error": f"Cannot read: {image}"}
-        elif hasattr(image, 'shape'):
+        elif hasattr(image, "shape"):
             img = image
         else:
             img = np.array(image)
@@ -168,38 +172,35 @@ class MedicinePipeline:
                         "YOLO detection failed, using full image as fallback"
                     )
             except Exception as e:
-                logger.error(
-                    f"YOLO detection error: {e}, using full image"
-                )
+                logger.error(f"YOLO detection error: {e}, using full image")
 
         # Step 1.5: Preprocess — deskew & orientation (VĐ3)
         try:
             from core.phase_a.s2_preprocess.orientation import (
                 preprocess_image,
             )
+
             img, prep_info = preprocess_image(img, stem="api")
             logger.info(f"Preprocess: {prep_info}")
         except Exception as e:
-            logger.warning(
-                f"Preprocess failed: {e}, continuing with original image"
-            )
+            logger.warning(f"Preprocess failed: {e}, continuing with original image")
 
         h, w = img.shape[:2]
 
         # Step 2: OCR
         ocr_blocks = self._run_ocr(img)
         if not ocr_blocks:
-            return {"error": "OCR found no text",
-                    "image_size": (w, h)}
+            return {"error": "OCR found no text", "image_size": (w, h)}
 
         # Step 3: NER classify
         ner_results = self._classify_blocks(ocr_blocks)
 
         # Step 4: Map drug names
-        medications = self._extract_medications(ner_results)
+        medications, medication_candidates = self._extract_medications(ner_results)
 
         return {
             "medications": medications,
+            "medication_candidates": medication_candidates,
             "ocr_blocks": ner_results,
             "image_size": (w, h),
             "stats": {
@@ -217,7 +218,7 @@ class MedicinePipeline:
             img = cv2.imread(image)
             if img is None:
                 return {"error": f"Cannot read: {image}"}
-        elif hasattr(image, 'shape'):
+        elif hasattr(image, "shape"):
             img = image
         else:
             img = np.array(image)
@@ -229,12 +230,15 @@ class MedicinePipeline:
                     img = cropped
                     logger.info("YOLO crop successful")
                 else:
-                    logger.warning("YOLO detection failed, using full image as fallback")
+                    logger.warning(
+                        "YOLO detection failed, using full image as fallback"
+                    )
             except Exception as e:
                 logger.error(f"YOLO detection error: {e}, using full image")
 
         try:
             from core.phase_a.s2_preprocess.orientation import preprocess_image
+
             img, prep_info = preprocess_image(img, stem="api")
             logger.info(f"Preprocess: {prep_info}")
         except Exception as e:
@@ -246,75 +250,81 @@ class MedicinePipeline:
         result = ocr.extract(img)
         if not result.text_blocks:
             return {"error": "OCR found no text", "image_size": (w, h)}
-        
+
         # STT Grouping
         from core.phase_a.s3_ocr.ocr_engine import group_by_stt
+
         merged_blocks_obj = group_by_stt(result.text_blocks)
-        
+
         ner_input = []
         for b in merged_blocks_obj:
             text = b.text.strip()
             if not text:
                 continue
-            ner_input.append({
-                "text": text,
-                "label": "other",
-                "box": b.bbox,
-                "bbox": b.bbox,
-            })
+            ner_input.append(
+                {
+                    "text": text,
+                    "label": "other",
+                    "box": b.bbox,
+                    "bbox": b.bbox,
+                }
+            )
 
         if not ner_input:
             return {"error": "No text after grouping", "image_size": (w, h)}
 
         ner_results = self._classify_blocks(ner_input)
-        
+
         # Mapping rules
         mapper = self._get_drug_mapper()
         medications = []
-        
+
         for block in ner_results:
             if block.get("label") == "drugname":
                 text = block["text"]
                 match = mapper.lookup(text)
                 bbox = block.get("bbox") or block.get("box") or [0, 0, 0, 0]
-                
+
                 match_score = match.get("score", 0) if match else 0
                 matched_name = match.get("name", text) if match else text
-                
+
                 # Confidence Thresholding
                 # Level B: strict confirmed
                 if match_score >= 0.85:
                     mapping_status = "confirmed"
-                elif (
-                    match_score >= 0.65
-                    or self._looks_like_valid_drugname_app(
-                        text,
-                        block.get("confidence", 0),
-                    )
+                elif match_score >= 0.65 or self._looks_like_valid_drugname_app(
+                    text,
+                    block.get("confidence", 0),
                 ):
                     mapping_status = "unmapped_candidate"
                 else:
                     mapping_status = "rejected_noise"
-                    
-                medications.append({
-                    "ocr_text": text,
-                    "drug_name_raw": text, # Raw text before fuzzy match
-                    "matched_drug_name": matched_name,
-                    "mapping_status": mapping_status,
-                    "confidence": block.get("confidence", 0),
-                    "match_score": match_score,
-                    "bbox": bbox,
-                    "extracted": {
-                        "stt": "",
-                        "drug_name": matched_name if mapping_status == "confirmed" else text,
-                        "instruction": "",
-                        "quantity": "",
-                        "unit": ""
+
+                medications.append(
+                    {
+                        "ocr_text": text,
+                        "drug_name_raw": text,  # Raw text before fuzzy match
+                        "matched_drug_name": matched_name,
+                        "mapping_status": mapping_status,
+                        "confidence": block.get("confidence", 0),
+                        "match_score": match_score,
+                        "bbox": bbox,
+                        "extracted": {
+                            "stt": "",
+                            "drug_name": matched_name
+                            if mapping_status == "confirmed"
+                            else text,
+                            "instruction": "",
+                            "quantity": "",
+                            "unit": "",
+                        },
                     }
-                })
+                )
 
         # Remove rejected noise from returned medications (or keep them but UI will hide)
-        filtered_meds = [m for m in medications if m["mapping_status"] != "rejected_noise"]
+        filtered_meds = [
+            m for m in medications if m["mapping_status"] != "rejected_noise"
+        ]
 
         return {
             "medications": filtered_meds,
@@ -334,15 +344,20 @@ class MedicinePipeline:
         App product decision: extracted names should still surface to the user,
         even when local fuzzy matching is imperfect.
         """
+        from core.phase_a.s5_classify.post_filter import NerPostFilter
+
         if float(confidence or 0) < 0.75:
             return False
 
         cleaned = re.sub(r"\s+", " ", str(text or "")).strip()
         if len(cleaned) < 4:
             return False
+        if not NerPostFilter.is_likely_drug(cleaned):
+            return False
 
         alpha_tokens = [
-            token for token in re.split(r"[^A-Za-zÀ-ỹ0-9]+", cleaned)
+            token
+            for token in re.split(r"[^A-Za-zÀ-ỹ0-9]+", cleaned)
             if any(ch.isalpha() for ch in token)
         ]
         if not alpha_tokens:
@@ -367,8 +382,10 @@ class MedicinePipeline:
     def _crop_prescription(self, img):
         """Use YOLO to detect and crop prescription area."""
         from core.phase_a.s1_detect.segmentation import (
-            crop_by_mask, crop_by_bbox,
+            crop_by_mask,
+            crop_by_bbox,
         )
+
         detector = self._get_detector()
         results = detector.predict(img)
         if not results or len(results[0].boxes) == 0:
@@ -385,12 +402,14 @@ class MedicinePipeline:
         bbox_result = crop_by_bbox(img, r0)
         return bbox_result
 
-    def _run_ocr(self, img):
+    def _run_ocr(self, img, bbox_offset=None):
         """Run Hybrid OCR and return normalized blocks."""
         ocr = self._get_ocr()
         result = ocr.extract(img)
         if not result.text_blocks:
             return []
+
+        offset_x, offset_y = bbox_offset or (0, 0)
 
         blocks = []
         for tb in result.text_blocks:
@@ -399,13 +418,23 @@ class MedicinePipeline:
                 if isinstance(bbox[0], list):
                     xs = [p[0] for p in bbox]
                     ys = [p[1] for p in bbox]
-                    bbox = [int(min(xs)), int(min(ys)),
-                            int(max(xs)), int(max(ys))]
-            blocks.append({
-                "text": tb.text,
-                "bbox": bbox,
-                "confidence": round(tb.confidence, 4),
-            })
+                    bbox = [int(min(xs)), int(min(ys)), int(max(xs)), int(max(ys))]
+                else:
+                    bbox = [int(v) for v in bbox]
+            if bbox_offset and isinstance(bbox, list) and len(bbox) == 4:
+                bbox = [
+                    bbox[0] + offset_x,
+                    bbox[1] + offset_y,
+                    bbox[2] + offset_x,
+                    bbox[3] + offset_y,
+                ]
+            blocks.append(
+                {
+                    "text": tb.text,
+                    "bbox": bbox,
+                    "confidence": round(tb.confidence, 4),
+                }
+            )
         return blocks
 
     def _classify_blocks(self, ocr_blocks):
@@ -418,6 +447,7 @@ class MedicinePipeline:
         """Extract drugname blocks and map to standard names."""
         mapper = self._get_drug_mapper()
         medications = []
+        candidates = []
 
         for block in ner_results:
             if block.get("label") == "drugname":
@@ -425,19 +455,36 @@ class MedicinePipeline:
                 match = mapper.lookup(text)
                 # VĐ4: NER trả key "box", cần đọc cả "bbox" lẫn "box"
                 bbox = block.get("bbox") or block.get("box")
-                medications.append({
-                    "ocr_text": text,
-                    "drug_name": (
-                        match.get("name", text) if match else text
-                    ),
-                    "match_score": (
-                        match.get("score", 0) if match else 0
-                    ),
-                    "confidence": block.get("confidence", 0),
-                    "bbox": bbox,
-                })
+                confidence = block.get("confidence", 0)
+                match_score = match.get("score", 0) if match else 0
+                matched_name = match.get("name") if match else None
 
-        return medications
+                if matched_name and match_score >= 0.85:
+                    mapping_status = "confirmed"
+                    drug_name = matched_name
+                elif match_score >= 0.65 or self._looks_like_valid_drugname_app(
+                    text, confidence
+                ):
+                    mapping_status = "unmapped_candidate"
+                    drug_name = text
+                else:
+                    mapping_status = "rejected_noise"
+                    drug_name = text
+
+                candidate = {
+                    "ocr_text": text,
+                    "drug_name": drug_name,
+                    "matched_drug_name": matched_name,
+                    "match_score": match_score,
+                    "mapping_status": mapping_status,
+                    "confidence": confidence,
+                    "bbox": bbox,
+                }
+                candidates.append(candidate)
+                if mapping_status != "rejected_noise":
+                    medications.append(candidate)
+
+        return medications, candidates
 
     # ── Phase B: Verify Pills ────────────────────────────
 
@@ -493,15 +540,9 @@ class MedicinePipeline:
                     "scheduledTime": scheduled_time,
                     "detections": [],
                     "summary": empty_verify.get("summary", {}),
-                    "referenceCoverage": empty_verify.get(
-                        "referenceCoverage", {}
-                    ),
-                    "expectedMedications": empty_verify.get(
-                        "expectedMedications", []
-                    ),
-                    "missingReferences": empty_verify.get(
-                        "missingReferences", []
-                    ),
+                    "referenceCoverage": empty_verify.get("referenceCoverage", {}),
+                    "expectedMedications": empty_verify.get("expectedMedications", []),
+                    "missingReferences": empty_verify.get("missingReferences", []),
                     "matches": [],
                     "n_pills": 0,
                     "warning": "No pills detected",
@@ -539,15 +580,9 @@ class MedicinePipeline:
                 "scheduledTime": scheduled_time,
                 "detections": verify_result.get("detections", []),
                 "summary": verify_result.get("summary", {}),
-                "referenceCoverage": verify_result.get(
-                    "referenceCoverage", {}
-                ),
-                "expectedMedications": verify_result.get(
-                    "expectedMedications", []
-                ),
-                "missingReferences": verify_result.get(
-                    "missingReferences", []
-                ),
+                "referenceCoverage": verify_result.get("referenceCoverage", {}),
+                "expectedMedications": verify_result.get("expectedMedications", []),
+                "missingReferences": verify_result.get("missingReferences", []),
                 # Backward-compatible fields
                 "matches": assigned_matches,
                 "n_pills": len(detections),
@@ -556,8 +591,10 @@ class MedicinePipeline:
         matcher = self._get_matcher()
         blocks = prescription_blocks or []
         matches = matcher.match(
-            pimg, blocks,
-            img_w=img_w, img_h=img_h,
+            pimg,
+            blocks,
+            img_w=img_w,
+            img_h=img_h,
         )
 
         return {

@@ -302,11 +302,15 @@ class _DrugEntrySheetState extends State<DrugEntrySheet> {
                   title: Text(
                     item.name,
                     style: const TextStyle(fontWeight: FontWeight.w600),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: item.activeIngredient != null
                       ? Text(
                           item.activeIngredient!,
                           style: const TextStyle(fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         )
                       : null,
                   trailing: const Icon(

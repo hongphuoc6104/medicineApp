@@ -21,6 +21,251 @@
     "description": "Bottom navigation label for Drug tab"
   },
 
+  "navLookup": "Tra cứu",
+  "@navLookup": {
+    "description": "Bottom navigation label for Lookup tab"
+  },
+
+  "lookupTitle": "Tra cứu",
+  "@lookupTitle": {
+    "description": "AppBar title for lookup screen"
+  },
+
+  "lookupSectionDrugs": "Thuốc",
+  "@lookupSectionDrugs": {
+    "description": "Segment label for drug lookup section"
+  },
+
+  "lookupSectionInteractions": "Tương tác",
+  "@lookupSectionInteractions": {
+    "description": "Segment label for interactions section"
+  },
+
+  "lookupSectionIngredients": "Hoạt chất",
+  "@lookupSectionIngredients": {
+    "description": "Segment label for active ingredients section"
+  },
+
+  "lookupDrugSectionTitle": "Tra cứu thuốc",
+  "@lookupDrugSectionTitle": {
+    "description": "Title of drug lookup section"
+  },
+
+  "lookupDrugSectionSubtitle": "Tìm theo tên thương mại hoặc hoạt chất để xem thông tin chi tiết.",
+  "@lookupDrugSectionSubtitle": {
+    "description": "Subtitle of drug lookup section"
+  },
+
+  "lookupDrugSearchHint": "Ví dụ: Paracetamol, Hapacol...",
+  "@lookupDrugSearchHint": {
+    "description": "Input hint for drug search"
+  },
+
+  "lookupInteractionSectionTitle": "Kiểm tra tương tác theo thuốc",
+  "@lookupInteractionSectionTitle": {
+    "description": "Title of interaction-by-drug section"
+  },
+
+  "lookupInteractionSectionSubtitle": "Chọn từ 2 thuốc trở lên để kiểm tra các cặp có nguy cơ tương tác.",
+  "@lookupInteractionSectionSubtitle": {
+    "description": "Subtitle of interaction-by-drug section"
+  },
+
+  "lookupInteractionDrugSearchHint": "Nhập tên thuốc để thêm...",
+  "@lookupInteractionDrugSearchHint": {
+    "description": "Input hint for adding drugs to interaction check"
+  },
+
+  "lookupIngredientsSectionTitle": "Kiểm tra theo danh sách hoạt chất",
+  "@lookupIngredientsSectionTitle": {
+    "description": "Title of interaction-by-ingredients section"
+  },
+
+  "lookupIngredientsSectionSubtitle": "Thêm hoạt chất trực tiếp để kiểm tra tương tác dược lý.",
+  "@lookupIngredientsSectionSubtitle": {
+    "description": "Subtitle of interaction-by-ingredients section"
+  },
+
+  "lookupIngredientSearchHint": "Nhập hoạt chất (ví dụ: Paracetamol)",
+  "@lookupIngredientSearchHint": {
+    "description": "Input hint for active ingredient search"
+  },
+
+  "lookupSingleIngredientTitle": "Tra cứu 1 hoạt chất",
+  "@lookupSingleIngredientTitle": {
+    "description": "Title for single ingredient lookup"
+  },
+
+  "lookupSingleIngredientSubtitle": "Xem toàn bộ tương tác liên quan tới một hoạt chất cụ thể.",
+  "@lookupSingleIngredientSubtitle": {
+    "description": "Subtitle for single ingredient lookup"
+  },
+
+  "lookupSingleIngredientHint": "Ví dụ: Levocetirizine",
+  "@lookupSingleIngredientHint": {
+    "description": "Input hint for one ingredient lookup"
+  },
+
+  "lookupActionCheckInteractions": "Kiểm tra tương tác",
+  "@lookupActionCheckInteractions": {
+    "description": "Primary action for drug interaction checking"
+  },
+
+  "lookupActionCheckByIngredients": "Kiểm tra theo hoạt chất",
+  "@lookupActionCheckByIngredients": {
+    "description": "Primary action for active ingredient interaction checking"
+  },
+
+  "lookupActionLookupIngredient": "Tra cứu hoạt chất",
+  "@lookupActionLookupIngredient": {
+    "description": "Primary action for single ingredient lookup"
+  },
+
+  "lookupActionClearSelection": "Xóa chọn",
+  "@lookupActionClearSelection": {
+    "description": "Secondary action to clear selected chips"
+  },
+
+  "lookupHintEnterAtLeast2Chars": "Nhập ít nhất 2 ký tự để bắt đầu tra cứu thuốc.",
+  "@lookupHintEnterAtLeast2Chars": {
+    "description": "Hint shown when keyword length is below minimum"
+  },
+
+  "lookupHintNoDrugResult": "Không tìm thấy thuốc phù hợp với từ khóa hiện tại.",
+  "@lookupHintNoDrugResult": {
+    "description": "Hint shown when no drugs found"
+  },
+
+  "lookupHintNoSelectedDrugs": "Chưa chọn thuốc nào.",
+  "@lookupHintNoSelectedDrugs": {
+    "description": "Hint shown when no selected drugs"
+  },
+
+  "lookupHintNoSelectedIngredients": "Chưa chọn hoạt chất nào.",
+  "@lookupHintNoSelectedIngredients": {
+    "description": "Hint shown when no selected active ingredients"
+  },
+
+  "lookupUnknownIngredient": "Không rõ hoạt chất",
+  "@lookupUnknownIngredient": {
+    "description": "Fallback label for unknown active ingredient"
+  },
+
+  "lookupIngredientSuggestionLabel": "Hoạt chất gợi ý",
+  "@lookupIngredientSuggestionLabel": {
+    "description": "Subtitle label for active ingredient suggestion items"
+  },
+
+  "lookupResultByDrugsTitle": "Kết quả tương tác theo thuốc",
+  "@lookupResultByDrugsTitle": {
+    "description": "Title for interaction results by selected drugs"
+  },
+
+  "lookupResultByIngredientsTitle": "Kết quả theo danh sách hoạt chất",
+  "@lookupResultByIngredientsTitle": {
+    "description": "Title for interaction results by selected active ingredients"
+  },
+
+  "lookupResultBySingleIngredientTitle": "Kết quả theo một hoạt chất",
+  "@lookupResultBySingleIngredientTitle": {
+    "description": "Title for interaction results by single active ingredient"
+  },
+
+  "lookupNoInteractions": "Chưa ghi nhận tương tác trong dữ liệu hiện tại.",
+  "@lookupNoInteractions": {
+    "description": "Message when no interactions are found"
+  },
+
+  "lookupSummaryTotal": "Tổng: {count}",
+  "@lookupSummaryTotal": {
+    "description": "Total interactions chip label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "lookupGroupPairCount": "{count} cặp",
+  "@lookupGroupPairCount": {
+    "description": "Pair count label in grouped interaction cards",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "lookupUnknownInteractionPair": "Cặp tương tác chưa xác định",
+  "@lookupUnknownInteractionPair": {
+    "description": "Fallback label when interaction pair text is missing"
+  },
+
+  "lookupSeverityContraindicated": "Chống chỉ định",
+  "@lookupSeverityContraindicated": {
+    "description": "Normalized severity label: contraindicated"
+  },
+
+  "lookupSeverityMajor": "Nghiêm trọng",
+  "@lookupSeverityMajor": {
+    "description": "Normalized severity label: major"
+  },
+
+  "lookupSeverityModerate": "Trung bình",
+  "@lookupSeverityModerate": {
+    "description": "Normalized severity label: moderate"
+  },
+
+  "lookupSeverityMinor": "Nhẹ",
+  "@lookupSeverityMinor": {
+    "description": "Normalized severity label: minor"
+  },
+
+  "lookupSeverityCaution": "Thận trọng",
+  "@lookupSeverityCaution": {
+    "description": "Normalized severity label: caution"
+  },
+
+  "lookupSeverityUnknown": "Chưa xác định",
+  "@lookupSeverityUnknown": {
+    "description": "Normalized severity label: unknown"
+  },
+
+  "lookupErrorLoadDrugDetail": "Không tải được thông tin thuốc. Vui lòng thử lại.",
+  "@lookupErrorLoadDrugDetail": {
+    "description": "Error message when loading drug details fails"
+  },
+
+  "lookupErrorSearchDrugs": "Không thể tìm thuốc lúc này. Vui lòng thử lại.",
+  "@lookupErrorSearchDrugs": {
+    "description": "Error message when searching drugs fails"
+  },
+
+  "lookupErrorMinDrugs": "Cần chọn ít nhất 2 thuốc để kiểm tra.",
+  "@lookupErrorMinDrugs": {
+    "description": "Validation error for minimum selected drugs"
+  },
+
+  "lookupErrorMinIngredients": "Cần chọn ít nhất 2 hoạt chất để kiểm tra.",
+  "@lookupErrorMinIngredients": {
+    "description": "Validation error for minimum selected ingredients"
+  },
+
+  "lookupErrorMinSingleIngredient": "Nhập ít nhất 2 ký tự hoạt chất.",
+  "@lookupErrorMinSingleIngredient": {
+    "description": "Validation error for single ingredient input"
+  },
+
+  "lookupTabAlertTooltip": "Cảnh báo tương tác mức {severity}",
+  "@lookupTabAlertTooltip": {
+    "description": "Tooltip text for lookup tab alert badge",
+    "placeholders": {
+      "severity": {
+        "type": "String"
+      }
+    }
+  },
+
   "navPlan": "Kế hoạch",
   "@navPlan": {
     "description": "Bottom navigation label for Plan tab"
@@ -597,4 +842,6 @@
   "@drugEntrySheetPillsPerDoseLabel": {},
   "drugEntrySheetTotalDaysLabel": "Số ngày uống",
   "@drugEntrySheetTotalDaysLabel": {}
+
+  
 }

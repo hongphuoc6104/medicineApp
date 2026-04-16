@@ -7,11 +7,7 @@ import '../../create_plan/data/plan_repository.dart';
 import '../domain/today_schedule.dart';
 import 'today_schedule_cache.dart';
 
-enum MarkDoseResult {
-  synced,
-  queuedOffline,
-  failed,
-}
+enum MarkDoseResult { synced, queuedOffline, failed }
 
 class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
   @override
@@ -30,10 +26,16 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
     try {
       await flushOfflineQueue();
       final repo = ref.read(planRepositoryProvider);
-      final fresh = await _syncExpiredMissedDoses(await repo.getTodaySchedule());
+      final fresh = await _syncExpiredMissedDoses(
+        await repo.getTodaySchedule(),
+      );
+      final merged = await _applyOfflineQueue(fresh.recount());
 
-      await cache.save(fresh.recount());
-      return await _applyOfflineQueue(fresh.recount());
+      final notificationService = ref.read(notificationServiceProvider);
+      await notificationService.scheduleDosesFromTodaySummary(merged.doses);
+
+      await cache.save(merged.recount());
+      return merged.recount();
     } catch (e, st) {
       if (cached != null) {
         return await _applyOfflineQueue(cached.recount());
@@ -48,7 +50,9 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
 
     if (pendingLogs.isEmpty) return schedule.recount();
 
-    final logMap = {for (final item in pendingLogs) item.occurrenceId: item.status};
+    final logMap = {
+      for (final item in pendingLogs) item.occurrenceId: item.status,
+    };
     return _replaceStatuses(schedule, logMap);
   }
 
@@ -67,7 +71,9 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
     final updatedStatuses = <String, String>{};
 
     for (final dose in expired) {
-      await notificationService.cancelOccurrenceNotifications(dose.occurrenceId);
+      await notificationService.cancelOccurrenceNotifications(
+        dose.occurrenceId,
+      );
       try {
         await repo.logDose(
           planId: dose.planId,
@@ -79,7 +85,9 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
       } catch (e) {
         final issue = classifyNetworkIssue(e);
         if (issue == NetworkIssueKind.noConnection ||
-            issue == NetworkIssueKind.timeout) {
+            issue == NetworkIssueKind.timeout ||
+            issue == NetworkIssueKind.serviceUnavailable ||
+            issue == NetworkIssueKind.serverError) {
           await queue.enqueue(
             PendingDoseLog(
               planId: dose.planId,
@@ -111,12 +119,18 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
     state = await AsyncValue.guard(() async {
       await flushOfflineQueue();
       final repo = ref.read(planRepositoryProvider);
-      final fresh = await _syncExpiredMissedDoses(await repo.getTodaySchedule());
+      final fresh = await _syncExpiredMissedDoses(
+        await repo.getTodaySchedule(),
+      );
+      final merged = await _applyOfflineQueue(fresh.recount());
+
+      final notificationService = ref.read(notificationServiceProvider);
+      await notificationService.scheduleDosesFromTodaySummary(merged.doses);
 
       final cache = ref.read(todayScheduleCacheProvider);
-      await cache.save(fresh.recount());
+      await cache.save(merged.recount());
 
-      return await _applyOfflineQueue(fresh.recount());
+      return merged.recount();
     });
   }
 
@@ -167,7 +181,9 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
     } catch (e) {
       final issue = classifyNetworkIssue(e);
       if (issue != NetworkIssueKind.noConnection &&
-          issue != NetworkIssueKind.timeout) {
+          issue != NetworkIssueKind.timeout &&
+          issue != NetworkIssueKind.serviceUnavailable &&
+          issue != NetworkIssueKind.serverError) {
         return MarkDoseResult.failed;
       }
 
@@ -209,6 +225,26 @@ class TodayScheduleNotifier extends AsyncNotifier<TodaySchedule> {
     }).toList();
 
     return schedule.copyWith(doses: updatedDoses).recount();
+  }
+
+  Future<void> clearForCurrentUser() async {
+    final cache = ref.read(todayScheduleCacheProvider);
+    final queue = ref.read(offlineDoseQueueProvider);
+    await cache.clearCurrentUser();
+    await queue.clearCurrentUser();
+    state = const AsyncValue.data(TodaySchedule.empty());
+  }
+
+  void resetInMemory() {
+    state = const AsyncValue.data(TodaySchedule.empty());
+  }
+
+  Future<void> clearAllCaches() async {
+    final cache = ref.read(todayScheduleCacheProvider);
+    final queue = ref.read(offlineDoseQueueProvider);
+    await cache.clearAllUsers();
+    await queue.clearAllUsers();
+    state = const AsyncValue.data(TodaySchedule.empty());
   }
 }
 

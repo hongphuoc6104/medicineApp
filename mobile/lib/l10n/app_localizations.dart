@@ -118,6 +118,282 @@ abstract class AppLocalizations {
   /// **'Thuốc'**
   String get navDrug;
 
+  /// Bottom navigation label for Lookup tab
+  ///
+  /// In vi, this message translates to:
+  /// **'Tra cứu'**
+  String get navLookup;
+
+  /// AppBar title for lookup screen
+  ///
+  /// In vi, this message translates to:
+  /// **'Tra cứu'**
+  String get lookupTitle;
+
+  /// Segment label for drug lookup section
+  ///
+  /// In vi, this message translates to:
+  /// **'Thuốc'**
+  String get lookupSectionDrugs;
+
+  /// Segment label for interactions section
+  ///
+  /// In vi, this message translates to:
+  /// **'Tương tác'**
+  String get lookupSectionInteractions;
+
+  /// Segment label for active ingredients section
+  ///
+  /// In vi, this message translates to:
+  /// **'Hoạt chất'**
+  String get lookupSectionIngredients;
+
+  /// Title of drug lookup section
+  ///
+  /// In vi, this message translates to:
+  /// **'Tra cứu thuốc'**
+  String get lookupDrugSectionTitle;
+
+  /// Subtitle of drug lookup section
+  ///
+  /// In vi, this message translates to:
+  /// **'Tìm theo tên thương mại hoặc hoạt chất để xem thông tin chi tiết.'**
+  String get lookupDrugSectionSubtitle;
+
+  /// Input hint for drug search
+  ///
+  /// In vi, this message translates to:
+  /// **'Ví dụ: Paracetamol, Hapacol...'**
+  String get lookupDrugSearchHint;
+
+  /// Title of interaction-by-drug section
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra tương tác theo thuốc'**
+  String get lookupInteractionSectionTitle;
+
+  /// Subtitle of interaction-by-drug section
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn từ 2 thuốc trở lên để kiểm tra các cặp có nguy cơ tương tác.'**
+  String get lookupInteractionSectionSubtitle;
+
+  /// Input hint for adding drugs to interaction check
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập tên thuốc để thêm...'**
+  String get lookupInteractionDrugSearchHint;
+
+  /// Title of interaction-by-ingredients section
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra theo danh sách hoạt chất'**
+  String get lookupIngredientsSectionTitle;
+
+  /// Subtitle of interaction-by-ingredients section
+  ///
+  /// In vi, this message translates to:
+  /// **'Thêm hoạt chất trực tiếp để kiểm tra tương tác dược lý.'**
+  String get lookupIngredientsSectionSubtitle;
+
+  /// Input hint for active ingredient search
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập hoạt chất (ví dụ: Paracetamol)'**
+  String get lookupIngredientSearchHint;
+
+  /// Title for single ingredient lookup
+  ///
+  /// In vi, this message translates to:
+  /// **'Tra cứu 1 hoạt chất'**
+  String get lookupSingleIngredientTitle;
+
+  /// Subtitle for single ingredient lookup
+  ///
+  /// In vi, this message translates to:
+  /// **'Xem toàn bộ tương tác liên quan tới một hoạt chất cụ thể.'**
+  String get lookupSingleIngredientSubtitle;
+
+  /// Input hint for one ingredient lookup
+  ///
+  /// In vi, this message translates to:
+  /// **'Ví dụ: Levocetirizine'**
+  String get lookupSingleIngredientHint;
+
+  /// Primary action for drug interaction checking
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra tương tác'**
+  String get lookupActionCheckInteractions;
+
+  /// Primary action for active ingredient interaction checking
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra theo hoạt chất'**
+  String get lookupActionCheckByIngredients;
+
+  /// Primary action for single ingredient lookup
+  ///
+  /// In vi, this message translates to:
+  /// **'Tra cứu hoạt chất'**
+  String get lookupActionLookupIngredient;
+
+  /// Secondary action to clear selected chips
+  ///
+  /// In vi, this message translates to:
+  /// **'Xóa chọn'**
+  String get lookupActionClearSelection;
+
+  /// Hint shown when keyword length is below minimum
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập ít nhất 2 ký tự để bắt đầu tra cứu thuốc.'**
+  String get lookupHintEnterAtLeast2Chars;
+
+  /// Hint shown when no drugs found
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tìm thấy thuốc phù hợp với từ khóa hiện tại.'**
+  String get lookupHintNoDrugResult;
+
+  /// Hint shown when no selected drugs
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa chọn thuốc nào.'**
+  String get lookupHintNoSelectedDrugs;
+
+  /// Hint shown when no selected active ingredients
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa chọn hoạt chất nào.'**
+  String get lookupHintNoSelectedIngredients;
+
+  /// Fallback label for unknown active ingredient
+  ///
+  /// In vi, this message translates to:
+  /// **'Không rõ hoạt chất'**
+  String get lookupUnknownIngredient;
+
+  /// Subtitle label for active ingredient suggestion items
+  ///
+  /// In vi, this message translates to:
+  /// **'Hoạt chất gợi ý'**
+  String get lookupIngredientSuggestionLabel;
+
+  /// Title for interaction results by selected drugs
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết quả tương tác theo thuốc'**
+  String get lookupResultByDrugsTitle;
+
+  /// Title for interaction results by selected active ingredients
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết quả theo danh sách hoạt chất'**
+  String get lookupResultByIngredientsTitle;
+
+  /// Title for interaction results by single active ingredient
+  ///
+  /// In vi, this message translates to:
+  /// **'Kết quả theo một hoạt chất'**
+  String get lookupResultBySingleIngredientTitle;
+
+  /// Message when no interactions are found
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa ghi nhận tương tác trong dữ liệu hiện tại.'**
+  String get lookupNoInteractions;
+
+  /// Total interactions chip label
+  ///
+  /// In vi, this message translates to:
+  /// **'Tổng: {count}'**
+  String lookupSummaryTotal(int count);
+
+  /// Pair count label in grouped interaction cards
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} cặp'**
+  String lookupGroupPairCount(int count);
+
+  /// Fallback label when interaction pair text is missing
+  ///
+  /// In vi, this message translates to:
+  /// **'Cặp tương tác chưa xác định'**
+  String get lookupUnknownInteractionPair;
+
+  /// Normalized severity label: contraindicated
+  ///
+  /// In vi, this message translates to:
+  /// **'Chống chỉ định'**
+  String get lookupSeverityContraindicated;
+
+  /// Normalized severity label: major
+  ///
+  /// In vi, this message translates to:
+  /// **'Nghiêm trọng'**
+  String get lookupSeverityMajor;
+
+  /// Normalized severity label: moderate
+  ///
+  /// In vi, this message translates to:
+  /// **'Trung bình'**
+  String get lookupSeverityModerate;
+
+  /// Normalized severity label: minor
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhẹ'**
+  String get lookupSeverityMinor;
+
+  /// Normalized severity label: caution
+  ///
+  /// In vi, this message translates to:
+  /// **'Thận trọng'**
+  String get lookupSeverityCaution;
+
+  /// Normalized severity label: unknown
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa xác định'**
+  String get lookupSeverityUnknown;
+
+  /// Error message when loading drug details fails
+  ///
+  /// In vi, this message translates to:
+  /// **'Không tải được thông tin thuốc. Vui lòng thử lại.'**
+  String get lookupErrorLoadDrugDetail;
+
+  /// Error message when searching drugs fails
+  ///
+  /// In vi, this message translates to:
+  /// **'Không thể tìm thuốc lúc này. Vui lòng thử lại.'**
+  String get lookupErrorSearchDrugs;
+
+  /// Validation error for minimum selected drugs
+  ///
+  /// In vi, this message translates to:
+  /// **'Cần chọn ít nhất 2 thuốc để kiểm tra.'**
+  String get lookupErrorMinDrugs;
+
+  /// Validation error for minimum selected ingredients
+  ///
+  /// In vi, this message translates to:
+  /// **'Cần chọn ít nhất 2 hoạt chất để kiểm tra.'**
+  String get lookupErrorMinIngredients;
+
+  /// Validation error for single ingredient input
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập ít nhất 2 ký tự hoạt chất.'**
+  String get lookupErrorMinSingleIngredient;
+
+  /// Tooltip text for lookup tab alert badge
+  ///
+  /// In vi, this message translates to:
+  /// **'Cảnh báo tương tác mức {severity}'**
+  String lookupTabAlertTooltip(String severity);
+
   /// Bottom navigation label for Plan tab
   ///
   /// In vi, this message translates to:

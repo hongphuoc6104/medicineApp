@@ -46,22 +46,33 @@ class SettingsNotifier extends AsyncNotifier<SettingsState> {
 
       final repo = ref.read(settingsRepositoryProvider);
       await repo.setRemindersEnabled(enabled);
-      
+
       if (!enabled) {
         await notificationService.cancelAllNotifications();
       } else {
+        notificationService.markNotificationsDirty('reminders_enabled');
         final plansAsync = ref.read(planNotifierProvider);
         final cachedPlans = plansAsync.asData?.value.plans;
         if (cachedPlans != null) {
-          await notificationService.rescheduleAllPlans(cachedPlans);
+          await notificationService.rescheduleAllPlans(
+            cachedPlans,
+            mode: NotificationSyncMode.force,
+            reason: 'settings_enable',
+          );
         } else {
           final planRepository = ref.read(planRepositoryProvider);
           final plans = await planRepository.getPlans(activeOnly: true);
-          await notificationService.rescheduleAllPlans(plans);
+          await notificationService.rescheduleAllPlans(
+            plans,
+            mode: NotificationSyncMode.force,
+            reason: 'settings_enable_fetch',
+          );
         }
       }
-      
-      state = AsyncValue.data(SettingsState(remindersEnabled: enabled, isLoading: false));
+
+      state = AsyncValue.data(
+        SettingsState(remindersEnabled: enabled, isLoading: false),
+      );
       return true;
     } catch (e) {
       state = AsyncValue.data(state.value!.copyWith(isLoading: false));

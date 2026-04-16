@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/session/current_user_store.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../home/data/plan_cache.dart';
 import '../data/plan_repository.dart';
 import '../domain/plan.dart';
 
@@ -31,7 +33,9 @@ class ReuseHistoryScreen extends ConsumerWidget {
           }
 
           if (snapshot.hasError) {
-            return _ErrorState(onRetry: () => ref.invalidate(_archivedPlansProvider));
+            return _ErrorState(
+              onRetry: () => ref.invalidate(_archivedPlansProvider),
+            );
           }
 
           final plans = snapshot.data ?? const <Plan>[];
@@ -89,15 +93,54 @@ class ReuseHistoryScreen extends ConsumerWidget {
 }
 
 final _archivedPlansProvider = FutureProvider<List<Plan>>((ref) async {
-  final repo = ref.read(planRepositoryProvider);
-  final plans = await repo.getPlans(activeOnly: false);
-  final archived = plans.where((plan) => plan.hasEnded).toList()
-    ..sort((a, b) {
-      final aDate = a.parsedEndDate ?? a.parsedStartDate ?? DateTime.fromMillisecondsSinceEpoch(0);
-      final bDate = b.parsedEndDate ?? b.parsedStartDate ?? DateTime.fromMillisecondsSinceEpoch(0);
-      return bDate.compareTo(aDate);
-    });
-  return archived;
+  final userStore = ref.read(currentUserStoreProvider);
+  final userId = await userStore.getCurrentUserId();
+
+  try {
+    final repo = ref.read(planRepositoryProvider);
+    final plans = await repo.getPlans(activeOnly: false);
+    if (userId != null && userId.isNotEmpty) {
+      await ref
+          .read(planCacheProvider)
+          .save(userId: userId, activeOnly: false, plans: plans);
+    }
+    final archived = plans.where((plan) => plan.hasEnded).toList()
+      ..sort((a, b) {
+        final aDate =
+            a.parsedEndDate ??
+            a.parsedStartDate ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        final bDate =
+            b.parsedEndDate ??
+            b.parsedStartDate ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        return bDate.compareTo(aDate);
+      });
+    return archived;
+  } catch (_) {
+    if (userId == null || userId.isEmpty) {
+      rethrow;
+    }
+    final cached = await ref
+        .read(planCacheProvider)
+        .load(userId: userId, activeOnly: false);
+    final archived = cached.where((plan) => plan.hasEnded).toList()
+      ..sort((a, b) {
+        final aDate =
+            a.parsedEndDate ??
+            a.parsedStartDate ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        final bDate =
+            b.parsedEndDate ??
+            b.parsedStartDate ??
+            DateTime.fromMillisecondsSinceEpoch(0);
+        return bDate.compareTo(aDate);
+      });
+    if (archived.isNotEmpty) {
+      return archived;
+    }
+    rethrow;
+  }
 });
 
 // ---------------------------------------------------------------------------
@@ -152,11 +195,7 @@ class _ReuseCard extends StatelessWidget {
                 color: accent.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.history_rounded,
-                color: accent,
-                size: 22,
-              ),
+              child: Icon(Icons.history_rounded, color: accent, size: 22),
             ),
             const SizedBox(width: 14),
 
@@ -174,6 +213,8 @@ class _ReuseCard extends StatelessWidget {
                           ? AppColors.textPrimary
                           : AppColors.textMuted,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 3),
                   Text(
@@ -192,6 +233,8 @@ class _ReuseCard extends StatelessWidget {
                       color: AppColors.textMuted,
                       fontSize: 12,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -203,8 +246,10 @@ class _ReuseCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: qColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
@@ -274,10 +319,7 @@ class _EmptyState extends StatelessWidget {
                   const Text(
                     'Chưa có kế hoạch cũ nào',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                   ),
                   const SizedBox(height: 8),
                   const Text(

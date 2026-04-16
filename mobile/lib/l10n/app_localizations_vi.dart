@@ -21,6 +21,165 @@ class AppLocalizationsVi extends AppLocalizations {
   String get navDrug => 'Thuốc';
 
   @override
+  String get navLookup => 'Tra cứu';
+
+  @override
+  String get lookupTitle => 'Tra cứu';
+
+  @override
+  String get lookupSectionDrugs => 'Thuốc';
+
+  @override
+  String get lookupSectionInteractions => 'Tương tác';
+
+  @override
+  String get lookupSectionIngredients => 'Hoạt chất';
+
+  @override
+  String get lookupDrugSectionTitle => 'Tra cứu thuốc';
+
+  @override
+  String get lookupDrugSectionSubtitle =>
+      'Tìm theo tên thương mại hoặc hoạt chất để xem thông tin chi tiết.';
+
+  @override
+  String get lookupDrugSearchHint => 'Ví dụ: Paracetamol, Hapacol...';
+
+  @override
+  String get lookupInteractionSectionTitle => 'Kiểm tra tương tác theo thuốc';
+
+  @override
+  String get lookupInteractionSectionSubtitle =>
+      'Chọn từ 2 thuốc trở lên để kiểm tra các cặp có nguy cơ tương tác.';
+
+  @override
+  String get lookupInteractionDrugSearchHint => 'Nhập tên thuốc để thêm...';
+
+  @override
+  String get lookupIngredientsSectionTitle =>
+      'Kiểm tra theo danh sách hoạt chất';
+
+  @override
+  String get lookupIngredientsSectionSubtitle =>
+      'Thêm hoạt chất trực tiếp để kiểm tra tương tác dược lý.';
+
+  @override
+  String get lookupIngredientSearchHint =>
+      'Nhập hoạt chất (ví dụ: Paracetamol)';
+
+  @override
+  String get lookupSingleIngredientTitle => 'Tra cứu 1 hoạt chất';
+
+  @override
+  String get lookupSingleIngredientSubtitle =>
+      'Xem toàn bộ tương tác liên quan tới một hoạt chất cụ thể.';
+
+  @override
+  String get lookupSingleIngredientHint => 'Ví dụ: Levocetirizine';
+
+  @override
+  String get lookupActionCheckInteractions => 'Kiểm tra tương tác';
+
+  @override
+  String get lookupActionCheckByIngredients => 'Kiểm tra theo hoạt chất';
+
+  @override
+  String get lookupActionLookupIngredient => 'Tra cứu hoạt chất';
+
+  @override
+  String get lookupActionClearSelection => 'Xóa chọn';
+
+  @override
+  String get lookupHintEnterAtLeast2Chars =>
+      'Nhập ít nhất 2 ký tự để bắt đầu tra cứu thuốc.';
+
+  @override
+  String get lookupHintNoDrugResult =>
+      'Không tìm thấy thuốc phù hợp với từ khóa hiện tại.';
+
+  @override
+  String get lookupHintNoSelectedDrugs => 'Chưa chọn thuốc nào.';
+
+  @override
+  String get lookupHintNoSelectedIngredients => 'Chưa chọn hoạt chất nào.';
+
+  @override
+  String get lookupUnknownIngredient => 'Không rõ hoạt chất';
+
+  @override
+  String get lookupIngredientSuggestionLabel => 'Hoạt chất gợi ý';
+
+  @override
+  String get lookupResultByDrugsTitle => 'Kết quả tương tác theo thuốc';
+
+  @override
+  String get lookupResultByIngredientsTitle =>
+      'Kết quả theo danh sách hoạt chất';
+
+  @override
+  String get lookupResultBySingleIngredientTitle =>
+      'Kết quả theo một hoạt chất';
+
+  @override
+  String get lookupNoInteractions =>
+      'Chưa ghi nhận tương tác trong dữ liệu hiện tại.';
+
+  @override
+  String lookupSummaryTotal(int count) {
+    return 'Tổng: $count';
+  }
+
+  @override
+  String lookupGroupPairCount(int count) {
+    return '$count cặp';
+  }
+
+  @override
+  String get lookupUnknownInteractionPair => 'Cặp tương tác chưa xác định';
+
+  @override
+  String get lookupSeverityContraindicated => 'Chống chỉ định';
+
+  @override
+  String get lookupSeverityMajor => 'Nghiêm trọng';
+
+  @override
+  String get lookupSeverityModerate => 'Trung bình';
+
+  @override
+  String get lookupSeverityMinor => 'Nhẹ';
+
+  @override
+  String get lookupSeverityCaution => 'Thận trọng';
+
+  @override
+  String get lookupSeverityUnknown => 'Chưa xác định';
+
+  @override
+  String get lookupErrorLoadDrugDetail =>
+      'Không tải được thông tin thuốc. Vui lòng thử lại.';
+
+  @override
+  String get lookupErrorSearchDrugs =>
+      'Không thể tìm thuốc lúc này. Vui lòng thử lại.';
+
+  @override
+  String get lookupErrorMinDrugs => 'Cần chọn ít nhất 2 thuốc để kiểm tra.';
+
+  @override
+  String get lookupErrorMinIngredients =>
+      'Cần chọn ít nhất 2 hoạt chất để kiểm tra.';
+
+  @override
+  String get lookupErrorMinSingleIngredient =>
+      'Nhập ít nhất 2 ký tự hoạt chất.';
+
+  @override
+  String lookupTabAlertTooltip(String severity) {
+    return 'Cảnh báo tương tác mức $severity';
+  }
+
+  @override
   String get navPlan => 'Kế hoạch';
 
   @override

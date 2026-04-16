@@ -432,6 +432,9 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                 notes: draft.notes,
               ),
             );
+      notificationService.markNotificationsDirty(
+        widget.existingPlan == null ? 'plan_created' : 'plan_updated',
+      );
       if (remindersEnabled) {
         try {
           await notificationService.schedulePlanNotifications(savedPlan);
@@ -540,12 +543,16 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                               fontWeight: FontWeight.w900,
                               fontSize: 17,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             l10n.scheduleHeaderSubtitle,
                             style: const TextStyle(
                               color: AppColors.textSecondary,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
@@ -599,6 +606,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryDark,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -616,6 +625,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                 Text(
                   l10n.schedulePresetHint,
                   style: const TextStyle(color: AppColors.textSecondary),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 12),
                 Wrap(
@@ -716,6 +727,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                         Text(
                           slot.time,
                           style: const TextStyle(fontWeight: FontWeight.w800),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 8),
                         if (assignedDrugIndices.isEmpty)
@@ -724,6 +737,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                             style: const TextStyle(
                               color: AppColors.textSecondary,
                             ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           )
                         else
                           ...assignedDrugIndices.map((drugIndex) {
@@ -740,6 +755,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
                                       style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                       ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   _PillStepper(
@@ -839,6 +856,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
               child: Text(
                 l10n.scheduleSummaryLine(drug.name, summary),
                 style: const TextStyle(fontSize: 13),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -944,6 +963,8 @@ class _TimeSlotCard extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 10),
           Text(
@@ -961,7 +982,11 @@ class _TimeSlotCard extends StatelessWidget {
               final selected = assignedDrugIndices.contains(e.key);
               return FilterChip(
                 selected: selected,
-                label: Text(e.value.name),
+                label: Text(
+                  e.value.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 selectedColor: AppColors.primary.withValues(alpha: 0.18),
                 checkmarkColor: AppColors.primaryDark,
                 labelStyle: TextStyle(
@@ -1058,6 +1083,8 @@ class _DateCard extends StatelessWidget {
                     color: AppColors.textSecondary,
                     fontSize: 11,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   value,
@@ -1065,6 +1092,8 @@ class _DateCard extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

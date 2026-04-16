@@ -1,34 +1,24 @@
-import 'dart:typed_data';
-
 import 'package:camera/camera.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 
+import '../../../core/network/network_error_mapper.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
 import '../data/local_quality_gate.dart';
 import '../data/scan_camera_controller.dart';
 import '../data/scan_repository.dart';
-import '../../../core/network/network_error_mapper.dart';
 
-// ---------------------------------------------------------------------------
-// Screen states
-// ---------------------------------------------------------------------------
-
-enum _ScreenMode {
-  /// Live camera preview is shown.
-  cameraPreview,
-
-  /// Uploading image to server.
-  uploading,
+enum _ScanStage {
+  camera,
+  previewChecking,
+  previewRejected,
+  previewWarning,
+  waiting,
+  error,
 }
-
-// ---------------------------------------------------------------------------
-// Screen widget — Primary "1 ảnh đẹp" flow
-// ---------------------------------------------------------------------------
 
 class ScanCameraScreen extends ConsumerStatefulWidget {
   const ScanCameraScreen({super.key});
@@ -39,15 +29,15 @@ class ScanCameraScreen extends ConsumerStatefulWidget {
 
 class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
     with WidgetsBindingObserver {
-  final _picker = ImagePicker();
   final _scanCameraCtrl = ScanCameraController();
 
-  _ScreenMode _mode = _ScreenMode.cameraPreview;
-  String? _error;
-  String? _qualityBanner;
-  String? _qualityGuidance;
-  Uint8List? _lastUploadBytes;
-  String? _lastUploadFilename;
+  _ScanStage _stage = _ScanStage.camera;
+  Uint8List? _capturedBytes;
+  String? _capturedFilename;
+  LocalQualityResult? _qualityResult;
+  String? _statusText;
+  String? _errorText;
+  bool _isCapturing = false;
 
   @override
   void initState() {
@@ -84,99 +74,123 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
     setState(() {});
   }
 
-  // -------------------------------------------------------------------------
-  // Camera actions
-  // -------------------------------------------------------------------------
-
   Future<void> _openCamera() async {
     await _scanCameraCtrl.initialize();
     if (mounted) setState(() {});
   }
 
   Future<void> _captureFromCamera() async {
+    if (_isCapturing || !_scanCameraCtrl.isReady) return;
+
     final l10n = AppLocalizations.of(context);
+    setState(() {
+      _isCapturing = true;
+      _errorText = null;
+    });
+
     final bytes = await _scanCameraCtrl.capturePhoto();
+    if (!mounted) return;
+
+    setState(() => _isCapturing = false);
+
     if (bytes == null) {
-      setState(() => _error = l10n.scanCameraCaptureFailed);
+      setState(() {
+        _stage = _ScanStage.error;
+        _statusText = l10n.scanCameraCaptureFailed;
+        _errorText = l10n.scanCameraCaptureFailed;
+      });
       return;
     }
-    await _processAndUpload(
+
+    await _scanCameraCtrl.pause();
+    await _analyzeCapturedImage(
       bytes,
       'capture_${DateTime.now().millisecondsSinceEpoch}.jpg',
     );
   }
 
-  Future<void> _pickFromGallery() async {
+  Future<void> _analyzeCapturedImage(Uint8List bytes, String filename) async {
     final l10n = AppLocalizations.of(context);
+    setState(() {
+      _capturedBytes = bytes;
+      _capturedFilename = filename;
+      _qualityResult = null;
+      _stage = _ScanStage.previewChecking;
+      _statusText = 'Đang kiểm tra ảnh...';
+      _errorText = null;
+    });
+
     try {
-      final picked = await _picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 2048,
-        maxHeight: 2048,
-        imageQuality: 85,
-      );
-      if (picked == null) return;
-      final bytes = await picked.readAsBytes();
-      if (bytes.lengthInBytes > 10 * 1024 * 1024) {
-        setState(() => _error = l10n.scanCameraFileTooLarge);
+      final quality = await assessLocalImageQuality(bytes);
+      if (!mounted) return;
+
+      setState(() {
+        _qualityResult = quality;
+      });
+
+      if (quality.state == 'REJECT') {
+        setState(() {
+          _stage = _ScanStage.previewRejected;
+          _statusText = quality.guidance;
+        });
         return;
       }
-      await _processAndUpload(bytes, picked.name);
+
+      if (quality.state == 'WARNING') {
+        setState(() {
+          _stage = _ScanStage.previewWarning;
+          _statusText = quality.guidance;
+        });
+        return;
+      }
+
+      setState(() {
+        _stage = _ScanStage.waiting;
+        _statusText = l10n.scanCameraUploadingTitle;
+      });
+      await _uploadCapturedImage(bytes, filename);
     } catch (e) {
-      setState(() => _error = l10n.scanCameraGalleryError);
+      if (!mounted) return;
+      setState(() {
+        _stage = _ScanStage.error;
+        _statusText = e.toString();
+        _errorText = e.toString();
+      });
     }
   }
 
-  // -------------------------------------------------------------------------
-  // Local quality check → upload → navigate to review
-  // -------------------------------------------------------------------------
+  Future<void> _continueAfterWarning() async {
+    final bytes = _capturedBytes;
+    final filename = _capturedFilename;
+    if (bytes == null || filename == null) return;
 
-  Future<void> _processAndUpload(
-    Uint8List bytes,
-    String filename, {
-    bool skipLocalQualityGate = false,
-  }) async {
     final l10n = AppLocalizations.of(context);
-    // Step 1: local quality gate
-    final quality = skipLocalQualityGate
-        ? null
-        : await assessLocalImageQuality(bytes);
-
-    if (quality?.state == 'REJECT') {
-      setState(() {
-        _qualityBanner = 'REJECT';
-        _qualityGuidance = quality?.guidance;
-        _error = null;
-      });
-      return;
-    }
-
-    if (quality?.state == 'WARNING') {
-      // Show banner but allow user to choose to proceed or retake
-      setState(() {
-        _qualityBanner = 'WARNING';
-        _qualityGuidance = quality?.guidance;
-        _error = null;
-      });
-      // Give user a chance to decide — show bottom sheet
-      final shouldProceed = await _showQualityWarning(
-        guidance: quality?.guidance,
-        rejectReason: quality?.rejectReason,
-      );
-      if (!shouldProceed) {
-        return;
-      }
-    }
-
-    // Step 2: upload and scan
     setState(() {
-      _mode = _ScreenMode.uploading;
-      _error = null;
-      _qualityBanner = null;
+      _stage = _ScanStage.waiting;
+      _statusText = l10n.scanCameraUploadingTitle;
+      _errorText = null;
     });
 
-    _lastUploadBytes = bytes;
-    _lastUploadFilename = filename;
+    await _uploadCapturedImage(bytes, filename);
+  }
+
+  Future<void> _retryUpload() async {
+    final bytes = _capturedBytes;
+    final filename = _capturedFilename;
+    if (bytes == null || filename == null) return;
+
+    final l10n = AppLocalizations.of(context);
+    setState(() {
+      _stage = _ScanStage.waiting;
+      _statusText = l10n.scanCameraUploadingTitle;
+      _errorText = null;
+    });
+
+    await _uploadCapturedImage(bytes, filename);
+  }
+
+  Future<void> _uploadCapturedImage(Uint8List bytes, String filename) async {
+    final l10n = AppLocalizations.of(context);
 
     try {
       final repo = ref.read(scanRepositoryProvider);
@@ -189,25 +203,28 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
 
       if (result.drugs.isEmpty && result.qualityState == 'REJECT') {
         setState(() {
-          _mode = _ScreenMode.cameraPreview;
-          _qualityBanner = 'REJECT';
-          _qualityGuidance =
-              result.guidance ?? l10n.scanCameraQualityServerReject;
+          _stage = _ScanStage.previewRejected;
+          _statusText = result.guidance ?? l10n.scanCameraQualityServerReject;
+          _qualityResult = const LocalQualityResult(
+            state: 'REJECT',
+            rejectReason: 'SERVER_REJECT',
+            guidance: 'Ảnh có vấn đề, hãy chụp lại.',
+            metrics: <String, num>{},
+          );
         });
-        _clearLastUploadAttempt();
         return;
       }
 
       if (result.drugs.isEmpty) {
         setState(() {
-          _mode = _ScreenMode.cameraPreview;
-          _error = l10n.scanCameraNodrugFound;
+          _stage = _ScanStage.error;
+          _statusText = l10n.scanCameraNodrugFound;
+          _errorText = l10n.scanCameraNodrugFound;
         });
-        _clearLastUploadAttempt();
         return;
       }
 
-      _clearLastUploadAttempt();
+      _clearCapturedState();
       context.go('/create/review', extra: result);
     } catch (e) {
       if (!mounted) return;
@@ -230,194 +247,69 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
       }
 
       setState(() {
-        _mode = _ScreenMode.cameraPreview;
-        _error = message;
+        _stage = _ScanStage.error;
+        _statusText = message;
+        _errorText = message;
       });
     }
   }
 
-  void _clearLastUploadAttempt() {
-    _lastUploadBytes = null;
-    _lastUploadFilename = null;
+  void _clearCapturedState() {
+    _capturedBytes = null;
+    _capturedFilename = null;
+    _qualityResult = null;
+    _statusText = null;
+    _errorText = null;
+    _isCapturing = false;
   }
 
-  Future<void> _retryLastUpload() async {
-    final bytes = _lastUploadBytes;
-    final filename = _lastUploadFilename;
-    if (bytes == null || filename == null) {
+  Future<void> _retake() async {
+    if (_stage == _ScanStage.previewChecking || _stage == _ScanStage.waiting) {
       return;
     }
 
-    await _processAndUpload(bytes, filename, skipLocalQualityGate: true);
+    await _scanCameraCtrl.resume();
+    if (!mounted) return;
+
+    setState(() {
+      _stage = _ScanStage.camera;
+      _capturedBytes = null;
+      _capturedFilename = null;
+      _qualityResult = null;
+      _statusText = null;
+      _errorText = null;
+      _isCapturing = false;
+    });
   }
-
-  Future<bool> _showQualityWarning({
-    required String? guidance,
-    String? rejectReason,
-  }) async {
-    final l10n = AppLocalizations.of(context);
-    // Chọn icon và tiêu đề phù hợp với từng loại lỗi
-    IconData warningIcon;
-    String warningTitle;
-    switch (rejectReason) {
-      case 'BLURRY_IMAGE':
-        warningIcon = Icons.blur_on_outlined;
-        warningTitle = l10n.scanCameraQualityBlurry;
-        break;
-      case 'GLARE_IMAGE':
-        warningIcon = Icons.wb_sunny_outlined;
-        warningTitle = l10n.scanCameraQualityGlare;
-        break;
-      case 'CONTENT_CUTOFF':
-        warningIcon = Icons.crop_outlined;
-        warningTitle = l10n.scanCameraQualityCutoff;
-        break;
-      default:
-        warningIcon = Icons.warning_amber_rounded;
-        warningTitle = l10n.scanCameraQualityUnknown;
-    }
-
-    final result = await showModalBottomSheet<bool>(
-      context: context,
-      builder: (ctx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Icon(warningIcon, color: AppColors.warning, size: 28),
-                  const SizedBox(width: 10),
-                  Text(
-                    warningTitle,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 17,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                guidance ?? l10n.scanCameraQualityDefault,
-                style: const TextStyle(color: AppColors.textSecondary),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () => Navigator.pop(ctx, false),
-                icon: const Icon(Icons.camera_alt_outlined),
-                label: Text(l10n.scanCameraRetake),
-              ),
-              const SizedBox(height: 8),
-              OutlinedButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: Text(l10n.scanCameraProceed),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-    return result ?? false;
-  }
-
-  // -------------------------------------------------------------------------
-  // Build
-  // -------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
-    if (_mode == _ScreenMode.uploading) {
-      return _buildUploadingOverlay();
+    switch (_stage) {
+      case _ScanStage.camera:
+        return _buildCameraStage();
+      case _ScanStage.previewChecking:
+      case _ScanStage.previewRejected:
+      case _ScanStage.previewWarning:
+      case _ScanStage.waiting:
+      case _ScanStage.error:
+        return _buildPreviewStage();
     }
-    return _buildCameraPreview();
   }
 
-  // -------------------------------------------------------------------------
-  // Uploading overlay
-  // -------------------------------------------------------------------------
-
-  Widget _buildUploadingOverlay() {
+  Widget _buildCameraStage() {
     final l10n = AppLocalizations.of(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 64,
-                height: 64,
-                child: CircularProgressIndicator(
-                  strokeWidth: 4,
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Text(
-                  l10n.scanCameraUploadingTitle,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Text(
-                  l10n.scanCameraUploadingSubtitle,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: AppColors.textSecondary),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // -------------------------------------------------------------------------
-  // Live camera preview (primary mode)
-  // -------------------------------------------------------------------------
-
-  Widget _buildCameraPreview() {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Stack(
           children: [
-            // Camera feed or state messages
-            Positioned.fill(child: _buildCameraBody()),
-
-            // Top bar
-            Positioned(top: 0, left: 0, right: 0, child: _buildCameraTopBar()),
-
-            // Quality / error banner
-            if (_qualityBanner != null || _error != null)
-              Positioned(
-                top: 60,
-                left: 16,
-                right: 16,
-                child: _qualityBanner != null
-                    ? _buildQualityFeedback()
-                    : _buildErrorFeedback(_error!),
-              ),
-
-            // Bottom controls
+            Positioned.fill(child: _buildCameraFeed()),
+            Positioned(top: 0, left: 0, right: 0, child: _buildTopBar()),
             Positioned(
               bottom: 0,
               left: 0,
               right: 0,
-              child: _buildCameraBottomBar(),
+              child: _buildCaptureBar(l10n),
             ),
           ],
         ),
@@ -425,76 +317,108 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
     );
   }
 
-  Widget _buildCameraBody() {
-    final l10n = AppLocalizations.of(context);
-    final camState = _scanCameraCtrl.state;
+  Widget _buildPreviewStage() {
+    final quality = _qualityResult;
+    final isReject = _stage == _ScanStage.previewRejected;
+    final isWarning = _stage == _ScanStage.previewWarning;
+    final isWaiting = _stage == _ScanStage.waiting;
+    final isChecking = _stage == _ScanStage.previewChecking;
 
-    if (camState == ScanCameraState.initializing) {
-      return Center(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            const CircularProgressIndicator(color: Colors.white),
-            const SizedBox(height: 16),
-            Text(
-              l10n.scanCameraInitializing,
-              style: const TextStyle(color: Colors.white70),
+            _buildTopBar(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final wide = constraints.maxWidth >= 720;
+                    final preview = _PreviewPane(
+                      bytes: _capturedBytes,
+                      stage: _stage,
+                      statusText: _statusText,
+                      quality: quality,
+                    );
+                    final controls = _PreviewControls(
+                      isChecking: isChecking,
+                      isWaiting: isWaiting,
+                      isReject: isReject,
+                      isWarning: isWarning,
+                      isError: _stage == _ScanStage.error,
+                      hasCapturedImage: _capturedBytes != null,
+                      errorText: _errorText,
+                      onRetake: _retake,
+                      onProceed: _continueAfterWarning,
+                      onRetryUpload: _retryUpload,
+                    );
+
+                    if (wide) {
+                      return Row(
+                        children: [
+                          Expanded(child: preview),
+                          const SizedBox(width: 16),
+                          Expanded(child: controls),
+                        ],
+                      );
+                    }
+
+                    return Column(
+                      children: [
+                        Expanded(child: preview),
+                        const SizedBox(height: 12),
+                        controls,
+                      ],
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildCameraFeed() {
+    final camState = _scanCameraCtrl.state;
+    final controller = _scanCameraCtrl.cameraController;
+
+    if (camState == ScanCameraState.initializing) {
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.white),
       );
     }
 
-    if (camState == ScanCameraState.permissionDenied) {
+    if (camState == ScanCameraState.permissionDenied ||
+        camState == ScanCameraState.unavailable) {
+      final l10n = AppLocalizations.of(context);
       return _buildCameraError(
-        icon: Icons.no_photography_outlined,
+        icon: camState == ScanCameraState.permissionDenied
+            ? Icons.no_photography_outlined
+            : Icons.camera_outlined,
         message:
-            _scanCameraCtrl.errorMessage ?? l10n.scanCameraPermissionDenied,
-        actionLabel: l10n.scanCameraUseGallery,
-        onAction: _pickFromGallery,
+            _scanCameraCtrl.errorMessage ??
+            (camState == ScanCameraState.permissionDenied
+                ? l10n.scanCameraPermissionDenied
+                : l10n.scanCameraUnavailable),
+        actionLabel: l10n.commonRetry,
+        onAction: _openCamera,
       );
     }
 
-    if (camState == ScanCameraState.unavailable) {
-      return _buildCameraError(
-        icon: Icons.camera_outlined,
-        message: _scanCameraCtrl.errorMessage ?? l10n.scanCameraUnavailable,
-        actionLabel: l10n.scanCameraUseGallery,
-        onAction: _pickFromGallery,
-      );
-    }
-
-    // Ready or capturing
-    if (_scanCameraCtrl.cameraController != null &&
-        _scanCameraCtrl.cameraController!.value.isInitialized) {
-      return GestureDetector(
-        onTap: () {
-          if (_scanCameraCtrl.state != ScanCameraState.capturing) {
-            _captureFromCamera();
-          }
-        },
-        child: ClipRect(
-          child: OverflowBox(
-            alignment: Alignment.center,
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: SizedBox(
-                width:
-                    _scanCameraCtrl
-                        .cameraController!
-                        .value
-                        .previewSize
-                        ?.height ??
-                    1,
-                height:
-                    _scanCameraCtrl
-                        .cameraController!
-                        .value
-                        .previewSize
-                        ?.width ??
-                    1,
-                child: CameraPreview(_scanCameraCtrl.cameraController!),
-              ),
+    if (controller != null && controller.value.isInitialized) {
+      return ClipRect(
+        child: OverflowBox(
+          alignment: Alignment.center,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: controller.value.previewSize?.height ?? 1,
+              height: controller.value.previewSize?.width ?? 1,
+              child: CameraPreview(controller),
             ),
           ),
         ),
@@ -502,6 +426,97 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
     }
 
     return const SizedBox.shrink();
+  }
+
+  Widget _buildTopBar() {
+    final l10n = AppLocalizations.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      color: Colors.black45,
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () => context.go('/create'),
+            icon: const Icon(Icons.close, color: Colors.white),
+            tooltip: l10n.scanCameraClose,
+          ),
+          Expanded(
+            child: Text(
+              l10n.scanCameraTitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: _showGuide,
+            icon: const Icon(Icons.help_outline, color: Colors.white70),
+            tooltip: l10n.scanCameraGuide,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCaptureBar(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 14, 20, 24),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          colors: [Colors.black87, Colors.transparent],
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            l10n.scanCameraHint,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 18),
+          Center(
+            child: GestureDetector(
+              onTap: _isCapturing ? null : _captureFromCamera,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 160),
+                width: _isCapturing ? 68 : 76,
+                height: _isCapturing ? 68 : 76,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _scanCameraCtrl.isReady
+                      ? Colors.white
+                      : Colors.white30,
+                  border: Border.all(color: Colors.white70, width: 4),
+                ),
+                child: _isCapturing
+                    ? const Padding(
+                        padding: EdgeInsets.all(18),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: Colors.black54,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.camera_alt,
+                        color: Colors.black87,
+                        size: 30,
+                      ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildCameraError({
@@ -527,261 +542,6 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
             ElevatedButton(onPressed: onAction, child: Text(actionLabel)),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildCameraTopBar() {
-    final l10n = AppLocalizations.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      color: Colors.black54,
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => context.go('/create'),
-            icon: const Icon(Icons.close, color: Colors.white),
-            tooltip: l10n.scanCameraClose,
-          ),
-          Expanded(
-            child: Text(
-              l10n.scanCameraTitle,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          // Guidance icon
-          IconButton(
-            onPressed: _showGuide,
-            icon: const Icon(Icons.help_outline, color: Colors.white70),
-            tooltip: l10n.scanCameraGuide,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCameraBottomBar() {
-    final l10n = AppLocalizations.of(context);
-    final isCapturing = _scanCameraCtrl.state == ScanCameraState.capturing;
-
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 36),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.bottomCenter,
-          end: Alignment.topCenter,
-          colors: [Colors.black87, Colors.transparent],
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Guidance hint
-          Text(
-            l10n.scanCameraHint,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 13,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 18),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Gallery fallback
-              _CameraIconBtn(
-                icon: Icons.photo_library_outlined,
-                label: l10n.scanCameraGallery,
-                onTap: _pickFromGallery,
-              ),
-
-              // Capture button
-              GestureDetector(
-                onTap: isCapturing ? null : _captureFromCamera,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 160),
-                  width: isCapturing ? 68 : 72,
-                  height: isCapturing ? 68 : 72,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _scanCameraCtrl.isReady
-                        ? Colors.white
-                        : Colors.white30,
-                    border: Border.all(color: Colors.white70, width: 4),
-                  ),
-                  child: isCapturing
-                      ? const Padding(
-                          padding: EdgeInsets.all(18),
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            color: Colors.black54,
-                          ),
-                        )
-                      : const Icon(
-                          Icons.camera_alt,
-                          color: Colors.black87,
-                          size: 30,
-                        ),
-                ),
-              ),
-
-              // Retry / manual entry
-              _CameraIconBtn(
-                icon: Icons.edit_note_rounded,
-                label: l10n.scanCameraManual,
-                onTap: () => context.go('/create/edit'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQualityFeedback() {
-    final l10n = AppLocalizations.of(context);
-    final isReject = _qualityBanner == 'REJECT';
-    final color = isReject ? AppColors.error : AppColors.warning;
-    final icon = isReject
-        ? Icons.cancel_outlined
-        : Icons.warning_amber_outlined;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: Colors.white, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  _qualityGuidance ??
-                      (isReject
-                          ? l10n.scanCameraQualityReject
-                          : l10n.scanCameraQualityWarning),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () => setState(() {
-                  _qualityBanner = null;
-                  _qualityGuidance = null;
-                }),
-                child: Text(
-                  l10n.commonOk,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-          if (isReject) ...[
-            const SizedBox(height: 6),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () => setState(() {
-                  _qualityBanner = null;
-                  _qualityGuidance = null;
-                }),
-                icon: const Icon(
-                  Icons.camera_alt_outlined,
-                  color: Colors.white,
-                  size: 16,
-                ),
-                label: Text(
-                  l10n.scanCameraRetake,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.white38),
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorFeedback(String message) {
-    final l10n = AppLocalizations.of(context);
-    final canRetryLastUpload =
-        _lastUploadBytes != null &&
-        _lastUploadFilename != null &&
-        _mode == _ScreenMode.cameraPreview;
-
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.error.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.error_outline, color: Colors.white, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  message,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () => setState(() => _error = null),
-                child: Text(
-                  l10n.commonOk,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-          if (canRetryLastUpload)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: _retryLastUpload,
-                  icon: const Icon(
-                    Icons.refresh,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                  label: Text(
-                    l10n.commonRetry,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white38),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                ),
-              ),
-            ),
-        ],
       ),
     );
   }
@@ -820,41 +580,242 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen>
   }
 }
 
-// ---------------------------------------------------------------------------
-// Helper widget for camera bottom bar icon buttons
-// ---------------------------------------------------------------------------
-
-class _CameraIconBtn extends StatelessWidget {
-  const _CameraIconBtn({
-    required this.icon,
-    required this.label,
-    required this.onTap,
+class _PreviewPane extends StatelessWidget {
+  const _PreviewPane({
+    required this.bytes,
+    required this.stage,
+    required this.statusText,
+    required this.quality,
   });
 
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
+  final Uint8List? bytes;
+  final _ScanStage stage;
+  final String? statusText;
+  final LocalQualityResult? quality;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    final isWaiting = stage == _ScanStage.waiting;
+    final isReject = stage == _ScanStage.previewRejected;
+    final isWarning = stage == _ScanStage.previewWarning;
+    final isChecking = stage == _ScanStage.previewChecking;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(22),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(22),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (bytes != null)
+              Image.memory(
+                bytes!,
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.medium,
+              )
+            else
+              const ColoredBox(color: Colors.black12),
+            Container(color: Colors.black.withValues(alpha: 0.12)),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      Colors.black.withValues(alpha: 0.8),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          isWaiting
+                              ? Icons.hourglass_top_rounded
+                              : isChecking
+                              ? Icons.verified_outlined
+                              : isReject
+                              ? Icons.cancel_outlined
+                              : isWarning
+                              ? Icons.warning_amber_rounded
+                              : Icons.image_outlined,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            statusText ?? 'Đang xử lý ảnh...',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (isChecking || isWaiting) ...[
+                      const SizedBox(height: 10),
+                      const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                    if (quality != null) ...[
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          _PreviewBadge('State: ${quality!.state}'),
+                          if (quality!.rejectReason != null)
+                            _PreviewBadge('Reason: ${quality!.rejectReason}'),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PreviewBadge extends StatelessWidget {
+  const _PreviewBadge(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(color: Colors.white, fontSize: 12),
+      ),
+    );
+  }
+}
+
+class _PreviewControls extends StatelessWidget {
+  const _PreviewControls({
+    required this.isChecking,
+    required this.isWaiting,
+    required this.isReject,
+    required this.isWarning,
+    required this.isError,
+    required this.hasCapturedImage,
+    required this.errorText,
+    required this.onRetake,
+    required this.onProceed,
+    required this.onRetryUpload,
+  });
+
+  final bool isChecking;
+  final bool isWaiting;
+  final bool isReject;
+  final bool isWarning;
+  final bool isError;
+  final bool hasCapturedImage;
+  final String? errorText;
+  final VoidCallback onRetake;
+  final VoidCallback onProceed;
+  final VoidCallback onRetryUpload;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+
+    String title;
+    String subtitle;
+    if (isChecking) {
+      title = 'Đang kiểm tra ảnh';
+      subtitle = 'Ứng dụng đang đánh giá chất lượng ảnh.';
+    } else if (isWaiting) {
+      title = 'Đang chờ xử lý ảnh';
+      subtitle = 'Ảnh đã đạt, hệ thống đang xử lý.';
+    } else if (isReject) {
+      title = 'Ảnh chưa đạt';
+      subtitle = errorText ?? 'Bạn nên chụp lại để kết quả chính xác hơn.';
+    } else if (isWarning) {
+      title = 'Ảnh tạm ổn';
+      subtitle = errorText ?? 'Bạn có thể chụp lại hoặc vẫn tiếp tục.';
+    } else {
+      title = 'Ảnh đã chụp';
+      subtitle = errorText ?? 'Kiểm tra ảnh hoặc chụp lại nếu cần.';
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(22),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: const BoxDecoration(
-              color: Colors.white24,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: Colors.white, size: 26),
-          ),
-          const SizedBox(height: 6),
           Text(
-            label,
-            style: const TextStyle(color: Colors.white70, fontSize: 11),
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            subtitle,
+            style: const TextStyle(color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: 18),
+          if (isChecking) ...[
+            const LinearProgressIndicator(minHeight: 3),
+            const SizedBox(height: 18),
+          ],
+          if (isWaiting) ...[
+            const LinearProgressIndicator(minHeight: 3),
+            const SizedBox(height: 18),
+          ],
+          if (isWarning) ...[
+            ElevatedButton.icon(
+              onPressed: onProceed,
+              icon: const Icon(Icons.arrow_forward),
+              label: Text(l10n.scanCameraProceed),
+            ),
+            const SizedBox(height: 10),
+          ],
+          if (isError && hasCapturedImage) ...[
+            ElevatedButton.icon(
+              onPressed: onRetryUpload,
+              icon: const Icon(Icons.refresh),
+              label: Text(l10n.commonRetry),
+            ),
+            const SizedBox(height: 10),
+          ],
+          OutlinedButton.icon(
+            onPressed: (isChecking || isWaiting) ? null : onRetake,
+            icon: const Icon(Icons.camera_alt_outlined),
+            label: Text(l10n.scanCameraRetake),
           ),
         ],
       ),

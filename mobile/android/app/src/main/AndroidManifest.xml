@@ -10,6 +10,8 @@
     <application
         android:label="Uống thuốc"
         android:name="${applicationName}"
+        android:allowBackup="false"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -38,6 +40,12 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false" />
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"
+            android:exported="false" />
         <!-- Reschedules notifications after device reboot or app update.
              Required because flutter_local_notifications v19.x does not
              auto-register this receiver in its own AndroidManifest.xml. -->

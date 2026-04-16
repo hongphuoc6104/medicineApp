@@ -146,9 +146,20 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
                 children: [
                   _SectionTitle(
-                    title: 'Kế hoạch cũ',
+                    title: 'Tổng quan',
                     subtitle:
-                        '${_archivedPlans.length} kế hoạch đã kết thúc hoặc hết thời gian theo dõi',
+                        '${_archivedPlans.length} kế hoạch cũ • ${_logs.length} lần ghi nhận',
+                  ),
+                  const SizedBox(height: 12),
+                  _PlanSummaryCard(
+                    plan: selectedPlan,
+                    weekLabel: _formatWeekRange(_weekStart),
+                    onReuse: () => _reusePlan(selectedPlan),
+                  ),
+                  const SizedBox(height: 18),
+                  _SectionTitle(
+                    title: 'Kế hoạch cũ',
+                    subtitle: 'Chọn 1 kế hoạch để xem lịch uống theo tuần',
                   ),
                   const SizedBox(height: 12),
                   ..._archivedPlans.map(
@@ -157,12 +168,6 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                       selected: plan.id == selectedPlan.id,
                       onTap: () => _selectPlan(plan),
                     ),
-                  ),
-                  const SizedBox(height: 18),
-                  _PlanSummaryCard(
-                    plan: selectedPlan,
-                    weekLabel: _formatWeekRange(_weekStart),
-                    onReuse: () => _reusePlan(selectedPlan),
                   ),
                   const SizedBox(height: 18),
                   _WeekHeader(
@@ -181,7 +186,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                   _SectionTitle(
                     title: 'Chi tiết trong tuần',
                     subtitle:
-                        'Xem từng lần uống để biết liều nào đã uống, bỏ qua hoặc bị miss.',
+                        'Nhìn từng ngày để biết liều nào đã uống, bỏ qua hoặc quên.',
                   ),
                   const SizedBox(height: 12),
                   if (occurrences.isEmpty)
@@ -726,23 +731,31 @@ class _WeekCell extends StatelessWidget {
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  summary.label,
-                  style: TextStyle(
-                    color: summary.foregroundColor,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 12,
+                Flexible(
+                  child: Text(
+                    summary.label,
+                    style: TextStyle(
+                      color: summary.foregroundColor,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  summary.detail,
-                  style: TextStyle(
-                    color: summary.foregroundColor.withValues(alpha: 0.9),
-                    fontSize: 11,
+                Flexible(
+                  child: Text(
+                    summary.detail,
+                    style: TextStyle(
+                      color: summary.foregroundColor.withValues(alpha: 0.9),
+                      fontSize: 11,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),

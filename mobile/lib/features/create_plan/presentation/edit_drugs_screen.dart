@@ -168,11 +168,15 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
         title: Text(
           drug.name,
           style: const TextStyle(fontWeight: FontWeight.w500),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
         subtitle: drug.dosage.isNotEmpty
             ? Text(
                 drug.dosage,
                 style: TextStyle(color: AppColors.textSecondary),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               )
             : null,
         trailing: Row(

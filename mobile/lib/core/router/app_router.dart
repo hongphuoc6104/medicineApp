@@ -18,8 +18,8 @@ import '../../features/create_plan/domain/scan_result.dart';
 import '../../features/drug/presentation/drug_search_screen.dart';
 import '../../features/drug/presentation/drug_detail_screen.dart';
 import '../../features/drug/data/drug_repository.dart';
+import '../../features/lookup/presentation/lookup_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
-import '../../features/history/presentation/scan_history_detail_screen.dart';
 import '../../features/plan/presentation/plan_detail_screen.dart';
 import '../../features/plan/presentation/plan_list_screen.dart';
 import '../../features/pill_verification/presentation/pill_verification_screen.dart';
@@ -175,6 +175,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 const NoTransitionPage(child: PlanListScreen()),
           ),
           GoRoute(
+            path: '/plans/create',
+            builder: (context, state) => const CreatePlanScreen(),
+          ),
+          GoRoute(
             path: '/plans/:id',
             builder: (context, state) =>
                 PlanDetailScreen(planId: state.pathParameters['id'] ?? ''),
@@ -221,11 +225,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                 const NoTransitionPage(child: HistoryScreen()),
           ),
           GoRoute(
+            path: '/lookup',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: LookupScreen()),
+          ),
+          GoRoute(
             path: '/history/scan/:id',
-            builder: (context, state) => ScanHistoryDetailScreen(
-              scanId: state.pathParameters['id'] ?? '',
-              mode: state.uri.queryParameters['mode'] ?? 'normal',
-            ),
+            redirect: (context, state) => '/history',
           ),
           GoRoute(
             path: '/settings',

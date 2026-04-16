@@ -7,6 +7,7 @@ import 'core/notifications/notification_service.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/data/auth_notifier.dart';
+import 'features/home/data/plan_notifier.dart';
 import 'features/home/data/today_schedule_notifier.dart';
 import 'l10n/app_localizations.dart';
 
@@ -53,6 +54,10 @@ class _NotificationActionBridgeState
   final List<NotificationActionEvent> _pendingEvents = [];
   StreamSubscription<NotificationActionEvent>? _subscription;
   bool _isProcessing = false;
+  late final AppLifecycleListener _lifecycleListener;
+  DateTime? _lastResumeSyncAt;
+
+  static const Duration _resumeSyncDebounce = Duration(seconds: 15);
 
   @override
   void initState() {
@@ -65,10 +70,34 @@ class _NotificationActionBridgeState
         _enqueueEvent(event);
       }
     });
+
+    _lifecycleListener = AppLifecycleListener(
+      onResume: () {
+        if (!mounted) {
+          return;
+        }
+        if (ref.read(authStateProvider) == AuthStatus.authenticated) {
+          final now = DateTime.now();
+          final last = _lastResumeSyncAt;
+          if (last != null && now.difference(last) < _resumeSyncDebounce) {
+            return;
+          }
+          _lastResumeSyncAt = now;
+          unawaited(ref.read(planNotifierProvider.notifier).syncInBackground());
+          unawaited(
+            ref
+                .read(planNotifierProvider.notifier)
+                .ensureNotificationsSynced(reason: 'app_resume'),
+          );
+          unawaited(ref.read(todayScheduleNotifierProvider.notifier).refresh());
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
+    _lifecycleListener.dispose();
     _subscription?.cancel();
     super.dispose();
   }
@@ -130,7 +159,20 @@ class _NotificationActionBridgeState
   Widget build(BuildContext context) {
     ref.listen<AuthStatus>(authStateProvider, (_, next) {
       if (next == AuthStatus.authenticated) {
+        unawaited(ref.read(planNotifierProvider.notifier).syncInBackground());
+        unawaited(ref.read(todayScheduleNotifierProvider.notifier).refresh());
+        unawaited(
+          ref
+              .read(planNotifierProvider.notifier)
+              .ensureNotificationsSynced(reason: 'auth_authenticated'),
+        );
         _drainPendingEvents();
+      }
+
+      if (next == AuthStatus.unauthenticated) {
+        _pendingEvents.clear();
+        ref.read(planNotifierProvider.notifier).resetInMemory();
+        ref.read(todayScheduleNotifierProvider.notifier).resetInMemory();
       }
     });
     return widget.child;
