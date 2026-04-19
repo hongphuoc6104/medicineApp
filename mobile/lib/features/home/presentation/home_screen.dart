@@ -7,8 +7,6 @@ import 'package:medicine_app/l10n/app_localizations.dart';
 
 import '../../../core/network/network_error_mapper.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../create_plan/data/offline_dose_queue.dart';
-import '../../create_plan/domain/plan.dart';
 import '../data/plan_notifier.dart';
 import '../data/today_schedule_notifier.dart';
 import '../domain/today_schedule.dart';
@@ -84,7 +82,7 @@ class HomeScreen extends ConsumerWidget {
               await ref.read(todayScheduleNotifierProvider.notifier).refresh();
             },
             child: state.hasPlans
-                ? _DashboardView(plans: state.plans, todayAsync: todayAsync)
+                ? _DashboardView(todayAsync: todayAsync)
                 : _OnboardingView(isOfflineCache: state.isFromCache),
           );
         },
@@ -130,7 +128,6 @@ class _ErrorView extends StatelessWidget {
     );
   }
 }
-
 class _OnboardingView extends StatelessWidget {
   const _OnboardingView({this.isOfflineCache = false});
 
@@ -262,14 +259,12 @@ class _OnboardingView extends StatelessWidget {
 }
 
 class _DashboardView extends ConsumerWidget {
-  const _DashboardView({required this.plans, required this.todayAsync});
+  const _DashboardView({required this.todayAsync});
 
-  final List<Plan> plans;
   final AsyncValue<TodaySchedule> todayAsync;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pendingCountFuture = ref.watch(_pendingCountProvider.future);
     final canMark = !todayAsync.isLoading;
 
     return ListView(
@@ -277,38 +272,6 @@ class _DashboardView extends ConsumerWidget {
       children: [
         const _DateHeader(),
         const SizedBox(height: 12),
-        const _WeekStrip(),
-        const SizedBox(height: 18),
-        FutureBuilder<int>(
-          future: pendingCountFuture,
-          builder: (context, snapshot) {
-            final count = snapshot.data ?? 0;
-            if (count <= 0) return const SizedBox.shrink();
-            return Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: AppColors.warning.withValues(alpha: 0.14),
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.sync_problem_outlined,
-                    color: AppColors.warning,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      AppLocalizations.of(context).homePendingSync(count),
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
         todayAsync.when(
           loading: () => const _TodayLoadingCard(),
           error: (e, _) => _TodayErrorCard(
@@ -324,93 +287,62 @@ class _DashboardView extends ConsumerWidget {
             final now = DateTime.now();
             final sortedDoses = List<TodayDose>.from(today.doses)
               ..sort((a, b) => a.comparePriority(b, now));
-            final dueNow = sortedDoses.where((d) => d.isDueNow(now)).toList();
-            final upcoming = sortedDoses
-                .where((d) => d.isUpcomingSoon(now))
-                .toList();
-            final laterToday = sortedDoses
-                .where(
-                  (d) =>
-                      d.effectiveStatus(now) == 'pending' &&
-                      !d.isDueNow(now) &&
-                      !d.isUpcomingSoon(now),
-                )
-                .toList();
-            final featuredDose = dueNow.isNotEmpty
-                ? dueNow.first
-                : upcoming.isNotEmpty
-                ? upcoming.first
-                : laterToday.isNotEmpty
-                ? laterToday.first
+            final featuredDose = sortedDoses.isNotEmpty
+                ? sortedDoses.first
                 : null;
 
-            Widget doseTile(TodayDose dose) => _TodayDoseTile(
-              dose: dose,
-              canMark: canMark,
-              onTaken: () async {
-                final result = await ref
-                    .read(todayScheduleNotifierProvider.notifier)
-                    .markDose(dose: dose, status: 'taken');
-                if (!context.mounted) return;
-                final l10n = AppLocalizations.of(context);
+            Future<void> onMarkDose(TodayDose dose, String status) async {
+              final result = await ref
+                  .read(todayScheduleNotifierProvider.notifier)
+                  .markDose(dose: dose, status: status);
+              if (!context.mounted) return;
+              final l10n = AppLocalizations.of(context);
 
-                if (result == MarkDoseResult.failed) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Lỗi lưu liều uống. Vui lòng thử lại.'),
-                      backgroundColor: AppColors.error,
-                    ),
-                  );
-                  return;
-                }
-
+              if (result == MarkDoseResult.failed) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      result == MarkDoseResult.synced
-                          ? l10n.homeDoseTakenStatus(dose.primaryTitle)
-                          : l10n.homeDoseOfflineStatus,
-                    ),
-                    backgroundColor: result == MarkDoseResult.synced
-                        ? AppColors.success
-                        : AppColors.warning,
+                  const SnackBar(
+                    content: Text('Lỗi lưu liều uống. Vui lòng thử lại.'),
+                    backgroundColor: AppColors.error,
                   ),
                 );
-              },
-              onSkipped: () async {
-                final result = await ref
-                    .read(todayScheduleNotifierProvider.notifier)
-                    .markDose(dose: dose, status: 'skipped');
-                if (!context.mounted) return;
-                final l10n = AppLocalizations.of(context);
+                return;
+              }
 
-                if (result == MarkDoseResult.failed) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Lỗi lưu liều uống. Vui lòng thử lại.'),
-                      backgroundColor: AppColors.error,
-                    ),
-                  );
-                  return;
-                }
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      result == MarkDoseResult.synced
-                          ? l10n.homeDoseSkippedStatus(dose.primaryTitle)
-                          : l10n.homeDoseOfflineStatus,
-                    ),
-                    backgroundColor: AppColors.warning,
+              final successLabel = status == 'taken'
+                  ? l10n.homeDoseTakenStatus(dose.primaryTitle)
+                  : l10n.homeDoseSkippedStatus(dose.primaryTitle);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    result == MarkDoseResult.synced
+                        ? successLabel
+                        : l10n.homeDoseOfflineStatus,
                   ),
-                );
-              },
-            );
+                  backgroundColor: result == MarkDoseResult.synced
+                      ? AppColors.success
+                      : AppColors.warning,
+                ),
+              );
+            }
+
+            final mainDose = featuredDose;
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _HeroTodayCard(today: today, featuredDose: featuredDose),
+                if (today.doses.isEmpty || mainDose == null)
+                  _TodayEmptyCard(
+                    onScan: () => context.go('/create/scan'),
+                    onCreatePlan: () => context.go('/create/edit'),
+                    onViewPlans: () => context.go('/plans'),
+                  )
+                else
+                  _TodayMainDoseCard(
+                    dose: mainDose,
+                    canMark: canMark,
+                    onTap: () => context.go('/plans/${mainDose.planId}'),
+                    onTaken: () => onMarkDose(mainDose, 'taken'),
+                  ),
                 const SizedBox(height: 16),
                 _LookupPrimaryCard(onTap: () => context.go('/lookup')),
                 const SizedBox(height: 16),
@@ -430,55 +362,6 @@ class _DashboardView extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                if (today.doses.isEmpty)
-                  _TodayEmptyCard(
-                    onScan: () => context.go('/create/scan'),
-                    onCreatePlan: () => context.go('/create/edit'),
-                    onViewPlans: () => context.go('/plans'),
-                  )
-                else ...[
-                  if (dueNow.isNotEmpty) ...[
-                    const _SectionLabel(title: 'Đến giờ uống'),
-                    const SizedBox(height: 10),
-                    ...dueNow.map(doseTile),
-                    const SizedBox(height: 8),
-                  ],
-                  if (upcoming.isNotEmpty) ...[
-                    const _SectionLabel(title: 'Sắp đến giờ'),
-                    const SizedBox(height: 10),
-                    ...upcoming.map(doseTile),
-                    const SizedBox(height: 8),
-                  ],
-                  if (laterToday.isNotEmpty) ...[
-                    const _SectionLabel(title: 'Còn lại hôm nay'),
-                    const SizedBox(height: 10),
-                    ...laterToday.map(doseTile),
-                    const SizedBox(height: 8),
-                  ],
-                  if (dueNow.isEmpty && upcoming.isEmpty && laterToday.isEmpty)
-                    _TodayEmptyCard(
-                      onScan: () => context.go('/create/scan'),
-                      onCreatePlan: () => context.go('/create/edit'),
-                      onViewPlans: () => context.go('/plans'),
-                    ),
-                ],
-                const SizedBox(height: 18),
-                const _SectionLabel(title: 'Kế hoạch đang chạy'),
-                const SizedBox(height: 10),
-                ...plans.take(3).map((plan) => _PlanCard(plan: plan)),
-                if (plans.length > 3) ...[
-                  const SizedBox(height: 8),
-                  TextButton.icon(
-                    onPressed: () => context.go('/plans'),
-                    icon: const Icon(Icons.open_in_new),
-                    label: Text(
-                      AppLocalizations.of(
-                        context,
-                      ).homeViewAllPlans(plans.length),
-                    ),
-                  ),
-                ],
               ],
             );
           },
@@ -488,16 +371,27 @@ class _DashboardView extends ConsumerWidget {
   }
 }
 
-final _pendingCountProvider = FutureProvider<int>((ref) async {
-  return ref.read(offlineDoseQueueProvider).pendingCount();
-});
-
 String _formatHomeDate(DateTime date) {
   return DateFormat('d MMMM, yyyy', 'vi_VN').format(date);
 }
 
 bool _isCompactHomeCard(BuildContext context) {
   return MediaQuery.sizeOf(context).width < 390;
+}
+
+String _formatCountdownText(DateTime scheduled, DateTime now) {
+  final diff = scheduled.difference(now);
+  if (diff.inMinutes > 0) {
+    if (diff.inHours > 0) {
+      return 'Còn ${diff.inHours} giờ ${diff.inMinutes.remainder(60)} phút';
+    }
+    return 'Còn ${diff.inMinutes} phút';
+  }
+  final overdue = diff.abs();
+  if (overdue.inHours > 0) {
+    return 'Trễ ${overdue.inHours} giờ ${overdue.inMinutes.remainder(60)} phút';
+  }
+  return 'Trễ ${overdue.inMinutes} phút';
 }
 
 String _doseSummaryText(TodayDose dose) {
@@ -533,28 +427,24 @@ String _doseSummaryText(TodayDose dose) {
   return '${dose.pillsPerDose ?? 1} viên/liều';
 }
 
-String _planFrequencyLabel(BuildContext context, String freq) {
-  switch (freq) {
-    case 'twice_daily':
-      return AppLocalizations.of(context).homeFreqDaily2;
-    case 'three_daily':
-      return AppLocalizations.of(context).homeFreqDaily3;
-    case 'weekly':
-      return AppLocalizations.of(context).homeFreqWeekly;
-    default:
-      return AppLocalizations.of(context).homeFreqDaily1;
-  }
+String _doseSessionLabel(TodayDose dose) {
+  final scheduled = dose.scheduledLocalDateTime;
+  if (scheduled == null) return 'Liều';
+
+  final hour = scheduled.hour;
+  if (hour >= 5 && hour < 11) return 'Buổi sáng';
+  if (hour >= 11 && hour < 14) return 'Buổi trưa';
+  if (hour >= 14 && hour < 18) return 'Buổi chiều';
+  return 'Buổi tối';
 }
 
-String _planSubtitleText(BuildContext context, Plan plan) {
-  final freq = _planFrequencyLabel(context, plan.frequency);
-  final times = plan.times.join(', ');
-
-  if (plan.hasVariableDoseSchedule) {
-    return '$freq · ${AppLocalizations.of(context).homeFreqHourly} · $times';
-  }
-
-  return '$freq · ${plan.pillsPerDose} viên · $times';
+String _doseLineLabel(TodayDoseMedication item) {
+  final dosage = item.dosage?.trim();
+  final drugName = item.drugName.trim();
+  final base = dosage != null && dosage.isNotEmpty
+      ? '$drugName $dosage'
+      : drugName;
+  return '$base × ${item.pills} viên';
 }
 
 class _DateHeader extends StatelessWidget {
@@ -609,199 +499,210 @@ class _DateHeader extends StatelessWidget {
   }
 }
 
-class _WeekStrip extends StatelessWidget {
-  const _WeekStrip();
+class _TodayMainDoseCard extends StatelessWidget {
+  const _TodayMainDoseCard({
+    required this.dose,
+    required this.canMark,
+    required this.onTap,
+    required this.onTaken,
+  });
+
+  final TodayDose dose;
+  final bool canMark;
+  final VoidCallback onTap;
+  final VoidCallback onTaken;
 
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final monday = now.subtract(Duration(days: now.weekday - 1));
-    final days = List.generate(7, (index) => monday.add(Duration(days: index)));
-    final labels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(days.length, (index) {
-          final day = days[index];
-          final selected =
-              day.year == now.year &&
-              day.month == now.month &&
-              day.day == now.day;
-          return Column(
-            children: [
-              Text(
-                labels[index],
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: AppColors.textMuted,
-                ),
-              ),
-              const SizedBox(height: 8),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 180),
-                width: 36,
-                height: 36,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: selected ? AppColors.primary : AppColors.surfaceSoft,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Text(
-                  '${day.day}',
-                  style: TextStyle(
-                    color: selected ? Colors.white : AppColors.textPrimary,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ),
-            ],
-          );
-        }),
-      ),
-    );
-  }
-}
-
-class _HeroTodayCard extends StatelessWidget {
-  const _HeroTodayCard({required this.today, required this.featuredDose});
-
-  final TodaySchedule today;
-  final TodayDose? featuredDose;
-
-  String _formatCountdown(DateTime scheduled, DateTime now) {
-    final diff = scheduled.difference(now);
-    if (diff.inMinutes > 0) {
-      if (diff.inHours > 0) {
-        return 'Còn ${diff.inHours} giờ ${diff.inMinutes.remainder(60)} phút';
-      }
-      return 'Còn ${diff.inMinutes} phút';
-    }
-    final overdue = diff.abs();
-    if (overdue.inHours > 0) {
-      return 'Trễ ${overdue.inHours} giờ ${overdue.inMinutes.remainder(60)} phút';
-    }
-    return 'Trễ ${overdue.inMinutes} phút';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final scheduled = featuredDose?.scheduledLocalDateTime;
+    final scheduled = dose.scheduledLocalDateTime;
     final compact = _isCompactHomeCard(context);
-    final title = featuredDose == null
-        ? 'Hôm nay chưa có liều nào'
-        : featuredDose!.primaryTitle;
-    final subtitle = featuredDose == null
-        ? 'Bạn có thể tạo kế hoạch mới hoặc dùng lại kế hoạch cũ'
-        : '${featuredDose!.time} • ${scheduled == null ? 'Đang chờ' : _formatCountdown(scheduled, now)}';
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFEFFAF9), Color(0xFFF9FFFE)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: AppColors.border),
+    final status = dose.effectiveStatus(now);
+    final isPending = status == 'pending';
+    final statusMeta = switch (status) {
+      'taken' => ('Đã uống', AppColors.success, Icons.check_circle_rounded),
+      'skipped' => ('Bỏ qua', AppColors.warning, Icons.remove_circle_rounded),
+      'missed' => ('Đã quên', AppColors.error, Icons.error_rounded),
+      _ when dose.isDueNow(now) => (
+        'Đến giờ uống',
+        AppColors.primaryDark,
+        Icons.alarm_rounded,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(
-                  Icons.medication_liquid_rounded,
-                  color: AppColors.primaryDark,
-                ),
+      _ when dose.isUpcomingSoon(now) => (
+        'Sắp đến giờ',
+        AppColors.info,
+        Icons.notifications_active_rounded,
+      ),
+      _ => ('Chờ đến giờ', AppColors.primaryDark, Icons.schedule_rounded),
+    };
+
+    final actionLabel = switch (status) {
+      'taken' => 'Đã uống xong',
+      'skipped' => 'Đã bỏ qua',
+      'missed' => 'Đã quên',
+      _ when dose.isDueNow(now) => 'Đã uống',
+      _ when dose.isUpcomingSoon(now) => 'Sắp đến giờ',
+      _ => 'Chờ đến giờ',
+    };
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(compact ? 14 : 16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppColors.border),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.04),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: compact ? 78 : 88,
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceSoft,
+                borderRadius: BorderRadius.circular(18),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hôm nay',
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: AppColors.primaryDark,
+              child: Column(
+                children: [
+                  Text(
+                    dose.time,
+                    style: TextStyle(
+                      fontSize: compact ? 24 : 28,
+                      fontWeight: FontWeight.w900,
+                      height: 1,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    _doseSessionLabel(dose),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: compact ? 12 : 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          statusMeta.$1,
+                          style: TextStyle(
+                            color: statusMeta.$2,
+                            fontWeight: FontWeight.w900,
+                            fontSize: compact ? 13 : 14,
+                          ),
+                        ),
+                      ),
+                      if (scheduled != null)
+                        Text(
+                          _formatCountdownText(scheduled, now),
+                          style: const TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    dose.primaryTitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _doseSummaryText(dose),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      height: 1.35,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: statusMeta.$2.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      actionLabel,
+                      style: TextStyle(
+                        color: statusMeta.$2,
                         fontWeight: FontWeight.w800,
+                        fontSize: compact ? 11.5 : 12,
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      AppLocalizations.of(context).homeHeroTitle,
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 13,
+                  ),
+                  if (dose.medications.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    ...dose.medications.map(
+                      (item) => Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          _doseLineLabel(item),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            height: 1.28,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
                       ),
                     ),
                   ],
-                ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: isPending && dose.isDueNow(now)
+                        ? ElevatedButton.icon(
+                            onPressed: canMark ? onTaken : null,
+                            icon: const Icon(Icons.check_circle_outline),
+                            label: const Text('Đã uống'),
+                          )
+                        : OutlinedButton.icon(
+                            onPressed: null,
+                            icon: const Icon(Icons.info_outline),
+                            label: Text(actionLabel),
+                          ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 18),
-          Text(
-            title,
-            maxLines: compact ? 1 : 2,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w900,
-              color: AppColors.textPrimary,
-              fontSize: compact ? 20 : null,
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            maxLines: compact ? 1 : 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              height: 1.35,
-              fontSize: compact ? 12.5 : 13,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _HeroChip(
-                label: 'Tổng ${today.summary.total}',
-                color: AppColors.primaryDark,
-              ),
-              _HeroChip(
-                label: 'Đã uống ${today.summary.taken}',
-                color: AppColors.success,
-              ),
-              _HeroChip(
-                label: 'Còn ${today.summary.pending}',
-                color: AppColors.info,
-              ),
-              if (today.summary.missed > 0)
-                _HeroChip(
-                  label: 'Quên ${today.summary.missed}',
-                  color: AppColors.error,
-                ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -883,32 +784,6 @@ class _LookupPrimaryCard extends StatelessWidget {
               size: 30,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _HeroChip extends StatelessWidget {
-  const _HeroChip({required this.label, required this.color});
-
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: color,
-          fontWeight: FontWeight.w800,
-          fontSize: 12,
         ),
       ),
     );
@@ -1012,87 +887,6 @@ class _QuickActionItem {
   final String subtitle;
   final IconData icon;
   final VoidCallback onTap;
-}
-
-class _PlanCard extends StatelessWidget {
-  const _PlanCard({required this.plan});
-
-  final Plan plan;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => context.go('/plans/${plan.id}'),
-      borderRadius: BorderRadius.circular(24),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: AppColors.surfaceSoft,
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: const Icon(
-                Icons.medication_rounded,
-                color: AppColors.primaryDark,
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    plan.drugName,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 15,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _planSubtitleText(context, plan),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                AppLocalizations.of(context).homePlanActive,
-                style: const TextStyle(
-                  color: AppColors.primaryDark,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 11,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _TodayLoadingCard extends StatelessWidget {
@@ -1226,179 +1020,6 @@ class _TodayEmptyCard extends StatelessWidget {
               label: const Text('Xem kế hoạch'),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TodayDoseTile extends StatelessWidget {
-  const _TodayDoseTile({
-    required this.dose,
-    required this.canMark,
-    required this.onTaken,
-    required this.onSkipped,
-  });
-
-  final TodayDose dose;
-  final bool canMark;
-  final VoidCallback onTaken;
-  final VoidCallback onSkipped;
-
-  @override
-  Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final compact = _isCompactHomeCard(context);
-    final status = dose.effectiveStatus(now);
-    final pending = status == 'pending';
-    final statusMeta = switch (status) {
-      'taken' => ('Đã uống', AppColors.success, Icons.check_circle_rounded),
-      'skipped' => ('Bỏ qua', AppColors.warning, Icons.remove_circle_rounded),
-      'missed' => ('Đã quên', AppColors.error, Icons.error_rounded),
-      _ when dose.isDueNow(now) => (
-        'Đến giờ uống',
-        AppColors.primaryDark,
-        Icons.alarm_rounded,
-      ),
-      _ when dose.isUpcomingSoon(now) => (
-        'Sắp đến giờ',
-        AppColors.info,
-        Icons.notifications_active_rounded,
-      ),
-      _ => ('Chờ đến giờ', AppColors.primaryDark, Icons.schedule_rounded),
-    };
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: EdgeInsets.all(compact ? 14 : 16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              SizedBox(
-                width: compact ? 50 : 56,
-                child: Column(
-                  children: [
-                    Text(
-                      dose.time,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 22,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: compact ? 6 : 8),
-                    Icon(
-                      statusMeta.$3,
-                      color: statusMeta.$2,
-                      size: compact ? 18 : 20,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: compact ? 10 : 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dose.primaryTitle,
-                      maxLines: compact ? 1 : 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _doseSummaryText(dose),
-                      maxLines: compact ? 1 : 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: compact ? 12.5 : 13,
-                        height: 1.25,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: statusMeta.$2.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        statusMeta.$1,
-                        style: TextStyle(
-                          color: statusMeta.$2,
-                          fontWeight: FontWeight.w800,
-                          fontSize: compact ? 11.5 : 12,
-                        ),
-                      ),
-                    ),
-                    if (dose.isUpcomingSoon(now)) ...[
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Thông báo trước 30 phút đã được lên lịch.',
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 11.5,
-                        ),
-                      ),
-                    ] else if (dose.isDueNow(now)) ...[
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Nếu chưa uống, hệ thống sẽ nhắc lại mỗi 15 phút.',
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 11.5,
-                        ),
-                      ),
-                    ] else if (status == 'missed') ...[
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Liều này đã quá 45 phút nên được chuyển sang trạng thái quên.',
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 11.5,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-          ),
-          if (pending && dose.isDueNow(now)) ...[
-            const SizedBox(height: 14),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: canMark ? onSkipped : null,
-                    child: const Text('Bỏ qua'),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: canMark ? onTaken : null,
-                    child: const Text('Đã uống'),
-                  ),
-                ),
-              ],
-            ),
-          ],
         ],
       ),
     );

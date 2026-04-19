@@ -2,156 +2,207 @@
 
 ## 1. Muc tieu dot cap nhat
 
-Dot cap nhat nay chi tac dong den phan thesis media va cac doan mo ta sat media trong `docs/thesis_report`.
+Dot cap nhat nay giai quyet dong thoi 3 nhom viec:
 
-Phan ngoai scope khong bi sua.
+- cap nhat noi dung `docs/thesis_report/main.tex` cho khop voi trang thai du an hien tai
+- ve lai bo so do chinh theo chuan de doc tren 1 trang A4, giam do dam va giam cam giac bi den khi in
+- chinh bo cuc media trong thesis de trinh bay sach hon va dung narrative cua luong core
 
-Muc tieu da thuc hien:
-
-- Tao file yeu cau media rieng de khoa pham vi va tieu chi dung duoc khi in.
-- Tao backup/copy truoc khi sua.
-- Lam moi 3 so do co rui ro lech so voi trang thai repo hien tai.
-- Cap nhat `main.tex` chi o cac doan phuc vu media va giai thich media.
-- Ghi nhan ro blocker cua buoc compile.
+Ket qua: da hoan thanh cap nhat source thesis va asset media. Compile PDF cuoi cung van bi chan boi moi truong LaTeX cua may.
 
 ## 2. Backup va copy an toan
 
-Da tao backup tai:
+### 2.1. Backup dot truoc
 
 - `docs/thesis_report/backup/2026-04-19/main.tex.bak`
 - `docs/thesis_report/backup/2026-04-19/main.pdf.bak`
 - `docs/thesis_report/backup/2026-04-19/diagram_image_plan.md.bak`
 - `docs/thesis_report/backup/2026-04-19/app_screenshot_checklist.md.bak`
 
-Da tao ban sao de thu nghiem truoc khi ap vao file chinh:
+### 2.2. Backup dot hien tai
+
+- `docs/thesis_report/backup/2026-04-19-pass2/main.tex.bak`
+- `docs/thesis_report/backup/2026-04-19-pass2/THESIS_MEDIA_REQUIREMENTS.md.bak`
+- `docs/thesis_report/backup/2026-04-19-pass2/THESIS_UPDATE_REPORT.md.bak`
+- `docs/thesis_report/backup/2026-04-19-pass2/use_case_core_v2.png.bak`
+- `docs/thesis_report/backup/2026-04-19-pass2/scan_flow_core_v2_portrait.png.bak`
+- `docs/thesis_report/backup/2026-04-19-pass2/erd_main_scope_v2.png.bak`
+
+### 2.3. Ban sao lam viec
 
 - `docs/thesis_report/main_media_update_work.tex`
 
-## 3. File moi da tao
+## 3. File moi va file da cap nhat
 
-### 3.1. File yeu cau / quy trinh
+### 3.1. File plan / requirement
 
+- `docs/thesis_report/THESIS_EXECUTION_PLAN.md`
 - `docs/thesis_report/THESIS_MEDIA_REQUIREMENTS.md`
 
-### 3.2. Source so do moi
+### 3.2. Source ve so do moi
 
-- `docs/thesis_report/diagrams/use_case_core_v2.mmd`
-- `docs/thesis_report/diagrams/scan_flow_core_v2.mmd`
-- `docs/thesis_report/diagrams/scan_flow_core_v2_portrait.mmd`
-- `docs/thesis_report/diagrams/erd_main_scope_v2.mmd`
-- `docs/thesis_report/diagrams/puppeteer-config.json`
+- `docs/thesis_report/diagrams/render_thesis_diagrams.py`
 
-### 3.3. Asset moi
+### 3.3. Asset so do moi theo chuan A4
 
-- `docs/thesis_report/assets/diagrams/use_case_core_v2.svg`
-- `docs/thesis_report/assets/diagrams/use_case_core_v2.png`
-- `docs/thesis_report/assets/diagrams/scan_flow_core_v2.svg`
-- `docs/thesis_report/assets/diagrams/scan_flow_core_v2.png`
-- `docs/thesis_report/assets/diagrams/scan_flow_core_v2_portrait.svg`
-- `docs/thesis_report/assets/diagrams/scan_flow_core_v2_portrait.png`
-- `docs/thesis_report/assets/diagrams/erd_main_scope_v2.svg`
-- `docs/thesis_report/assets/diagrams/erd_main_scope_v2.png`
+- `docs/thesis_report/assets/diagrams/architecture_a4_v3.svg`
+- `docs/thesis_report/assets/diagrams/architecture_a4_v3.png`
+- `docs/thesis_report/assets/diagrams/use_case_a4_v3.svg`
+- `docs/thesis_report/assets/diagrams/use_case_a4_v3.png`
+- `docs/thesis_report/assets/diagrams/sequence_scan_a4_v3.svg`
+- `docs/thesis_report/assets/diagrams/sequence_scan_a4_v3.png`
+- `docs/thesis_report/assets/diagrams/scan_flow_a4_v3.svg`
+- `docs/thesis_report/assets/diagrams/scan_flow_a4_v3.png`
+- `docs/thesis_report/assets/diagrams/erd_main_a4_v3.svg`
+- `docs/thesis_report/assets/diagrams/erd_main_a4_v3.png`
 
-## 4. File da cap nhat
+### 3.4. File thesis da cap nhat
 
 - `docs/thesis_report/main.tex`
 
-Cap nhat gom:
+## 4. Noi dung da sua trong `main.tex`
 
-- doi reference cua `use_case`, `scan_flow`, `erd_main` sang asset moi
-- cap nhat mo ta use case cho dung scope thesis
-- cap nhat luong quet don thuoc de phan anh quality gate, table ROI va group by STT
-- cap nhat bang cac buoc pipeline tu 5 muc len 8 muc
-- cap nhat mo ta ERD de bao gom `scan_sessions` va `scans`
+### 4.1. Cap nhat cho dung repo hien tai
 
-## 5. Quyết định media
+- doi wording ve benchmark thanh `benchmark snapshot noi bo`
+- lam ro quan he `51 anh input trong repo` va `50 anh trong benchmark tieu bieu`
+- bo claim cu ve so test `55/55` va `16/16`, thay bang mo ta repo dang co test tu dong
+- sua mo ta scan screen cho dung code hien tai:
+  - camera mo truc tiep
+  - nguoi dung chu dong bam chup
+  - co local quality gate
+  - manual entry / reuse nam o `CreatePlanScreen`, khong nam duoi camera screen
+- sua wording `lich su quet` tren mobile thanh `lich su ke hoach va nhat ky dung thuoc`
+- cap nhat bang API de phan biet:
+  - route core
+  - route mo rong / experimental
+- sua framing ve pill verification thanh:
+  - repo da co artifact thu nghiem
+  - chua la luong chinh da duoc kiem chung trong thesis
+
+### 4.2. Rut gon va lam sach narrative
+
+- giam bot lap y quanh benchmark va test count
+- giam bot wording mo ta tinh nang chua nam trong pham vi danh gia trung tam
+- chinh mot so cau cho sach hon va it mo ta "planned UX" hon
+
+### 4.3. Chinh bo cuc media
+
+- doi reference tu bo so do cu sang bo `*_a4_v3`
+- doi `scan_flow` sang dat tren trang landscape A4 de giu co chu de doc
+- giu `ERD` va `sequence` tren landscape voi asset moi
+- tang width hien thi cua 4 screenshot app tu `0.38\textwidth` len `0.46\textwidth`
+- doi placement screenshot tu `[H]` sang `[tbp]` de layout de tho hon
+- cap nhat caption `set_schedule` theo y `so vien theo tung khung gio`
+
+## 5. Danh gia media va quyet dinh
 
 | Item | Quyết định | Ghi chu |
 |---|---|---|
-| `input_prescription.jpg` | Giữ | Van phu hop va da duoc dung tot |
-| `preprocessed.png` | Giữ | Hinh AI trung gian quan trong |
-| `ocr_det.png` | Giữ | Bang chung OCR detect |
-| `scan_camera.png` | Giữ | Canh bao: can test print preview vi source nho |
-| `scan_review.png` | Giữ | Canh bao: can test print preview vi source nho |
-| `set_schedule.png` | Giữ | Canh bao: can test print preview vi source nho |
-| `home_today.png` | Giữ | Canh bao: can test print preview vi source nho |
-| `architecture.png` | Giữ | Khong can lam moi |
-| `sequence_scan.png` | Giữ | Khong can lam moi |
-| `activity_create_plan.png` | Giữ | Khong can lam moi |
-| `use_case.png` | Thay bang `use_case_core_v2.png` | Ban moi gon hon va sat narrative thesis |
-| `scan_flow.png` | Thay bang `scan_flow_core_v2_portrait.png` | Ban moi phan anh quality gate, ROI va group by STT |
-| `erd_main.png` | Thay bang `erd_main_scope_v2.png` | Ban moi chi giu nhom bang phuc vu thesis |
-| `6_tuan_tu_lap_lich.*` | Khong dua vao main.tex | Trung y voi activity diagram dang dung |
-| `7_tuan_tu_tuong_tac_thuoc.*` | Khong dua vao main.tex | Ngoai truc chinh cua thesis hien tai |
-| `8_hoat_dong_dong_bo_offline.*` | Khong dua vao main.tex | Ngoai truc chinh cua thesis hien tai |
+| `input_prescription.jpg` | Giữ | Van phu hop, chung minh du lieu thuc |
+| `preprocessed.png` | Giữ | Chung minh detect/crop/preprocess |
+| `ocr_det.png` | Giữ | Chung minh OCR detect |
+| `scan_camera.png` | Giữ, tang kich thuoc hien thi | Van can print preview that vi source goc nho |
+| `scan_review.png` | Giữ, tang kich thuoc hien thi | Van can print preview that vi source goc nho |
+| `set_schedule.png` | Giữ, tang kich thuoc hien thi | Van can print preview that vi source goc nho |
+| `home_today.png` | Giữ, tang kich thuoc hien thi | Van can print preview that vi source goc nho |
+| `architecture.png` | Thay bang `architecture_a4_v3.png` | Lam nhe visual va cap nhat narrative backend |
+| `use_case_core_v2.png` | Thay bang `use_case_a4_v3.png` | Don gian hon, de doc hon tren A4 |
+| `sequence_scan.png` | Thay bang `sequence_scan_a4_v3.png` | Bo text cu sai ve gallery va lam nhe bo cuc |
+| `scan_flow_core_v2_portrait.png` | Thay bang `scan_flow_a4_v3.png` | Chuyen sang layout ngang de dung 1 trang A4 landscape |
+| `erd_main_scope_v2.png` | Thay bang `erd_main_a4_v3.png` | Giam mat do, chi giu bang core |
+| `activity_create_plan.png` | Giữ | Da dat readability tot, khong can ve lai |
 
-## 6. Kiem tra da thuc hien
+## 6. Danh gia trinh bay so do moi
 
-### 6.1. Kiem tra ton tai asset moi
+### 6.1. Tieu chi da ap dung
 
-Da xac nhan ton tai day du:
+- nen trang hoac rat sang
+- stroke nhe hon, tranh vien qua dam
+- text ngan gon, uu tien 1-2 dong trong box
+- bo cuc fit 1 trang A4 portrait hoac landscape
+- cac so do rong duoc dua ve landscape neu can de giu co chu
 
-- `use_case_core_v2.png` va `.svg`
-- `scan_flow_core_v2_portrait.png` va `.svg`
-- `erd_main_scope_v2.png` va `.svg`
+### 6.2. Kich thuoc asset moi
 
-### 6.2. Kiem tra kich thuoc asset
+- `architecture_a4_v3.png`: `2548 x 1664`
+- `use_case_a4_v3.png`: `2548 x 1456`
+- `sequence_scan_a4_v3.png`: `3068 x 1976`
+- `scan_flow_a4_v3.png`: `3588 x 1872`
+- `erd_main_a4_v3.png`: `3328 x 2132`
 
-Ket qua:
+### 6.3. Danh gia A4 / print-readability
 
-- `use_case_core_v2.png`: `2352 x 1152`
-- `scan_flow_core_v2_portrait.png`: `2181 x 5223`
-- `erd_main_scope_v2.png`: `2352 x 2076`
+- `architecture_a4_v3`: dat cho trang portrait, mat do vua phai
+- `use_case_a4_v3`: dat cho trang portrait, chi giu use case core
+- `sequence_scan_a4_v3`: dat cho 1 trang A4 landscape, co chu ngan gon hon ban cu
+- `scan_flow_a4_v3`: dat cho 1 trang A4 landscape, bo duoc tinh trang qua cao cua ban portrait truoc do
+- `erd_main_a4_v3`: dat cho 1 trang A4 landscape, giam so bang va note ro scope
 
-Danh gia:
+Danh gia tong quat:
 
-- Ca 3 asset moi dat nguong phan giai tot hon ro rang so voi cac file cu nho.
-- Ban `scan_flow_core_v2_portrait.png` duoc chon thay vi ban ngang `scan_flow_core_v2.png` do phu hop hon voi cach dat full-page trong `main.tex`.
+- bo so do moi nhe hon ban truoc
+- khong co vung den dac lon
+- do dam vien va mui ten da giam
+- cach to mau huong ve in de doc thay vi trang tri
 
-### 6.3. Kiem tra reference trong `main.tex`
+## 7. Kiem tra tinh va ket qua
+
+### 7.1. Reference trong `main.tex`
 
 Da xac nhan `main.tex` dang tro den:
 
-- `assets/diagrams/use_case_core_v2.png`
-- `assets/diagrams/scan_flow_core_v2_portrait.png`
-- `assets/diagrams/erd_main_scope_v2.png`
+- `assets/diagrams/use_case_a4_v3.png`
+- `assets/diagrams/architecture_a4_v3.png`
+- `assets/diagrams/sequence_scan_a4_v3.png`
+- `assets/diagrams/scan_flow_a4_v3.png`
+- `assets/diagrams/erd_main_a4_v3.png`
 
-Da xac nhan bang pipeline co them muc:
+Khong con reference cu den:
 
-- `Kiểm tra chất lượng`
-- `Table ROI (tùy chọn)`
-- `Gom khối OCR theo STT`
+- `use_case_core_v2`
+- `scan_flow_core_v2*`
+- `erd_main_scope_v2`
+- `architecture.png`
+- `sequence_scan.png`
 
-## 7. Compile va blocker
+### 7.2. Kiem tra noi dung
 
-### 7.1. Trang thai compile
+Da sua cac diem lech quan trong nhat:
 
-Compile end-to-end chua xac nhan duoc trong moi truong hien tai.
+- benchmark wording
+- test count wording
+- scan screen behavior
+- mobile history wording
+- API table
+- pill verification framing
 
-### 7.2. Nguyen nhan
+### 7.3. Kiem tra compile
 
-Da thu tren ban sao `main_media_update_work.tex`:
+Da thu compile voi `lualatex`.
+
+Ket qua:
 
 - `xelatex` khong co trong PATH
-- `lualatex` co ton tai, nhung toolchain loi do thieu `luaotfload-main`
+- `lualatex` co ton tai nhung fail ngay tu dau vi moi truong thieu `luaotfload-main`
+- `main.tex` hien van yeu cau `XeLaTeX`
 
-Log blocker da ghi nhan:
+Log blocker:
 
 - `module 'luaotfload-main' not found`
-- `Font ... not loadable`
+- `Tài liệu này yêu cầu biên dịch bằng XeLaTeX.`
 - `Fatal error occurred, no output PDF file produced`
 
-### 7.3. Danh gia tac dong
+Danh gia:
 
-- Day la blocker cua moi truong build, khong phai blocker cua media source da tao.
-- Phan cap nhat media va text lien quan da hoan tat o muc file source.
-- Can mot moi truong TeX day du hon de xac nhan PDF cuoi cung bang compile that.
+- blocker nay den tu moi truong build, khong phai do asset media vua tao
+- can moi truong co `xelatex` day du de xac nhan PDF cuoi cung bang compile that
 
-## 8. Muc con thieu / placeholder
+## 8. Phan con thieu / can xac nhan bang mat khi co PDF
 
 ### 8.1. Screenshot app
 
-Chua chup lai screenshot phan giai cao hon vi chua co bang chung cho thay ban hien tai khong doc duoc khi in.
+Da tang kich thuoc hien thi trong `main.tex`, nhung van can xac nhan print preview that do source goc chi khoang 500px be ngang.
 
 Placeholder:
 
@@ -166,23 +217,24 @@ ELSE:
 ### 8.2. Compile PDF
 
 ```text
-BLOCKED: TEX_TOOLCHAIN_UNAVAILABLE()
+BLOCKED: XELATEX_UNAVAILABLE()
 NEXT:
   - INSTALL_OR_ENABLE_XELATEX()
-  - OR FIX_LUALATEX_FONTSTACK()
-  - RECOMPILE_TWICE()
-  - VERIFY_FIGURE_READABILITY_IN_PDF()
+  - RECOMPILE_TWICE(main.tex)
+  - VERIFY_LAYOUT_ON_PDF()
+  - VERIFY_PRINT_READABILITY()
 ```
 
 ## 9. Ket luan
 
-Dot cap nhat nay da hoan thanh phan chinh yeu theo plan:
+Dot cap nhat nay da hoan thanh theo dung yeu cau mot lan chay:
 
-- co backup
-- co file requirement chi tiet
-- co source moi cho media rui ro
-- co asset moi khong ghi de asset cu
-- co cap nhat `main.tex` dung pham vi media lien quan
-- co bao cao tong hop blocker va phan con thieu
+- co plan chi tiet
+- co backup moi
+- co cap nhat noi dung thesis theo repo hien tai
+- co ve lai bo so do chinh theo tieu chi A4
+- co danh gia trinh bay / do dam / readability
+- co cap nhat `main.tex` de dung asset moi va bo cuc moi
+- co bao cao tong hop blocker compile
 
-Phan duy nhat chua the xac nhan den cuoi la compile PDF, va ly do da duoc ghi ro la do moi truong LaTeX hien tai chua san sang.
+Phan chua the xac nhan den cuoi chi con buoc compile PDF bang `XeLaTeX`, vi moi truong hien tai chua co toolchain phu hop.

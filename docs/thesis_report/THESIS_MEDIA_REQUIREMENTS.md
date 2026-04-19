@@ -107,12 +107,12 @@ Day la phan bat buoc nhat.
 | `assets/app/scan_review.png` | Co | Cao | Keep with print check | Hinh quan trong ve buoc ra soat an toan |
 | `assets/app/set_schedule.png` | Co | Cao | Keep with print check | Hinh dau ra chinh cua luong lap lich |
 | `assets/app/home_today.png` | Co | Cao | Keep with print check | Hinh vong kin theo doi trong ngay |
-| `assets/diagrams/architecture.png` | Co | Cao | Keep | So do kien truc van phu hop scope thesis |
-| `assets/diagrams/sequence_scan.png` | Co | Cao | Keep | So do tuan tu quet don van phu hop |
+| `assets/diagrams/architecture_a4_v3.png` | Co | Cao | Regenerate | Ve lai nhe hon, fit A4 hon va cap nhat narrative hien tai |
+| `assets/diagrams/sequence_scan_a4_v3.png` | Co | Cao | Regenerate | Ve lai de bo text sai ve gallery va giam do dam khi in |
 | `assets/diagrams/activity_create_plan.png` | Co | Cao | Keep | So do cho luong lap ke hoach ro rang |
-| `assets/diagrams/use_case.png` | Co | Trung binh | Regenerate | Can lam gon lai de chi giu flow chinh |
-| `assets/diagrams/scan_flow.png` | Co | Cao | Regenerate | Ban cu co nguy co lech pipeline hien tai |
-| `assets/diagrams/erd_main.png` | Co | Cao | Regenerate | Ban cu can thu hep dung group bang thesis |
+| `assets/diagrams/use_case_a4_v3.png` | Co | Trung binh | Regenerate | Can lam gon lai de chi giu flow chinh va de doc tren A4 |
+| `assets/diagrams/scan_flow_a4_v3.png` | Co | Cao | Regenerate | Ve lai theo layout ngang de de doc tren 1 trang A4 landscape |
+| `assets/diagrams/erd_main_a4_v3.png` | Co | Cao | Regenerate | Ve lai de thu hep dung group bang thesis va giam mat do |
 | `diagrams/6_tuan_tu_lap_lich.*` | Khong | Trung binh | Omit | Trung y voi activity diagram dang dung |
 | `diagrams/7_tuan_tu_tuong_tac_thuoc.*` | Khong | Thap doi voi thesis | Omit | Ngoai truc chinh cua thesis hien tai |
 | `diagrams/8_hoat_dong_dong_bo_offline.*` | Khong | Thap doi voi thesis | Omit | Ngoai truc chinh va de lam phinh narrative |
