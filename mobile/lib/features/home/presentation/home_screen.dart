@@ -412,6 +412,8 @@ class _DashboardView extends ConsumerWidget {
               children: [
                 _HeroTodayCard(today: today, featuredDose: featuredDose),
                 const SizedBox(height: 16),
+                _LookupPrimaryCard(onTap: () => context.go('/lookup')),
+                const SizedBox(height: 16),
                 _QuickActionGrid(
                   actions: [
                     _QuickActionItem(
@@ -492,6 +494,10 @@ final _pendingCountProvider = FutureProvider<int>((ref) async {
 
 String _formatHomeDate(DateTime date) {
   return DateFormat('d MMMM, yyyy', 'vi_VN').format(date);
+}
+
+bool _isCompactHomeCard(BuildContext context) {
+  return MediaQuery.sizeOf(context).width < 390;
 }
 
 String _doseSummaryText(TodayDose dose) {
@@ -688,6 +694,7 @@ class _HeroTodayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final scheduled = featuredDose?.scheduledLocalDateTime;
+    final compact = _isCompactHomeCard(context);
     final title = featuredDose == null
         ? 'Hôm nay chưa có liều nào'
         : featuredDose!.primaryTitle;
@@ -751,19 +758,24 @@ class _HeroTodayCard extends StatelessWidget {
           const SizedBox(height: 18),
           Text(
             title,
-            maxLines: 2,
+            maxLines: compact ? 1 : 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w900,
               color: AppColors.textPrimary,
+              fontSize: compact ? 20 : null,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            maxLines: 2,
+            maxLines: compact ? 1 : 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(color: AppColors.textSecondary, height: 1.4),
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              height: 1.35,
+              fontSize: compact ? 12.5 : 13,
+            ),
           ),
           const SizedBox(height: 16),
           Wrap(
@@ -1236,6 +1248,7 @@ class _TodayDoseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
+    final compact = _isCompactHomeCard(context);
     final status = dose.effectiveStatus(now);
     final pending = status == 'pending';
     final statusMeta = switch (status) {
@@ -1257,7 +1270,7 @@ class _TodayDoseTile extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(compact ? 14 : 16),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(24),
@@ -1268,7 +1281,7 @@ class _TodayDoseTile extends StatelessWidget {
           Row(
             children: [
               SizedBox(
-                width: 56,
+                width: compact ? 50 : 56,
                 child: Column(
                   children: [
                     Text(
@@ -1277,20 +1290,26 @@ class _TodayDoseTile extends StatelessWidget {
                         fontWeight: FontWeight.w900,
                         fontSize: 22,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 8),
-                    Icon(statusMeta.$3, color: statusMeta.$2, size: 20),
+                    SizedBox(height: compact ? 6 : 8),
+                    Icon(
+                      statusMeta.$3,
+                      color: statusMeta.$2,
+                      size: compact ? 18 : 20,
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: compact ? 10 : 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       dose.primaryTitle,
-                      maxLines: 2,
+                      maxLines: compact ? 1 : 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontWeight: FontWeight.w800,
@@ -1300,9 +1319,13 @@ class _TodayDoseTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       _doseSummaryText(dose),
-                      maxLines: 2,
+                      maxLines: compact ? 1 : 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: AppColors.textSecondary),
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: compact ? 12.5 : 13,
+                        height: 1.25,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Container(
@@ -1319,7 +1342,7 @@ class _TodayDoseTile extends StatelessWidget {
                         style: TextStyle(
                           color: statusMeta.$2,
                           fontWeight: FontWeight.w800,
-                          fontSize: 12,
+                          fontSize: compact ? 11.5 : 12,
                         ),
                       ),
                     ),
@@ -1329,7 +1352,7 @@ class _TodayDoseTile extends StatelessWidget {
                         'Thông báo trước 30 phút đã được lên lịch.',
                         style: TextStyle(
                           color: AppColors.textSecondary,
-                          fontSize: 12,
+                          fontSize: 11.5,
                         ),
                       ),
                     ] else if (dose.isDueNow(now)) ...[
@@ -1338,7 +1361,7 @@ class _TodayDoseTile extends StatelessWidget {
                         'Nếu chưa uống, hệ thống sẽ nhắc lại mỗi 15 phút.',
                         style: TextStyle(
                           color: AppColors.textSecondary,
-                          fontSize: 12,
+                          fontSize: 11.5,
                         ),
                       ),
                     ] else if (status == 'missed') ...[
@@ -1347,7 +1370,7 @@ class _TodayDoseTile extends StatelessWidget {
                         'Liều này đã quá 45 phút nên được chuyển sang trạng thái quên.',
                         style: TextStyle(
                           color: AppColors.textSecondary,
-                          fontSize: 12,
+                          fontSize: 11.5,
                         ),
                       ),
                     ],

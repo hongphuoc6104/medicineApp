@@ -4,7 +4,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { asyncHandler } from '../utils/errors.js';
-import { success } from '../utils/response.js';
+import { paginated, success } from '../utils/response.js';
 import { validateBody, validateQuery } from '../middleware/validator.js';
 import { requireAuth } from '../middleware/auth.js';
 import * as drugInteractionService from '../services/drugInteraction.service.js';
@@ -21,6 +21,12 @@ const checkByActiveIngredientsSchema = z.object({
 
 const searchActiveIngredientsSchema = z.object({
   keyword: z.string().trim().min(1).max(120),
+});
+
+const listActiveIngredientsSchema = z.object({
+  keyword: z.string().trim().max(120).optional().default(''),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
 });
 
 const byActiveIngredientSchema = z.object({
@@ -50,6 +56,29 @@ router.get(
   asyncHandler(async (req, res) => {
     const data = await drugInteractionService.searchActiveIngredients(req.query.keyword);
     success(res, data);
+  })
+);
+
+/**
+ * GET /api/drug-interactions/active-ingredients?keyword=...&page=1&limit=20
+ */
+router.get(
+  '/active-ingredients',
+  requireAuth,
+  validateQuery(listActiveIngredientsSchema),
+  asyncHandler(async (req, res) => {
+    const { keyword, page, limit } = req.query;
+    const data = await drugInteractionService.listActiveIngredients({
+      keyword,
+      page,
+      limit,
+    });
+    paginated(res, {
+      items: data.items,
+      total: data.total,
+      page: data.page,
+      limit: data.limit,
+    });
   })
 );
 

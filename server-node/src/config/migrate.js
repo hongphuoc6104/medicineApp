@@ -308,6 +308,71 @@ const MIGRATIONS = [
   );`,
   `CREATE INDEX IF NOT EXISTS idx_prescription_plan_logs_plan
    ON prescription_plan_logs(plan_id, scheduled_time DESC);`,
+
+  // 049: Drug -> active ingredient lookup cache
+  `CREATE TABLE IF NOT EXISTS drug_active_ingredients (
+    id SERIAL PRIMARY KEY,
+    drug_name TEXT NOT NULL,
+    drug_name_key TEXT NOT NULL,
+    ingredient_name TEXT NOT NULL,
+    ingredient_key TEXT NOT NULL,
+    strength VARCHAR(120),
+    source VARCHAR(50) NOT NULL DEFAULT 'local',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(drug_name_key, ingredient_key, source)
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_drug_active_ingredients_drug_key
+   ON drug_active_ingredients(drug_name_key);`,
+  `CREATE INDEX IF NOT EXISTS idx_drug_active_ingredients_ingredient_key
+   ON drug_active_ingredients(ingredient_key);`,
+  `CREATE INDEX IF NOT EXISTS idx_drug_active_ingredients_drug_trgm
+   ON drug_active_ingredients USING GIN (drug_name gin_trgm_ops);`,
+  `ALTER TABLE drug_active_ingredients ALTER COLUMN drug_name TYPE TEXT;`,
+  `ALTER TABLE drug_active_ingredients ALTER COLUMN ingredient_name TYPE TEXT;`,
+
+  // 050: Active ingredient catalog derived from interaction dataset
+  `CREATE TABLE IF NOT EXISTS interaction_active_ingredients (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    name_key TEXT NOT NULL UNIQUE,
+    interaction_count INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_interaction_active_ingredients_name_key
+   ON interaction_active_ingredients(name_key);`,
+  `CREATE INDEX IF NOT EXISTS idx_interaction_active_ingredients_name_trgm
+   ON interaction_active_ingredients USING GIN (name gin_trgm_ops);`,
+  `ALTER TABLE interaction_active_ingredients ALTER COLUMN name TYPE TEXT;`,
+
+  // 051: Canonical interaction pairs seeded from local dataset
+  `CREATE TABLE IF NOT EXISTS drug_interaction_pairs (
+    id SERIAL PRIMARY KEY,
+    source_id VARCHAR(64),
+    source_drug_name TEXT,
+    ingredient_a TEXT NOT NULL,
+    ingredient_b TEXT NOT NULL,
+    ingredient_a_key TEXT NOT NULL,
+    ingredient_b_key TEXT NOT NULL,
+    pair_key TEXT NOT NULL,
+    severity_original TEXT,
+    severity_normalized VARCHAR(30) NOT NULL DEFAULT 'unknown',
+    warning TEXT,
+    warning_key TEXT NOT NULL,
+    dedupe_key VARCHAR(120) NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  );`,
+  `CREATE INDEX IF NOT EXISTS idx_drug_interaction_pairs_pair_key
+   ON drug_interaction_pairs(pair_key);`,
+  `CREATE INDEX IF NOT EXISTS idx_drug_interaction_pairs_ingredient_a_key
+   ON drug_interaction_pairs(ingredient_a_key);`,
+  `CREATE INDEX IF NOT EXISTS idx_drug_interaction_pairs_ingredient_b_key
+   ON drug_interaction_pairs(ingredient_b_key);`,
+  `CREATE INDEX IF NOT EXISTS idx_drug_interaction_pairs_severity
+   ON drug_interaction_pairs(severity_normalized);`,
+  `ALTER TABLE drug_interaction_pairs ALTER COLUMN source_drug_name TYPE TEXT;`,
+  `ALTER TABLE drug_interaction_pairs ALTER COLUMN ingredient_a TYPE TEXT;`,
+  `ALTER TABLE drug_interaction_pairs ALTER COLUMN ingredient_b TYPE TEXT;`,
+  `ALTER TABLE drug_interaction_pairs ALTER COLUMN severity_original TYPE TEXT;`,
 ];
 
 async function migrate() {

@@ -19,6 +19,8 @@ import '../../features/drug/presentation/drug_search_screen.dart';
 import '../../features/drug/presentation/drug_detail_screen.dart';
 import '../../features/drug/data/drug_repository.dart';
 import '../../features/lookup/presentation/lookup_screen.dart';
+import '../../features/lookup/presentation/active_ingredient_catalog_screen.dart';
+import '../../features/lookup/presentation/active_ingredient_interactions_screen.dart';
 import '../../features/history/presentation/history_screen.dart';
 import '../../features/plan/presentation/plan_detail_screen.dart';
 import '../../features/plan/presentation/plan_list_screen.dart';
@@ -228,6 +230,18 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: '/lookup',
             pageBuilder: (context, state) =>
                 const NoTransitionPage(child: LookupScreen()),
+          ),
+          GoRoute(
+            path: '/lookup/ingredients',
+            builder: (context, state) => const ActiveIngredientCatalogScreen(),
+          ),
+          GoRoute(
+            path: '/lookup/ingredients/:name',
+            builder: (context, state) => ActiveIngredientInteractionsScreen(
+              ingredientName: Uri.decodeComponent(
+                state.pathParameters['name'] ?? '',
+              ),
+            ),
           ),
           GoRoute(
             path: '/history/scan/:id',

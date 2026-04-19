@@ -8,6 +8,8 @@
     "start": "node src/server.js",
     "migrate": "node src/config/migrate.js",
     "seed": "node src/config/seed.js",
+    "seed:lookup": "node src/config/seed_lookup.js",
+    "seed:all": "npm run seed && npm run seed:lookup",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --forceExit --runInBand",
     "test:watch": "npm test -- --watch"
   },

@@ -1,15 +1,9 @@
 /**
- * Drug service — search local DB + ddi.lab.io.vn API + PostgreSQL cache.
- *
- * Flow:
- * 1. Search local drug_cache (crawled data, 9284 drugs) using pg_trgm fuzzy search
- * 2. If not found / user requests detailed info → call ddi.lab.io.vn API
- * 3. Cache API results in drug_cache (7 day TTL)
+ * Drug service — fully local PostgreSQL-backed drug lookup.
  */
 import { query } from '../config/database.js';
-import { env } from '../config/env.js';
 import { AppError } from '../utils/errors.js';
-import logger from '../middleware/logger.js';
+import { getInteractionsByActiveIngredient } from './drugInteraction.service.js';
 
 /**
  * Search drugs by name (fuzzy search using pg_trgm).
@@ -58,8 +52,7 @@ export async function searchDrugs(q, { page = 1, limit = 20 } = {}) {
 }
 
 /**
- * Get drug details by exact name.
- * First checks local cache, then calls ddi.lab.io.vn API.
+ * Get drug details by exact or fuzzy-local name.
  * @param {string} name - Drug name
  * @returns {Promise<object>}
  */
@@ -70,7 +63,7 @@ export async function getDrugDetails(name) {
 
   const trimmed = name.trim();
 
-  // 1. Check local cache (non-expired)
+  // 1. Exact local match (non-expired)
   const cached = await query(
     `SELECT data, source, cached_at, expires_at FROM drug_cache
      WHERE drug_name ILIKE $1 AND expires_at > NOW() LIMIT 1`,
@@ -87,8 +80,36 @@ export async function getDrugDetails(name) {
     };
   }
 
-  // 2. Not in cache or expired → call ddi.lab.io.vn API
-  return await fetchFromDdi(trimmed);
+  // 2. Local fuzzy fallback to avoid remote dependency for detail pages.
+  const fuzzy = await query(
+    `SELECT data, source, cached_at,
+            similarity(drug_name, $1) AS sim_score
+     FROM drug_cache
+     WHERE drug_name % $1 OR drug_name ILIKE $2
+     ORDER BY
+       CASE
+         WHEN lower(drug_name) = lower($1) THEN 0
+         WHEN drug_name ILIKE $3 THEN 1
+         ELSE 2
+       END,
+       sim_score DESC,
+       drug_name ASC
+     LIMIT 1`,
+    [trimmed, `%${trimmed}%`, `${trimmed}%`]
+  );
+
+  if (fuzzy.rows.length > 0) {
+    const row = fuzzy.rows[0];
+    return {
+      ...row.data,
+      _source: row.source,
+      _cached: true,
+      _cached_at: row.cached_at,
+      _fuzzy_match: true,
+    };
+  }
+
+  throw new AppError(`Drug not found: ${trimmed}`, 404, 'DRUG_NOT_FOUND');
 }
 
 /**
@@ -101,88 +122,5 @@ export async function getInteractions(ingredientName) {
     throw new AppError('Ingredient name required', 400, 'INVALID_NAME');
   }
 
-  try {
-    const url = `${env.DDI_API_BASE}/interactions/by-active-ingredient?ingredientName=${encodeURIComponent(ingredientName)}`;
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 5000);
-
-    const resp = await fetch(url, {
-      signal: ctrl.signal,
-      headers: { 'Accept': 'application/json' },
-    });
-    clearTimeout(timeout);
-
-    if (!resp.ok) {
-      throw new Error(`DDI API returned ${resp.status}`);
-    }
-
-    return await resp.json();
-  } catch (err) {
-    if (err instanceof AppError) throw err;
-    if (err.name === 'AbortError') {
-      throw new AppError('Drug interaction service timed out', 504, 'INTERACTION_TIMEOUT');
-    }
-    logger.warn(`DDI interactions API error: ${err.message}`);
-    throw new AppError(
-      'Drug interaction service unavailable',
-      503,
-      'INTERACTION_SERVICE_ERROR'
-    );
-  }
-}
-
-// ── Internal ──
-
-async function fetchFromDdi(drugName) {
-  try {
-    const url = `${env.DDI_API_BASE}/drugs/search-detailed?q=${encodeURIComponent(drugName)}&page=1&limit=5`;
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 5000);
-
-    const resp = await fetch(url, {
-      signal: ctrl.signal,
-      headers: { 'Accept': 'application/json' },
-    });
-    clearTimeout(timeout);
-
-    if (!resp.ok) {
-      throw new Error(`DDI API returned ${resp.status}`);
-    }
-
-    const data = await resp.json();
-    const drugs = data.drugs || [];
-
-    if (drugs.length === 0) {
-      throw new AppError(`Drug not found: ${drugName}`, 404, 'DRUG_NOT_FOUND');
-    }
-
-    // Cache the first result
-    const drug = drugs[0];
-    try {
-      await query(
-        `INSERT INTO drug_cache (drug_name, source, data, expires_at)
-         VALUES ($1, 'ddi', $2, NOW() + INTERVAL '7 days')
-         ON CONFLICT (drug_name, source) DO UPDATE
-         SET data = $2, cached_at = NOW(), expires_at = NOW() + INTERVAL '7 days'`,
-        [drug.tenThuoc?.trim() || drugName, JSON.stringify(drug)]
-      );
-    } catch (cacheErr) {
-      logger.warn(`Failed to cache drug: ${cacheErr.message}`);
-    }
-
-    return {
-      ...drug,
-      _source: 'ddi',
-      _cached: false,
-    };
-  } catch (err) {
-    if (err instanceof AppError) throw err;
-
-    logger.warn(`DDI API error: ${err.message}`);
-    throw new AppError(
-      'Drug information service temporarily unavailable',
-      503,
-      'DDI_SERVICE_ERROR'
-    );
-  }
+  return getInteractionsByActiveIngredient(ingredientName);
 }

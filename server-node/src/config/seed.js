@@ -20,8 +20,19 @@ async function seed() {
   }
 
   const raw = JSON.parse(fs.readFileSync(DRUG_DB_PATH, 'utf-8'));
-  const drugs = raw.drugs;
-  console.log(`  Found ${drugs.length} drugs`);
+  const sourceDrugs = raw.drugs;
+  const uniqueDrugs = new Map();
+  for (const drug of sourceDrugs) {
+    const key = String(drug?.tenThuoc || '').trim().toLowerCase();
+    if (!key) {
+      continue;
+    }
+    uniqueDrugs.set(key, drug);
+  }
+
+  const drugs = [...uniqueDrugs.values()];
+  console.log(`  Found ${sourceDrugs.length} source rows`);
+  console.log(`  Using ${drugs.length} unique drug names`);
 
   let inserted = 0;
   let skipped = 0;

@@ -1,0 +1,80 @@
+%%{init: {'theme':'base','themeVariables': {'fontSize':'16px','fontFamily':'Arial','lineColor':'#37474f'}}}%%
+erDiagram
+    USERS ||--o{ SCAN_SESSIONS : creates
+    USERS ||--o{ SCANS : owns
+    USERS ||--o{ PRESCRIPTION_PLANS : owns
+
+    SCAN_SESSIONS ||--o{ SCANS : groups
+
+    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_DRUGS : contains
+    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_SLOTS : contains
+    PRESCRIPTION_PLANS ||--o{ PRESCRIPTION_PLAN_LOGS : records
+
+    PRESCRIPTION_PLAN_SLOTS ||--o{ PRESCRIPTION_PLAN_SLOT_DRUGS : assigns
+    PRESCRIPTION_PLAN_DRUGS ||--o{ PRESCRIPTION_PLAN_SLOT_DRUGS : scheduled_in
+
+    USERS {
+        uuid id PK
+        varchar email UK
+        varchar name
+        timestamptz created_at
+    }
+
+    SCAN_SESSIONS {
+        uuid id PK
+        uuid user_id FK
+        varchar status
+        boolean converged
+        jsonb merged_result
+        timestamptz created_at
+    }
+
+    SCANS {
+        uuid id PK
+        uuid user_id FK
+        uuid session_id FK
+        varchar quality_state
+        integer drug_count
+        timestamptz scanned_at
+    }
+
+    PRESCRIPTION_PLANS {
+        uuid id PK
+        uuid user_id FK
+        varchar title
+        date start_date
+        date end_date
+        integer total_days
+        boolean is_active
+    }
+
+    PRESCRIPTION_PLAN_DRUGS {
+        uuid id PK
+        uuid plan_id FK
+        varchar drug_name
+        varchar dosage
+        integer sort_order
+    }
+
+    PRESCRIPTION_PLAN_SLOTS {
+        uuid id PK
+        uuid plan_id FK
+        varchar time
+        integer sort_order
+    }
+
+    PRESCRIPTION_PLAN_SLOT_DRUGS {
+        uuid id PK
+        uuid slot_id FK
+        uuid drug_id FK
+        integer pills
+    }
+
+    PRESCRIPTION_PLAN_LOGS {
+        uuid id PK
+        uuid plan_id FK
+        varchar occurrence_id UK
+        varchar slot_time
+        timestamptz scheduled_time
+        varchar status
+    }

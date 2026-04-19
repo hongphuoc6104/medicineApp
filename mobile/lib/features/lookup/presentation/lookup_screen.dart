@@ -450,13 +450,16 @@ class _DrugInteractionsSectionState
                 ),
               ),
               const SizedBox(width: 10),
-              OutlinedButton(
-                onPressed: state.selectedDrugNames.isEmpty
-                    ? null
-                    : () => ref
-                          .read(lookupInteractionNotifierProvider.notifier)
-                          .clearDrugs(),
-                child: Text(l10n.lookupActionClearSelection),
+              SizedBox(
+                width: 132,
+                child: OutlinedButton(
+                  onPressed: state.selectedDrugNames.isEmpty
+                      ? null
+                      : () => ref
+                            .read(lookupInteractionNotifierProvider.notifier)
+                            .clearDrugs(),
+                  child: Text(l10n.lookupActionClearSelection),
+                ),
               ),
             ],
           ),
@@ -612,13 +615,18 @@ class _ActiveIngredientSectionState
                     ),
                   ),
                   const SizedBox(width: 10),
-                  OutlinedButton(
-                    onPressed: state.selectedIngredients.isEmpty
-                        ? null
-                        : () => ref
-                              .read(lookupInteractionNotifierProvider.notifier)
-                              .clearIngredients(),
-                    child: Text(l10n.lookupActionClearSelection),
+                  SizedBox(
+                    width: 132,
+                    child: OutlinedButton(
+                      onPressed: state.selectedIngredients.isEmpty
+                          ? null
+                          : () => ref
+                                .read(
+                                  lookupInteractionNotifierProvider.notifier,
+                                )
+                                .clearIngredients(),
+                      child: Text(l10n.lookupActionClearSelection),
+                    ),
                   ),
                 ],
               ),
@@ -669,6 +677,15 @@ class _ActiveIngredientSectionState
                 style: TextStyle(color: AppColors.textSecondary),
               ),
               const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: () => context.push('/lookup/ingredients'),
+                  icon: const Icon(Icons.format_list_bulleted_rounded),
+                  label: const Text('Danh mục hoạt chất'),
+                ),
+              ),
+              const SizedBox(height: 6),
               TextField(
                 controller: _singleIngredientController,
                 onChanged: (value) => ref
@@ -680,14 +697,22 @@ class _ActiveIngredientSectionState
                 ),
               ),
               const SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: state.isCheckingSingleIngredient
-                    ? null
-                    : () => ref
-                          .read(lookupInteractionNotifierProvider.notifier)
-                          .checkSingleIngredient(),
-                icon: const Icon(Icons.travel_explore_outlined),
-                label: Text(l10n.lookupActionLookupIngredient),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: state.isCheckingSingleIngredient
+                          ? null
+                          : () => ref
+                                .read(
+                                  lookupInteractionNotifierProvider.notifier,
+                                )
+                                .checkSingleIngredient(),
+                      icon: const Icon(Icons.travel_explore_outlined),
+                      label: Text(l10n.lookupActionLookupIngredient),
+                    ),
+                  ),
+                ],
               ),
               if (state.isCheckingSingleIngredient)
                 const Padding(

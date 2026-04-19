@@ -358,6 +358,39 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
     );
   }
 
+  Widget _buildContinueFooter(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.surfaceHigh),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: (_drugs.isEmpty || _isCheckingInteractions)
+              ? null
+              : _continueToSchedule,
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size.fromHeight(52),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          child: Text(l10n.editDrugsContinue(_drugs.length)),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -377,6 +410,13 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
         tooltip: l10n.editDrugsAddTooltip,
         child: const Icon(Icons.add),
       ),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: _buildContinueFooter(l10n),
+        ),
+      ),
       body: Column(
         children: [
           _buildInteractionPanel(l10n),
@@ -385,24 +425,10 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
             child: _drugs.isEmpty
                 ? _buildEmpty(l10n)
                 : ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
                     itemCount: _drugs.length,
                     itemBuilder: (ctx, i) => _buildDrugCard(i),
                   ),
-          ),
-
-          // Bottom action
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: ElevatedButton(
-              onPressed: (_drugs.isEmpty || _isCheckingInteractions)
-                  ? null
-                  : _continueToSchedule,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-              ),
-              child: Text(l10n.editDrugsContinue(_drugs.length)),
-            ),
           ),
         ],
       ),

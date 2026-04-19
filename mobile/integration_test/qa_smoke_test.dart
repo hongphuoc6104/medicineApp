@@ -352,11 +352,73 @@ void main() {
     expect(find.text('Cần chọn ít nhất 2 thuốc để kiểm tra.'), findsOneWidget);
     await screenshot('22_lookup_interactions_validation');
 
+    final interactionField = find.byType(TextField).first;
+    await tester.enterText(interactionField, 'aviranz');
+    await tester.pumpAndSettle(const Duration(seconds: 3));
+    await waitFor(tester, find.textContaining('Aviranz'));
+    await tester.tap(find.textContaining('Aviranz').first, warnIfMissed: false);
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    await tester.enterText(interactionField, 'adefovir');
+    await tester.pumpAndSettle(const Duration(seconds: 3));
+    await waitFor(tester, find.textContaining('Adefovir'));
+    await tester.tap(
+      find.textContaining('Adefovir').first,
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await screenshot('22_lookup_interactions_selected');
+
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Kiểm tra tương tác'));
+    await tester.pumpAndSettle(const Duration(seconds: 4));
+    await waitFor(tester, find.text('Kết quả tương tác theo thuốc'));
+    await screenshot('22_lookup_interactions_success');
+
     await tester.tap(find.text('Hoạt chất'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
     await tester.tap(find.widgetWithText(ElevatedButton, 'Tra cứu hoạt chất'));
     await tester.pumpAndSettle(const Duration(seconds: 2));
     expect(find.text('Nhập ít nhất 2 ký tự hoạt chất.'), findsOneWidget);
     await screenshot('23_lookup_ingredient_validation');
+
+    final ingredientField = find.byType(TextField).first;
+    await tester.enterText(ingredientField, 'efa');
+    await tester.pumpAndSettle(const Duration(seconds: 3));
+    await waitFor(tester, find.textContaining('efavirenz'));
+    await tester.tap(
+      find.textContaining('efavirenz').first,
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    await tester.enterText(ingredientField, 'adefovir');
+    await tester.pumpAndSettle(const Duration(seconds: 3));
+    await waitFor(tester, find.textContaining('adefovir'));
+    await tester.tap(
+      find.textContaining('adefovir').first,
+      warnIfMissed: false,
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await screenshot('23_lookup_ingredients_selected');
+
+    await tester.tap(
+      find.widgetWithText(ElevatedButton, 'Kiểm tra theo hoạt chất'),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 4));
+    await waitFor(tester, find.text('Kết quả theo danh sách hoạt chất'));
+    await screenshot('23_lookup_ingredients_success');
+
+    final singleIngredientField = find.byType(TextField).at(1);
+    await tester.enterText(singleIngredientField, 'Levocetirizine');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Tra cứu hoạt chất'));
+    await tester.pumpAndSettle(const Duration(seconds: 4));
+    await waitFor(tester, find.text('Kết quả theo một hoạt chất'));
+    await screenshot('24_lookup_single_ingredient_success');
+
+    await tester.tap(find.text('Danh mục hoạt chất'));
+    await tester.pumpAndSettle(const Duration(seconds: 3));
+    await waitFor(tester, find.text('Danh mục hoạt chất'));
+    await screenshot('25_lookup_ingredient_catalog');
   });
 }

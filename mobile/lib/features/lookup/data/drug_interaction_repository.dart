@@ -130,6 +130,37 @@ class ActiveIngredientSuggestion {
   }
 }
 
+class ActiveIngredientCatalogItem {
+  const ActiveIngredientCatalogItem({
+    required this.name,
+    required this.interactionCount,
+  });
+
+  final String name;
+  final int interactionCount;
+
+  factory ActiveIngredientCatalogItem.fromJson(Map<String, dynamic> json) {
+    return ActiveIngredientCatalogItem(
+      name: json['name']?.toString() ?? '',
+      interactionCount: (json['interactionCount'] as num?)?.toInt() ?? 0,
+    );
+  }
+}
+
+class ActiveIngredientCatalogPage {
+  const ActiveIngredientCatalogPage({
+    required this.items,
+    required this.total,
+    required this.page,
+    required this.limit,
+  });
+
+  final List<ActiveIngredientCatalogItem> items;
+  final int total;
+  final int page;
+  final int limit;
+}
+
 class DrugInteractionRepository {
   DrugInteractionRepository(this._dio);
 
@@ -162,6 +193,33 @@ class DrugInteractionRepository {
         .toList();
 
     return list;
+  }
+
+  Future<ActiveIngredientCatalogPage> listActiveIngredients(
+    String keyword, {
+    int page = 1,
+    int limit = 20,
+  }) async {
+    final response = await _dio.get(
+      '/drug-interactions/active-ingredients',
+      queryParameters: {'keyword': keyword, 'page': page, 'limit': limit},
+    );
+
+    final items = (response.data['data'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(ActiveIngredientCatalogItem.fromJson)
+        .where((item) => item.name.trim().isNotEmpty)
+        .toList();
+    final pagination =
+        response.data['pagination'] as Map<String, dynamic>? ??
+        const <String, dynamic>{};
+
+    return ActiveIngredientCatalogPage(
+      items: items,
+      total: pagination['total'] as int? ?? items.length,
+      page: pagination['page'] as int? ?? page,
+      limit: pagination['limit'] as int? ?? limit,
+    );
   }
 
   Future<InteractionCheckResult> checkByActiveIngredients(
