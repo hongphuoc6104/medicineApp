@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="sgWGGwF04JhhqinL0tVA">
+    <mxGraphModel dx="1000" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- Người dùng -->
+        <mxCell id="user" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#fff8f2;strokeColor=#d6b656;fontStyle=1;fontSize=15;" value="Người dùng" vertex="1">
+          <mxGeometry height="40" width="200" x="390" y="20" as="geometry" />
+        </mxCell>
+        <!-- Tầng Ứng dụng di động -->
+        <mxCell id="layer1" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fillColor=#f5faff;strokeColor=#6c8ebf;fontStyle=1;fontSize=15;" value="&amp;nbsp;Lớp Giao diện &amp;amp; Ứng dụng (Flutter)&amp;nbsp;" vertex="1">
+          <mxGeometry height="130" width="900" x="40" y="96" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" parent="layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=15;" value="Quét đơn thuốc" vertex="1">
+          <mxGeometry height="60" width="184" x="26" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" parent="layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=15;" value="Rà soát danh sách thuốc" vertex="1">
+          <mxGeometry height="60" width="184" x="240" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" parent="layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=15;" value="Lập lịch dùng thuốc" vertex="1">
+          <mxGeometry height="60" width="184" x="454" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" parent="layer1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=15;" value="Lịch hôm nay &amp;amp; Theo dõi" vertex="1">
+          <mxGeometry height="60" width="184" x="668" y="50" as="geometry" />
+        </mxCell>
+        <!-- Tầng Máy chủ -->
+        <mxCell id="layer2" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fillColor=#f7fcf8;strokeColor=#82b366;fontStyle=1;fontSize=15;" value="&amp;nbsp; Lớp Điều phối &amp;amp; Nghiệp vụ (Node.js)&amp;nbsp;" vertex="1">
+          <mxGeometry height="140" width="900" x="40" y="256" as="geometry" />
+        </mxCell>
+        <mxCell id="b1" parent="layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=15;" value="Xác thực &amp;amp; Phân quyền" vertex="1">
+          <mxGeometry height="60" width="184" x="26" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b2" parent="layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=15;" value="Quét đơn &amp;amp; Lưu kết quả" vertex="1">
+          <mxGeometry height="60" width="184" x="240" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b3" parent="layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=15;" value="Kế hoạch, Slots &amp;amp; Logs" vertex="1">
+          <mxGeometry height="60" width="184" x="454" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="b4" parent="layer2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=15;" value="Tra cứu thuốc &amp;amp; API phụ" vertex="1">
+          <mxGeometry height="60" width="184" x="668" y="50" as="geometry" />
+        </mxCell>
+        <!-- Tầng AI -->
+        <mxCell id="layer3" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fillColor=#fffdf5;strokeColor=#d6b656;fontStyle=1;fontSize=15;" value="&amp;nbsp;Lớp Phân tích Trí tuệ nhân tạo (FastAPI)&amp;nbsp;" vertex="1">
+          <mxGeometry height="140" width="900" x="40" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" parent="layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=15;" value="Detect và Crop đơn thuốc" vertex="1">
+          <mxGeometry height="60" width="184" x="26" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" parent="layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=15;" value="Preprocess + Quality Gate" vertex="1">
+          <mxGeometry height="60" width="184" x="240" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" parent="layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=15;" value="Hybrid OCR + Group STT" vertex="1">
+          <mxGeometry height="60" width="184" x="454" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="a4" parent="layer3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;fontSize=15;" value="PhoBERT NER + Drug Lookup" vertex="1">
+          <mxGeometry height="60" width="184" x="668" y="50" as="geometry" />
+        </mxCell>
+        <!-- Databases -->
+        <mxCell id="db1" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f9f9f9;strokeColor=#666666;fontSize=15;" value="Cơ sở dữ liệu&#xa;PostgreSQL" vertex="1">
+          <mxGeometry height="75" width="184" x="150" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="db2" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f9f9f9;strokeColor=#666666;fontSize=15;" value="Kho Mô hình &amp;amp;&#xa;Danh mục thuốc" vertex="1">
+          <mxGeometry height="75" width="220" x="650" y="600" as="geometry" />
+        </mxCell>
+        <!-- Arrows -->
+        <mxCell id="e1" edge="1" parent="1" source="user" target="layer1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;fontSize=15;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="layer1" target="layer2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;fontSize=15;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="layer2" target="layer3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=2;fontSize=15;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="layer2" target="db1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;dashed=1;fontSize=15;" value="Đọc / Ghi">
+          <mxGeometry x="-0.1" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="layer3" target="db2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeWidth=1.5;dashed=1;fontSize=15;" value="Tra cứu">
+          <mxGeometry x="-0.1" y="20" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Activity-3-Tier" id="activity-3tier">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Lane 1: Người dùng -->
+        <mxCell id="l_user" value="&lt;b&gt;NGƯỜI DÙNG&lt;/b&gt;" style="swimlane;horizontal=0;startSize=50;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="260" height="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="start" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="l_user">
+          <mxGeometry x="115" y="30" width="25" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="act_scan" value="Chụp đơn thuốc" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#000000;" vertex="1" parent="l_user">
+          <mxGeometry x="70" y="80" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="decide" value="Chỉnh sửa?" style="rhombus;whiteSpace=wrap;html=1;strokeColor=#000000;" vertex="1" parent="l_user">
+          <mxGeometry x="80" y="240" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="act_edit" value="Chỉnh sửa thuốc" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#000000;" vertex="1" parent="l_user">
+          <mxGeometry x="75" y="340" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="act_wizard" value="Cài đặt lịch&lt;br&gt;(Ngày, Giờ, Liều)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#000000;" vertex="1" parent="l_user">
+          <mxGeometry x="70" y="440" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="act_click_save" value="Xác nhận Lưu" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#000000;" vertex="1" parent="l_user">
+          <mxGeometry x="70" y="550" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act_track" value="Theo dõi điều trị" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#000000;" vertex="1" parent="l_user">
+          <mxGeometry x="70" y="910" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="end_outer" value="" style="ellipse;html=1;shape=doubleEllipse;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="l_user">
+          <mxGeometry x="115" y="1000" width="25" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="end_inner" value="" style="ellipse;html=1;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="end_outer">
+          <mxGeometry x="6.25" y="6.25" width="12.5" height="12.5" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 2: Hệ thống (App & Server Logic) -->
+        <mxCell id="l_sys" value="&lt;b&gt;HỆ THỐNG (AI &amp; LOGIC)&lt;/b&gt;" style="swimlane;horizontal=0;startSize=50;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="300" y="40" width="280" height="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="sys_ai" value="Xử lý OCR &amp; PhoBERT&lt;br&gt;Trích xuất thuốc" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;" vertex="1" parent="l_sys">
+          <mxGeometry x="65" y="150" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sys_call" value="Gửi yêu cầu Lưu&lt;br&gt;(Plan Payload)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;" vertex="1" parent="l_sys">
+          <mxGeometry x="65" y="620" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sys_notif" value="Tính toán khung giờ&lt;br&gt;Cài nhắc nhở nội bộ" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;" vertex="1" parent="l_sys">
+          <mxGeometry x="65" y="800" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Lane 3: Cơ sở dữ liệu (Database) -->
+        <mxCell id="l_db" value="&lt;b&gt;CƠ SỞ DỮ LIỆU&lt;/b&gt;" style="swimlane;horizontal=0;startSize=50;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="580" y="40" width="230" height="1060" as="geometry" />
+        </mxCell>
+        <mxCell id="db_process" value="Lưu vào các bảng:&lt;br&gt;- plans&lt;br&gt;- plan_drugs&lt;br&gt;- plan_slots" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="l_db">
+          <mxGeometry x="50" y="670" width="130" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Connectors -->
+        <mxCell id="e1" edge="1" parent="1" source="start" target="act_scan" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="act_scan" target="sys_ai" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="sys_ai" target="decide" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="Có" edge="1" parent="1" source="decide" target="act_edit" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;labelBackgroundColor=#ffffff;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="act_edit" target="act_wizard" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="Không" edge="1" parent="1" source="decide" target="act_wizard" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;labelBackgroundColor=#ffffff;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="100" y="270" />
+              <mxPoint x="100" y="420" />
+              <mxPoint x="140" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="act_wizard" target="act_click_save" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="act_click_save" target="sys_call" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="sys_call" target="db_process" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="db_process" target="sys_notif" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="645" y="830" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="sys_notif" target="act_track" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="act_track" target="end_outer" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

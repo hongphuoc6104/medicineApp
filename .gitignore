@@ -33,6 +33,11 @@ data/createPrescription/
 data/output/
 # Data input (images - large files)
 data/input/
+data/input/**  # ignore all prescription input images
+
+data/output/
+data/output/**  # ignore generated output files and intermediate results
+
 # Nhưng giữ lại .gitkeep
 !data/input/.gitkeep
 !data/output/.gitkeep
@@ -142,6 +147,35 @@ htmlcov/
 runs/
 server-node/node_modules/
 server-node/.env
+server-node/storage/
+# Ignore large data files and generated datasets
+data/drug_interactions_vn.json
+data/synthetic_train/
+data/ner_dataset/
+# Ignore large model directories (exclude any required README or metadata if needed)
+models/phobert_ner_model/
+models/zero_pima/
 mobile/.dart_tool/
+# Large drug database JSON
+data/drug_db_vn_full.json
 docs/thesis_report/diagram_tools/node_modules/
 docs/thesis_report/mcp_tools/node_modules/
+
+# ============================================
+# Thesis report generated and backup files
+# ============================================
+docs/thesis_report/*.aux
+docs/thesis_report/*.lof
+docs/thesis_report/*.lot
+docs/thesis_report/*.out
+docs/thesis_report/*.toc
+docs/thesis_report/*.synctex.gz
+docs/thesis_report/*.fdb_latexmk
+docs/thesis_report/*.fls
+docs/thesis_report/*.xdv
+docs/thesis_report/*.bak*
+docs/thesis_report/backup/
+docs/thesis_report/image/images*/
+
+# Large reference materials used only for local comparison
+docs/mẫu bài luận/

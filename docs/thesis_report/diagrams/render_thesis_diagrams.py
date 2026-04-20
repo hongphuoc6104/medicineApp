@@ -19,25 +19,25 @@ ROOT = os.path.dirname(os.path.dirname(__file__))
 ASSETS = os.path.join(ROOT, "assets", "diagrams")
 
 PALETTE = {
-    "ink": "#37474f",
+    "ink": "#2f2f2f",
     "text": "#111111",
-    "muted": "#5f6b73",
-    "blue_fill": "#eef5ff",
-    "blue_stroke": "#5c8ec8",
-    "green_fill": "#eef8f2",
-    "green_stroke": "#4f8a63",
-    "yellow_fill": "#fff9e9",
-    "yellow_stroke": "#c6a545",
-    "orange_fill": "#fff6ea",
-    "orange_stroke": "#c38b43",
-    "red_fill": "#fff3f2",
-    "red_stroke": "#c86b66",
-    "purple_fill": "#f3f0ff",
-    "purple_stroke": "#7a6fc2",
-    "gray_fill": "#f6f7f8",
-    "gray_stroke": "#98a1a8",
-    "db_fill": "#eef1ff",
-    "db_stroke": "#5d6cc2",
+    "muted": "#555555",
+    "blue_fill": "#fcfcfc",
+    "blue_stroke": "#3e3e3e",
+    "green_fill": "#f8f8f8",
+    "green_stroke": "#3e3e3e",
+    "yellow_fill": "#f6f6f6",
+    "yellow_stroke": "#3e3e3e",
+    "orange_fill": "#fbfbfb",
+    "orange_stroke": "#3e3e3e",
+    "red_fill": "#f5f5f5",
+    "red_stroke": "#3e3e3e",
+    "purple_fill": "#f7f7f7",
+    "purple_stroke": "#3e3e3e",
+    "gray_fill": "#f4f4f4",
+    "gray_stroke": "#6a6a6a",
+    "db_fill": "#fbfbfb",
+    "db_stroke": "#3e3e3e",
 }
 
 
@@ -196,6 +196,33 @@ def path_arrow(parent, d, dashed=False, open_arrow=False, width=1.5):
     ET.SubElement(parent, "path", **attrs)
 
 
+def connector(parent, x1, y1, x2, y2, dashed=False, width=1.5):
+    attrs = {
+        "x1": f"{x1}",
+        "y1": f"{y1}",
+        "x2": f"{x2}",
+        "y2": f"{y2}",
+        "stroke": PALETTE["ink"],
+        "stroke-width": f"{width}",
+        "fill": "none",
+    }
+    if dashed:
+        attrs["stroke-dasharray"] = "7,5"
+    ET.SubElement(parent, "line", **attrs)
+
+
+def path_connector(parent, d, dashed=False, width=1.5):
+    attrs = {
+        "d": d,
+        "stroke": PALETTE["ink"],
+        "stroke-width": f"{width}",
+        "fill": "none",
+    }
+    if dashed:
+        attrs["stroke-dasharray"] = "7,5"
+    ET.SubElement(parent, "path", **attrs)
+
+
 def label_box(parent, x, y, text):
     rounded_box(parent, x - 42, y - 11, 84, 22, "white", "none", stroke_width=0, rx=6)
     add_text(parent, x, y + 4, text, size=10, fill=PALETTE["muted"], italic=True)
@@ -236,7 +263,7 @@ def render_architecture():
     pill_box(svg, 390, 20, 200, 42, PALETTE["orange_fill"], PALETTE["orange_stroke"], "Người dùng")
 
     rounded_box(svg, 40, 96, 900, 132, PALETTE["blue_fill"], PALETTE["blue_stroke"], stroke_width=1.6)
-    add_text(svg, 72, 118, "Tầng 1 - Ứng dụng di động (Flutter)", size=12, anchor="start", weight="bold", fill="#355f8f")
+    add_text(svg, 72, 118, "Tầng 1 - Ứng dụng di động (Flutter)", size=12, anchor="start", weight="bold", fill="#222222")
     mobile_labels = [
         ["Quét đơn thuốc"],
         ["Rà soát", "danh sách thuốc"],
@@ -249,12 +276,12 @@ def render_architecture():
         add_multiline_text(svg, x + 92, 166, lines, size=11.5, line_gap=14)
 
     rounded_box(svg, 40, 256, 900, 144, PALETTE["green_fill"], PALETTE["green_stroke"], stroke_width=1.6)
-    add_text(svg, 72, 278, "Tầng 2 - Máy chủ chính (Node.js / Express)", size=12, anchor="start", weight="bold", fill="#3c6e50")
+    add_text(svg, 72, 278, "Tầng 2 - Máy chủ chính (Node.js / Express)", size=12, anchor="start", weight="bold", fill="#222222")
     backend_labels = [
         ["Xác thực", "và phân quyền"],
-        ["API quét đơn", "và scan history"],
+        ["Quét đơn", "và lưu kết quả"],
         ["Kế hoạch,", "slots và logs"],
-        ["Tra cứu thuốc", "và lookup phụ trợ"],
+        ["Tra cứu thuốc", "và API phụ trợ"],
     ]
     for idx, lines in enumerate(backend_labels):
         x = 66 + idx * 214
@@ -262,9 +289,9 @@ def render_architecture():
         add_multiline_text(svg, x + 92, 327, lines, size=11.5, line_gap=14)
 
     rounded_box(svg, 40, 430, 900, 144, PALETTE["yellow_fill"], PALETTE["yellow_stroke"], stroke_width=1.6)
-    add_text(svg, 72, 452, "Tầng 3 - Dịch vụ AI (FastAPI)", size=12, anchor="start", weight="bold", fill="#7f6b2f")
+    add_text(svg, 72, 452, "Tầng 3 - Dịch vụ AI (FastAPI)", size=12, anchor="start", weight="bold", fill="#222222")
     ai_labels = [
-        ["Detect & crop", "đơn thuốc"],
+        ["Detect và crop", "đơn thuốc"],
         ["Preprocess +", "quality gate"],
         ["Hybrid OCR +", "group by STT"],
         ["PhoBERT NER +", "drug lookup"],
@@ -290,39 +317,24 @@ def render_architecture():
 
 def render_use_case():
     svg = svg_root(980, 560)
-    actor(svg, 86, 170, "Người dùng")
-    rounded_box(svg, 184, 24, 760, 500, "#fbfcfe", PALETTE["gray_stroke"], stroke_width=1.2, rx=10)
-    add_text(svg, 564, 52, "Hệ thống MedicineApp", size=15, weight="bold", fill="#385070")
+    actor(svg, 88, 206, "Người dùng")
+    rounded_box(svg, 234, 24, 680, 500, "#fbfcfe", PALETTE["gray_stroke"], stroke_width=1.2, rx=10)
+    add_text(svg, 574, 52, "Hệ thống MedicineApp", size=15, weight="bold", fill="#222222")
 
-    positions = {
-        "login": (376, 118, ["Đăng nhập / Đăng ký"]),
-        "scan": (376, 206, ["Quét đơn thuốc"]),
-        "review": (376, 294, ["Rà soát danh sách thuốc"]),
-        "schedule": (376, 382, ["Lập lịch dùng thuốc"]),
-        "today": (716, 206, ["Xem lịch hôm nay"]),
-        "log": (716, 294, ["Ghi nhận trạng thái", "uống thuốc"]),
-        "history": (716, 382, ["Xem lịch sử kế hoạch", "và nhật ký"]),
-    }
-
-    for _, (cx, cy, lines) in positions.items():
-        ET.SubElement(svg, "ellipse", cx=f"{cx}", cy=f"{cy}", rx="126", ry="34", fill=PALETTE["blue_fill"], stroke=PALETTE["blue_stroke"], **{"stroke-width": "1.3"})
-        add_multiline_text(svg, cx, cy - (8 if len(lines) > 1 else 0), lines, size=12, line_gap=16)
-
-    actor_anchor_x = 114
-    actor_points = [118, 206, 294, 382, 206, 294, 382]
-    for idx, key in enumerate(["login", "scan", "review", "schedule", "today", "log", "history"]):
-        cx, cy, _ = positions[key]
-        arrow(svg, actor_anchor_x, actor_points[idx], cx - 126, cy)
-
-    dashed_pairs = [
-        ((376, 240), (376, 260), "<<include>>", 432, 250),
-        ((376, 328), (376, 348), "<<include>>", 432, 338),
-        ((590, 206), (654, 206), "<<include>>", 622, 194),
-        ((716, 240), (716, 260), "<<extend>>", 792, 250),
+    ellipses = [
+        (576, 94, ["Đăng nhập / Đăng ký"]),
+        (576, 154, ["Quét đơn thuốc"]),
+        (576, 214, ["Rà soát danh sách thuốc"]),
+        (576, 274, ["Lập lịch dùng thuốc"]),
+        (576, 334, ["Xem lịch hôm nay"]),
+        (576, 394, ["Ghi nhận trạng thái", "uống thuốc"]),
+        (576, 454, ["Xem lịch sử kế hoạch", "và nhật ký"]),
     ]
-    for (x1, y1), (x2, y2), label, lx, ly in dashed_pairs:
-        arrow(svg, x1, y1, x2, y2, dashed=True)
-        add_text(svg, lx, ly, label, size=10.5, fill=PALETTE["muted"], italic=True)
+
+    for cx, cy, lines in ellipses:
+        ET.SubElement(svg, "ellipse", cx=f"{cx}", cy=f"{cy}", rx="128", ry="28", fill=PALETTE["blue_fill"], stroke=PALETTE["blue_stroke"], **{"stroke-width": "1.3"})
+        add_multiline_text(svg, cx, cy - (8 if len(lines) > 1 else -4), lines, size=12, line_gap=15)
+        connector(svg, 126, cy, cx - 128, cy, width=1.4)
 
     save_svg_and_png(svg, "use_case_a4_v3")
 
@@ -417,37 +429,85 @@ def relation(parent, x1, y1, x2, y2, label, start_card="1", end_card="N"):
     add_text(parent, x2 + (-12 if x2 >= x1 else 12), y2 - 6, end_card, size=10.5, weight="bold", fill="#33507a")
 
 
+def relation_path(parent, d, label, label_x, label_y, start_card, start_x, start_y, end_card, end_x, end_y):
+    path_arrow(parent, d, width=1.3)
+    add_text(parent, label_x, label_y, label, size=10.5, fill=PALETTE["muted"], italic=True)
+    add_text(parent, start_x, start_y, start_card, size=10.5, weight="bold", fill="#33507a")
+    add_text(parent, end_x, end_y, end_card, size=10.5, weight="bold", fill="#33507a")
+
+
 def render_erd():
-    svg = svg_root(1280, 820)
-    entity(svg, 60, 64, 230, 120, ["users"], ["id (PK)", "email", "name", "created_at"], PALETTE["orange_fill"], PALETTE["orange_stroke"])
-    entity(svg, 390, 56, 240, 136, ["scan_sessions"], ["id (PK)", "user_id (FK)", "status", "converged", "merged_result"], PALETTE["blue_fill"], PALETTE["blue_stroke"])
-    entity(svg, 706, 56, 230, 136, ["scans"], ["id (PK)", "user_id (FK)", "session_id (FK)", "quality_state", "drug_count"], PALETTE["blue_fill"], PALETTE["blue_stroke"])
+    svg = svg_root(1280, 760)
+    entity(svg, 50, 56, 240, 124, ["users"], ["id (PK)", "email", "name", "created_at"], PALETTE["orange_fill"], PALETTE["orange_stroke"])
+    entity(svg, 360, 56, 250, 148, ["scan_sessions"], ["id (PK)", "user_id (FK)", "status", "converged", "merged_result"], PALETTE["blue_fill"], PALETTE["blue_stroke"])
+    entity(svg, 690, 56, 240, 148, ["scans"], ["id (PK)", "user_id (FK)", "session_id (FK)", "quality_state", "drug_count"], PALETTE["blue_fill"], PALETTE["blue_stroke"])
 
-    entity(svg, 392, 274, 246, 136, ["prescription_plans"], ["id (PK)", "user_id (FK)", "title", "start_date", "end_date", "is_active"], PALETTE["green_fill"], PALETTE["green_stroke"])
-    entity(svg, 86, 484, 246, 128, ["prescription_plan_drugs"], ["id (PK)", "plan_id (FK)", "drug_name", "dosage", "sort_order"], PALETTE["green_fill"], PALETTE["green_stroke"])
-    entity(svg, 392, 492, 246, 120, ["prescription_plan_slots"], ["id (PK)", "plan_id (FK)", "time", "sort_order"], PALETTE["green_fill"], PALETTE["green_stroke"])
-    entity(svg, 706, 484, 246, 120, ["prescription_plan_logs"], ["id (PK)", "plan_id (FK)", "occurrence_id", "slot_time", "status"], PALETTE["green_fill"], PALETTE["green_stroke"])
-    entity(svg, 1016, 492, 206, 104, ["plan_slot_drugs"], ["slot_id (FK)", "drug_id (FK)", "pills"], PALETTE["purple_fill"], PALETTE["purple_stroke"])
+    entity(svg, 360, 286, 270, 148, ["prescription_plans"], ["id (PK)", "user_id (FK)", "title", "start_date", "end_date", "is_active"], PALETTE["green_fill"], PALETTE["green_stroke"])
+    entity(svg, 980, 286, 240, 124, ["prescription_plan_logs"], ["id (PK)", "plan_id (FK)", "occurrence_id", "slot_time", "status"], PALETTE["green_fill"], PALETTE["green_stroke"])
+    entity(svg, 50, 570, 260, 132, ["prescription_plan_drugs"], ["id (PK)", "plan_id (FK)", "drug_name", "dosage", "sort_order"], PALETTE["green_fill"], PALETTE["green_stroke"])
+    entity(svg, 360, 570, 260, 124, ["prescription_plan_slots"], ["id (PK)", "plan_id (FK)", "time", "sort_order"], PALETTE["green_fill"], PALETTE["green_stroke"])
+    entity(svg, 690, 570, 290, 124, ["prescription_plan_slot_drugs"], ["id (PK)", "slot_id (FK)", "drug_id (FK)", "pills"], PALETTE["purple_fill"], PALETTE["purple_stroke"])
 
-    relation(svg, 290, 122, 390, 122, "sở hữu", "1", "N")
-    relation(svg, 290, 140, 706, 140, "sinh ra", "1", "N")
-    relation(svg, 516, 192, 516, 274, "nhóm phiên quét", "1", "N")
-    relation(svg, 176, 184, 452, 274, "sở hữu", "1", "N")
-    relation(svg, 454, 410, 250, 484, "gồm thuốc", "1", "N")
-    relation(svg, 516, 410, 516, 492, "gồm khung giờ", "1", "N")
-    relation(svg, 638, 356, 820, 484, "ghi nhật ký", "1", "N")
-    relation(svg, 638, 552, 1016, 544, "gán liều", "1", "N")
-    relation(svg, 332, 548, 1016, 560, "tham gia", "1", "N")
-
-    rounded_box(svg, 932, 56, 286, 118, "#fbfcfd", PALETTE["gray_stroke"], stroke_width=1.0, rx=10)
-    add_multiline_text(svg, 1075, 84, ["Phạm vi ERD trong thesis"], size=12, weight="bold")
-    add_multiline_text(svg, 948, 110, [
-        "- Chỉ giữ nhóm bảng phục vụ luồng scan va lập lịch",
-        "- Không đưa bảng pill verification / interaction vào sơ đồ chính",
-        "- Mục tiêu là dễ đọc trên 1 trang A4 landscape",
-    ], size=10.5, line_gap=17, anchor="start", fill=PALETTE["muted"])
+    relation_path(svg, "M 290 110 L 360 110", "sở hữu", 324, 94, "1", 298, 94, "N", 350, 94)
+    relation_path(svg, "M 610 124 L 690 124", "gom ảnh quét", 636, 106, "1", 620, 108, "N", 680, 108)
+    relation_path(svg, "M 290 78 L 330 78 L 330 30 L 810 30 L 810 56", "tạo lịch sử quét", 570, 18, "1", 300, 64, "N", 822, 42)
+    relation_path(svg, "M 170 180 L 170 248 L 495 248 L 495 286", "tạo kế hoạch", 334, 232, "1", 182, 168, "N", 508, 272)
+    relation_path(svg, "M 630 348 L 980 348", "ghi nhật ký", 804, 332, "1", 642, 332, "N", 970, 332)
+    relation_path(svg, "M 440 434 L 440 520 L 180 520 L 180 570", "gồm thuốc", 310, 504, "1", 452, 420, "N", 192, 556)
+    relation_path(svg, "M 520 434 L 520 570", "gồm khung giờ", 584, 502, "1", 532, 420, "N", 532, 556)
+    relation_path(svg, "M 310 620 L 330 620 L 330 718 L 840 718 L 840 694", "gán thuốc", 566, 702, "1", 322, 604, "N", 852, 682)
+    relation_path(svg, "M 620 636 L 690 636", "gán số viên", 652, 620, "1", 632, 620, "N", 680, 620)
 
     save_svg_and_png(svg, "erd_main_a4_v3")
+
+
+def render_activity_create_plan():
+    svg = svg_root(1240, 620)
+
+    pill_box(svg, 58, 86, 120, 42, PALETTE["blue_fill"], PALETTE["blue_stroke"], "Bắt đầu")
+
+    rounded_box(svg, 232, 58, 180, 86, PALETTE["green_fill"], PALETTE["green_stroke"], stroke_width=1.4, rx=10)
+    add_multiline_text(svg, 322, 88, ["Quét đơn thuốc", "và nhận kết quả"], size=12, line_gap=16)
+
+    diamond(svg, 474, 52, 140, 102, PALETTE["yellow_fill"], PALETTE["yellow_stroke"], ["Cần", "chỉnh sửa?"], size=12)
+
+    rounded_box(svg, 680, 58, 188, 86, PALETTE["green_fill"], PALETTE["green_stroke"], stroke_width=1.4, rx=10)
+    add_multiline_text(svg, 774, 88, ["Chọn ngày bắt đầu", "và số ngày dùng"], size=12, line_gap=16)
+
+    rounded_box(svg, 926, 58, 188, 86, PALETTE["green_fill"], PALETTE["green_stroke"], stroke_width=1.4, rx=10)
+    add_multiline_text(svg, 1020, 88, ["Chọn khung giờ", "uống thuốc"], size=12, line_gap=16)
+
+    rounded_box(svg, 926, 240, 188, 86, PALETTE["green_fill"], PALETTE["green_stroke"], stroke_width=1.4, rx=10)
+    add_multiline_text(svg, 1020, 270, ["Nhập số viên", "theo từng khung giờ"], size=12, line_gap=16)
+
+    rounded_box(svg, 680, 422, 188, 86, PALETTE["green_fill"], PALETTE["green_stroke"], stroke_width=1.4, rx=10)
+    add_multiline_text(svg, 774, 452, ["Lưu kế hoạch", "lên máy chủ"], size=12, line_gap=16)
+
+    rounded_box(svg, 410, 422, 188, 86, PALETTE["purple_fill"], PALETTE["purple_stroke"], stroke_width=1.4, rx=10)
+    add_multiline_text(svg, 504, 452, ["Thiết lập nhắc uống", "cục bộ trên thiết bị"], size=12, line_gap=16)
+
+    rounded_box(svg, 150, 422, 188, 86, PALETTE["blue_fill"], PALETTE["blue_stroke"], stroke_width=1.4, rx=10)
+    add_multiline_text(svg, 244, 452, ["Chuyển sang theo dõi", "liều uống trong ngày"], size=12, line_gap=16)
+
+    rounded_box(svg, 410, 240, 188, 86, PALETTE["orange_fill"], PALETTE["orange_stroke"], stroke_width=1.4, rx=10)
+    add_multiline_text(svg, 504, 270, ["Chỉnh sửa danh sách", "thuốc khi cần"], size=12, line_gap=16)
+
+    pill_box(svg, 68, 450, 120, 42, PALETTE["blue_fill"], PALETTE["blue_stroke"], "Kết thúc")
+
+    arrow(svg, 178, 107, 232, 101)
+    arrow(svg, 412, 101, 474, 103)
+    arrow(svg, 614, 103, 680, 101)
+    label_box(svg, 648, 84, "Không")
+    path_arrow(svg, "M 1020 144 L 1020 240")
+    path_arrow(svg, "M 926 283 L 774 283 L 774 422")
+    path_arrow(svg, "M 680 465 L 598 465")
+    path_arrow(svg, "M 410 465 L 338 465")
+    path_arrow(svg, "M 150 465 L 128 465")
+    path_arrow(svg, "M 544 154 L 544 240 L 598 240")
+    label_box(svg, 584, 188, "Có")
+    path_arrow(svg, "M 598 283 L 680 283 L 680 101")
+
+    save_svg_and_png(svg, "activity_create_plan")
 
 
 def main():
@@ -456,6 +516,7 @@ def main():
     render_sequence()
     render_scan_flow()
     render_erd()
+    render_activity_create_plan()
     print("Rendered thesis diagrams into", ASSETS)
 
 
