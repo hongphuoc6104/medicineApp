@@ -1,0 +1,1308 @@
+{
+  "generated_at": "2026-04-21T10:55:15.789141",
+  "image_count": 50,
+  "images": [
+    {
+      "image_id": "IMG_20260209_180410",
+      "group_id": "prescription_1",
+      "relative_path": "data/input/prescription_1/IMG_20260209_180410.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "ginkgo_biloba",
+          "display_name": "Ginkgo Biloba"
+        },
+        {
+          "canonical_id": "calcium_d3",
+          "display_name": "Calcium D3"
+        },
+        {
+          "canonical_id": "vitamin_c",
+          "display_name": "Vitamin C"
+        },
+        {
+          "canonical_id": "magnesium_b6",
+          "display_name": "Magnesium B6"
+        },
+        {
+          "canonical_id": "artificial_tears",
+          "display_name": "Artificial Tears"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180412",
+      "group_id": "prescription_1",
+      "relative_path": "data/input/prescription_1/IMG_20260209_180412.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "ginkgo_biloba",
+          "display_name": "Ginkgo Biloba"
+        },
+        {
+          "canonical_id": "calcium_d3",
+          "display_name": "Calcium D3"
+        },
+        {
+          "canonical_id": "vitamin_c",
+          "display_name": "Vitamin C"
+        },
+        {
+          "canonical_id": "magnesium_b6",
+          "display_name": "Magnesium B6"
+        },
+        {
+          "canonical_id": "artificial_tears",
+          "display_name": "Artificial Tears"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180415",
+      "group_id": "prescription_1",
+      "relative_path": "data/input/prescription_1/IMG_20260209_180415.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "ginkgo_biloba",
+          "display_name": "Ginkgo Biloba"
+        },
+        {
+          "canonical_id": "calcium_d3",
+          "display_name": "Calcium D3"
+        },
+        {
+          "canonical_id": "vitamin_c",
+          "display_name": "Vitamin C"
+        },
+        {
+          "canonical_id": "magnesium_b6",
+          "display_name": "Magnesium B6"
+        },
+        {
+          "canonical_id": "artificial_tears",
+          "display_name": "Artificial Tears"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180420",
+      "group_id": "prescription_1",
+      "relative_path": "data/input/prescription_1/IMG_20260209_180420.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "ginkgo_biloba",
+          "display_name": "Ginkgo Biloba"
+        },
+        {
+          "canonical_id": "calcium_d3",
+          "display_name": "Calcium D3"
+        },
+        {
+          "canonical_id": "vitamin_c",
+          "display_name": "Vitamin C"
+        },
+        {
+          "canonical_id": "magnesium_b6",
+          "display_name": "Magnesium B6"
+        },
+        {
+          "canonical_id": "artificial_tears",
+          "display_name": "Artificial Tears"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180421",
+      "group_id": "prescription_1",
+      "relative_path": "data/input/prescription_1/IMG_20260209_180421.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "ginkgo_biloba",
+          "display_name": "Ginkgo Biloba"
+        },
+        {
+          "canonical_id": "calcium_d3",
+          "display_name": "Calcium D3"
+        },
+        {
+          "canonical_id": "vitamin_c",
+          "display_name": "Vitamin C"
+        },
+        {
+          "canonical_id": "magnesium_b6",
+          "display_name": "Magnesium B6"
+        },
+        {
+          "canonical_id": "artificial_tears",
+          "display_name": "Artificial Tears"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180423",
+      "group_id": "prescription_1",
+      "relative_path": "data/input/prescription_1/IMG_20260209_180423.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "ginkgo_biloba",
+          "display_name": "Ginkgo Biloba"
+        },
+        {
+          "canonical_id": "calcium_d3",
+          "display_name": "Calcium D3"
+        },
+        {
+          "canonical_id": "vitamin_c",
+          "display_name": "Vitamin C"
+        },
+        {
+          "canonical_id": "magnesium_b6",
+          "display_name": "Magnesium B6"
+        },
+        {
+          "canonical_id": "artificial_tears",
+          "display_name": "Artificial Tears"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180425",
+      "group_id": "prescription_1",
+      "relative_path": "data/input/prescription_1/IMG_20260209_180425.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "ginkgo_biloba",
+          "display_name": "Ginkgo Biloba"
+        },
+        {
+          "canonical_id": "calcium_d3",
+          "display_name": "Calcium D3"
+        },
+        {
+          "canonical_id": "vitamin_c",
+          "display_name": "Vitamin C"
+        },
+        {
+          "canonical_id": "magnesium_b6",
+          "display_name": "Magnesium B6"
+        },
+        {
+          "canonical_id": "artificial_tears",
+          "display_name": "Artificial Tears"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180428",
+      "group_id": "prescription_1",
+      "relative_path": "data/input/prescription_1/IMG_20260209_180428.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "ginkgo_biloba",
+          "display_name": "Ginkgo Biloba"
+        },
+        {
+          "canonical_id": "calcium_d3",
+          "display_name": "Calcium D3"
+        },
+        {
+          "canonical_id": "vitamin_c",
+          "display_name": "Vitamin C"
+        },
+        {
+          "canonical_id": "magnesium_b6",
+          "display_name": "Magnesium B6"
+        },
+        {
+          "canonical_id": "artificial_tears",
+          "display_name": "Artificial Tears"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180432",
+      "group_id": "prescription_2",
+      "relative_path": "data/input/prescription_2/IMG_20260209_180432.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180434",
+      "group_id": "prescription_2",
+      "relative_path": "data/input/prescription_2/IMG_20260209_180434.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180436",
+      "group_id": "prescription_2",
+      "relative_path": "data/input/prescription_2/IMG_20260209_180436.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180438",
+      "group_id": "prescription_2",
+      "relative_path": "data/input/prescription_2/IMG_20260209_180438.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180442",
+      "group_id": "prescription_2",
+      "relative_path": "data/input/prescription_2/IMG_20260209_180442.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180445",
+      "group_id": "prescription_2",
+      "relative_path": "data/input/prescription_2/IMG_20260209_180445.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180453",
+      "group_id": "prescription_2",
+      "relative_path": "data/input/prescription_2/IMG_20260209_180453.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180455",
+      "group_id": "prescription_2",
+      "relative_path": "data/input/prescription_2/IMG_20260209_180455.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180505",
+      "group_id": "prescription_3",
+      "relative_path": "data/input/prescription_3/IMG_20260209_180505.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180744",
+      "group_id": "prescription_4",
+      "relative_path": "data/input/prescription_4/IMG_20260209_180744.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "rosuvastatin",
+          "display_name": "Rosuvastatin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "ezetimibe",
+          "display_name": "Ezetimibe"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180746",
+      "group_id": "prescription_4",
+      "relative_path": "data/input/prescription_4/IMG_20260209_180746.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "rosuvastatin",
+          "display_name": "Rosuvastatin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "ezetimibe",
+          "display_name": "Ezetimibe"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180748",
+      "group_id": "prescription_4",
+      "relative_path": "data/input/prescription_4/IMG_20260209_180748.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "rosuvastatin",
+          "display_name": "Rosuvastatin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "ezetimibe",
+          "display_name": "Ezetimibe"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180750",
+      "group_id": "prescription_4",
+      "relative_path": "data/input/prescription_4/IMG_20260209_180750.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "rosuvastatin",
+          "display_name": "Rosuvastatin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "ezetimibe",
+          "display_name": "Ezetimibe"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180800",
+      "group_id": "prescription_4",
+      "relative_path": "data/input/prescription_4/IMG_20260209_180800.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "rosuvastatin",
+          "display_name": "Rosuvastatin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "ezetimibe",
+          "display_name": "Ezetimibe"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180804",
+      "group_id": "prescription_4",
+      "relative_path": "data/input/prescription_4/IMG_20260209_180804.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "rosuvastatin",
+          "display_name": "Rosuvastatin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "ezetimibe",
+          "display_name": "Ezetimibe"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180705",
+      "group_id": "prescription_5",
+      "relative_path": "data/input/prescription_5/IMG_20260209_180705.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180708",
+      "group_id": "prescription_5",
+      "relative_path": "data/input/prescription_5/IMG_20260209_180708.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180710",
+      "group_id": "prescription_5",
+      "relative_path": "data/input/prescription_5/IMG_20260209_180710.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180712",
+      "group_id": "prescription_5",
+      "relative_path": "data/input/prescription_5/IMG_20260209_180712.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180715",
+      "group_id": "prescription_5",
+      "relative_path": "data/input/prescription_5/IMG_20260209_180715.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180717",
+      "group_id": "prescription_5",
+      "relative_path": "data/input/prescription_5/IMG_20260209_180717.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180457",
+      "group_id": "prescription_6",
+      "relative_path": "data/input/prescription_6/IMG_20260209_180457.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180500",
+      "group_id": "prescription_6",
+      "relative_path": "data/input/prescription_6/IMG_20260209_180500.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180502",
+      "group_id": "prescription_6",
+      "relative_path": "data/input/prescription_6/IMG_20260209_180502.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "celecoxib",
+          "display_name": "Celecoxib"
+        },
+        {
+          "canonical_id": "eperisone",
+          "display_name": "Eperisone"
+        },
+        {
+          "canonical_id": "mecobalamin",
+          "display_name": "Mecobalamin"
+        },
+        {
+          "canonical_id": "loratadine",
+          "display_name": "Loratadine"
+        },
+        {
+          "canonical_id": "paracetamol",
+          "display_name": "Paracetamol"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180511",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180511.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180513",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180513.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180517",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180517.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180524",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180524.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180525",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180525.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180527",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180527.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180530",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180530.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180537",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180537.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180540",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180540.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180542",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180542.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180546",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180546.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180548",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180548.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180553",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180553.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180604",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180604.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180616",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180616.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180619",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180619.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180621",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180621.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    },
+    {
+      "image_id": "IMG_20260209_180633",
+      "group_id": "prescription_7",
+      "relative_path": "data/input/prescription_7/IMG_20260209_180633.jpg",
+      "expected_drugs": [
+        {
+          "canonical_id": "amlodipine",
+          "display_name": "Amlodipine"
+        },
+        {
+          "canonical_id": "metformin",
+          "display_name": "Metformin"
+        },
+        {
+          "canonical_id": "atorvastatin",
+          "display_name": "Atorvastatin"
+        },
+        {
+          "canonical_id": "bisoprolol",
+          "display_name": "Bisoprolol"
+        },
+        {
+          "canonical_id": "esomeprazole",
+          "display_name": "Esomeprazole"
+        }
+      ]
+    }
+  ]
+}

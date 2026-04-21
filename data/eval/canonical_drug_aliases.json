@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-04-21T10:55:15.788273",
+  "canonical_drugs": [
+    {
+      "canonical_id": "ginkgo_biloba",
+      "display_name": "Ginkgo Biloba",
+      "aliases": [
+        "ginkgo",
+        "biloba",
+        "tanakan"
+      ]
+    },
+    {
+      "canonical_id": "calcium_d3",
+      "display_name": "Calcium D3",
+      "aliases": [
+        "calcium d3",
+        "calcium",
+        "corbiere"
+      ]
+    },
+    {
+      "canonical_id": "vitamin_c",
+      "display_name": "Vitamin C",
+      "aliases": [
+        "vitamin c",
+        "upsa c"
+      ]
+    },
+    {
+      "canonical_id": "magnesium_b6",
+      "display_name": "Magnesium B6",
+      "aliases": [
+        "magnesium b6",
+        "magne-b6",
+        "magne"
+      ]
+    },
+    {
+      "canonical_id": "artificial_tears",
+      "display_name": "Artificial Tears",
+      "aliases": [
+        "artificial tears",
+        "refresh"
+      ]
+    },
+    {
+      "canonical_id": "celecoxib",
+      "display_name": "Celecoxib",
+      "aliases": [
+        "celecoxib",
+        "celebrex"
+      ]
+    },
+    {
+      "canonical_id": "eperisone",
+      "display_name": "Eperisone",
+      "aliases": [
+        "eperisone",
+        "eperison",
+        "myonal"
+      ]
+    },
+    {
+      "canonical_id": "mecobalamin",
+      "display_name": "Mecobalamin",
+      "aliases": [
+        "mecobalamin",
+        "methycobal",
+        "drikryl"
+      ]
+    },
+    {
+      "canonical_id": "loratadine",
+      "display_name": "Loratadine",
+      "aliases": [
+        "loratadine",
+        "clarityne"
+      ]
+    },
+    {
+      "canonical_id": "paracetamol",
+      "display_name": "Paracetamol",
+      "aliases": [
+        "paracetamol",
+        "panadol",
+        "uphadol"
+      ]
+    },
+    {
+      "canonical_id": "rosuvastatin",
+      "display_name": "Rosuvastatin",
+      "aliases": [
+        "rosuvastatin",
+        "crestor"
+      ]
+    },
+    {
+      "canonical_id": "atorvastatin",
+      "display_name": "Atorvastatin",
+      "aliases": [
+        "atorvastatin",
+        "lipitor"
+      ]
+    },
+    {
+      "canonical_id": "ezetimibe",
+      "display_name": "Ezetimibe",
+      "aliases": [
+        "ezetimibe",
+        "ezetrol"
+      ]
+    },
+    {
+      "canonical_id": "amlodipine",
+      "display_name": "Amlodipine",
+      "aliases": [
+        "amlodipine",
+        "amlor"
+      ]
+    },
+    {
+      "canonical_id": "metformin",
+      "display_name": "Metformin",
+      "aliases": [
+        "metformin",
+        "glucophage"
+      ]
+    },
+    {
+      "canonical_id": "bisoprolol",
+      "display_name": "Bisoprolol",
+      "aliases": [
+        "bisoprolol",
+        "concor"
+      ]
+    },
+    {
+      "canonical_id": "esomeprazole",
+      "display_name": "Esomeprazole",
+      "aliases": [
+        "esomeprazole",
+        "nexium"
+      ]
+    }
+  ]
+}

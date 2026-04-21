@@ -511,7 +511,7 @@ def _split_band_on_missing_anchor(band, col_idx, num_cols, y_center_fn):
     return [subband for subband in subbands if subband]
 
 
-def group_by_stt(blocks: list) -> list:
+def group_by_stt_with_meta(blocks: list) -> tuple[list, dict]:
     """
     Gộp TextBlock thành các dòng hoàn chỉnh với thứ tự ngữ nghĩa đúng.
 
@@ -530,7 +530,7 @@ def group_by_stt(blocks: list) -> list:
     Args:
         blocks: Danh sách TextBlock từ OCR.
     Returns:
-        Danh sách TextBlock đã gộp theo thứ tự ngữ nghĩa đúng.
+        (Danh sách TextBlock đã gộp, metadata về độ tin cậy grouping)
     """
     import re
     from core.phase_a.s3_ocr.base import TextBlock
@@ -539,7 +539,14 @@ def group_by_stt(blocks: list) -> list:
     logger = logging.getLogger(__name__)
 
     if not blocks:
-        return []
+        return [], {
+            "strategy": "raw_empty",
+            "raw_block_count": 0,
+            "merged_block_count": 0,
+            "anchor_count": 0,
+            "used_dynamic_bounds": False,
+            "header_block_count": 0,
+        }
 
     def _y_center(bbox):
         ys = [pt[1] for pt in bbox]
@@ -580,7 +587,14 @@ def group_by_stt(blocks: list) -> list:
 
     if not anchors:
         logger.warning("group_by_stt: Không tìm thấy STT anchor → trả về blocks gốc.")
-        return blocks
+        return blocks, {
+            "strategy": "raw_no_anchor",
+            "raw_block_count": len(blocks),
+            "merged_block_count": len(blocks),
+            "anchor_count": 0,
+            "used_dynamic_bounds": bool(abs_col_bounds),
+            "header_block_count": 0,
+        }
 
     # 2. Xây Boundaries và Bands
     boundaries = [
@@ -662,4 +676,16 @@ def group_by_stt(blocks: list) -> list:
         f"group_by_stt [{mode}]: {len(blocks)} blocks → {len(merged)} lines "
         f"(Found {len(anchors)} STTs)"
     )
+    return merged, {
+        "strategy": "stt_grouped",
+        "raw_block_count": len(blocks),
+        "merged_block_count": len(merged),
+        "anchor_count": len(anchors),
+        "used_dynamic_bounds": bool(abs_col_bounds),
+        "header_block_count": len(headers),
+    }
+
+
+def group_by_stt(blocks: list) -> list:
+    merged, _ = group_by_stt_with_meta(blocks)
     return merged

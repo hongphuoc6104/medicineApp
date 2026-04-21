@@ -212,7 +212,7 @@ class MedicinePipeline:
 
     def scan_prescription_app(self, image, skip_yolo=False):
         """
-        Safer API scan path incorporating STT grouping and confidence levels.
+        API scan path with adaptive STT grouping and coverage-preserving fallback.
         """
         if isinstance(image, str):
             img = cv2.imread(image)
@@ -251,80 +251,45 @@ class MedicinePipeline:
         if not result.text_blocks:
             return {"error": "OCR found no text", "image_size": (w, h)}
 
-        # STT Grouping
-        from core.phase_a.s3_ocr.ocr_engine import group_by_stt
+        from core.phase_a.s3_ocr.ocr_engine import group_by_stt_with_meta
 
-        merged_blocks_obj = group_by_stt(result.text_blocks)
+        raw_ner_input = self._build_ner_input_from_text_blocks(result.text_blocks)
+        if not raw_ner_input:
+            return {"error": "OCR produced only empty blocks", "image_size": (w, h)}
 
-        ner_input = []
-        for b in merged_blocks_obj:
-            text = b.text.strip()
-            if not text:
-                continue
-            ner_input.append(
-                {
-                    "text": text,
-                    "label": "other",
-                    "box": b.bbox,
-                    "bbox": b.bbox,
-                }
-            )
+        raw_ner_results = self._classify_blocks(raw_ner_input)
+        raw_meds, _ = self._extract_medications(raw_ner_results)
 
-        if not ner_input:
-            return {"error": "No text after grouping", "image_size": (w, h)}
+        grouped_blocks_obj, grouping_meta = group_by_stt_with_meta(result.text_blocks)
+        grouped_ner_input = self._build_ner_input_from_text_blocks(grouped_blocks_obj)
 
-        ner_results = self._classify_blocks(ner_input)
+        if grouped_ner_input:
+            grouped_ner_results = self._classify_blocks(grouped_ner_input)
+            grouped_meds, _ = self._extract_medications(grouped_ner_results)
+        else:
+            grouped_ner_results = []
+            grouped_meds = []
 
-        # Mapping rules
-        mapper = self._get_drug_mapper()
-        medications = []
+        raw_summary = self._summarize_scan_branch(raw_ner_input, raw_ner_results, raw_meds)
+        grouped_summary = self._summarize_scan_branch(
+            grouped_ner_input,
+            grouped_ner_results,
+            grouped_meds,
+        )
+        selection_strategy, selection_reason = self._select_app_scan_branch(
+            raw_summary,
+            grouped_summary,
+            grouping_meta,
+        )
 
-        for block in ner_results:
-            if block.get("label") == "drugname":
-                text = block["text"]
-                match = mapper.lookup(text)
-                bbox = block.get("bbox") or block.get("box") or [0, 0, 0, 0]
-
-                match_score = match.get("score", 0) if match else 0
-                matched_name = match.get("name", text) if match else text
-
-                # Confidence Thresholding
-                # Level B: strict confirmed
-                if match_score >= 0.85:
-                    mapping_status = "confirmed"
-                elif match_score >= 0.65 or self._looks_like_valid_drugname_app(
-                    text,
-                    block.get("confidence", 0),
-                ):
-                    mapping_status = "unmapped_candidate"
-                else:
-                    mapping_status = "rejected_noise"
-
-                medications.append(
-                    {
-                        "ocr_text": text,
-                        "drug_name_raw": text,  # Raw text before fuzzy match
-                        "matched_drug_name": matched_name,
-                        "mapping_status": mapping_status,
-                        "confidence": block.get("confidence", 0),
-                        "match_score": match_score,
-                        "bbox": bbox,
-                        "extracted": {
-                            "stt": "",
-                            "drug_name": matched_name
-                            if mapping_status == "confirmed"
-                            else text,
-                            "instruction": "",
-                            "quantity": "",
-                            "unit": "",
-                        },
-                    }
-                )
-
-        # Remove rejected noise from returned medications (or keep them but UI will hide)
-        filtered_meds = [
-            m for m in medications if m["mapping_status"] != "rejected_noise"
-        ]
+        if selection_strategy == "stt_grouped":
+            filtered_meds = grouped_meds
+            ner_results = grouped_ner_results
+            ner_input = grouped_ner_input
+        else:
+            filtered_meds = raw_meds
+            ner_results = raw_ner_results
+            ner_input = raw_ner_input
 
         return {
             "medications": filtered_meds,
@@ -334,8 +299,59 @@ class MedicinePipeline:
                 "total_blocks": len(ner_input),
                 "drugnames": len(filtered_meds),
                 "others": len(ner_input) - len(filtered_meds),
+                "selection_strategy": selection_strategy,
+                "selection_reason": selection_reason,
+                "raw_branch": raw_summary,
+                "grouped_branch": grouped_summary,
+                "grouping_meta": grouping_meta,
             },
         }
+
+    @staticmethod
+    def _build_ner_input_from_text_blocks(blocks):
+        ner_input = []
+        for block in blocks or []:
+            text = getattr(block, "text", "").strip()
+            if not text:
+                continue
+            bbox = getattr(block, "bbox", [0, 0, 0, 0])
+            ner_input.append(
+                {
+                    "text": text,
+                    "label": "other",
+                    "box": bbox,
+                    "bbox": bbox,
+                }
+            )
+        return ner_input
+
+    @staticmethod
+    def _summarize_scan_branch(ner_input, ner_results, medications):
+        return {
+            "ner_input_count": len(ner_input),
+            "ocr_block_count": len(ner_results),
+            "candidate_count": len(medications),
+        }
+
+    @staticmethod
+    def _select_app_scan_branch(raw_summary, grouped_summary, grouping_meta):
+        grouped_candidates = int(grouped_summary.get("candidate_count", 0))
+        raw_candidates = int(raw_summary.get("candidate_count", 0))
+        anchor_count = int(grouping_meta.get("anchor_count", 0))
+        raw_overhang = raw_candidates - grouped_candidates
+        grouped_floor = max(3, anchor_count - 1) if anchor_count >= 3 else 3
+
+        if grouped_candidates <= 0:
+            return "raw_blocks", "grouped_empty"
+        if raw_candidates <= 0:
+            return "stt_grouped", "raw_empty"
+        if grouping_meta.get("strategy") != "stt_grouped":
+            return "raw_blocks", "grouping_not_reliable"
+        if grouped_candidates < grouped_floor:
+            return "raw_blocks", "grouped_under_covers_rows"
+        if raw_overhang >= 3:
+            return "stt_grouped", "reduced_document_noise"
+        return "raw_blocks", "preserve_raw_coverage"
 
     @staticmethod
     def _looks_like_valid_drugname_app(text, confidence):

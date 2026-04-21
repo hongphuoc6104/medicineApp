@@ -1,0 +1,151 @@
+{
+  "generated_at": "2026-04-21T10:55:15.788488",
+  "group_ground_truth": {
+    "prescription_1": [
+      {
+        "canonical_id": "ginkgo_biloba",
+        "display_name": "Ginkgo Biloba"
+      },
+      {
+        "canonical_id": "calcium_d3",
+        "display_name": "Calcium D3"
+      },
+      {
+        "canonical_id": "vitamin_c",
+        "display_name": "Vitamin C"
+      },
+      {
+        "canonical_id": "magnesium_b6",
+        "display_name": "Magnesium B6"
+      },
+      {
+        "canonical_id": "artificial_tears",
+        "display_name": "Artificial Tears"
+      }
+    ],
+    "prescription_2": [
+      {
+        "canonical_id": "celecoxib",
+        "display_name": "Celecoxib"
+      },
+      {
+        "canonical_id": "eperisone",
+        "display_name": "Eperisone"
+      },
+      {
+        "canonical_id": "mecobalamin",
+        "display_name": "Mecobalamin"
+      },
+      {
+        "canonical_id": "loratadine",
+        "display_name": "Loratadine"
+      },
+      {
+        "canonical_id": "paracetamol",
+        "display_name": "Paracetamol"
+      }
+    ],
+    "prescription_3": [
+      {
+        "canonical_id": "celecoxib",
+        "display_name": "Celecoxib"
+      },
+      {
+        "canonical_id": "eperisone",
+        "display_name": "Eperisone"
+      },
+      {
+        "canonical_id": "mecobalamin",
+        "display_name": "Mecobalamin"
+      },
+      {
+        "canonical_id": "loratadine",
+        "display_name": "Loratadine"
+      },
+      {
+        "canonical_id": "paracetamol",
+        "display_name": "Paracetamol"
+      }
+    ],
+    "prescription_4": [
+      {
+        "canonical_id": "rosuvastatin",
+        "display_name": "Rosuvastatin"
+      },
+      {
+        "canonical_id": "atorvastatin",
+        "display_name": "Atorvastatin"
+      },
+      {
+        "canonical_id": "ezetimibe",
+        "display_name": "Ezetimibe"
+      }
+    ],
+    "prescription_5": [
+      {
+        "canonical_id": "amlodipine",
+        "display_name": "Amlodipine"
+      },
+      {
+        "canonical_id": "metformin",
+        "display_name": "Metformin"
+      },
+      {
+        "canonical_id": "atorvastatin",
+        "display_name": "Atorvastatin"
+      },
+      {
+        "canonical_id": "bisoprolol",
+        "display_name": "Bisoprolol"
+      },
+      {
+        "canonical_id": "esomeprazole",
+        "display_name": "Esomeprazole"
+      }
+    ],
+    "prescription_6": [
+      {
+        "canonical_id": "celecoxib",
+        "display_name": "Celecoxib"
+      },
+      {
+        "canonical_id": "eperisone",
+        "display_name": "Eperisone"
+      },
+      {
+        "canonical_id": "mecobalamin",
+        "display_name": "Mecobalamin"
+      },
+      {
+        "canonical_id": "loratadine",
+        "display_name": "Loratadine"
+      },
+      {
+        "canonical_id": "paracetamol",
+        "display_name": "Paracetamol"
+      }
+    ],
+    "prescription_7": [
+      {
+        "canonical_id": "amlodipine",
+        "display_name": "Amlodipine"
+      },
+      {
+        "canonical_id": "metformin",
+        "display_name": "Metformin"
+      },
+      {
+        "canonical_id": "atorvastatin",
+        "display_name": "Atorvastatin"
+      },
+      {
+        "canonical_id": "bisoprolol",
+        "display_name": "Bisoprolol"
+      },
+      {
+        "canonical_id": "esomeprazole",
+        "display_name": "Esomeprazole"
+      }
+    ]
+  }
+}
