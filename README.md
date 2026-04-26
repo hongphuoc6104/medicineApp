@@ -1,180 +1,131 @@
 # MedicineApp
 
-He thong AI ho tro quet don thuoc va xac minh vien thuoc.
+> AI-powered prescription scanning and medication extraction
+> Hệ thống AI hỗ trợ quét đơn thuốc và trích xuất danh sách thuốc
 
-> **Trang thai**: Phase A (quet don thuoc) da hoat dong. Phase B (xac minh vien thuoc) dang hold.
+[![Phase A](https://img.shields.io/badge/Phase_A-Active-brightgreen)](#current-status)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
----
+MedicineApp turns a prescription photo into structured medication data.
+MedicineApp biến ảnh đơn thuốc thành dữ liệu có cấu trúc để hỗ trợ tra cứu, lưu trữ và tích hợp với ứng dụng di động.
 
-## Tinh nang
+The public repository focuses on Phase A, the prescription-scanning flow that is already working end to end.
+Kho lưu trữ công khai tập trung vào Phase A, tức luồng quét đơn thuốc đã chạy được từ đầu đến cuối.
 
-### Phase A - Quet don thuoc (Hoat dong)
-Chup anh don thuoc -> nhan dien danh sach ten thuoc tu dong.
+Phase B for pill verification is intentionally on hold.
+Phase B dùng để xác minh viên thuốc hiện đang tạm dừng.
 
-### Phase B - Xac minh vien thuoc (Hold)
-Chup anh vien thuoc -> so khop voi don thuoc da quet.
+## What it solves / Bài toán giải quyết
 
----
+- Manual prescription transcription is slow and error-prone. Đọc tay đơn thuốc dễ sai, chậm và khó đồng nhất.
+- MedicineApp automates crop, OCR, NER, and drug lookup for Vietnamese prescriptions. MedicineApp tự động cắt vùng đơn thuốc, OCR, NER và tra cứu tên thuốc cho đơn tiếng Việt.
 
-## Pipeline Phase A - 4 buoc
+## Highlights / Điểm nổi bật
 
-```
-Anh don thuoc
-  -> [1] YOLO Detect and Crop    - Cat vung don thuoc
-  -> [2] Preprocess               - Deskew, xoay phang
-  -> [3] Hybrid OCR               - PaddleOCR detect + VietOCR recognize
-  -> [4] PhoBERT NER Classify     - Nhan dien ten thuoc (drugname/other)
-  -> JSON danh sach thuoc
-```
+- YOLO-based prescription detection with convex-hull cropping. Phát hiện vùng đơn thuốc bằng YOLO và cắt theo convex hull để giữ nội dung bên trong.
+- Deskew and orientation normalization for rotated photos. Nắn ảnh lệch góc và chuẩn hóa chiều xoay cho ảnh chụp thực tế.
+- Hybrid OCR with PaddleOCR detection and VietOCR recognition. OCR lai: PaddleOCR để phát hiện vùng chữ và VietOCR để nhận dạng tiếng Việt.
+- PhoBERT NER for drug-name extraction. PhoBERT NER để trích xuất tên thuốc.
+- Fuzzy lookup against `data/drug_db_vn_full.json` with 9,284 Vietnamese drug records. Tra cứu gần đúng trên `data/drug_db_vn_full.json` với 9,284 thuốc Việt Nam.
+- CLI, FastAPI service, and Node.js backend support the same project. CLI, dịch vụ FastAPI và backend Node.js cùng phục vụ cho một hệ thống thống nhất.
 
----
+<a id="current-status"></a>
+## Current status / Trạng thái hiện tại
 
-## Cai dat
+| English | Tiếng Việt |
+|---|---|
+| Phase A is active and usable. | Phase A đang hoạt động và có thể dùng được. |
+| Phase B is on hold. | Phase B hiện tạm dừng. |
+| Main output: `data/output/phase_a/<image>/summary.json`. | Output chính: `data/output/phase_a/<image>/summary.json`. |
+| Current benchmark: 50/50 test images processed successfully, 338 drugs extracted, 0 errors. | Benchmark hiện tại: xử lý thành công 50/50 ảnh test, trích xuất 338 thuốc, 0 lỗi. |
+| NER result: 100% F1 on the test set. | NER đạt F1 100% trên tập test. |
+
+## Pipeline / Quy trình
+
+1. Detect and crop the prescription region. Phát hiện và cắt vùng đơn thuốc.
+2. Preprocess the image with deskew and auto-orientation. Tiền xử lý ảnh với deskew và xoay tự động.
+3. Run hybrid OCR to extract text blocks. Chạy OCR lai để lấy các block văn bản.
+4. Classify drug names with PhoBERT NER. Phân loại tên thuốc bằng PhoBERT NER.
+5. Fuzzy-match names against the Vietnamese drug database. So khớp gần đúng với cơ sở dữ liệu thuốc Việt Nam.
+
+## Tech stack / Công nghệ
+
+| Component | Role |
+|---|---|
+| Python 3.12 | AI pipeline and CLI |
+| FastAPI | Python AI service |
+| Node.js / Express | Main backend API |
+| PostgreSQL 16 | Database and sessions |
+| Flutter | Mobile client |
+| YOLOv11n-seg | Prescription detection |
+| PaddleOCR | Text detection |
+| VietOCR | Text recognition |
+| PhoBERT-base-v2 | NER model |
+
+## Setup / Cài đặt
 
 ```bash
-# Clone repo
 git clone git@github.com:hongphuoc6104/medicineApp.git
 cd medicineApp
 
-# Tao virtual environment
 python3.12 -m venv venv
 source venv/bin/activate
 
-# Cai dependencies
 pip install -r requirements.txt
 ```
 
-### Download Model Weights (khong co trong repo)
+### Model weights / Trọng số mô hình
 
-| Model | Duong dan | Kich thuoc |
-|-------|----------|-----------|
-| YOLO detect | `models/yolo/best.pt` | 6MB |
-| PhoBERT NER | `models/phobert_ner_model/` | ~500MB |
-| Zero-PIMA (Phase B) | `models/zero_pima/zero_pima_best.pth` | 521MB |
+| Model | Path | Note |
+|---|---|---|
+| YOLO detect | `models/yolo/best.pt` | Prescription crop model |
+| PhoBERT NER | `models/phobert_ner_model/` | NER weights |
+| Zero-PIMA | `models/zero_pima/zero_pima_best.pth` | Phase B only |
 
----
+## Usage / Cách sử dụng
 
-## Su dung
-
-### CLI - Chay Pipeline
+### CLI
 
 ```bash
 source venv/bin/activate
 
-# 1 anh
 python scripts/run_pipeline.py --image data/input/prescription_3/IMG_20260209_180505.jpg
-
-# 1 folder
 python scripts/run_pipeline.py --dir data/input/prescription_3
-
-# Tat ca anh
 python scripts/run_pipeline.py --all
 ```
 
-### FastAPI Server
+### FastAPI AI service
 
 ```bash
+source venv/bin/activate
 python -m server.main
-# -> http://localhost:8000
-# -> Swagger docs: http://localhost:8000/docs
 ```
 
-**Endpoints chinh:**
-
-| Endpoint | Method | Mo ta |
-|----------|--------|-------|
-| `/api/health` | GET | Kiem tra trang thai server |
-| `/api/scan-prescription` | POST | Upload anh don thuoc -> nhan dien thuoc |
-| `/api/drugs` | GET | Tim kiem DB thuoc local |
-| `/api/drug-info/{name}` | GET | Thong tin chi tiet 1 thuoc |
-| `/api/drugs/search-vn` | GET | Tim thuoc VN qua DDI Lab API |
-
----
-
-## Mobile Dev Khong Phu Thuoc Wi-Fi
-
-Khi test app Android that, khuyen nghi dung USB + `adb reverse` thay vi hardcode IP LAN.
+### Node.js backend
 
 ```bash
-bash dev.sh
-cd mobile && flutter run -d <device-id>
+cd server-node
+npm install
+npm run dev
 ```
 
-Workflow nay se cap nhat `mobile/.env` ve:
-
-```bash
-API_BASE_URL=http://127.0.0.1:3001/api
-```
-
-va map request tren dien thoai ve may dev qua USB. `dev.sh` chay:
-
-- PostgreSQL bang Docker
-- Node API local tren `3001`
-- Python AI local tren `8000`
-
-nen khong can sua lai IP moi lan doi Wi-Fi.
-
----
-
-## Cau truc du an
+## Project structure / Cấu trúc dự án
 
 ```
 medicineApp/
-├── core/                        # Source code chinh
-│   ├── phase_a/                 #   Pipeline 4 buoc
-│   │   ├── s1_detect/           #     YOLO crop
-│   │   ├── s2_preprocess/       #     Deskew + orientation
-│   │   ├── s3_ocr/              #     PaddleOCR + VietOCR
-│   │   ├── s5_classify/         #     PhoBERT NER
-│   │   └── s6_drug_search/      #     Drug fuzzy lookup
-│   ├── phase_b/                 #   [HOLD] Xac minh vien thuoc
-│   ├── config.py                #   Cau hinh (thresholds, paths)
-│   └── pipeline.py              #   API orchestrator
-├── scripts/                     #   CLI scripts
-├── server/                      #   FastAPI server
-├── models/                      #   Model weights (khong commit)
-├── data/                        #   Input/output data
-├── docs/                        #   Tai lieu chi tiet
-├── archive/                     #   Code cu da bo
-├── AGENTS.md                    #   Onboarding guide cho AI agents
-└── PIPELINE_STATUS.md           #   Tai lieu ky thuat pipeline
+├── core/           # AI pipeline source
+├── scripts/        # CLI and training scripts
+├── server/         # FastAPI AI service
+├── server-node/    # Node.js main backend
+├── mobile/         # Flutter client
+├── models/         # Model weights
+├── data/           # Inputs, outputs, datasets
+├── tests/          # Python tests
+└── archive/        # Deprecated or superseded work
 ```
 
----
+## License / Giấy phép
 
-## Tech Stack
-
-| Component | Chi tiet |
-|-----------|---------|
-| Python | 3.12 |
-| OCR Detection | PaddleOCR PP-OCRv5 (GPU) |
-| OCR Recognition | VietOCR vgg_transformer (CUDA) |
-| NER | PhoBERT-base-v2 fine-tuned (BIO tagging) |
-| Object Detection | YOLOv11n-seg |
-| Server | FastAPI |
-| GPU | NVIDIA RTX 3050 4GB |
-
----
-
-## Hieu suat
-
-| Metric | Gia tri |
-|--------|--------|
-| Cold start | ~13s/anh (loading models) |
-| Warm inference | ~6-7s/anh |
-| NER F1-score | 100% (test set) |
-
----
-
-## Tai lieu
-
-- [AGENTS.md](AGENTS.md) - Onboarding guide cho AI agents
-- [PIPELINE_STATUS.md](PIPELINE_STATUS.md) - Chi tiet ky thuat pipeline
-- [docs/project_status.md](docs/project_status.md) - Tien do du an
-- [docs/master_plan.md](docs/master_plan.md) - Master plan thiet ke
-
----
-
-## License
-
-MIT License - xem file [LICENSE](LICENSE).
+MIT License. See [`LICENSE`](LICENSE).
