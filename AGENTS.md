@@ -242,8 +242,11 @@ archive/
 |------|------------|
 | `AGENTS.md` (file này) | **Luôn đọc đầu tiên** |
 | `PIPELINE_STATUS.md` | Khi cần biết chi tiết kỹ thuật từng bước, args, versions |
-| `docs/project_status.md` | Khi cần checklist tiến độ (Đã làm / Chưa làm) |
-| `docs/master_plan.md` | Khi cần hiểu bức tranh tổng thể thiết kế ban đầu |
+| `docs/mlkit_progressive_ocr/README.md` | Mục lục duy nhất cho đợt nâng cấp ML Kit và Progressive OCR |
+| `docs/mlkit_progressive_ocr/01_CONG_VIEC_CAN_LAM.md` | Checklist và trạng thái từng work package |
+| `docs/mlkit_progressive_ocr/04_KE_HOACH_KIEM_THU.md` | Khi tạo hoặc chạy test cho pipeline mới |
+| `docs/mlkit_progressive_ocr/05_DEBUG_VA_QUAN_SAT.md` | Khi debug từng stage hoặc đối chiếu artifact |
+| `docs/mlkit_progressive_ocr/06_BENCHMARK_VA_DOI_CHIEU.md` | Khi benchmark A/B/C và quyết định giữ/xóa stage cũ |
 | `models/README.md` | Khi cần biết weights nào, dung lượng, load ở đâu |
 | `README.md` (root) | ⚠️ 83KB, có thể lỗi thời ở 1 số phần — ưu tiên AGENTS.md |
 

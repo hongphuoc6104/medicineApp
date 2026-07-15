@@ -50,7 +50,7 @@ Sau file này, AI phải đọc tiếp theo đúng thứ tự:
 1. `AGENTS.md`
 2. `APP_ACTIVE_GENERAL_PLAN.md`
 3. `APP_ACTIVE_DETAILED_PLAN.md`
-4. `docs/phase_a_debug_runbook.md`
+4. `docs/mlkit_progressive_ocr/README.md`
 
 Nếu một trong các file plan active không còn phù hợp với vấn đề hiện tại, AI phải cập nhật hoặc tạo plan mới theo quy trình ở mục 4.
 
@@ -66,7 +66,7 @@ Những nguyên tắc nền phải luôn giữ:
 
 - không đụng `scripts/run_pipeline.py` nếu không có lý do bắt buộc và được chốt rõ
 - Phase A là trọng tâm giao sản phẩm
-- Phase B là lớp nghiên cứu/tiếp theo, không được làm lệch mục tiêu chính
+- phần xác minh viên thuốc đã bị loại khỏi repo, không mở lại nếu không có yêu cầu mới rõ ràng
 - mọi text user-facing ở các màn đã sửa phải là tiếng Việt có dấu
 
 ---
@@ -79,7 +79,7 @@ Khi có một yêu cầu mới hoặc cần nâng cấp/sửa lỗi lớn, AI ph
 
 - đọc code liên quan
 - xem `git status --short`
-- xác định đây là vấn đề thuộc Phase A, Phase B, contract, UX hay infra
+- xác định đây là vấn đề thuộc pipeline quét đơn, contract, UX hay infra
 
 ### Bước 2 — Tạo hoặc cập nhật general plan ở root
 
@@ -249,7 +249,7 @@ Khi dừng phải báo lại:
 
 Khi làm việc liên quan đến Phase A app flow, AI phải dùng runbook:
 
-- `docs/phase_a_debug_runbook.md`
+- `docs/mlkit_progressive_ocr/05_DEBUG_VA_QUAN_SAT.md`
 
 Lệnh kiểm tra nhanh chuẩn:
 
@@ -266,7 +266,7 @@ Chỉ khi cần mới chạy mode nặng hơn như `--full` hoặc `--image`.
 Khi đã có detailed plan, AI điều phối nên giao bằng prompt kiểu này:
 
 ```text
-Đọc AGENTS.md, APP_ACTIVE_DETAILED_PLAN.md và docs/phase_a_debug_runbook.md trước.
+Đọc AGENTS.md, APP_ACTIVE_DETAILED_PLAN.md và docs/mlkit_progressive_ocr/README.md trước.
 
 Chỉ làm đúng lát cắt đang được giao.
 Không sửa ngoài phạm vi plan.
@@ -285,7 +285,7 @@ Nếu gặp blocker lớn hoặc phải lan sang phần ngoài scope, dừng l�
 Lần sau, nếu muốn AI hiểu ngay cách làm việc, chỉ cần gửi file này và nói ngắn gọn:
 
 - vấn đề mới là gì
-- muốn bắt đầu ở Phase A hay Phase B
+- muốn bắt đầu ở pipeline quét đơn, app mobile hay backend
 - muốn chỉ lập plan hay muốn bắt đầu thực hiện
 
 AI phải tự dựa vào file này để:

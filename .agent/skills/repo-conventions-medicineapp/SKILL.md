@@ -11,7 +11,7 @@
 
 - `AGENTS.md`
 - `PIPELINE_STATUS.md`
-- `docs/master_plan.md`
+- `docs/mlkit_progressive_ocr/README.md`
 - `mobile/`
 - `server-node/`
 - `server/`
