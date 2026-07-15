@@ -26,7 +26,7 @@ import os
 import sys
 import time
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from statistics import mean
@@ -74,6 +74,8 @@ class ImageEvalRow:
     gt_ids: list[str]
     pred_ids: list[str]
     pred_texts: list[str]
+    unmatched_predictions: list[dict] = field(default_factory=list)
+    prediction_resolutions: list[dict] = field(default_factory=list)
 
 
 def load_manifest() -> list[dict]:
@@ -121,9 +123,15 @@ def normalize_text(text: str) -> str:
     return " ".join("".join(cleaned).split())
 
 
-def canonicalize_prediction(pred_texts: list[str], alias_pairs: list[tuple[str, str]]) -> list[str]:
-    cids: set[str] = set()
+def resolve_predictions(
+    pred_texts: list[str],
+    alias_pairs: list[tuple[str, str]],
+) -> list[dict]:
+    """Resolve each non-empty prediction without discarding unknown text."""
+    resolutions = []
     for raw in pred_texts:
+        if not raw or not raw.strip():
+            continue
         norm = normalize_text(raw)
         best_cid = None
         best_len = -1
@@ -133,9 +141,25 @@ def canonicalize_prediction(pred_texts: list[str], alias_pairs: list[tuple[str, 
             if alias in norm and len(alias) > best_len:
                 best_cid = cid
                 best_len = len(alias)
-        if best_cid:
-            cids.add(best_cid)
-    return sorted(cids)
+        resolutions.append(
+            {
+                "raw_text": raw,
+                "normalized_text": norm,
+                "status": "matched" if best_cid else "unmatched",
+                "canonical_id": best_cid,
+            }
+        )
+    return resolutions
+
+
+def canonicalize_prediction(pred_texts: list[str], alias_pairs: list[tuple[str, str]]) -> list[str]:
+    return sorted(
+        {
+            record["canonical_id"]
+            for record in resolve_predictions(pred_texts, alias_pairs)
+            if record["status"] == "matched"
+        }
+    )
 
 
 def build_ner_input_from_blocks(blocks) -> list[dict]:
@@ -366,9 +390,28 @@ def evaluate_row(
                 or ""
             )
 
-    pred_ids = set(canonicalize_prediction(pred_texts, alias_pairs))
+    prediction_resolutions = resolve_predictions(pred_texts, alias_pairs)
+    pred_ids = {
+        record["canonical_id"]
+        for record in prediction_resolutions
+        if record["status"] == "matched"
+    }
+    unmatched_by_normalized = {}
+    for record in prediction_resolutions:
+        if record["status"] != "unmatched":
+            continue
+        unmatched_by_normalized.setdefault(
+            record["normalized_text"],
+            {
+                "raw_text": record["raw_text"],
+                "normalized_text": record["normalized_text"],
+            },
+        )
+    unmatched_predictions = [
+        unmatched_by_normalized[key] for key in sorted(unmatched_by_normalized)
+    ]
     tp = len(gt_ids & pred_ids)
-    fp = len(pred_ids - gt_ids)
+    fp = len(pred_ids - gt_ids) + len(unmatched_predictions)
     fn = len(gt_ids - pred_ids)
     p = tp / (tp + fp) if (tp + fp) else 0.0
     r = tp / (tp + fn) if (tp + fn) else 0.0
@@ -381,17 +424,19 @@ def evaluate_row(
         relative_path=image_row["relative_path"],
         elapsed_s=elapsed_s,
         gt_count=len(gt_ids),
-        pred_count=len(pred_ids),
+        pred_count=len(pred_ids) + len(unmatched_predictions),
         tp=tp,
         fp=fp,
         fn=fn,
         precision=p,
         recall=r,
         f1=f1,
-        exact_match=pred_ids == gt_ids,
+        exact_match=pred_ids == gt_ids and not unmatched_predictions,
         gt_ids=sorted(gt_ids),
         pred_ids=sorted(pred_ids),
-        pred_texts=[t for t in pred_texts if t],
+        pred_texts=[record["raw_text"] for record in prediction_resolutions],
+        unmatched_predictions=unmatched_predictions,
+        prediction_resolutions=prediction_resolutions,
     )
 
 
@@ -467,6 +512,8 @@ def write_per_image_csv(out_path: Path, rows: list[ImageEvalRow]) -> None:
         "gt_ids",
         "pred_ids",
         "pred_texts",
+        "unmatched_predictions",
+        "prediction_resolutions",
     ]
     with out_path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
@@ -491,6 +538,14 @@ def write_per_image_csv(out_path: Path, rows: list[ImageEvalRow]) -> None:
                     "gt_ids": "|".join(r.gt_ids),
                     "pred_ids": "|".join(r.pred_ids),
                     "pred_texts": " || ".join(r.pred_texts),
+                    "unmatched_predictions": json.dumps(
+                        r.unmatched_predictions,
+                        ensure_ascii=False,
+                    ),
+                    "prediction_resolutions": json.dumps(
+                        r.prediction_resolutions,
+                        ensure_ascii=False,
+                    ),
                 }
             )
 
@@ -610,6 +665,9 @@ def main() -> None:
                         "gt_ids": r.gt_ids,
                         "pred_ids": r.pred_ids,
                         "pred_texts": r.pred_texts,
+                        "pred_count": r.pred_count,
+                        "unmatched_predictions": r.unmatched_predictions,
+                        "prediction_resolutions": r.prediction_resolutions,
                         "tp": r.tp,
                         "fp": r.fp,
                         "fn": r.fn,
