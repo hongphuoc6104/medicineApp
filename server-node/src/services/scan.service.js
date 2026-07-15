@@ -303,6 +303,7 @@ export async function scanPrescription(
   sessionId = null
 ) {
   let result;
+  let timeout;
 
   try {
     // Build multipart form for Python API
@@ -312,24 +313,53 @@ export async function scanPrescription(
     formData.append('file', blob, originalName || 'prescription.jpg');
 
     const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 30_000); // 30s for OCR
+    timeout = setTimeout(() => ctrl.abort(), 30_000); // 30s for OCR
 
     const resp = await fetch(`${env.PYTHON_API_URL}/api/scan-prescription`, {
       method: 'POST',
       body: formData,
       signal: ctrl.signal,
     });
-    clearTimeout(timeout);
 
     if (!resp.ok) {
       const errBody = await resp.text();
-      throw new Error(`Python API returned ${resp.status}: ${errBody}`);
+      let upstreamError = {};
+      try {
+        upstreamError = JSON.parse(errBody);
+      } catch {
+        upstreamError = { detail: errBody };
+      }
+      const detail = upstreamError?.detail || upstreamError?.error || {};
+      const code = typeof detail === 'object' && detail.code
+        ? detail.code
+        : 'PIPELINE_UNAVAILABLE';
+      const message = typeof detail === 'object' && detail.message
+        ? detail.message
+        : `Python API returned ${resp.status}`;
+      throw new AppError(message, resp.status, code);
     }
 
     result = await resp.json();
+    if (result?.mock === true) {
+      throw new AppError(
+        'AI pipeline unavailable. Please try again later.',
+        503,
+        'PIPELINE_UNAVAILABLE'
+      );
+    }
+    if (result?.error) {
+      throw new AppError(
+        String(result.error),
+        422,
+        'SCAN_PROCESSING_FAILED'
+      );
+    }
   } catch (err) {
     if (err.name === 'AbortError') {
       throw new AppError('Scan timed out (30s)', 504, 'SCAN_TIMEOUT');
+    }
+    if (err instanceof AppError) {
+      throw err;
     }
     logger.error(`Python API error: ${err.message}`);
     throw new AppError(
@@ -337,6 +367,8 @@ export async function scanPrescription(
       503,
       'PIPELINE_UNAVAILABLE'
     );
+  } finally {
+    clearTimeout(timeout);
   }
 
   const normalized = normalizeScanResult(result);
