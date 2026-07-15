@@ -53,7 +53,7 @@ Nâng cấp luồng quét đơn thuốc để:
 | ID | Công việc | Trạng thái | Phụ thuộc | Bằng chứng hoàn thành |
 |---|---|---|---|---|
 | WP-00 | Tạo baseline sạch từ GitHub `main` | DONE | Không | Branch/worktree `feature/mlkit-progressive-ocr-foundation` từ `a6810a3` |
-| WP-01 | Chụp baseline full OCR hiện tại | TODO | WP-00 | Báo cáo timing, accuracy, error list |
+| WP-01 | Chụp baseline full OCR hiện tại | BLOCKED | WP-00 | Cần manifest và assets model/input có hash trước khi chạy |
 | WP-02 | Cleanup Phase B và dead code chắc chắn | IN_PROGRESS | WP-00 | Call-site audit và test không regression |
 | WP-03 | Sửa error/API/drug resolution contract | TODO | WP-00 | Python và Node contract tests pass |
 | WP-04 | Tạo abstraction lấy ảnh prescription trên mobile | TODO | WP-00 | Unit test với fake acquirer |
