@@ -12,5 +12,7 @@ Mọi quyết định kiến trúc, test, benchmark hoặc cleanup được thê
 | ADR-006 | ACCEPTED | Progressive OCR đi `shadow`, `exhaustive`, rồi `guarded`; partial không là complete |
 | ADR-007 | ACCEPTED | Xóa generated artifact/cache, giữ venv/model/Docker rollback |
 | ADR-008 | ACCEPTED | Archive docs main ra sibling ngoài repo với hash kiểm chứng |
+| ADR-009 | ACCEPTED | Scan failure dùng HTTP/code rõ ràng: unavailable `503`, execution failed `500`, processing failed `422`; Node không persist mock/error |
+| ADR-010 | ACCEPTED | Prediction không khớp alias được giữ để adjudication, tính FP và làm `exact_match=false` |
 
 Mẫu: ngày, trạng thái (`PROPOSED|ACCEPTED|SUPERSEDED|REJECTED`), quyết định, lý do, bằng chứng, hệ quả và ADR thay thế.

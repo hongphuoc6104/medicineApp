@@ -1,64 +1,64 @@
 # Active Detailed Plan
 
-## Current Slice: WP-03A
+## Current Slice: WP-03B
 
-`Failure contract and mock-medication removal`
+`Safe brand, ingredient, and strength resolution`
 
 ## Objective
 
-Ensure a Python pipeline failure is an explicit non-2xx error through Node, is never normalized as a successful empty or mock scan, and is not persisted as a completed scan.
+Prevent ingredient-only or strength-incompatible OCR text from being silently converted into a confirmed trade product while preserving the raw OCR candidate for user review.
 
 ## In scope
 
-- `server/main.py` and the Python scan endpoint/pipeline boundary it calls.
-- `server-node/src/services/scan.service.js`.
-- `server-node/src/routes/scan.routes.js` only if required to preserve an HTTP status/code.
-- `scripts/tests/test_pipeline_failure_contract.py`.
-- `server-node/tests/integration/pythonScanContract.test.js`.
+- `core/phase_a/s6_drug_search/drug_lookup.py`
+- `core/pipeline.py`, limited to medication resolution output
+- `server-node/src/services/scan.service.js`, limited to additive mapped/raw fields
+- `scripts/tests/test_drug_lookup_resolution_safety.py`
+- `tests/test_phase_a_scan_lookup_regression.py`
 
 ## Out of scope
 
-- `scripts/run_pipeline.py`.
-- ML Kit, Progressive OCR, mobile UI, database migration, Phase B cleanup.
-- Drug matching logic and row ownership; these are later WP-03 slices.
+- `scripts/run_pipeline.py`
+- OCR grouping and row ownership
+- ML Kit, Progressive OCR, Phase B cleanup and database migrations
+- Broad canonical response migration or mobile UI changes
 
-## Required reading order
+## Test-first cases
 
-1. `AGENTS.md`
-2. `docs/mlkit_progressive_ocr/README.md`
-3. `server/main.py`
-4. The full Python scan handler and its pipeline invocation
-5. `server-node/src/services/scan.service.js`
-6. `server-node/src/routes/scan.routes.js`
-7. Current Python and Node scan tests
+1. Exact brand with compatible strength may be confirmed.
+2. Brand with incompatible strength must not be confirmed.
+3. Query strength present but candidate strength absent must not be confirmed.
+4. Ingredient shared by multiple brands remains an ingredient/unmapped candidate.
+5. Ingredient plus unique strength must not silently become a brand.
+6. Combination products require complete compatible strength evidence.
+7. Parenthetical explicit brand remains supported.
+8. `drug_name_raw` and `ocr_text` are preserved.
+9. Existing lookup keys remain backward compatible.
+10. Selected `medication_candidates`, including rejected items, remain observable.
 
 ## Implementation rules
 
-1. Write both new contract tests before integration changes.
-2. Preserve a machine-readable failure code and appropriate HTTP status from Python through Node.
-3. Do not fabricate medications, quality `GOOD`, or a successful scan ID after failure.
-4. Do not insert a scan-history row after the pipeline failure.
-5. Keep the normal successful response backward-compatible until a later, separately approved canonical contract migration.
-6. Stop and report if preserving the Python HTTP response requires a broad public API redesign.
+- Return additive evidence such as `match_basis`, ambiguity, strength state and resolution reason.
+- Treat strength as `compatible`, `mismatch`, `unknown_query` or `unknown_candidate` rather than a ranking-only boolean.
+- Ingredient-only, ambiguous and strength-mismatch results cannot be `confirmed`.
+- Keep plausible unsafe mappings as `unmapped_candidate` for review rather than dropping them.
+- Do not change protected CLI behavior or remove existing lookup return keys.
 
 ## Acceptance criteria
 
-- A Python exception produces a non-2xx API response with an explicit error code.
-- Node preserves the failure semantics instead of returning success or mock medication.
-- No successful scan persistence occurs for that request.
-- Existing successful scan tests continue to pass.
+- New safety test passes without loading OCR/NER models.
+- Existing scan lookup regression passes, including `drug_name_raw`.
+- WP-03A Python/Node contract tests remain green.
+- No new confirmation path relies only on fuzzy score.
 
 ## Verification
 
 ```bash
-python scripts/tests/test_pipeline_failure_contract.py
-cd server-node && npm test -- pythonScanContract.test.js
+python -m pytest scripts/tests/test_drug_lookup_resolution_safety.py -q
+python -m pytest tests/test_phase_a_scan_lookup_regression.py tests/test_drug_database.py -q
+cd server-node && npm test -- pythonScanContract.test.js scan.service.test.js
 ```
 
-Run the relevant existing Python and Node scan tests after the two targeted tests pass.
+## Stop conditions
 
-## Next slices
-
-1. WP-03B: safe brand/ingredient/strength resolution with `test_drug_lookup_resolution_safety.py`.
-2. WP-03C: medication row ownership with `test_medication_row_ownership.py`.
-3. WP-03D: evaluator counts out-of-alias predictions as false positives.
+Stop if the change requires rewriting `scripts/run_pipeline.py`, removing current response fields, or combining row-ownership semantics into this slice.

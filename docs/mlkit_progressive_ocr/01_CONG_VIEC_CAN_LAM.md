@@ -55,8 +55,8 @@ Nâng cấp luồng quét đơn thuốc để:
 | WP-00 | Tạo baseline sạch từ GitHub `main` | DONE | Không | Branch/worktree `feature/mlkit-progressive-ocr-foundation` từ `a6810a3` |
 | WP-01 | Chụp baseline full OCR hiện tại | BLOCKED | WP-00 | Cần manifest và assets model/input có hash trước khi chạy |
 | WP-02 | Cleanup Phase B và dead code chắc chắn | IN_PROGRESS | WP-00 | Call-site audit và test không regression |
-| WP-03 | Sửa error/API/drug resolution contract | TODO | WP-00 | Python và Node contract tests pass |
-| WP-04 | Tạo abstraction lấy ảnh prescription trên mobile | TODO | WP-00 | Unit test với fake acquirer |
+| WP-03 | Sửa error/API/drug resolution contract | IN_PROGRESS | WP-00 | WP-03A và WP-03D đã đạt; WP-03B/C còn lại |
+| WP-04 | Tạo abstraction lấy ảnh prescription trên mobile | DONE | WP-00 | Pure-Dart contract và 5 fake-acquirer tests pass |
 | WP-05 | Tích hợp native ML Kit bridge | TODO | WP-04 | Android build và device tests pass |
 | WP-06 | Thêm metadata nguồn ảnh và debug mobile | TODO | WP-05 | Metadata tới được Python, không log PHI |
 | WP-07 | Benchmark đầu ra ML Kit với pipeline cũ | TODO | WP-05, WP-06 | Bảng ablation YOLO/preprocess |
@@ -81,7 +81,7 @@ Nâng cấp luồng quét đơn thuốc để:
 | CLEAN-03 | DONE | Dọn Flutter/Node/Python cache |
 | CLEAN-04 | DONE | Thêm root `.dockerignore` |
 | CLEAN-05 | DONE | Xóa `core/shared` không có call-site |
-| CLEAN-06 | TODO | Dọn Phase B hoàn chỉnh trên baseline sạch |
+| CLEAN-06 | IN_PROGRESS | Đã gỡ Node Phase B ingress, orphan gitlink và legacy `drug_mapper`; Python/FastAPI/mobile còn lại |
 | CLEAN-07 | TODO | Xử lý database schema/table Phase B |
 | CLEAN-08 | TODO | Kiểm tra fresh install sau dependency cleanup |
 
@@ -93,11 +93,11 @@ Nâng cấp luồng quét đơn thuốc để:
 - [ ] Hoàn thành WP-01.
 - [ ] Hoàn thành WP-02 bằng một change set riêng.
 - [ ] Hoàn thành WP-03 trước khi dùng bộ lọc thuốc làm tín hiệu progressive stop.
-- [ ] Sửa evaluator để prediction ngoài alias không bị bỏ qua khi tính FP.
+- [x] Sửa evaluator để prediction ngoài alias không bị bỏ qua khi tính FP.
 
 ### Giai đoạn B: ML Kit Document Scanner
 
-- [ ] Hoàn thành WP-04.
+- [x] Hoàn thành WP-04.
 - [ ] Hoàn thành WP-05 với `SCANNER_MODE_FULL`, JPEG, một trang và gallery import.
 - [ ] Giữ CameraX làm fallback trong giai đoạn thử nghiệm.
 - [ ] Chạy quality gate ML Kit ở chế độ observe-only trước khi hiệu chỉnh threshold.

@@ -33,3 +33,11 @@ Layout coverage gồm bảng có/thiếu STT, free-text, tên tách box, quantit
 - Mỗi medication giữ `source_region_ids`.
 
 Integration chain: Flutter fake scanner -> Node multipart -> Python fake/full pipeline -> canonical response -> mobile review. Python HTTP error phải được Node giữ nguyên; Node không chấp nhận `mock: true`.
+
+## Test run log
+
+| Run ID | Commit | Phạm vi | Kết quả |
+|---|---|---|---|
+| `foundation-parallel-20260716-01` | `9bf03be` | WP-03A, WP-03D, WP-04, Node Phase B ingress cleanup | Python targeted `9/9`; Node `97/97`; Flutter acquirer `5/5`, targeted analyze sạch |
+
+Giới hạn của run: full Python đạt `39 pass, 3 fail` do hai test cần PhoBERT weights không có trong worktree sạch và một assertion `drug_name_raw` thuộc WP-03B. Full Flutter đạt `24 pass, 2 fail` tại `home_screen_test.dart`, ngoài phạm vi WP-04.
