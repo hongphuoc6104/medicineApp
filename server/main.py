@@ -201,7 +201,7 @@ async def health():
         "ai_ready": pipeline is not None,
         "runtime": _runtime_info(),
         "scan_runtime": {
-            "mode": "full_ai" if pipeline is not None else "mock_fallback",
+            "mode": "full_ai" if pipeline is not None else "pipeline_unavailable",
             "pipeline_loaded": pipeline is not None,
             "pipeline_loaded_at": _pipeline_loaded_at,
             "pipeline_last_error": _pipeline_last_error,
@@ -384,23 +384,36 @@ async def scan_prescription(file: UploadFile = File(...)):
 
     pipeline = _get_pipeline()
     if pipeline is None:
-        # Mock response when AI models aren't loaded
-        return {
-            "medications": [
-                {
-                    "drug_name": "Mock-Paracetamol-500mg",
-                    "ocr_text": "Paracetamol 500mg",
-                    "confidence": 0.95,
-                    "match_score": 0.9,
-                }
-            ],
-            "mock": True,
-            "message": ("AI models not loaded. Download checkpoint to models/weights/"),
-        }
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "code": "PIPELINE_UNAVAILABLE",
+                "message": "AI pipeline is unavailable. Please try again later.",
+            },
+        )
 
     # VĐ7: Semaphore — chỉ 1 scan đồng thời trên GPU
-    async with scan_semaphore:
-        result = pipeline.scan_prescription_app(img)
+    try:
+        async with scan_semaphore:
+            result = pipeline.scan_prescription_app(img)
+    except Exception as exc:
+        logger.exception("Prescription pipeline execution failed")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "code": "PIPELINE_EXECUTION_FAILED",
+                "message": "AI pipeline failed while processing the prescription.",
+            },
+        ) from exc
+
+    if isinstance(result, dict) and result.get("error"):
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "code": "SCAN_PROCESSING_FAILED",
+                "message": str(result["error"]),
+            },
+        )
     return result
 
 
