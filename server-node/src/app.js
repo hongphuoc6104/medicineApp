@@ -21,8 +21,6 @@ import drugRoutes from './routes/drug.routes.js';
 import drugInteractionRoutes from './routes/drugInteraction.routes.js';
 import scanRoutes from './routes/scan.routes.js';
 import planRoutes from './routes/plan.routes.js';
-import pillVerificationRoutes from './routes/pillVerification.routes.js';
-import pillReferenceRoutes from './routes/pillReference.routes.js';
 
 const app = express();
 
@@ -54,8 +52,6 @@ app.use('/api/drugs', drugRoutes);
 app.use('/api/drug-interactions', drugInteractionRoutes);
 app.use('/api/scan', scanRoutes);
 app.use('/api/plans', planRoutes);
-app.use('/api/pill-verifications', pillVerificationRoutes);
-app.use('/api/pill-references', pillReferenceRoutes);
 
 // ── 404 ──
 app.use((req, res) => {
