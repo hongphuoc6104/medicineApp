@@ -24,10 +24,7 @@ import '../../features/lookup/presentation/active_ingredient_interactions_screen
 import '../../features/history/presentation/history_screen.dart';
 import '../../features/plan/presentation/plan_detail_screen.dart';
 import '../../features/plan/presentation/plan_list_screen.dart';
-import '../../features/pill_verification/presentation/pill_verification_screen.dart';
-import '../../features/pill_verification/presentation/pill_reference_enrollment_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
-import '../../features/home/domain/today_schedule.dart';
 
 /// Tri-state auth: loading (cold start) → authenticated / unauthenticated.
 enum AuthStatus { loading, authenticated, unauthenticated }
@@ -184,42 +181,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: '/plans/:id',
             builder: (context, state) =>
                 PlanDetailScreen(planId: state.pathParameters['id'] ?? ''),
-          ),
-          GoRoute(
-            path: '/pill-verify',
-            builder: (context, state) {
-              final dose = state.extra as TodayDose?;
-              return PillVerificationScreen(
-                dose:
-                    dose ??
-                    const TodayDose(
-                      occurrenceId: '',
-                      planId: '',
-                      drugName: '',
-                      time: '',
-                      scheduledTime: '',
-                      status: 'pending',
-                    ),
-              );
-            },
-          ),
-          GoRoute(
-            path: '/pill-reference/enroll',
-            builder: (context, state) {
-              final dose = state.extra as TodayDose?;
-              return PillReferenceEnrollmentScreen(
-                dose:
-                    dose ??
-                    const TodayDose(
-                      occurrenceId: '',
-                      planId: '',
-                      drugName: '',
-                      time: '',
-                      scheduledTime: '',
-                      status: 'pending',
-                    ),
-              );
-            },
           ),
           GoRoute(
             path: '/history',

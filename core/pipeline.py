@@ -258,17 +258,18 @@ class MedicinePipeline:
             return {"error": "OCR produced only empty blocks", "image_size": (w, h)}
 
         raw_ner_results = self._classify_blocks(raw_ner_input)
-        raw_meds, _ = self._extract_medications(raw_ner_results)
+        raw_meds, raw_candidates = self._extract_medications(raw_ner_results)
 
         grouped_blocks_obj, grouping_meta = group_by_stt_with_meta(result.text_blocks)
         grouped_ner_input = self._build_ner_input_from_text_blocks(grouped_blocks_obj)
 
         if grouped_ner_input:
             grouped_ner_results = self._classify_blocks(grouped_ner_input)
-            grouped_meds, _ = self._extract_medications(grouped_ner_results)
+            grouped_meds, grouped_candidates = self._extract_medications(grouped_ner_results)
         else:
             grouped_ner_results = []
             grouped_meds = []
+            grouped_candidates = []
 
         raw_summary = self._summarize_scan_branch(raw_ner_input, raw_ner_results, raw_meds)
         grouped_summary = self._summarize_scan_branch(
@@ -284,15 +285,18 @@ class MedicinePipeline:
 
         if selection_strategy == "stt_grouped":
             filtered_meds = grouped_meds
+            medication_candidates = grouped_candidates
             ner_results = grouped_ner_results
             ner_input = grouped_ner_input
         else:
             filtered_meds = raw_meds
+            medication_candidates = raw_candidates
             ner_results = raw_ner_results
             ner_input = raw_ner_input
 
         return {
             "medications": filtered_meds,
+            "medication_candidates": medication_candidates,
             "ocr_blocks": ner_results,
             "image_size": (w, h),
             "stats": {
@@ -474,8 +478,29 @@ class MedicinePipeline:
                 confidence = block.get("confidence", 0)
                 match_score = match.get("score", 0) if match else 0
                 matched_name = match.get("name") if match else None
+                if match:
+                    registration_number = (
+                        match.get("registration_number")
+                        or match.get("so_dang_ky", "")
+                    )
+                else:
+                    registration_number = ""
+                normalized_candidate_strength = (
+                    match.get("normalized_candidate_strength", "") if match else ""
+                )
+                normalized_query_strength = (
+                    match.get("normalized_query_strength", "") if match else ""
+                )
+                confirmation_safe = bool(
+                    match
+                    and match.get("confirmation_safe")
+                    and match.get("match_basis") == "brand_exact"
+                    and match.get("strength_state") == "compatible"
+                    and not match.get("ambiguous")
+                    and normalized_candidate_strength
+                )
 
-                if matched_name and match_score >= 0.85:
+                if matched_name and confirmation_safe:
                     mapping_status = "confirmed"
                     drug_name = matched_name
                 elif match_score >= 0.65 or self._looks_like_valid_drugname_app(
@@ -489,10 +514,25 @@ class MedicinePipeline:
 
                 candidate = {
                     "ocr_text": text,
+                    "drug_name_raw": text,
                     "drug_name": drug_name,
                     "matched_drug_name": matched_name,
+                    "mapped_drug_name": matched_name,
+                    "registration_number": registration_number,
+                    "normalized_query_strength": normalized_query_strength,
+                    "normalized_candidate_strength": normalized_candidate_strength,
                     "match_score": match_score,
                     "mapping_status": mapping_status,
+                    "match_basis": match.get("match_basis", "none") if match else "none",
+                    "strength_state": (
+                        match.get("strength_state", "unknown_candidate")
+                        if match else "unknown_candidate"
+                    ),
+                    "ambiguous": bool(match and match.get("ambiguous")),
+                    "resolution_reason": (
+                        match.get("resolution_reason", "no_match") if match else "no_match"
+                    ),
+                    "confirmation_safe": confirmation_safe,
                     "confidence": confidence,
                     "bbox": bbox,
                 }

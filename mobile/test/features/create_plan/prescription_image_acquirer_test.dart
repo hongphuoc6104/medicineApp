@@ -9,6 +9,7 @@ class _FakePrescriptionImageAcquirer implements PrescriptionImageAcquirer {
   PrescriptionImageAcquisitionOutcome nextOutcome;
   int callCount = 0;
   PrescriptionImageAcquisitionOptions? lastOptions;
+  AcquiredPrescriptionImage? lastReleasedImage;
 
   @override
   Future<PrescriptionImageAcquisitionOutcome> acquire(
@@ -17,6 +18,12 @@ class _FakePrescriptionImageAcquirer implements PrescriptionImageAcquirer {
     callCount += 1;
     lastOptions = options;
     return nextOutcome;
+  }
+
+  @override
+  Future<bool> release(AcquiredPrescriptionImage image) async {
+    lastReleasedImage = image;
+    return true;
   }
 }
 
@@ -60,6 +67,9 @@ void main() {
       expect(success.image.scannerMetadata.mode, 'full');
       expect(success.image.scannerMetadata.version, '16.0.0');
       expect(success.image.scannerMetadata.elapsedMilliseconds, 842);
+
+      expect(await fake.release(success.image), true);
+      expect(fake.lastReleasedImage, same(success.image));
     });
 
     test('represents user cancellation without a failure', () async {

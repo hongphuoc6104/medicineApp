@@ -50,5 +50,24 @@ Không tạo thêm tài liệu cùng chủ đề ở vị trí khác. Nếu cầ
 | `TODO` | Chưa bắt đầu |
 | `IN_PROGRESS` | Đang thực hiện |
 | `BLOCKED` | Bị chặn và cần quyết định hoặc dữ liệu |
+| `BLOCKED_ENV` | Code/contract đã kiểm tra nhưng môi trường thiếu dependency hoặc quyền cần thiết |
+| `PENDING_PREFLIGHT` | Chưa được phép chạy vì approval, privacy, asset hoặc provenance gate chưa đạt |
+| `IMPLEMENTATION_DONE` | Code và disposable verification xong; rollout production còn gate riêng |
+| `TOOLING_DONE_PREFLIGHT_BLOCKED` | Tooling xong nhưng run thực tế vẫn bị preflight chặn |
 | `DONE` | Đã hoàn thành và có bằng chứng kiểm chứng |
+| `PASS` | Run hoặc lane verification đã đạt acceptance trong phạm vi ghi nhận |
+| `IMPLEMENTATION_PASS` | Implementation/disposable verification đạt, nhưng không suy diễn là production rollout hoàn tất |
 | `REJECTED` | Đã thử nhưng không đạt tiêu chí |
+
+## Snapshot triển khai 2026-07-16
+
+| Hạng mục | Trạng thái | Bằng chứng / blocker |
+|---|---|---|
+| WP-03B | DONE | Safety fixture `16/16`; integrated Python targeted `52/52`; Node disposable full `104/104` |
+| Flutter/FastAPI Phase B ingress | DONE | Retired deep links/endpoints về fallback hoặc `404`; Flutter full chỉ còn 2 Home baseline failures |
+| WP-05A | BLOCKED_ENV | Dart/Kotlin contracts và ML Kit `16.0.0` đạt; Android debug build chờ NDK `28.2.13676358` và accepted license |
+| CLEAN-07 | IMPLEMENTATION_DONE | Fresh schema không tạo 7 bảng; disposable retirement `6/6`; không database thật nào đã drop |
+| WP-01A | DONE | Tooling `20/20`, no-copy locator, explicit asset binding, exact coverage/provenance/report gates |
+| WP-01B/C | PENDING_PREFLIGHT | Chờ approval bind đúng manifest, privacy approval, debug-retention deadline và clean `a6810a3` worktree |
+
+Không ghi CPU/GPU baseline metrics trước khi hai run WP-01 được preflight phê duyệt. Chi tiết và run registry nằm trong `09_BAO_CAO_KET_QUA.md`.

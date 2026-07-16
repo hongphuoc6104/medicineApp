@@ -54,5 +54,7 @@ def test_scan_prescription_app_keeps_high_confidence_unmapped_drugname(monkeypat
     result = pipe.scan_prescription_app(np.zeros((50, 50, 3), dtype=np.uint8), skip_yolo=True)
 
     assert len(result["medications"]) == 1
+    assert len(result["medication_candidates"]) == 1
+    assert result["medications"][0]["ocr_text"] == "Losartan ( Cozaar 50 mg ) 50 mg"
     assert result["medications"][0]["drug_name_raw"] == "Losartan ( Cozaar 50 mg ) 50 mg"
     assert result["medications"][0]["mapping_status"] == "unmapped_candidate"

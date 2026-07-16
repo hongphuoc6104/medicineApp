@@ -6,8 +6,6 @@ Endpoints:
     GET  /api/drug-info/{name}    → Drug information lookup
     GET  /api/drug-metadata/{name} → Drug metadata enrichment
     POST /api/scan-prescription   → Scan prescription image
-    POST /api/scan-pills          → Verify pills against prescription
-    POST /api/dose-verification   → Verify pills for one occurrence
 
 Run:
     uvicorn server.main:app --host 0.0.0.0 --port 8000 --reload
@@ -20,7 +18,6 @@ os.environ.setdefault("FLAGS_enable_pir_api", "0")
 os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
 
 import asyncio
-import json
 import logging
 import platform
 import socket
@@ -47,46 +44,6 @@ _pipeline_loaded_at = None
 # VĐ7: Semaphore giới hạn GPU concurrent (RTX 3050 4GB)
 # Chỉ cho phép 1 scan chạy đồng thời để tránh OOM
 scan_semaphore = asyncio.Semaphore(1)
-
-
-def _parse_json_list(raw_value: str, field_name: str):
-    """Parse JSON list field from multipart form input."""
-    if not raw_value:
-        return []
-    try:
-        parsed = json.loads(raw_value)
-    except json.JSONDecodeError as exc:
-        raise HTTPException(400, f"Invalid JSON for {field_name}") from exc
-
-    if not isinstance(parsed, list):
-        raise HTTPException(400, f"{field_name} must be a JSON array")
-    return parsed
-
-
-async def _enrich_expected_medications(expected_items):
-    """Attach structured metadata to expected meds for Phase B scoring."""
-    if not expected_items:
-        return []
-
-    svc = _get_drug_service()
-
-    async def enrich_item(item):
-        item_copy = dict(item)
-        drug_name = str(
-            item_copy.get("drugName") or item_copy.get("name") or ""
-        ).strip()
-        if not drug_name:
-            return item_copy
-
-        try:
-            metadata = await svc.enrich_metadata(drug_name)
-        except Exception as exc:
-            logger.warning("Drug metadata enrichment failed for %s: %s", drug_name, exc)
-            metadata = {}
-        item_copy["metadata"] = metadata
-        return item_copy
-
-    return await asyncio.gather(*(enrich_item(item) for item in expected_items))
 
 
 def _get_drug_service():
@@ -175,7 +132,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="MedicineApp API",
-    description=("AI-powered prescription scanning & pill verification"),
+    description="AI-powered prescription scanning",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -413,120 +370,5 @@ async def scan_prescription(file: UploadFile = File(...)):
                 "code": "SCAN_PROCESSING_FAILED",
                 "message": str(result["error"]),
             },
-        )
-    return result
-
-
-# ── Scan Pills ────────────────────────────────────────
-
-
-@app.post("/api/scan-pills")
-async def scan_pills(
-    file: UploadFile = File(...),
-    prescription_json: str = "",
-):
-    """
-    Verify pills match the prescription.
-
-    Upload a photo of pills + the prescription data (from scan)
-    to verify which pills are correct.
-    """
-    import cv2
-    import numpy as np
-
-    contents = await file.read()
-    nparr = np.frombuffer(contents, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    if img is None:
-        raise HTTPException(400, "Invalid image file")
-
-    # Parse prescription data
-    pres_blocks = []
-    if prescription_json:
-        pres_blocks = json.loads(prescription_json)
-
-    pipeline = _get_pipeline()
-    if pipeline is None:
-        return {
-            "matches": [],
-            "detections": [],
-            "mock": True,
-            "message": "AI models not loaded.",
-        }
-
-    result = pipeline.verify_pills(img, pres_blocks)
-    return result
-
-
-@app.post("/api/dose-verification")
-async def dose_verification(
-    file: UploadFile = File(...),
-    occurrence_id: str = "",
-    scheduled_time: str = "",
-    expected_medications: str = "[]",
-    reference_profiles: str = "[]",
-):
-    """
-    Verify pills for a single dose occurrence (dose-centric Phase B).
-
-    Upload one group pill image and provide expected medications for
-    the current occurrence along with optional user reference profiles.
-    """
-    import cv2
-    import numpy as np
-
-    if not occurrence_id:
-        raise HTTPException(400, "occurrence_id is required")
-
-    contents = await file.read()
-    nparr = np.frombuffer(contents, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    if img is None:
-        raise HTTPException(400, "Invalid image file")
-
-    expected = _parse_json_list(expected_medications, "expected_medications")
-    expected = await _enrich_expected_medications(expected)
-    references = _parse_json_list(reference_profiles, "reference_profiles")
-
-    pipeline = _get_pipeline()
-    if pipeline is None:
-        return {
-            "mode": "dose_verification",
-            "occurrenceId": occurrence_id,
-            "scheduledTime": scheduled_time,
-            "detections": [],
-            "summary": {
-                "totalDetections": 0,
-                "assigned": 0,
-                "uncertain": 0,
-                "unknown": 0,
-                "extra": 0,
-                "missingExpected": len(expected),
-                "perMedication": [],
-            },
-            "referenceCoverage": {
-                "totalExpected": len(expected),
-                "withReference": 0,
-                "withoutReference": len(expected),
-                "missingPlanIds": [str(item.get("planId", "")) for item in expected],
-                "missingDrugNames": [
-                    str(item.get("drugName", "")) for item in expected
-                ],
-            },
-            "expectedMedications": expected,
-            "missingReferences": [str(item.get("drugName", "")) for item in expected],
-            "mock": True,
-            "message": "AI models not loaded.",
-        }
-
-    async with scan_semaphore:
-        result = pipeline.verify_pills(
-            img,
-            occurrence_id=occurrence_id,
-            scheduled_time=scheduled_time,
-            expected_medications=expected,
-            reference_profiles=references,
         )
     return result

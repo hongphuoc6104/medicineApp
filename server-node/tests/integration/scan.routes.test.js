@@ -26,6 +26,12 @@ function buildMedication({
   mappingStatus = 'confirmed',
   confidence = 0.92,
   matchScore = 0.9,
+  matchBasis = 'brand_exact',
+  strengthState = 'compatible',
+  ambiguous = false,
+  confirmationSafe = true,
+  registrationNumber = 'REG-TEST',
+  normalizedCandidateStrength = '500 mg',
 }) {
   return {
     ocr_text: ocrText,
@@ -34,6 +40,12 @@ function buildMedication({
     mapping_status: mappingStatus,
     confidence,
     match_score: matchScore,
+    match_basis: matchBasis,
+    strength_state: strengthState,
+    ambiguous,
+    confirmation_safe: confirmationSafe,
+    registration_number: registrationNumber,
+    normalized_candidate_strength: normalizedCandidateStrength,
     bbox: [1, 2, 10, 12],
   };
 }

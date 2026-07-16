@@ -16,6 +16,28 @@ AcquiredPrescriptionImage(bytes_or_cache_path, filename, mime_type, width, heigh
 
 `acquisition_source`: `mlkit_document_scanner`, `camerax_fallback`, hoặc `gallery_fallback`.
 
+## Native MethodChannel boundary
+
+WP-05A triển khai `MlKitPrescriptionImageAcquirer` qua một app-owned MethodChannel. Tên channel, method, argument keys, result keys và error codes phải được định nghĩa một lần trong Dart/Kotlin contract constants và khóa bằng contract tests, không rải string literal trong UI hoặc `MainActivity`.
+
+Request contract của WP-05A:
+
+- Một request đang chạy tại một thời điểm; request trùng trả `acquisition_in_progress`.
+- Một trang, JPEG và ML Kit `SCANNER_MODE_FULL`.
+- Gallery import chỉ bật theo `PrescriptionImageAcquisitionOptions.allowGalleryFallback`.
+- ML Kit dependency khóa ở `16.0.0`.
+
+Success contract chỉ trả internal cache path cùng `image/jpeg`, width, height, byte size, source, scanner mode/version và elapsed milliseconds. Native phải copy URI kết quả vào app-internal cache, validate JPEG và giới hạn `10 MB` trước khi trả Dart. `PrescriptionImageAcquirer.release()` quản lý cleanup qua abstraction; ML Kit cache có explicit release và stale cleanup, còn byte/CameraX/gallery không bị native bridge xóa nhầm. Cancel là outcome riêng; unsupported/GMS/error dùng các stable failure code của WP-04. Không log URI, filename gốc, bytes hoặc dữ liệu ảnh.
+
+### Ranh giới WP-05
+
+| Slice | Phạm vi | Không được làm |
+|---|---|---|
+| WP-05A | Dart adapter, Kotlin bridge/contract, `MainActivity` registration, dependency và contract/build tests | Không nối production screen, không thay CameraX flow, không xóa `image_picker` |
+| WP-05B | Device integration, lifecycle/rotation/cancel, production screen selection và fallback UX | Không bắt đầu trước khi WP-05A tests/build pass |
+
+CameraX và gallery contract hiện tại tiếp tục tồn tại làm fallback. WP-05 chỉ `DONE` khi WP-05A và WP-05B đều hoàn thành.
+
 ## Chính sách server
 
 `ImageProcessingPolicy` gồm `use_yolo_crop`, `use_deskew`, `use_orientation`, `detection_max_side`, `recognition_max_side`. Không bỏ stage chỉ dựa trên source ảnh; quyết định đến từ B0/B1/B2/B3 benchmark.

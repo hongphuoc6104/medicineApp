@@ -4,6 +4,9 @@ abstract interface class PrescriptionImageAcquirer {
   Future<PrescriptionImageAcquisitionOutcome> acquire(
     PrescriptionImageAcquisitionOptions options,
   );
+
+  /// Releases owned resources, or returns false when the image needs no cleanup.
+  Future<bool> release(AcquiredPrescriptionImage image);
 }
 
 class PrescriptionImageAcquisitionOptions {

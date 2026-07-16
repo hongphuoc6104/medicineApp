@@ -10,6 +10,8 @@ Timing: scanner, upload, decode, YOLO, deskew, orientation, detection, graph, Vi
 
 Debug một ảnh: xác nhận manifest, metadata, transform frame, coverage region, graph/seed, OCR rounds, PhoBERT/post-filter, lookup/strength, stop/fallback và full OCR comparison.
 
-Không commit ảnh đơn thật, không log OCR text production. Full debug chỉ dùng synthetic hoặc dữ liệu có quyền; cache phải có TTL/cleanup.
+Không commit ảnh đơn thật, OCR text, crop, temporary scanner JPEG hoặc overlay. Không log OCR text production. Full debug chỉ dùng synthetic hoặc dữ liệu đã được phê duyệt, chỉ lưu trong thư mục local đã được ignore như `debug/`, không dùng filename/path gốc làm tracked metadata và không benchmark latency chính bằng artifact này.
+
+Mỗi full-debug run phải ghi local-only owner, mục đích, thời điểm tạo và hạn xóa. Hạn giữ phải được chốt ở WP-01 preflight; policy khuyến nghị là xóa ngay sau khi aggregate report được duyệt. Aggregate report chỉ được commit sau privacy scan, phải dùng image ID ẩn danh và không chứa URI, absolute home path hoặc nội dung OCR.
 
 Theo dõi: generic map sai biệt dược, wrong row ownership, OCR empty `IMG_180633`, confidence `1.0`, và Python error thành Node scan `GOOD`.

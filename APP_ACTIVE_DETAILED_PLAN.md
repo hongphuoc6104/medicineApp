@@ -1,6 +1,6 @@
 # Active Detailed Plan
 
-## Current Slice: WP-03B
+## Current Slice: WP-03B (DONE)
 
 `Safe brand, ingredient, and strength resolution`
 
@@ -62,3 +62,14 @@ cd server-node && npm test -- pythonScanContract.test.js scan.service.test.js
 ## Stop conditions
 
 Stop if the change requires rewriting `scripts/run_pipeline.py`, removing current response fields, or combining row-ownership semantics into this slice.
+
+## Completion evidence
+
+- Safety fixture suite: `16/16` pass without loading OCR/NER models.
+- Integrated targeted Python wave: `52/52` pass.
+- Node full suite on disposable PostgreSQL: `104/104` pass; same-brand registrations with different strength remain distinct.
+- Ingredient-only, ambiguous, missing/contradictory strength and strength mismatch cannot become `confirmed`.
+- `drug_name_raw`, `ocr_text`, rejected candidates, registration and normalized strength evidence remain observable.
+- `scripts/run_pipeline.py` is unchanged.
+
+WP-03C is the next permitted core slice, but it is not started in this wave.

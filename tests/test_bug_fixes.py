@@ -36,10 +36,22 @@ class _FakeMapper:
             return {
                 "name": "Paracetamol",
                 "score": 0.94,
+                "match_basis": "brand_exact",
+                "strength_state": "compatible",
+                "ambiguous": False,
+                "resolution_reason": "exact_brand_compatible_strength",
+                "confirmation_safe": True,
+                "so_dang_ky": "REG-PARA-500",
+                "normalized_candidate_strength": "500 mg",
             }
         return {
             "name": None,
             "score": 0.0,
+            "match_basis": "none",
+            "strength_state": "unknown_candidate",
+            "ambiguous": False,
+            "resolution_reason": "no_match",
+            "confirmation_safe": False,
         }
 
 

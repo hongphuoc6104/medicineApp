@@ -30,16 +30,36 @@ Mobile CameraX -> Node POST /api/scan -> Python POST /api/scan-prescription
 | Error contract | Có mock medication và lỗi HTTP 200 |
 | Evaluator | Có thể bỏ prediction ngoài alias khi tính FP |
 
-## Baseline cần ghi lại
+## Phạm vi dữ liệu WP-01
 
-Mỗi run phải lưu commit, trạng thái worktree, hash/phiên bản YOLO-Paddle-VietOCR-PhoBERT, môi trường CPU/runtime, manifest SHA-256 của input, timing cold/warm P50/P90/P95 theo stage, TP/FP/FN/F1, region OCR, false-complete và wrong-row ownership.
+WP-01 dùng một manifest duy nhất gồm đủ 170 ảnh đã chốt phạm vi. Việc chạy vẫn bị chặn đến khi approval thực thi và privacy approval được ghi cho đúng SHA-256 manifest này, đồng thời có debug-retention deadline:
 
-Hai baseline bắt buộc:
+| Nhóm | Số ảnh | Chỉ số được phép tính |
+|---|---:|---|
+| Labeled | 50 | TP, FP, FN, micro/macro F1, exact set match và lỗi mapping |
+| Operational | 120 | Success, error, empty result, cold/warm timing và lỗi vận hành; không tính F1 |
 
-1. `approved_main`: hành vi đúng `main@a6810a3`.
-2. `safe_full_ocr`: full OCR sau khi sửa mock/error/contract/resolution/evaluator. Đây là đối chứng cho tối ưu CPU.
+Trước khi chạy phải xác nhận 170 ảnh được phép dùng và không để thông tin bệnh nhân thật xuất hiện trong tracked artifact. Input và model được tham chiếu read-only bằng asset locator từ vị trí đã duyệt; không copy hoặc symlink asset vào worktree sạch và không ghi absolute home path vào manifest/requirements.
 
-| Run ID | Commit | Mode | Images | TP | FP | FN | F1 | P50 | P95 | Ghi chú |
-|---|---|---|---:|---:|---:|---:|---:|---:|---:|---|
-| Chưa chạy | | approved_main | | | | | | | | |
-| Chưa chạy | | safe_full_ocr | | | | | | | | |
+## Approved-main baseline protocol
+
+Mỗi run phải dùng code đúng `main@a6810a392c97593f073a9c5e2b8dfc47027c1911` và lưu commit, trạng thái worktree, SHA-256 input manifest, SHA-256/phiên bản YOLO-Paddle-VietOCR-PhoBERT, OS/runtime/hardware/thread policy, seed, evaluator version, debug level và timing cold/warm P50/P90/P95 theo stage.
+
+Chạy hai process tách biệt với cùng manifest, evaluator, seed và thread policy:
+
+1. `wp01-approved-main-gpu-<timestamp>`: GPU baseline.
+2. `wp01-approved-main-cpu-<timestamp>`: CPU-forced baseline; phải chứng minh process không dùng CUDA.
+
+Full debug chỉ được lưu local trong thư mục ignored và có hạn xóa. Tracked report chỉ chứa aggregate metrics, hashes, provenance và image ID đã ẩn danh; không chứa ảnh, OCR text, crop hoặc overlay.
+
+## Baseline tracking
+
+| Run ID | Commit | Runtime | Labeled | Operational | F1 | Exact match | P50 | P95 | Trạng thái |
+|---|---|---|---:|---:|---:|---:|---:|---:|---|
+| `wp01-approved-main-gpu-<timestamp>` | `a6810a3` | GPU | 50 | 120 | Chưa chạy | Chưa chạy | Chưa chạy | Chưa chạy | PENDING_PREFLIGHT |
+| `wp01-approved-main-cpu-<timestamp>` | `a6810a3` | CPU-forced | 50 | 120 | Chưa chạy | Chưa chạy | Chưa chạy | Chưa chạy | PENDING_PREFLIGHT |
+| `safe-full-ocr-<timestamp>` | Chưa chốt | CPU target | 50 | 120 | Chưa chạy | Chưa chạy | Chưa chạy | Chưa chạy | BLOCKED_BY_WP03B_WP03C |
+
+WP-01A tooling đã đạt `20/20` tests và xác minh asset/input hashes, explicit model binding, exact 170-record coverage, cold-init/warm timing, worker/evaluator hashes và privacy-safe aggregate report. Hai approved-main run vẫn `PENDING_PREFLIGHT` vì chưa có approval file bind đúng manifest, privacy approval và debug-retention deadline; không có CPU/GPU metrics nào được ghi.
+
+`safe_full_ocr` là full OCR sau khi hoàn tất mock/error/contract/resolution/evaluator và row ownership. WP-03B đã xong nhưng WP-03C chưa triển khai, nên safe full OCR vẫn bị chặn bởi WP-03C.

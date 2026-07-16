@@ -42,6 +42,8 @@ android {
 
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    implementation("com.google.android.gms:play-services-mlkit-document-scanner:16.0.0")
+    testImplementation("junit:junit:4.13.2")
 }
 
 flutter {

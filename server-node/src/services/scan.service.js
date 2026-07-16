@@ -14,10 +14,36 @@ const HIGH_CONFIDENCE_NEW_DRUG = 0.85;
 const MAX_CONSECUTIVE_REJECTS = 3;
 
 function toDrugItem(med) {
-  const mappingStatus = med.mapping_status
+  const requestedMappingStatus = med.mapping_status
     || med.mappingStatus
-    || (med.mapped_drug_name || med.mappedDrugName ? 'confirmed' : 'unmapped_candidate');
-  const mappedDrugName = med.mapped_drug_name || med.mappedDrugName || null;
+    || 'unmapped_candidate';
+  const mappedDrugName = med.mapped_drug_name
+    || med.mappedDrugName
+    || med.matched_drug_name
+    || med.matchedDrugName
+    || null;
+  const matchBasis = med.match_basis || med.matchBasis || 'none';
+  const strengthState = med.strength_state || med.strengthState || 'unknown_candidate';
+  const ambiguous = Boolean(med.ambiguous);
+  const registrationNumber = med.registration_number
+    || med.registrationNumber
+    || med.so_dang_ky
+    || null;
+  const normalizedCandidateStrength = med.normalized_candidate_strength
+    || med.normalizedCandidateStrength
+    || null;
+  const declaredConfirmationSafe = med.confirmation_safe ?? med.confirmationSafe ?? false;
+  const confirmationSafe = Boolean(
+    declaredConfirmationSafe === true
+    && matchBasis === 'brand_exact'
+    && strengthState === 'compatible'
+    && !ambiguous
+    && mappedDrugName
+    && normalizedCandidateStrength
+  );
+  const mappingStatus = requestedMappingStatus === 'confirmed' && !confirmationSafe
+    ? 'unmapped_candidate'
+    : requestedMappingStatus;
 
   // Plan §9.2: primary name is ALWAYS extracted/OCR text — DB match must not override display
   const rawText = med.drug_name_raw || med.drug_name || med.drugName || med.ocr_text || med.ocrText || '';
@@ -30,7 +56,14 @@ function toDrugItem(med) {
     matchScore: Number(med.match_score || 0),
     ocrText: med.ocr_text || med.ocrText || rawText,
     mappedDrugName,   // kept as optional secondary metadata
+    registrationNumber,
+    normalizedCandidateStrength,
     mappingStatus,
+    matchBasis,
+    strengthState,
+    ambiguous,
+    resolutionReason: med.resolution_reason || med.resolutionReason || null,
+    confirmationSafe,
     bbox: med.bbox || null,
   };
 }
@@ -80,15 +113,32 @@ function normalizeScanResult(rawResult) {
 
 function buildSignature(drugs) {
   return drugs
-    .map((d) => `${d.name.toLowerCase().trim()}:${d.mappingStatus}`)
+    .map((d) => `${drugIdentity(d)}:${d.mappingStatus}`)
     .sort()
     .join('|');
 }
 
+function drugIdentity(drug) {
+  const confirmedIdentity = drug.mappingStatus === 'confirmed'
+    && drug.confirmationSafe
+    && drug.mappedDrugName;
+  if (confirmedIdentity && drug.registrationNumber) {
+    return `registration:${String(drug.registrationNumber).toLowerCase().trim()}`;
+  }
+  if (confirmedIdentity) {
+    return (
+      `product:${String(drug.mappedDrugName).toLowerCase().trim()}`
+      + `|strength:${String(drug.normalizedCandidateStrength).toLowerCase().trim()}`
+    );
+  }
+  const value = drug.ocrText || drug.name;
+  return `raw:${String(value || '').toLowerCase().trim()}`;
+}
+
 function mergeDrugs(existingMap, incoming, sourceQuality = 'GOOD') {
   for (const d of incoming) {
-    const key = (d.mappedDrugName || d.name).toLowerCase().trim();
-    if (!key) {
+    const key = drugIdentity(d);
+    if (key.endsWith(':')) {
       continue;
     }
 
@@ -98,7 +148,14 @@ function mergeDrugs(existingMap, incoming, sourceQuality = 'GOOD') {
         name: d.name,
         ocrText: d.ocrText,
         mappedDrugName: d.mappedDrugName,
+        registrationNumber: d.registrationNumber,
+        normalizedCandidateStrength: d.normalizedCandidateStrength,
         mappingStatus: d.mappingStatus,
+        matchBasis: d.matchBasis,
+        strengthState: d.strengthState,
+        ambiguous: d.ambiguous,
+        resolutionReason: d.resolutionReason,
+        confirmationSafe: d.confirmationSafe,
         confidence: d.confidence,
         matchScore: d.matchScore,
         frequency: 1,
@@ -114,6 +171,13 @@ function mergeDrugs(existingMap, incoming, sourceQuality = 'GOOD') {
       prev.mappingStatus = 'confirmed';
       prev.name = d.name;
       prev.mappedDrugName = d.mappedDrugName;
+      prev.registrationNumber = d.registrationNumber;
+      prev.normalizedCandidateStrength = d.normalizedCandidateStrength;
+      prev.matchBasis = d.matchBasis;
+      prev.strengthState = d.strengthState;
+      prev.ambiguous = d.ambiguous;
+      prev.resolutionReason = d.resolutionReason;
+      prev.confirmationSafe = d.confirmationSafe;
     }
     if (!prev.ocrText && d.ocrText) {
       prev.ocrText = d.ocrText;
@@ -224,10 +288,10 @@ function evaluateConvergence(images, mergedDrugs) {
       .slice(0, -1)
       .flatMap((image) => image.drugs)
       .filter((drug) => Number(drug.confidence || 0) >= HIGH_CONFIDENCE_NEW_DRUG)
-      .map((drug) => (drug.mappedDrugName || drug.name).toLowerCase().trim())
+      .map(drugIdentity)
   );
   const hasNewHighConfidenceDrug = latest.drugs.some((drug) => {
-    const key = (drug.mappedDrugName || drug.name).toLowerCase().trim();
+    const key = drugIdentity(drug);
     return Number(drug.confidence || 0) >= HIGH_CONFIDENCE_NEW_DRUG && !historicalHighConfidence.has(key);
   });
 

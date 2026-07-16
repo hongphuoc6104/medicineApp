@@ -53,11 +53,11 @@ Nâng cấp luồng quét đơn thuốc để:
 | ID | Công việc | Trạng thái | Phụ thuộc | Bằng chứng hoàn thành |
 |---|---|---|---|---|
 | WP-00 | Tạo baseline sạch từ GitHub `main` | DONE | Không | Branch/worktree `feature/mlkit-progressive-ocr-foundation` từ `a6810a3` |
-| WP-01 | Chụp baseline full OCR hiện tại | BLOCKED | WP-00 | Cần manifest và assets model/input có hash trước khi chạy |
+| WP-01 | Chụp approved-main baseline CPU và GPU | IN_PROGRESS | WP-00 | Cả hai run có manifest, hashes và provenance đầy đủ |
 | WP-02 | Cleanup Phase B và dead code chắc chắn | IN_PROGRESS | WP-00 | Call-site audit và test không regression |
-| WP-03 | Sửa error/API/drug resolution contract | IN_PROGRESS | WP-00 | WP-03A và WP-03D đã đạt; WP-03B/C còn lại |
+| WP-03 | Sửa error/API/drug resolution contract | IN_PROGRESS | WP-00 | WP-03A/B/D đã đạt; WP-03C còn lại |
 | WP-04 | Tạo abstraction lấy ảnh prescription trên mobile | DONE | WP-00 | Pure-Dart contract và 5 fake-acquirer tests pass |
-| WP-05 | Tích hợp native ML Kit bridge | TODO | WP-04 | Android build và device tests pass |
+| WP-05 | Tích hợp ML Kit Document Scanner | IN_PROGRESS | WP-04 | WP-05A bridge và WP-05B device integration đều đạt |
 | WP-06 | Thêm metadata nguồn ảnh và debug mobile | TODO | WP-05 | Metadata tới được Python, không log PHI |
 | WP-07 | Benchmark đầu ra ML Kit với pipeline cũ | TODO | WP-05, WP-06 | Bảng ablation YOLO/preprocess |
 | WP-08 | Tạo contract Progressive Spatial OCR | TODO | WP-03 | Contract/state tests pass |
@@ -72,6 +72,20 @@ Nâng cấp luồng quét đơn thuốc để:
 | WP-17 | Quyết định giữ/xóa YOLO và preprocess | TODO | WP-16 | Decision log có bằng chứng |
 | WP-18 | Cleanup cuối và cập nhật tài liệu | TODO | WP-17 | Không còn dead call-site, docs khớp code |
 
+### Trạng thái work package đang tách lát cắt
+
+| ID | Trạng thái | Phạm vi | Điều kiện chuyển trạng thái |
+|---|---|---|---|
+| WP-01A | DONE | Asset locator no-copy, approval-gated harness, evaluator và provenance capture | Tooling tests `20/20`; preflight không import OCR/model package |
+| WP-01B | PENDING_PREFLIGHT | Approved-main GPU baseline tại đúng `a6810a3` | Run `wp01-approved-main-gpu-<timestamp>` có đủ provenance |
+| WP-01C | PENDING_PREFLIGHT | Approved-main CPU-forced baseline tại đúng `a6810a3` | Run `wp01-approved-main-cpu-<timestamp>` có đủ provenance |
+| WP-03A | DONE | Python/Node failure contract; không mock hoặc persist scan lỗi | Targeted contract tests đã pass |
+| WP-03B | DONE | An toàn brand/ingredient/strength và raw candidate | Safety/regression/Node scan tests pass; không đổi protected CLI |
+| WP-03C | TODO | Row ownership và source-region provenance | Đã được mở sau WP-03B; chưa triển khai |
+| WP-03D | DONE | Prediction ngoài alias được tính là false positive | Evaluator targeted tests đã pass |
+| WP-05A | BLOCKED_ENV | Native MethodChannel bridge dormant, chưa nối production UI | Dart/Kotlin contract đạt; Android debug build chờ NDK/license |
+| WP-05B | TODO | Device integration và nối screen production | Chờ WP-05A; CameraX vẫn là production flow/fallback |
+
 ## 5. Cleanup tracking
 
 | ID | Trạng thái | Công việc |
@@ -80,12 +94,33 @@ Nâng cấp luồng quét đơn thuốc để:
 | CLEAN-02 | DONE | Xóa generated output images, giữ reports |
 | CLEAN-03 | DONE | Dọn Flutter/Node/Python cache |
 | CLEAN-04 | DONE | Thêm root `.dockerignore` |
-| CLEAN-05 | DONE | Xóa `core/shared` không có call-site |
-| CLEAN-06 | IN_PROGRESS | Đã gỡ Node Phase B ingress, orphan gitlink và legacy `drug_mapper`; Python/FastAPI/mobile còn lại |
-| CLEAN-07 | TODO | Xử lý database schema/table Phase B |
+| CLEAN-05 | DONE | Xóa `core/shared` visualizer/init/README không có call-site; `zero_pima_loader.py` chờ Python Phase B cleanup |
+| CLEAN-06 | IN_PROGRESS | Node, Flutter và FastAPI ingress đã xong; Python core/Zero-PIMA cleanup chưa triển khai |
+| CLEAN-07 | IN_PROGRESS | Implementation và disposable verification đã xong; production retirement chờ backup/restore/apply từng môi trường |
 | CLEAN-08 | TODO | Kiểm tra fresh install sau dependency cleanup |
 
-## 6. Thứ tự triển khai
+## 6. Wave thực thi song song
+
+Tất cả lane tạo từ `7c66dc5`. Worker không chỉnh tracker, ADR hoặc run log chung; coordinator cập nhật tài liệu sau khi merge.
+
+| Lane | Branch đề xuất | Công việc | Trạng thái |
+|---|---|---|---|
+| A | `work/wp03b-drug-resolution` | WP-03B brand/ingredient/strength safety | DONE |
+| B | `work/wp05a-mlkit-bridge` | WP-05A native bridge dormant | BLOCKED_ENV |
+| C | `work/cleanup-mobile-phase-b` | Flutter Phase B và deep-link cleanup | DONE |
+| D | `work/cleanup-fastapi-phase-b` | FastAPI Phase B endpoint cleanup | DONE |
+| E | `work/clean07-schema-retirement` | Fresh schema và retirement tool an toàn | IMPLEMENTATION_DONE |
+| F | `work/wp01-baseline-tooling` | WP-01 locator, harness và provenance | TOOLING_DONE_PREFLIGHT_BLOCKED |
+
+Không chạy song song các phần phụ thuộc sau:
+
+- WP-03C và Python core Phase B cleanup đã được mở sau WP-03B nhưng chưa bắt đầu.
+- WP-05B chờ WP-05A; WP-06 chờ toàn bộ WP-05.
+- WP-08 và WP-12 chờ WP-03B/C.
+- Safe full OCR baseline chờ WP-03B/C; hai approved-main run của WP-01 vẫn chạy đúng `a6810a3`.
+- Drop bảng trên database thật chờ backup, restore test và deployment ingress cleanup.
+
+## 7. Thứ tự triển khai
 
 ### Giai đoạn A: Khóa baseline và an toàn
 
@@ -120,7 +155,7 @@ Nâng cấp luồng quét đơn thuốc để:
 - [ ] Ghi quyết định giữ/xóa các stage cũ trong WP-17.
 - [ ] Hoàn thành cleanup và tài liệu WP-18.
 
-## 7. Mục tiêu CPU ban đầu
+## 8. Mục tiêu CPU ban đầu
 
 Các giá trị dưới đây là tiêu chí thử nghiệm, không phải kết quả đã đạt:
 
@@ -134,7 +169,7 @@ Các giá trị dưới đây là tiêu chí thử nghiệm, không phải kết
 | False-complete | `0` |
 | Wrong row ownership | `0` |
 
-## 8. Điều kiện hoàn thành dự án nâng cấp
+## 9. Điều kiện hoàn thành dự án nâng cấp
 
 - [ ] ML Kit có fallback cho thiết bị không hỗ trợ hoặc thiếu Google Play services.
 - [ ] Pipeline chạy với CPU-only dependencies.
