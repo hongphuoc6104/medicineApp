@@ -45,7 +45,7 @@ def test_initialization_failure_is_structured_503():
 
 def test_runtime_exception_is_structured_500():
     class FailingPipeline:
-        def scan_prescription_app(self, _image):
+        def scan_prescription_app(self, *args, **kwargs):
             raise RuntimeError("inference exploded")
 
     assert_failure(FailingPipeline(), 500, "PIPELINE_EXECUTION_FAILED")
@@ -53,7 +53,7 @@ def test_runtime_exception_is_structured_500():
 
 def test_terminal_pipeline_error_is_structured_422():
     class TerminalErrorPipeline:
-        def scan_prescription_app(self, _image):
+        def scan_prescription_app(self, *args, **kwargs):
             return {"error": "No prescription region could be processed"}
 
     assert_failure(TerminalErrorPipeline(), 422, "SCAN_PROCESSING_FAILED")
@@ -67,7 +67,7 @@ def test_success_payload_is_returned_unchanged():
     }
 
     class SuccessfulPipeline:
-        def scan_prescription_app(self, _image):
+        def scan_prescription_app(self, *args, **kwargs):
             return expected
 
     assert scan_with(SuccessfulPipeline()) is expected
