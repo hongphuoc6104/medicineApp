@@ -1,131 +1,78 @@
 # MedicineApp
 
-> AI-powered prescription scanning and medication extraction
-> Hệ thống AI hỗ trợ quét đơn thuốc và trích xuất danh sách thuốc
+Hệ thống hỗ trợ quét đơn thuốc và trích xuất danh sách thuốc tự động thông minh bằng AI, tối ưu hóa chạy hoàn toàn trên CPU.
 
-[![Phase A](https://img.shields.io/badge/Phase_A-Active-brightgreen)](#current-status)
-[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+Dự án tích hợp **Google ML Kit Document Scanner** trên thiết bị di động để chuẩn hóa hình ảnh đơn thuốc trực tiếp, và sử dụng **PhoBERT NER + Drug Lookup** trên máy chủ (Server) để trích xuất và chuẩn hóa tên thuốc theo Cơ sở dữ liệu chuẩn của Cục Quản lý Dược Việt Nam.
 
-MedicineApp turns a prescription photo into structured medication data.
-MedicineApp biến ảnh đơn thuốc thành dữ liệu có cấu trúc để hỗ trợ tra cứu, lưu trữ và tích hợp với ứng dụng di động.
+---
 
-The public repository focuses on Phase A, the prescription-scanning flow that is already working end to end.
-Kho lưu trữ công khai tập trung vào Phase A, tức luồng quét đơn thuốc đã chạy được từ đầu đến cuối.
+## 🛠️ Yêu cầu Hệ thống & Cấu trúc Dự án
 
-Phase B for pill verification is intentionally on hold.
-Phase B dùng để xác minh viên thuốc hiện đang tạm dừng.
+Dự án bao gồm 3 thành phần chính:
+1.  **Mobile (Flutter App):** Ứng dụng di động chụp và quét chữ viết đơn thuốc tại chỗ (On-device OCR).
+2.  **Node.js Server:** Máy chủ backend chính để quản lý dữ liệu, người dùng, kế hoạch uống thuốc.
+3.  **FastAPI Server (Python AI Backend):** Máy chủ AI chịu trách nhiệm phân loại thực thể tên thuốc (NLP/NER) và tra cứu danh mục thuốc Việt Nam.
 
-## What it solves / Bài toán giải quyết
+---
 
-- Manual prescription transcription is slow and error-prone. Đọc tay đơn thuốc dễ sai, chậm và khó đồng nhất.
-- MedicineApp automates crop, OCR, NER, and drug lookup for Vietnamese prescriptions. MedicineApp tự động cắt vùng đơn thuốc, OCR, NER và tra cứu tên thuốc cho đơn tiếng Việt.
+## 🚀 Hướng dẫn Cài đặt & Phục hồi Trạng thái
 
-## Highlights / Điểm nổi bật
-
-- YOLO-based prescription detection with convex-hull cropping. Phát hiện vùng đơn thuốc bằng YOLO và cắt theo convex hull để giữ nội dung bên trong.
-- Deskew and orientation normalization for rotated photos. Nắn ảnh lệch góc và chuẩn hóa chiều xoay cho ảnh chụp thực tế.
-- Hybrid OCR with PaddleOCR detection and VietOCR recognition. OCR lai: PaddleOCR để phát hiện vùng chữ và VietOCR để nhận dạng tiếng Việt.
-- PhoBERT NER for drug-name extraction. PhoBERT NER để trích xuất tên thuốc.
-- Fuzzy lookup against `data/drug_db_vn_full.json` with 9,284 Vietnamese drug records. Tra cứu gần đúng trên `data/drug_db_vn_full.json` với 9,284 thuốc Việt Nam.
-- CLI, FastAPI service, and Node.js backend support the same project. CLI, dịch vụ FastAPI và backend Node.js cùng phục vụ cho một hệ thống thống nhất.
-
-<a id="current-status"></a>
-## Current status / Trạng thái hiện tại
-
-| English | Tiếng Việt |
-|---|---|
-| Phase A is active and usable. | Phase A đang hoạt động và có thể dùng được. |
-| Phase B is on hold. | Phase B hiện tạm dừng. |
-| Main output: `data/output/phase_a/<image>/summary.json`. | Output chính: `data/output/phase_a/<image>/summary.json`. |
-| Current benchmark: 50/50 test images processed successfully, 338 drugs extracted, 0 errors. | Benchmark hiện tại: xử lý thành công 50/50 ảnh test, trích xuất 338 thuốc, 0 lỗi. |
-| NER result: 100% F1 on the test set. | NER đạt F1 100% trên tập test. |
-
-## Pipeline / Quy trình
-
-1. Detect and crop the prescription region. Phát hiện và cắt vùng đơn thuốc.
-2. Preprocess the image with deskew and auto-orientation. Tiền xử lý ảnh với deskew và xoay tự động.
-3. Run hybrid OCR to extract text blocks. Chạy OCR lai để lấy các block văn bản.
-4. Classify drug names with PhoBERT NER. Phân loại tên thuốc bằng PhoBERT NER.
-5. Fuzzy-match names against the Vietnamese drug database. So khớp gần đúng với cơ sở dữ liệu thuốc Việt Nam.
-
-## Tech stack / Công nghệ
-
-| Component | Role |
-|---|---|
-| Python 3.12 | AI pipeline and CLI |
-| FastAPI | Python AI service |
-| Node.js / Express | Main backend API |
-| PostgreSQL 16 | Database and sessions |
-| Flutter | Mobile client |
-| YOLOv11n-seg | Prescription detection |
-| PaddleOCR | Text detection |
-| VietOCR | Text recognition |
-| PhoBERT-base-v2 | NER model |
-
-## Setup / Cài đặt
-
+### 1. Cơ sở dữ liệu (PostgreSQL qua Docker)
+Khởi động container cơ sở dữ liệu PostgreSQL 16:
 ```bash
-git clone git@github.com:hongphuoc6104/medicineApp.git
-cd medicineApp
-
-python3.12 -m venv venv
-source venv/bin/activate
-
-pip install -r requirements.txt
+docker start medicineapp_db
+# Hoặc chạy mới: docker compose up -d postgres
 ```
 
-### Model weights / Trọng số mô hình
+### 2. FastAPI AI Server (Python Backend)
+AI Server đã được cấu hình mặc định chạy **100% trên CPU**, không yêu cầu GPU CUDA.
 
-| Model | Path | Note |
-|---|---|---|
-| YOLO detect | `models/yolo/best.pt` | Prescription crop model |
-| PhoBERT NER | `models/phobert_ner_model/` | NER weights |
-| Zero-PIMA | `models/zero_pima/zero_pima_best.pth` | Phase B only |
+*   **Chuẩn bị môi trường & Cài đặt thư viện:**
+    ```bash
+    # Kích hoạt virtual environment
+    source venv/bin/activate
+    # Cài đặt thư viện phụ thuộc
+    pip install -r requirements.txt
+    ```
+*   **Trọng số Mô hình (Model Weights):**
+    Hãy đảm bảo các file weights được copy đúng cấu trúc sau (nằm trong `.gitignore` nên cần phục hồi thủ công khi tạo thư mục làm việc mới):
+    *   `models/yolo/best.pt` (Mô hình YOLOv11 cắt khung đơn thuốc)
+    *   `models/phobert_ner_model/` (Thư mục chứa weights PhoBERT NER fine-tuned)
+*   **Chạy FastAPI Server:**
+    ```bash
+    uvicorn server.main:app --host 0.0.0.0 --port 8000
+    ```
 
-## Usage / Cách sử dụng
+### 3. Node.js Backend Server
+*   **Cài đặt thư viện:**
+    ```bash
+    cd server-node
+    npm install
+    ```
+*   **Khởi chạy máy chủ ở chế độ Development:**
+    ```bash
+    npm run dev
+    ```
+    *Server chạy tại: http://localhost:3001*
 
-### CLI
+### 4. Mobile Client (Flutter App)
+*   **Cài đặt các gói phụ thuộc:**
+    ```bash
+    cd mobile
+    flutter pub get
+    ```
+*   **Chạy ứng dụng:**
+    ```bash
+    flutter run
+    ```
 
-```bash
-source venv/bin/activate
+---
 
-python scripts/run_pipeline.py --image data/input/prescription_3/IMG_20260209_180505.jpg
-python scripts/run_pipeline.py --dir data/input/prescription_3
-python scripts/run_pipeline.py --all
-```
+## ⚡ Luồng xử lý quét đơn thuốc mới (Fast-Path CPU)
 
-### FastAPI AI service
-
-```bash
-source venv/bin/activate
-python -m server.main
-```
-
-### Node.js backend
-
-```bash
-cd server-node
-npm install
-npm run dev
-```
-
-## Project structure / Cấu trúc dự án
-
-```
-medicineApp/
-├── core/           # AI pipeline source
-├── scripts/        # CLI and training scripts
-├── server/         # FastAPI AI service
-├── server-node/    # Node.js main backend
-├── mobile/         # Flutter client
-├── models/         # Model weights
-├── data/           # Inputs, outputs, datasets
-├── tests/          # Python tests
-└── archive/        # Deprecated or superseded work
-```
-
-## License / Giấy phép
-
-MIT License. See [`LICENSE`](LICENSE).
+1.  **Chụp & Chuẩn hóa (Di động):** Ứng dụng di động gọi Google ML Kit Document Scanner để tự động nắn góc phẳng, căn thẳng góc nghiêng và xoay đứng ảnh chụp đơn thuốc.
+2.  **OCR tại chỗ (Di động):** Chạy thư viện ML Kit Text Recognition để bóc tách chữ viết thô trực tiếp trên chip của điện thoại (không tốn tài nguyên server).
+3.  **Fast-Path xử lý AI (Server):** 
+    *   Điện thoại gửi ảnh + văn bản thô lên Server Node.js -> FastAPI.
+    *   FastAPI bỏ qua hoàn toàn các bước YOLO crop, deskew, orientation và OCR trên máy chủ.
+    *   Sử dụng **CPU** để chạy **PhoBERT NER** phân loại tên thuốc và chạy thuật toán **Drug Lookup** đối chiếu fuzzy search CSDL **9.284 thuốc chuẩn Việt Nam** để trả về kết quả an toàn.
