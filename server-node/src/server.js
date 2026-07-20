@@ -7,7 +7,7 @@ import { env } from './config/env.js';
 import logger from './middleware/logger.js';
 
 const PORT = env.PORT;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   logger.info(`🚀 Server running on http://localhost:${PORT}`);
   logger.info(`📋 Health: http://localhost:${PORT}/api/health`);
   logger.info(`🌍 Environment: ${env.NODE_ENV}`);

@@ -119,8 +119,7 @@ async def lifespan(app: FastAPI):
         try:
             import numpy as np
 
-            dummy = np.zeros((100, 100, 3), dtype=np.uint8)
-            pipeline.scan_prescription_app(dummy, skip_yolo=True)
+            pipeline.scan_prescription_app("1. Paracetamol 500mg")
             logger.info("✅ Pipeline warmed up successfully")
         except Exception as e:
             logger.warning(
@@ -324,27 +323,14 @@ async def drug_interactions(ingredient: str):
 
 @app.post("/api/scan-prescription")
 async def scan_prescription(
-    file: UploadFile = File(...),
-    ocr_text: Optional[str] = Form(None),
-    skip_ocr: Optional[bool] = Form(False),
+    ocr_text: str = Form(...),
 ):
     """
-    Scan prescription image → extract drug list.
+    Scan prescription text → extract drug list.
 
-    Upload a photo of a prescription and get back
+    Receive OCR text from client and get back
     a list of detected medications.
     """
-    import cv2
-    import numpy as np
-
-    # Read uploaded image
-    contents = await file.read()
-    nparr = np.frombuffer(contents, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    if img is None:
-        raise HTTPException(400, "Invalid image file")
-
     pipeline = _get_pipeline()
     if pipeline is None:
         raise HTTPException(
@@ -355,14 +341,10 @@ async def scan_prescription(
             },
         )
 
-    # VĐ7: Semaphore — chỉ 1 scan đồng thời trên GPU
     try:
-        async with scan_semaphore:
-            result = pipeline.scan_prescription_app(
-                img,
-                ocr_text=ocr_text,
-                skip_ocr=bool(skip_ocr),
-            )
+        result = pipeline.scan_prescription_app(
+            ocr_text=ocr_text,
+        )
     except Exception as exc:
         logger.exception("Prescription pipeline execution failed")
         raise HTTPException(

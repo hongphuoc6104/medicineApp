@@ -174,7 +174,7 @@ echo "✅ Updated $MOBILE_ENV → API_BASE_URL=http://127.0.0.1:${NODE_PORT}/api
 # 2. Start PostgreSQL only via Docker
 echo ""
 echo "🐳 Starting Docker services (postgres only)..."
-docker compose -f "$PROJECT_DIR/docker-compose.yml" up -d postgres
+docker compose -f "$PROJECT_DIR/docker-compose.yml" up -d postgres 2>/dev/null || docker start medicineapp_db 2>/dev/null || true
 echo "✅ PostgreSQL started"
 
 # 3. Run DB migrations
@@ -196,6 +196,7 @@ sleep 1
 pushd "$PROJECT_DIR/server-node" >/dev/null
 nohup node src/server.js > /tmp/medicine-node.log 2>&1 &
 NODE_PID=$!
+disown $NODE_PID 2>/dev/null || true
 popd >/dev/null
 echo "📝 Node logs: /tmp/medicine-node.log (PID: $NODE_PID)"
 
@@ -213,6 +214,7 @@ echo "🤖 Starting Python AI server (local venv)..."
 pushd "$PROJECT_DIR" >/dev/null
 nohup "$VENV_PY" -m uvicorn server.main:app --host 0.0.0.0 --port ${PYTHON_PORT} > /tmp/python-ai.log 2>&1 &
 AI_PID=$!
+disown $AI_PID 2>/dev/null || true
 popd >/dev/null
 echo "📝 Python AI logs: /tmp/python-ai.log (PID: $AI_PID)"
 

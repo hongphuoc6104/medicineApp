@@ -1,12 +1,12 @@
 # Core — Source Code Chính
 
-Module chứa toàn bộ logic nghiệp vụ MedicineApp.
+Module chứa toàn bộ logic nghiệp vụ MedicineApp (đã được tối ưu hóa cho Google ML Kit di động).
 
 ## Cấu trúc
 
 | Thư mục | Mô tả |
 |---------|-------|
-| `phase_a/` | Quét đơn thuốc — 4 bước (xem `phase_a/README.md`) |
-| `phase_b/` | Xác minh viên thuốc — 2 bước (chưa hoạt động) |
-| `config.py` | Cấu hình paths và thresholds |
-| `pipeline.py` | Orchestrator tích hợp cả 2 phase |
+| `classify/` | Phân loại thực thể PhoBERT NER + Ghép dòng thông minh theo STT |
+| `drug_search/` | Tra cứu và chuẩn hóa tên thuốc theo CSDL Việt Nam (9,284 thuốc) |
+| `config.py` | Cấu hình các đường dẫn đầu vào/đầu ra |
+| `pipeline.py` | Bộ điều phối (Orchestrator) chính của dịch vụ |

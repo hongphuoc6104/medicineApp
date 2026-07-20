@@ -46,15 +46,9 @@
 ```
 medicineApp/
 ├── core/                    # ★ SOURCE CODE CHÍNH (Python AI Pipeline)
-│   ├── phase_a/             #   Pipeline quét đơn thuốc (4 bước)
-│   │   ├── s1_detect/       #     Bước 1: YOLO crop
-│   │   ├── s2_preprocess/   #     Bước 2: Deskew + orientation
-│   │   ├── s3_ocr/          #     Bước 3: PaddleOCR + VietOCR
-│   │   ├── s5_classify/     #     Bước 4: PhoBERT NER
-│   │   └── s6_drug_search/  #     Bước 5 (optional): fuzzy-match tên chuẩn
-│   ├── phase_b/             #   [HOLD] Xác minh viên thuốc
-│   ├── shared/              #   zero_pima_loader (Phase B only)
-│   ├── config.py            #   Cấu hình: CONF_THRESHOLD=0.50, paths
+│   ├── classify/            #   Phân loại PhoBERT NER + STT grouping
+│   ├── drug_search/         #   Fuzzy-match local drug database (9,284 thuốc)
+│   ├── config.py            #   Cấu hình: paths
 │   └── pipeline.py          #   API orchestrator cho FastAPI
 │
 ├── scripts/                 # ★ SCRIPTS CHẠY
@@ -115,38 +109,21 @@ medicineApp/
 
 ---
 
-## 3. Pipeline Phase A — 4 Bước
+## 3. Pipeline Tinh giản (Fast-Path OCR Text)
 
 ```
-📷 Ảnh đơn thuốc
-  → [1] YOLO Detect & Crop     (core/phase_a/s1_detect/)
-       ★ Convex Hull Crop: Tự động bao quanh vùng lồi nhỏ nhất của đơn thuốc, tránh bị "bôi đen" lẹm vào nội dung bên trong bảng do lỗi mask lõm.
-  → [2] Preprocess              (core/phase_a/s2_preprocess/)
-       Deskew (Modulo 90): Tự động nắn vuông góc mọi góc nghiêng (±180°).
-       AI orientation PP-LCNet (GPU): Xoay về 0° (ưu tiên GPU RTX 3050, fall back CPU).
-       ⚠️ KHÔNG dùng force_portrait() — gây bug xoay sai YOLO-crop landscape!
-  → [2.1] Quality Gate          (GOOD / WARNING / REJECT)
-  → [2.2] YOLO Table ROI (optional)
-       detect bảng thuốc → OCR trong ROI, fallback full-image nếu fail
-  → [3] Hybrid OCR              (core/phase_a/s3_ocr/ocr_engine.py)
-       PaddleOCR detect polygons → crop → VietOCR recognize tiếng Việt
-  → [3.5] Group OCR blocks by STT (Kế hoạch MỚI - thế chỗ merge_into_lines)
-       TRƯỚC ĐÂY: Gộp theo Y-axis (bị lỗi khi bảng thực tế có chữ lơ lửng giữa 2 dòng, làm text bị nối lộn xộn).
-       HIỆN TẠI: Tìm tọa độ Y của các số thứ tự STT (1, 2, 3...), sau đó gom TẤT CẢ các text block nằm lọt thỏm giữa STT 1 và STT 2 thành CÙNG 1 CHUỖI ngang. 
-       MỤC ĐÍCH: Ép dữ liệu thực tế (dòng gãy khúc) về dạng 1 sequence chắp nối liên tục, trùng khớp 100% với format của tập `synthetic_train`.
-  → [4] PhoBERT NER Classify    (core/phase_a/s5_classify/ner_extractor.py)
+💬 Văn bản OCR từ máy di động (Client-side Google ML Kit Document Scanner & Text Recognition)
+  → [1] Group OCR blocks by STT  (core/classify/stt_grouping.py)
+       Tìm tọa độ Y của các số thứ tự STT (1, 2, 3...), sau đó gom TẤT CẢ các text block nằm lọt giữa STT 1 và STT 2 thành CÙNG 1 CHUỖI ngang.
+  → [2] PhoBERT NER Classify    (core/classify/ner_extractor.py)
        Label hiện tại: drugname / other
-       Hướng nâng cấp: Multi-label (DRUG, QTY, USAGE) 7 nhãn. 
-       Train model bằng tập `synthetic_train` (dữ liệu 1 dòng hoàn hảo) và test trên dữ liệu thực tế đã được ép về 1 dòng bằng Bước 3.5.
-  → [5] Drug Search             (core/phase_a/s6_drug_search/drug_lookup.py)
+  → [3] Drug Search             (core/drug_search/drug_lookup.py)
        fuzzy-match tên thuốc → drug_db_vn_full.json (9,284 thuốc VN)
        tenThuoc (tên thương mại) + hoatChat (generic) đều được search
   → [+] Resolution state
        confirmed / unmapped_candidate / rejected_noise
-  → 📋 JSON danh sách thuốc (data/output/phase_a/<tên_ảnh>/)
+  → 📋 JSON danh sách thuốc
 ```
-
-> ⚠️ **Folder đánh số nhảy từ s3 → s5**: `s4_grouping/` đã bị xóa và dời vào archive. Tên folder `s5_classify/` giữ nguyên để không thay đổi git history.
 
 ---
 

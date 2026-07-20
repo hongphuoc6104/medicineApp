@@ -156,6 +156,7 @@ data/ner_dataset/
 # Ignore large model directories (exclude any required README or metadata if needed)
 models/phobert_ner_model/
 models/zero_pima/
+models/yolo/
 mobile/.dart_tool/
 # Large drug database JSON
 data/drug_db_vn_full.json

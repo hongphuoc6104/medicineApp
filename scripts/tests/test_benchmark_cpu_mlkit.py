@@ -46,10 +46,7 @@ Uống 1 viên khi đau sốt > 38.5 độ C
     print("\n[CPU Mode] Đang thực thi scan_prescription_app với Fast-path MLKit OCR text...")
     t0_exec = time.time()
     result_cpu = pipeline_cpu.scan_prescription_app(
-        image=dummy_image,
         ocr_text=sample_mlkit_ocr_text,
-        skip_ocr=True,
-        skip_yolo=True,
     )
     t_exec_cpu = time.time() - t0_exec
 

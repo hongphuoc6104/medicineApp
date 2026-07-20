@@ -2,27 +2,19 @@
 
 | Script | Lệnh chạy | Mô tả |
 |--------|----------|-------|
-| `run_pipeline.py` | `python scripts/run_pipeline.py --image data/input/IMG.jpg` | Chạy Phase A cho 1 ảnh |
-| `debug_phase_a_checks.sh` | `bash scripts/debug_phase_a_checks.sh --quick` | Chạy bộ kiểm tra nhanh cho flow Phase A |
-| `build_drug_db.py` | `python scripts/build_drug_db.py` | Build drug database CSV |
+| `run_pipeline.py` | `python scripts/run_pipeline.py --text "Celecoxib 200mg"` | Chạy thử nghiệm trích xuất thuốc cho 1 đoạn text |
+| `debug_checks.sh` | `bash scripts/debug_checks.sh --quick` | Chạy bộ kiểm tra nhanh cho toàn bộ workspace (Python, Node, Flutter) |
 | `train_ner.py` | `python scripts/train_ner.py` | Train PhoBERT NER model |
 | `prepare_ner_data.py` | `python scripts/prepare_ner_data.py` | Chuẩn bị data NER từ VAIPE |
+| `crawl_drug_vn.py` | `python scripts/crawl_drug_vn.py` | Crawl danh mục thuốc VN từ ddi.lab.io.vn |
+| `build_full_drug_db.py` | `python scripts/build_full_drug_db.py` | Xử lý và build CSDL 9,284 thuốc |
 
 ### Tham số `run_pipeline.py`
 
 ```bash
-# 1 ảnh
-python scripts/run_pipeline.py --image data/input/IMG_20260209_180420.jpg
+# Nhận text trực tiếp từ CLI
+python scripts/run_pipeline.py --text "1) Celecoxib 200mg - 20 Viên\n2) Loratadine 10mg"
 
-# 1 folder ảnh
-python scripts/run_pipeline.py --dir data/input/prescription_3
-
-# Tất cả ảnh trong data/input/ (recursive)
-python scripts/run_pipeline.py --all
-
-# Giới hạn số ảnh
-python scripts/run_pipeline.py --all --limit 5
-
-# Bỏ qua NER (fallback mode)
-python scripts/run_pipeline.py --all --no-ner
+# Nhận text từ tệp tin văn bản (ví dụ kết quả OCR từ mobile)
+python scripts/run_pipeline.py --text-file data/sample_ocr.txt
 ```

@@ -1,4 +1,4 @@
-from core.phase_a.s5_classify.post_filter import NerPostFilter
+from core.classify.post_filter import NerPostFilter
 
 
 def test_post_filter_rejects_dosage_only_text():
