@@ -14,6 +14,7 @@ enum ScanCameraState {
 ///
 /// Keeps all camera logic outside the widget body.
 /// Dispose must be called when the screen leaves the tree.
+@Deprecated('Thay thế bằng Google ML Kit Document Scanner trong ML Kit Flow mới')
 class ScanCameraController extends ChangeNotifier {
   ScanCameraState _state = ScanCameraState.initializing;
   CameraController? _cameraController;

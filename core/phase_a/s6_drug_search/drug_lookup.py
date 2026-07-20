@@ -164,7 +164,9 @@ class DrugLookup:
         stop = {
             "", "mg", "ml", "mcg", "g", "iu", "tab", "cap",
             "viên", "ống", "lọ", "chai", "gói", "sủi",
-            "thuốc", "và", "the", "for",
+            "thuốc", "và", "the", "for", "forte", "extra", "plus",
+            "max", "mini", "nano", "fast", "express", "drops", "syrup",
+            "solution", "eye", "capsules", "tablets", "nhỏ", "mắt", "xịt", "mũi",
         }
         q_words = {w for w in re.split(r"\W+", query.lower()) if w not in stop and len(w) >= 3}
         c_words = {w for w in re.split(r"\W+", candidate.lower()) if w not in stop and len(w) >= 3}
@@ -324,7 +326,8 @@ class DrugLookup:
         if not self._search_keys:
             return self._empty(text)
 
-        query_clean = self._clean(text)
+        text = re.sub(r"^\d+[\.\/\,\-]\s*", "", text.strip())
+        query_clean  = self._clean(text)
         paren_m      = re.search(r"\(([^)]+)\)", text)
         query_paren  = self._clean(paren_m.group(1)) if paren_m else ""
         no_paren     = re.sub(r"\([^)]*\)", " ", text)
@@ -332,9 +335,9 @@ class DrugLookup:
 
         candidates = []
         variant_priority = {
-            "query_clean": 1,
-            "query_paren": 3,
+            "query_clean": 3,
             "query_no_par": 2,
+            "query_paren": 1,
         }
 
         for variant_name, query in [
@@ -373,8 +376,13 @@ class DrugLookup:
                     "brand_fuzzy": 2,
                     "ingredient_fuzzy": 1,
                 }[match_basis]
+                # Ưu tiên các thuốc đơn chất (hoặc ít tá dược/hợp chất điện giải) để không nhầm sang Alvesin 40 / Diclofenac
+                generic_count = len([g for g in entry.get("generic_name", "").split(",") if g.strip()])
+                single_ingredient_bonus = 2 if generic_count <= 1 else 0
+
                 candidate_rank = (
                     basis_rank,
+                    single_ingredient_bonus,
                     1 if strength_evidence["candidate_aligned"] else 0,
                     variant_priority[variant_name],
                     score,

@@ -364,7 +364,8 @@ export async function scanPrescription(
   userId,
   originalName,
   detectedMime = 'image/jpeg',
-  sessionId = null
+  sessionId = null,
+  ocrText = null
 ) {
   let result;
   let timeout;
@@ -375,6 +376,9 @@ export async function scanPrescription(
     // Use the actual detected MIME type (not hardcoded)
     const blob = new Blob([imageBuffer], { type: detectedMime });
     formData.append('file', blob, originalName || 'prescription.jpg');
+    if (ocrText) {
+      formData.append('ocr_text', ocrText);
+    }
 
     const ctrl = new AbortController();
     timeout = setTimeout(() => ctrl.abort(), 30_000); // 30s for OCR

@@ -52,15 +52,14 @@ def _get_classifier(model_path: Optional[str] = None):
     import paddle
     from paddleocr import DocImgOrientationClassification
     
-    # Cỗ máy ưu tiên GPU: Thiết lập thiết bị ở mức hệ thống
+    # =========================================================================
+    # CHÚ THÍCH: Module AI Orientation (PP-LCNet) này KHÔNG CÒN SỬ DỤNG
+    # khi ảnh chụp từ ứng dụng di động đã được Google ML Kit Document Scanner tự nắn xoay chiều dọc.
+    # Đã ép thiết bị chạy 100% bằng CPU cho mục đích thử nghiệm.
+    # =========================================================================
     try:
-        # Kiểm tra xem có thể dùng GPU không
-        if paddle.device.is_compiled_with_cuda():
-            paddle.set_device('gpu')
-            device_status = "GPU"
-        else:
-            paddle.set_device('cpu')
-            device_status = "CPU (No CUDA)"
+        paddle.set_device('cpu')
+        device_status = "CPU (Forced for testing)"
         
         if model_path and os.path.exists(model_path):
             _classifier_cache = DocImgOrientationClassification(

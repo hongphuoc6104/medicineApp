@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 
@@ -38,7 +39,7 @@ class ScanScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 48),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  // TODO: implement scan in 4c
+                  context.go('/create/scan');
                 },
                 icon: const Icon(Icons.camera_alt),
                 label: const Text('Chụp ảnh / Chọn ảnh'),

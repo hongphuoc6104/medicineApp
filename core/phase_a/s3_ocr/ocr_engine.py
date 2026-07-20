@@ -122,15 +122,22 @@ class HybridOcrModule(BaseOCR):
         det_model:      PaddleOCR detection model name
     """
 
+    # =========================================================================
+    # CHÚ THÍCH: Module Server Deep OCR (PaddleOCR + VietOCR) này KHÔNG CÒN SỬ DỤNG
+    # khi ứng dụng di động bật fast-path truyền trực tiếp chữ từ Google ML Kit Text Recognition.
+    # Module này chỉ chạy trên CPU làm phương án thử nghiệm/fallback khi không dùng ML Kit.
+    # =========================================================================
+
     def __init__(
         self,
         vietocr_model: str = "vgg_transformer",
-        device: str = "gpu",
+        device: str = "cpu",
         batch_size: int = 32,
         det_model: str = "PP-OCRv5_mobile_det",
     ):
         import torch
 
+        # Ép mặc định sử dụng CPU cho toàn bộ thử nghiệm
         if device in ("cuda", "gpu"):
             self._use_gpu = torch.cuda.is_available()
             self._torch_device = "cuda" if self._use_gpu else "cpu"

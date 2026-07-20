@@ -18,7 +18,9 @@ Usage:
     # → {"matches": [...]}
 """
 
+import json
 import logging
+from datetime import datetime
 from pathlib import Path
 import re
 from typing import Optional
@@ -29,6 +31,38 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 ROOT = Path(__file__).parent.parent
+
+
+def _save_debug_artifacts(img, ocr_text, ner_results, medications, candidates, stats):
+    """Save debug scan artifacts to data/output/debug_scans/ WITHOUT modifying DB."""
+    try:
+        debug_dir = ROOT / "data" / "output" / "debug_scans"
+        debug_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+
+        json_path = debug_dir / f"scan_{timestamp}_debug.json"
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "timestamp": timestamp,
+                    "ocr_text": ocr_text,
+                    "medications": medications,
+                    "candidates": candidates,
+                    "ocr_blocks": ner_results,
+                    "stats": stats,
+                },
+                f,
+                ensure_ascii=False,
+                indent=2,
+            )
+
+        if img is not None and hasattr(img, "shape"):
+            annotated_path = debug_dir / f"scan_{timestamp}_image.jpg"
+            cv2.imwrite(str(annotated_path), img)
+
+        logger.info(f"Saved debug artifacts to {json_path}")
+    except Exception as e:
+        logger.warning(f"Failed to save debug artifacts: {e}")
 
 
 class MedicinePipeline:
@@ -48,7 +82,8 @@ class MedicinePipeline:
 
         self._yolo_path = yolo_weights or str(ROOT / YOLO_WEIGHTS)
         self._zpima_path = zero_pima_weights or str(ROOT / ZERO_PIMA_WEIGHTS)
-        self._device = device
+        # ÉP SỬ DỤNG CPU MẶC ĐỊNH CHO MỌI THỬ NGHIỆM
+        self._device = device or "cpu"
 
         # Lazy-loaded modules
         self._detector = None
@@ -76,15 +111,11 @@ class MedicinePipeline:
     def _get_ocr(self):
         if self._ocr is None:
             from core.phase_a.s3_ocr.ocr_engine import HybridOcrModule
-            import torch
 
-            # Ưu tiên device được truyền vào, fallback theo CUDA
-            if self._device is not None:
-                device = self._device
-            else:
-                device = "gpu" if torch.cuda.is_available() else "cpu"
+            # Ép mặc định chạy CPU cho thử nghiệm
+            device = self._device or "cpu"
             self._ocr = HybridOcrModule(device=device)
-            logger.info("HybridOCR loaded")
+            logger.info(f"HybridOCR loaded (device={device})")
         return self._ocr
 
     def _get_classifier(self):
@@ -160,7 +191,13 @@ class MedicinePipeline:
         else:
             img = np.array(image)
 
-        # Step 1: YOLO detect & crop (VĐ2: fallback to full image)
+        # =========================================================================
+        # KHÔNG CÒN SỬ DỤNG - ĐÃ ĐƯỢC GOOGLE MLKIT THAY THẾ
+        # Ảnh chụp từ điện thoại bằng Google ML Kit Document Scanner đã được nắn thẳng góc,
+        # cắt viền chuẩn và xoay đúng chiều dọc trực tiếp trên phần cứng di động (On-device).
+        # =========================================================================
+
+        # Step 1: YOLO detect & crop (KHÔNG CÒN SỬ DỤNG KHI DÙNG MLKIT ON-DEVICE)
         if not skip_yolo:
             try:
                 cropped = self._crop_prescription(img)
@@ -174,7 +211,7 @@ class MedicinePipeline:
             except Exception as e:
                 logger.error(f"YOLO detection error: {e}, using full image")
 
-        # Step 1.5: Preprocess — deskew & orientation (VĐ3)
+        # Step 1.5: Preprocess — deskew & orientation (KHÔNG CÒN SỬ DỤNG KHI DÙNG MLKIT ON-DEVICE)
         try:
             from core.phase_a.s2_preprocess.orientation import (
                 preprocess_image,
@@ -187,7 +224,7 @@ class MedicinePipeline:
 
         h, w = img.shape[:2]
 
-        # Step 2: OCR
+        # Step 2: OCR — Server Deep OCR (KHÔNG CÒN SỬ DỤNG KHI DÙNG MLKIT TEXT RECOGNITION FAST-PATH)
         ocr_blocks = self._run_ocr(img)
         if not ocr_blocks:
             return {"error": "OCR found no text", "image_size": (w, h)}
@@ -210,9 +247,16 @@ class MedicinePipeline:
             },
         }
 
-    def scan_prescription_app(self, image, skip_yolo=False):
+    def scan_prescription_app(
+        self,
+        image,
+        skip_yolo: bool = False,
+        ocr_text: Optional[str] = None,
+        skip_ocr: bool = False,
+    ):
         """
         API scan path with adaptive STT grouping and coverage-preserving fallback.
+        If ocr_text or skip_ocr is provided, skips YOLO & Server Deep OCR.
         """
         if isinstance(image, str):
             img = cv2.imread(image)
@@ -223,44 +267,87 @@ class MedicinePipeline:
         else:
             img = np.array(image)
 
-        if not skip_yolo:
-            try:
-                cropped = self._crop_prescription(img)
-                if cropped is not None:
-                    img = cropped
-                    logger.info("YOLO crop successful")
-                else:
-                    logger.warning(
-                        "YOLO detection failed, using full image as fallback"
-                    )
-            except Exception as e:
-                logger.error(f"YOLO detection error: {e}, using full image")
-
-        try:
-            from core.phase_a.s2_preprocess.orientation import preprocess_image
-
-            img, prep_info = preprocess_image(img, stem="api")
-            logger.info(f"Preprocess: {prep_info}")
-        except Exception as e:
-            logger.warning(f"Preprocess failed: {e}, continuing with original image")
-
         h, w = img.shape[:2]
 
-        ocr = self._get_ocr()
-        result = ocr.extract(img)
-        if not result.text_blocks:
-            return {"error": "OCR found no text", "image_size": (w, h)}
-
+        from core.phase_a.s3_ocr.base import TextBlock
         from core.phase_a.s3_ocr.ocr_engine import group_by_stt_with_meta
 
-        raw_ner_input = self._build_ner_input_from_text_blocks(result.text_blocks)
+        if ocr_text or skip_ocr:
+            logger.info("Fast-path active: skipping YOLO & Server Deep OCR (using client OCR text)")
+            raw_lines = [l.strip() for l in (ocr_text or "").split("\n") if l.strip()]
+            raw_lines = [l for l in raw_lines if not l.startswith("---")]
+
+            # Smart line grouping by STT / bullet items to avoid line-break fragmentation
+            stt_pattern = re.compile(
+                r"^(\d+([\.\/\),]|\s+[A-Za-zÀ-ỹ])|STT\s*\d+|[①-⑩]|\d+\s*[-:])",
+                re.IGNORECASE,
+            )
+            grouped_lines = []
+            current_group = []
+
+            for line in raw_lines:
+                if stt_pattern.match(line):
+                    if current_group:
+                        grouped_lines.append(" ".join(current_group))
+                        current_group = []
+                    current_group.append(line)
+                else:
+                    if current_group:
+                        current_group.append(line)
+                    else:
+                        grouped_lines.append(line)
+
+            if current_group:
+                grouped_lines.append(" ".join(current_group))
+
+            effective_lines = grouped_lines if grouped_lines else raw_lines
+            text_blocks = [
+                TextBlock(
+                    text=l,
+                    confidence=0.95,
+                    bbox=[[0, 0], [100, 0], [100, 20], [0, 20]],
+                )
+                for l in effective_lines
+            ]
+        else:
+            if not skip_yolo:
+                try:
+                    cropped = self._crop_prescription(img)
+                    if cropped is not None:
+                        img = cropped
+                        logger.info("YOLO crop successful")
+                    else:
+                        logger.warning(
+                            "YOLO detection failed, using full image as fallback"
+                        )
+                except Exception as e:
+                    logger.error(f"YOLO detection error: {e}, using full image")
+
+            try:
+                from core.phase_a.s2_preprocess.orientation import preprocess_image
+
+                img, prep_info = preprocess_image(img, stem="api")
+                logger.info(f"Preprocess: {prep_info}")
+            except Exception as e:
+                logger.warning(f"Preprocess failed: {e}, continuing with original image")
+
+            h, w = img.shape[:2]
+
+            ocr = self._get_ocr()
+            result = ocr.extract(img)
+            text_blocks = result.text_blocks
+
+        if not text_blocks:
+            return {"error": "OCR found no text", "image_size": (w, h)}
+
+        raw_ner_input = self._build_ner_input_from_text_blocks(text_blocks)
         if not raw_ner_input:
             return {"error": "OCR produced only empty blocks", "image_size": (w, h)}
 
         raw_ner_results = self._classify_blocks(raw_ner_input)
         raw_meds, raw_candidates = self._extract_medications(raw_ner_results)
 
-        grouped_blocks_obj, grouping_meta = group_by_stt_with_meta(result.text_blocks)
+        grouped_blocks_obj, grouping_meta = group_by_stt_with_meta(text_blocks)
         grouped_ner_input = self._build_ner_input_from_text_blocks(grouped_blocks_obj)
 
         if grouped_ner_input:
@@ -294,21 +381,43 @@ class MedicinePipeline:
             ner_results = raw_ner_results
             ner_input = raw_ner_input
 
+        # Lọc bỏ rác tiêu đề bệnh viện / thông tin hành chính bị PhoBERT đoán nhầm
+        header_noise_re = re.compile(
+            r"(BỆNH\s*VIỆN|BENH\s*VIEN|SỞ\s*Y\s*TẾ|SO\s*Y\s*TE|PHÒNG\s*KHÁM|PHONG\s*KHAM|KHÁM\s*DỊCH|KHOA\s*DỊCH\s*VỤ|DỊCH\s*VỤ\s*TH|ĐỊA\s*CHỈ|HỌ\s*TÊN|BÁC\s*SĨ|CÂN\s*NẶNG|MẠCH|NHIỆT\s*ĐỘ|x\d+\s*ngày)",
+            re.IGNORECASE,
+        )
+        filtered_meds = [
+            m for m in filtered_meds
+            if not header_noise_re.search(m.get("ocr_text", "") or m.get("drug_name", ""))
+        ]
+
+        res_stats = {
+            "total_blocks": len(ner_input),
+            "drugnames": len(filtered_meds),
+            "others": len(ner_input) - len(filtered_meds),
+            "selection_strategy": selection_strategy,
+            "selection_reason": selection_reason,
+            "raw_branch": raw_summary,
+            "grouped_branch": grouped_summary,
+            "grouping_meta": grouping_meta,
+        }
+
+        # Lưu thông tin debug phục vụ kiểm tra (KHÔNG tạo bảng DB mới)
+        _save_debug_artifacts(
+            img=img,
+            ocr_text=ocr_text,
+            ner_results=ner_results,
+            medications=filtered_meds,
+            candidates=medication_candidates,
+            stats=res_stats,
+        )
+
         return {
             "medications": filtered_meds,
             "medication_candidates": medication_candidates,
             "ocr_blocks": ner_results,
             "image_size": (w, h),
-            "stats": {
-                "total_blocks": len(ner_input),
-                "drugnames": len(filtered_meds),
-                "others": len(ner_input) - len(filtered_meds),
-                "selection_strategy": selection_strategy,
-                "selection_reason": selection_reason,
-                "raw_branch": raw_summary,
-                "grouped_branch": grouped_summary,
-                "grouping_meta": grouping_meta,
-            },
+            "stats": res_stats,
         }
 
     @staticmethod

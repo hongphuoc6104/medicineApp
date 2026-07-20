@@ -17,6 +17,7 @@ class ScanRepository {
     required Uint8List imageBytes,
     required String filename,
     String mimeType = 'image/jpeg',
+    String? ocrText,
   }) async {
     final formData = FormData.fromMap({
       'file': MultipartFile.fromBytes(
@@ -24,6 +25,7 @@ class ScanRepository {
         filename: filename,
         contentType: MediaType.parse(mimeType),
       ),
+      if (ocrText != null && ocrText.isNotEmpty) 'ocr_text': ocrText,
     });
 
     final response = await _dio.post(

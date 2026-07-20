@@ -26,7 +26,8 @@ from pathlib import Path
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from typing import Optional
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 logging.basicConfig(level=logging.INFO)
@@ -62,10 +63,11 @@ def _get_pipeline():
         try:
             from core.pipeline import MedicinePipeline
 
-            _pipeline = MedicinePipeline()
+            # Ép khởi tạo pipeline chạy 100% trên CPU cho thử nghiệm
+            _pipeline = MedicinePipeline(device="cpu")
             _pipeline_last_error = None
             _pipeline_loaded_at = datetime.now(timezone.utc).isoformat()
-            logger.info("AI pipeline loaded")
+            logger.info("AI pipeline loaded (Forced CPU mode)")
         except Exception as e:
             _pipeline_last_error = str(e)
             logger.warning(f"AI pipeline not available: {e}")
@@ -321,7 +323,11 @@ async def drug_interactions(ingredient: str):
 
 
 @app.post("/api/scan-prescription")
-async def scan_prescription(file: UploadFile = File(...)):
+async def scan_prescription(
+    file: UploadFile = File(...),
+    ocr_text: Optional[str] = Form(None),
+    skip_ocr: Optional[bool] = Form(False),
+):
     """
     Scan prescription image → extract drug list.
 
@@ -352,7 +358,11 @@ async def scan_prescription(file: UploadFile = File(...)):
     # VĐ7: Semaphore — chỉ 1 scan đồng thời trên GPU
     try:
         async with scan_semaphore:
-            result = pipeline.scan_prescription_app(img)
+            result = pipeline.scan_prescription_app(
+                img,
+                ocr_text=ocr_text,
+                skip_ocr=bool(skip_ocr),
+            )
     except Exception as exc:
         logger.exception("Prescription pipeline execution failed")
         raise HTTPException(
