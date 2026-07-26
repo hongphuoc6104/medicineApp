@@ -7,9 +7,11 @@ import 'package:medicine_app/l10n/app_localizations.dart';
 
 import '../../../core/network/network_error_mapper.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../profile/data/profile_notifier.dart';
 import '../data/plan_notifier.dart';
 import '../data/today_schedule_notifier.dart';
 import '../domain/today_schedule.dart';
+import 'widgets/dose_timeline_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -165,7 +167,7 @@ class _OnboardingView extends StatelessWidget {
           padding: const EdgeInsets.all(22),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [Color(0xFFEBFBFB), Color(0xFFF9FFFE)],
+              colors: [AppColors.surfaceSoft, AppColors.background],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -205,7 +207,7 @@ class _OnboardingView extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               ElevatedButton.icon(
-                onPressed: () => context.go('/create/scan'),
+                onPressed: () => context.push('/create/scan'),
                 icon: const Icon(Icons.document_scanner_outlined),
                 label: Text(l10n.homeActionScan),
               ),
@@ -214,7 +216,7 @@ class _OnboardingView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => context.go('/create/edit'),
+                      onPressed: () => context.push('/create/edit'),
                       icon: const Icon(Icons.edit_note),
                       label: Text(l10n.homeActionManual),
                     ),
@@ -222,7 +224,7 @@ class _OnboardingView extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => context.go('/create/reuse'),
+                      onPressed: () => context.push('/create/reuse'),
                       icon: const Icon(Icons.history_outlined),
                       label: Text(l10n.homeActionHistory),
                     ),
@@ -233,9 +235,9 @@ class _OnboardingView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 18),
-        _LookupPrimaryCard(onTap: () => context.go('/lookup')),
+        _LookupPrimaryCard(onTap: () => context.push('/lookup')),
         const SizedBox(height: 14),
-        const _SectionLabel(title: 'Lối tắt'),
+        const _SectionLabel(title: 'Quản lý lịch uống'),
         const SizedBox(height: 10),
         _QuickActionGrid(
           actions: [
@@ -244,12 +246,6 @@ class _OnboardingView extends StatelessWidget {
               subtitle: l10n.homeActionPlansSubtitle,
               icon: Icons.calendar_month_rounded,
               onTap: () => context.go('/plans'),
-            ),
-            _QuickActionItem(
-              title: l10n.homeActionDrugLookup,
-              subtitle: l10n.homeActionDrugLookupSubtitle,
-              icon: Icons.search_rounded,
-              onTap: () => context.go('/lookup'),
             ),
           ],
         ),
@@ -268,10 +264,11 @@ class _DashboardView extends ConsumerWidget {
     final canMark = !todayAsync.isLoading;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 130),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, 100),
       children: [
+        const _ProfileHeaderSelector(),
         const _DateHeader(),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         todayAsync.when(
           loading: () => const _TodayLoadingCard(),
           error: (e, _) => _TodayErrorCard(
@@ -290,6 +287,14 @@ class _DashboardView extends ConsumerWidget {
             final featuredDose = sortedDoses.isNotEmpty
                 ? sortedDoses.first
                 : null;
+
+            // Sort all doses by scheduled time for timeline view
+            final timelineDoses = List<TodayDose>.from(today.doses)
+              ..sort((a, b) {
+                final aTime = a.scheduledLocalDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+                final bTime = b.scheduledLocalDateTime ?? DateTime.fromMillisecondsSinceEpoch(0);
+                return aTime.compareTo(bTime);
+              });
 
             Future<void> onMarkDose(TodayDose dose, String status) async {
               final result = await ref
@@ -325,42 +330,47 @@ class _DashboardView extends ConsumerWidget {
               );
             }
 
-            final mainDose = featuredDose;
-
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (today.doses.isEmpty || mainDose == null)
+                if (today.doses.isEmpty || featuredDose == null)
                   _TodayEmptyCard(
-                    onScan: () => context.go('/create/scan'),
-                    onCreatePlan: () => context.go('/create/edit'),
+                    onScan: () => context.push('/create/scan'),
+                    onCreatePlan: () => context.push('/create/edit'),
                     onViewPlans: () => context.go('/plans'),
                   )
-                else
+                else ...[
+                  _TodayProgressCard(doses: today.doses),
+                  const SizedBox(height: AppSpacing.md),
                   _TodayMainDoseCard(
-                    dose: mainDose,
+                    dose: featuredDose,
                     canMark: canMark,
-                    onTap: () => context.go('/plans/${mainDose.planId}'),
-                    onTaken: () => onMarkDose(mainDose, 'taken'),
+                    onTap: () => context.go('/plans/${featuredDose.planId}'),
+                    onTaken: () => onMarkDose(featuredDose, 'taken'),
                   ),
-                const SizedBox(height: 16),
-                _LookupPrimaryCard(onTap: () => context.go('/lookup')),
-                const SizedBox(height: 16),
-                _QuickActionGrid(
-                  actions: [
-                    _QuickActionItem(
-                      title: AppLocalizations.of(context).homeActionScan,
-                      subtitle: 'Quét đơn để tạo kế hoạch mới',
-                      icon: Icons.document_scanner_outlined,
-                      onTap: () => context.go('/create/scan'),
+                  const SizedBox(height: AppSpacing.xl),
+                  const Text(
+                    'Lịch uống trong ngày',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textPrimary,
                     ),
-                    _QuickActionItem(
-                      title: AppLocalizations.of(context).homeActionManual,
-                      subtitle: 'Nhập tay nếu không có ảnh',
-                      icon: Icons.edit_note,
-                      onTap: () => context.go('/create/edit'),
-                    ),
-                  ],
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  ...timelineDoses.map((dose) => DoseTimelineCard(
+                        dose: dose,
+                        canMark: canMark,
+                        onTap: () => context.go('/plans/${dose.planId}'),
+                        onTaken: () => onMarkDose(dose, 'taken'),
+                        onSkipped: () => onMarkDose(dose, 'skipped'),
+                      )),
+                ],
+                const SizedBox(height: AppSpacing.lg),
+                _QuickActionStrip(
+                  onScan: () => context.push('/create/scan'),
+                  onManual: () => context.push('/create/edit'),
+                  onLookup: () => context.push('/lookup'),
                 ),
               ],
             );
@@ -438,15 +448,6 @@ String _doseSessionLabel(TodayDose dose) {
   return 'Buổi tối';
 }
 
-String _doseLineLabel(TodayDoseMedication item) {
-  final dosage = item.dosage?.trim();
-  final drugName = item.drugName.trim();
-  final base = dosage != null && dosage.isNotEmpty
-      ? '$drugName $dosage'
-      : drugName;
-  return '$base × ${item.pills} viên';
-}
-
 class _DateHeader extends StatelessWidget {
   const _DateHeader();
 
@@ -495,6 +496,80 @@ class _DateHeader extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _TodayProgressCard extends StatelessWidget {
+  const _TodayProgressCard({required this.doses});
+
+  final List<TodayDose> doses;
+
+  @override
+  Widget build(BuildContext context) {
+    final taken = doses.where((d) => d.status == 'taken').length;
+    final total = doses.length;
+    final pct = total == 0 ? 0.0 : (taken / total);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryDark],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.25),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Row(
+                children: [
+                  Icon(Icons.task_alt_rounded, color: Colors.white, size: 20),
+                  SizedBox(width: 8),
+                  Text(
+                    'Tiến trình hôm nay',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                '$taken / $total liều',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: pct,
+              minHeight: 8,
+              backgroundColor: Colors.white.withValues(alpha: 0.3),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -632,73 +707,143 @@ class _TodayMainDoseCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 17,
                       fontWeight: FontWeight.w900,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
                     _doseSummaryText(dose),
-                    maxLines: 3,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: AppColors.textSecondary,
-                      height: 1.35,
+                      fontSize: 13,
+                      height: 1.3,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: statusMeta.$2.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      actionLabel,
-                      style: TextStyle(
-                        color: statusMeta.$2,
-                        fontWeight: FontWeight.w800,
-                        fontSize: compact ? 11.5 : 12,
+                  const SizedBox(height: 12),
+                  if (isPending && (dose.isDueNow(now) || dose.isUpcomingSoon(now)))
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: canMark ? onTaken : null,
+                        icon: const Icon(Icons.check_circle_outline, size: 20),
+                        label: const Text('Đã uống'),
+                      ),
+                    )
+                  else
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: statusMeta.$2.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(statusMeta.$3, color: statusMeta.$2, size: 16),
+                          const SizedBox(width: 6),
+                          Text(
+                            actionLabel,
+                            style: TextStyle(
+                              color: statusMeta.$2,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  if (dose.medications.isNotEmpty) ...[
-                    const SizedBox(height: 10),
-                    ...dose.medications.map(
-                      (item) => Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          _doseLineLabel(item),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            height: 1.28,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: isPending && dose.isDueNow(now)
-                        ? ElevatedButton.icon(
-                            onPressed: canMark ? onTaken : null,
-                            icon: const Icon(Icons.check_circle_outline),
-                            label: const Text('Đã uống'),
-                          )
-                        : OutlinedButton.icon(
-                            onPressed: null,
-                            icon: const Icon(Icons.info_outline),
-                            label: Text(actionLabel),
-                          ),
-                  ),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QuickActionStrip extends StatelessWidget {
+  const _QuickActionStrip({
+    required this.onScan,
+    required this.onManual,
+    required this.onLookup,
+  });
+
+  final VoidCallback onScan;
+  final VoidCallback onManual;
+  final VoidCallback onLookup;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _StripTile(
+            label: 'Quét đơn',
+            icon: Icons.document_scanner_outlined,
+            onTap: onScan,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _StripTile(
+            label: 'Nhập tay',
+            icon: Icons.edit_note_rounded,
+            onTap: onManual,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _StripTile(
+            label: 'Tra cứu',
+            icon: Icons.search_rounded,
+            onTap: onLookup,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StripTile extends StatelessWidget {
+  const _StripTile({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: AppColors.primaryDark, size: 22),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 12,
+                color: AppColors.textPrimary,
               ),
             ),
           ],
@@ -724,7 +869,7 @@ class _LookupPrimaryCard extends StatelessWidget {
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Color(0xFF2AD1C9), Color(0xFF59D8D3)],
+            colors: [AppColors.primaryDark, AppColors.primary],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -1019,6 +1164,118 @@ class _TodayEmptyCard extends StatelessWidget {
               icon: const Icon(Icons.view_list_outlined),
               label: const Text('Xem kế hoạch'),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileHeaderSelector extends ConsumerWidget {
+  const _ProfileHeaderSelector();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profileState = ref.watch(profileNotifierProvider);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            ...profileState.profiles.map((p) {
+              final selected = p.id == profileState.activeProfileId;
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: ChoiceChip(
+                  showCheckmark: false,
+                  avatar: Icon(
+                    p.relation == 'Con'
+                        ? Icons.child_care_rounded
+                        : (p.relation == 'Bố' || p.relation == 'Mẹ')
+                            ? Icons.elderly_rounded
+                            : Icons.person_rounded,
+                    size: 16,
+                    color: selected ? AppColors.surface : AppColors.primaryDark,
+                  ),
+                  label: Text(p.name),
+                  selected: selected,
+                  selectedColor: AppColors.primaryDark,
+                  labelStyle: TextStyle(
+                    color: selected ? AppColors.surface : AppColors.textPrimary,
+                    fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                  onSelected: (_) {
+                    ref
+                        .read(profileNotifierProvider.notifier)
+                        .selectProfile(p.id);
+                  },
+                ),
+              );
+            }),
+            IconButton.outlined(
+              onPressed: () => _showAddProfileDialog(context, ref),
+              icon: const Icon(Icons.add, size: 16),
+              tooltip: 'Thêm hồ sơ người thân',
+              style: IconButton.styleFrom(
+                minimumSize: const Size(36, 36),
+                padding: EdgeInsets.zero,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAddProfileDialog(BuildContext context, WidgetRef ref) {
+    final nameCtrl = TextEditingController();
+    String relation = 'Bố';
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Thêm hồ sơ người thân'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Tên người thân (ví dụ: Bố, Mẹ, Bé Bún)',
+              ),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              value: relation,
+              items: const [
+                DropdownMenuItem(value: 'Bố', child: Text('Bố')),
+                DropdownMenuItem(value: 'Mẹ', child: Text('Mẹ')),
+                DropdownMenuItem(value: 'Con', child: Text('Con')),
+                DropdownMenuItem(value: 'Khác', child: Text('Khác')),
+              ],
+              onChanged: (val) => relation = val ?? 'Bố',
+              decoration: const InputDecoration(labelText: 'Quan hệ'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (nameCtrl.text.trim().isNotEmpty) {
+                ref
+                    .read(profileNotifierProvider.notifier)
+                    .addProfile(nameCtrl.text.trim(), relation);
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Thêm'),
           ),
         ],
       ),

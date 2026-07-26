@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/network/network_error_mapper.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/step_wizard_progress.dart';
 import '../../lookup/data/drug_interaction_repository.dart';
 import '../data/plan_interaction_checker.dart';
 import '../domain/plan.dart';
@@ -122,13 +123,99 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
       }
     }
 
-    final items = _drugs
-        .map((d) => PlanDrugItem(name: d.name, dosage: d.dosage ?? ''))
-        .toList();
+    final items = _drugs.map((d) {
+      final freqCount = d.frequency > 0 ? d.frequency : 1;
+      List<String> autoTimes;
+      String freqKey;
+
+      if (freqCount == 2) {
+        autoTimes = ['08:00', '18:00'];
+        freqKey = '2_times_daily';
+      } else if (freqCount == 3) {
+        autoTimes = ['08:00', '12:00', '18:00'];
+        freqKey = '3_times_daily';
+      } else if (freqCount >= 4) {
+        autoTimes = ['07:00', '11:00', '16:00', '20:00'];
+        freqKey = '4_times_daily';
+      } else {
+        autoTimes = ['08:00'];
+        freqKey = 'daily';
+      }
+
+      // Parse detailed dose schedule per session (Sáng Xv, Trưa Yv, Tối Zv, Chiều Wv)
+      final rawText = d.ocrText.toLowerCase();
+      List<DoseScheduleItem>? parsedDoseSchedule;
+      final scheduleMatches = <DoseScheduleItem>[];
+
+      int parsePillsFromMatch(String fullText, String keyword) {
+        final pattern = RegExp(
+          keyword + r'\s*[:\-\=\s]*\s*(\d+|i|l)\b',
+          caseSensitive: false,
+        );
+        final match = pattern.firstMatch(fullText);
+        if (match == null) return 1;
+        final val = match.group(1)!;
+        if (val.toLowerCase() == 'i' || val.toLowerCase() == 'l') return 1;
+        return int.tryParse(val) ?? 1;
+      }
+
+      final hasSang = RegExp(r'sáng|sang', caseSensitive: false).hasMatch(rawText);
+      final hasTrua = RegExp(r'trưa|trua', caseSensitive: false).hasMatch(rawText);
+      final hasChieu = RegExp(r'chiều|chieu|tối|toi', caseSensitive: false).hasMatch(rawText);
+
+      if (hasSang) {
+        final pills = parsePillsFromMatch(rawText, r'(?:sáng|sang)');
+        scheduleMatches.add(DoseScheduleItem(time: '08:00', pills: pills));
+      }
+      if (hasTrua) {
+        final pills = parsePillsFromMatch(rawText, r'(?:trưa|trua)');
+        scheduleMatches.add(DoseScheduleItem(time: '12:00', pills: pills));
+      }
+      if (hasChieu) {
+        final pills = parsePillsFromMatch(rawText, r'(?:chiều|chieu|tối|toi)');
+        scheduleMatches.add(DoseScheduleItem(time: '18:00', pills: pills));
+      }
+
+      if (scheduleMatches.isNotEmpty) {
+        parsedDoseSchedule = scheduleMatches;
+      }
+
+      // Extract instruction notes (nhai nát, trước/sau ăn 30p, v.v.)
+      final noteParts = <String>[];
+      if (rawText.contains('nhai nát') || rawText.contains('nhai nat') || rawText.contains('nhại nát')) {
+        noteParts.add('Nhai nát trước khi uống');
+      }
+      if (rawText.contains('trước ăn') || rawText.contains('truoc an')) {
+        noteParts.add('Uống trước khi ăn 30 phút');
+      } else if (rawText.contains('sau ăn') || rawText.contains('sau an')) {
+        noteParts.add('Uống sau khi ăn 30 phút');
+      }
+
+      if (scheduleMatches.isNotEmpty) {
+        final detail = scheduleMatches.map((m) {
+          final session = m.time == '08:00' ? 'Sáng' : (m.time == '12:00' ? 'Trưa' : 'Tối');
+          return '$session ${m.pills}v';
+        }).join(' · ');
+        noteParts.add(detail);
+      }
+
+      final notes = noteParts.join(' · ');
+
+      return PlanDrugItem(
+        name: d.mappedDrugName ?? d.name,
+        dosage: d.dosage ?? '',
+        frequency: freqKey,
+        times: parsedDoseSchedule != null ? parsedDoseSchedule.map((e) => e.time).toList() : autoTimes,
+        doseSchedule: parsedDoseSchedule,
+        pillsPerDose: parsedDoseSchedule != null && parsedDoseSchedule.isNotEmpty ? parsedDoseSchedule.first.pills : 1,
+        notes: notes,
+      );
+    }).toList();
+
     if (!mounted) {
       return;
     }
-    // Skip edit_drugs step — go directly to schedule (plan §6.4, §8.1)
+    // Skip edit_drugs step — go directly to schedule
     context.go('/create/schedule', extra: items);
   }
 
@@ -233,23 +320,20 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
 
   Widget _buildInteractionPanel(AppLocalizations l10n) {
     if (_isCheckingInteractions) {
-      return Container(
-        margin: const EdgeInsets.only(top: 12),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceSoft,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      return const Padding(
+        padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
+        child: Row(
           children: [
-            Text(
-              'Đang tự động kiểm tra tương tác thuốc...',
-              style: TextStyle(fontWeight: FontWeight.w700),
+            SizedBox(
+              width: 14,
+              height: 14,
+              child: CircularProgressIndicator(strokeWidth: 2),
             ),
-            SizedBox(height: 8),
-            LinearProgressIndicator(minHeight: 3),
+            SizedBox(width: 8),
+            Text(
+              'Đang kiểm tra tương tác thuốc...',
+              style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+            ),
           ],
         ),
       );
@@ -257,131 +341,164 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
 
     if (_interactionError != null) {
       return Container(
-        margin: const EdgeInsets.only(top: 12),
-        padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: AppColors.error.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColors.error.withValues(alpha: 0.35)),
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.error_outline, color: AppColors.error, size: 18),
+            const Icon(Icons.error_outline, color: AppColors.error, size: 16),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 _interactionError!,
-                style: const TextStyle(color: AppColors.error),
+                style: const TextStyle(color: AppColors.error, fontSize: 12),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             TextButton(
               onPressed: _refreshInteractionSummary,
-              child: Text(l10n.commonRetry),
+              child: Text(l10n.commonRetry, style: const TextStyle(fontSize: 12)),
             ),
           ],
         ),
       );
     }
 
-    if (_interactionSummary.requestedDrugNames.length < 2) {
-      return Container(
-        margin: const EdgeInsets.only(top: 12),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceSoft,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: const Text(
-          'Cần ít nhất 2 thuốc để kiểm tra tương tác tự động.',
-          style: TextStyle(color: AppColors.textSecondary),
-        ),
-      );
+    if (!_interactionSummary.hasInteractions ||
+        _interactionSummary.requestedDrugNames.length < 2) {
+      return const SizedBox.shrink();
     }
 
-    if (!_interactionSummary.hasInteractions) {
-      return Container(
-        margin: const EdgeInsets.only(top: 12),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.success.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.success.withValues(alpha: 0.4)),
-        ),
-        child: const Row(
-          children: [
-            Icon(Icons.verified_user_outlined, color: AppColors.success),
-            SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                'Chưa ghi nhận tương tác giữa các thuốc đã chọn.',
-                style: TextStyle(
-                  color: AppColors.success,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    final result = _interactionSummary.result;
-    final items = (result?.interactions ?? const []).take(3).toList();
     final severity = _severityLabel(l10n, _interactionSummary.highestSeverity);
 
     return Container(
-      margin: const EdgeInsets.only(top: 12),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.error.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.error.withValues(alpha: 0.45)),
+        color: AppColors.error.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.warning_amber_rounded,
+          const Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Phát hiện ${_interactionSummary.totalInteractions} tương tác ($severity)',
+              style: const TextStyle(
                 color: AppColors.error,
-                size: 20,
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'Phát hiện tương tác mức $severity',
-                  style: const TextStyle(
-                    color: AppColors.error,
-                    fontWeight: FontWeight.w800,
-                  ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          InkWell(
+            onTap: () => _showInteractionDetailsSheet(l10n),
+            borderRadius: BorderRadius.circular(6),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              child: Text(
+                'Chi tiết >',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.error,
                 ),
               ),
-            ],
+            ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            '${_interactionSummary.totalInteractions} cặp tương tác trong danh sách.',
-            style: const TextStyle(color: AppColors.error),
-          ),
-          if (items.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            for (final item in items)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  '- ${_interactionPairLabel(item)}: ${item.warning.isNotEmpty ? item.warning : _severityLabel(l10n, item.severity)}',
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 12,
-                    height: 1.35,
-                  ),
-                ),
-              ),
-          ],
         ],
+      ),
+    );
+  }
+
+  void _showInteractionDetailsSheet(AppLocalizations l10n) {
+    final result = _interactionSummary.result;
+    final items = result?.interactions ?? const [];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 24),
+                const SizedBox(width: 8),
+                const Text(
+                  'Chi tiết Tương tác thuốc',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const Divider(),
+            const SizedBox(height: 8),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: items.map((item) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceSoft,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _interactionPairLabel(item),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.error,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            item.warning.isNotEmpty
+                                ? item.warning
+                                : _severityLabel(l10n, item.severity),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textPrimary,
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -395,6 +512,10 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
       appBar: AppBar(title: Text(l10n.scanReviewTitle)),
       body: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+            child: StepWizardProgress(currentStep: 1),
+          ),
           Container(
             width: double.infinity,
             margin: const EdgeInsets.all(16),
@@ -464,6 +585,7 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                         const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final drug = visible[index];
+                      final isConfirmed = drug.mappingStatus == 'confirmed' || drug.matchScore >= 0.75;
                       final hasDbSuggestion =
                           drug.mappedDrugName != null &&
                           drug.mappedDrugName!.isNotEmpty &&
@@ -476,68 +598,98 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                         decoration: BoxDecoration(
                           color: hasInteractionRisk
                               ? AppColors.error.withValues(alpha: 0.06)
-                              : AppColors.surface,
+                              : (isConfirmed
+                                  ? AppColors.surface
+                                  : AppColors.warning.withValues(alpha: 0.04)),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
                             color: hasInteractionRisk
                                 ? AppColors.error.withValues(alpha: 0.55)
-                                : AppColors.surfaceHigh,
+                                : (isConfirmed
+                                    ? AppColors.border
+                                    : AppColors.warning.withValues(alpha: 0.4)),
                           ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (hasInteractionRisk) ...[
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.warning_amber_rounded,
-                                    size: 16,
-                                    color: AppColors.error,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    'Có tương tác (${_severityLabel(l10n, severity)})',
-                                    style: const TextStyle(
-                                      color: AppColors.error,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                            ],
                             Row(
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    drug.name,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 15,
-                                    ),
-                                  ),
+                                _StatusChip(
+                                  label: isConfirmed ? '✅ Đã xác thực DB' : '⚠️ Cần kiểm tra lại',
+                                  color: isConfirmed ? AppColors.success : AppColors.warning,
                                 ),
+                                const Spacer(),
+                                if (hasInteractionRisk)
+                                  _StatusChip(
+                                    label: 'Tương tác (${_severityLabel(l10n, severity)})',
+                                    color: AppColors.error,
+                                  ),
                               ],
                             ),
+                            const SizedBox(height: 8),
+                            Text(
+                              drug.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 16,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            if (drug.dosage != null && drug.dosage!.isNotEmpty) ...[
+                              const SizedBox(height: 6),
+                              Wrap(
+                                spacing: 6,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryLight,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      'Hàm lượng: ${drug.dosage}',
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.primaryDark,
+                                      ),
+                                    ),
+                                  ),
+                                  if (drug.frequency > 0)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.surfaceSoft,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Text(
+                                        'Lịch: ${drug.frequency} lần/ngày',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.textSecondary,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ],
                             if (hasDbSuggestion) ...[
-                              const SizedBox(height: 4),
+                              const SizedBox(height: 6),
                               Row(
                                 children: [
                                   const Icon(
-                                    Icons.info_outline,
+                                    Icons.verified_outlined,
                                     size: 14,
-                                    color: AppColors.info,
+                                    color: AppColors.success,
                                   ),
                                   const SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
-                                      l10n.scanReviewStandardName(
-                                        drug.mappedDrugName!,
-                                      ),
+                                      'Chuẩn DB: ${drug.mappedDrugName!}',
                                       style: const TextStyle(
-                                        color: AppColors.info,
+                                        color: AppColors.success,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 12,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -554,35 +706,28 @@ class _ScanReviewScreenState extends ConsumerState<ScanReviewScreen> {
                               Text(
                                 l10n.scanReviewOcrRaw(drug.ocrText),
                                 style: const TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 12,
+                                  color: AppColors.textMuted,
+                                  fontSize: 11.5,
                                 ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
                             const SizedBox(height: 10),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
+                            Row(
                               children: [
-                                OutlinedButton.icon(
+                                TextButton.icon(
                                   onPressed: () => _editDrug(drug),
-                                  icon: const Icon(
-                                    Icons.edit_outlined,
-                                    size: 16,
-                                  ),
+                                  icon: const Icon(Icons.edit_outlined, size: 16),
                                   label: Text(l10n.scanReviewEdit),
                                 ),
-                                OutlinedButton.icon(
+                                const Spacer(),
+                                TextButton.icon(
                                   onPressed: () => _removeDrug(drug),
-                                  style: OutlinedButton.styleFrom(
+                                  style: TextButton.styleFrom(
                                     foregroundColor: AppColors.error,
                                   ),
-                                  icon: const Icon(
-                                    Icons.delete_outline,
-                                    size: 16,
-                                  ),
+                                  icon: const Icon(Icons.delete_outline, size: 16),
                                   label: Text(l10n.scanReviewRemove),
                                 ),
                               ],

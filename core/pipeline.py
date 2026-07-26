@@ -124,6 +124,21 @@ class MedicinePipeline:
             r"^(\d+([\.\/\),]|\s+[A-Za-zÀ-ỹ])|STT\s*\d+|[①-⑩]|\d+\s*[-:])",
             re.IGNORECASE,
         )
+
+        def is_continuation_line(line_str: str) -> bool:
+            lowered = line_str.strip().lower()
+            if not lowered:
+                return False
+            # Usage instructions or dosage notes
+            if any(lowered.startswith(kw) for kw in [
+                "ngày", "uống", "mỗi", "sau ăn", "trước ăn", "khi", "buổi", "chia", "sáng", "trưa", "chiều", "tối", "x "
+            ]):
+                return True
+            # Unit / dosage quantity
+            if re.match(r"^\d+\s*(viên|gói|ống|chai|lọ|vỉ|hộp|ml|mg|gam)", lowered):
+                return True
+            return False
+
         grouped_lines = []
         current_group = []
 
@@ -134,9 +149,12 @@ class MedicinePipeline:
                     current_group = []
                 current_group.append(line)
             else:
-                if current_group:
+                if current_group and is_continuation_line(line):
                     current_group.append(line)
                 else:
+                    if current_group:
+                        grouped_lines.append(" ".join(current_group))
+                        current_group = []
                     grouped_lines.append(line)
 
         if current_group:
@@ -193,14 +211,27 @@ class MedicinePipeline:
             ner_results = raw_ner_results
             ner_input = raw_ner_input
 
-        # Lọc bỏ rác tiêu đề bệnh viện / thông tin hành chính bị PhoBERT đoán nhầm
-        header_noise_re = re.compile(
-            r"(BỆNH\s*VIỆN|BENH\s*VIEN|SỞ\s*Y\s*TẾ|SO\s*Y\s*TE|PHÒNG\s*KHÁM|PHONG\s*KHAM|KHÁM\s*DỊCH|KHOA\s*DỊCH\s*VỤ|DỊCH\s*VỤ\s*TH|ĐỊA\s*CHỈ|HỌ\s*TÊN|BÁC\s*SĨ|CÂN\s*NẶNG|MẠCH|NHIỆT\s*ĐỘ|x\d+\s*ngày)",
-            re.IGNORECASE,
-        )
+        # Lọc bỏ rác tiêu đề bệnh viện / thông tin hành chính bị PhoBERT đoán nhầm qua AI Semantic Filter
+        from core.classify.post_filter import NerPostFilter
+
         filtered_meds = [
             m for m in filtered_meds
-            if not header_noise_re.search(m.get("ocr_text", "") or m.get("drug_name", ""))
+            if NerPostFilter.is_likely_drug(
+                text=m.get("drug_name", "") or m.get("ocr_text", ""),
+                ocr_text=m.get("ocr_text", ""),
+                match_score=float(m.get("match_score", 0.0)),
+                matched_name=m.get("matched_drug_name"),
+            )
+        ]
+
+        medication_candidates = [
+            c for c in (medication_candidates or [])
+            if NerPostFilter.is_likely_drug(
+                text=c.get("drug_name", "") or c.get("ocr_text", ""),
+                ocr_text=c.get("ocr_text", ""),
+                match_score=float(c.get("match_score", 0.0)),
+                matched_name=c.get("matched_drug_name"),
+            )
         ]
 
         res_stats = {

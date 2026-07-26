@@ -469,36 +469,36 @@ class AppLocalizationsVi extends AppLocalizations {
   String get createPlanTitle => 'Tạo kế hoạch';
 
   @override
-  String get createPlanStartTitle => 'Chọn cách bắt đầu tạo kế hoạch';
+  String get createPlanStartTitle => 'Tạo lịch uống thuốc mới';
 
   @override
   String get createPlanStartSubtitle =>
-      'Ứng dụng hỗ trợ trích xuất tên thuốc. Bạn kiểm tra lại danh sách trước khi lưu kế hoạch.';
+      'Chọn cách tạo lịch phù hợp nhất với bạn';
 
   @override
   String get createPlanDisclaimer =>
-      'Lưu ý: Kết quả quét là bước gợi ý ban đầu, không thay thế hoàn toàn việc kiểm tra toa thuốc.';
+      'Lưu ý: Bạn nhớ dò lại tên thuốc cho đúng trước khi lưu.';
 
   @override
-  String get createPlanScanTitle => 'Quét đơn thuốc';
+  String get createPlanScanTitle => 'Chụp ảnh đơn thuốc';
 
   @override
   String get createPlanScanSubtitle =>
-      'Chụp hoặc tải ảnh đơn thuốc,\nứng dụng trích xuất tên thuốc để bạn kiểm tra lại';
+      'Máy tự đọc tên thuốc & liều dùng từ hình chụp';
 
   @override
-  String get createPlanManualTitle => 'Nhập thủ công';
+  String get createPlanManualTitle => 'Tự nhập bằng tay';
 
   @override
   String get createPlanManualSubtitle =>
-      'Tự nhập danh sách thuốc\nkhi không dùng ảnh quét hoặc cần nhập mới hoàn toàn';
+      'Tự gõ tên thuốc và chọn giờ uống theo ý bạn';
 
   @override
-  String get createPlanHistoryTitle => 'Dùng lại từ lịch sử';
+  String get createPlanHistoryTitle => 'Dùng lại đơn cũ';
 
   @override
   String get createPlanHistorySubtitle =>
-      'Dùng lại kết quả đã quét trước đó\nđể tạo kế hoạch mới nhanh hơn';
+      'Mở lại danh sách thuốc bạn đã từng chụp trước đây';
 
   @override
   String get scanCameraTitle => 'Chụp đơn thuốc';

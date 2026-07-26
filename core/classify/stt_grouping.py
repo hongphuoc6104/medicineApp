@@ -213,8 +213,8 @@ def group_by_stt_with_meta(blocks: list) -> tuple[list, dict]:
                     return i
             return len(FALLBACK_BOUNDS)
 
-    stt_re = re.compile(r"^\d+$")
-    anchors = [b for b in blocks if _col_idx(b) == 0 and stt_re.match(b.text.strip())]
+    stt_re = re.compile(r"^(\d+[\.\/\),]?|STT\s*\d+|[①-⑩])$", re.IGNORECASE)
+    anchors = [b for b in blocks if _col_idx(b) <= 1 and stt_re.match(b.text.strip())]
     anchors.sort(key=lambda b: _y_center(b.bbox))
 
     if not anchors:

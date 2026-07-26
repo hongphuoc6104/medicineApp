@@ -30,11 +30,11 @@ MIN_SCORE = 65   # Minimum fuzzy score to accept match
 _NUMBER_PATTERN = r"(?:\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:[.,]\d+)?)"
 _STRENGTH_PATTERN = re.compile(
     rf"(?P<concentration>"
-    rf"(?P<c_value>{_NUMBER_PATTERN})\s*(?P<c_unit>mcg|mg|iu|g)\s*/\s*"
+    rf"(?P<c_value>{_NUMBER_PATTERN})\s*(?P<c_unit>mcg|mg|iu|ui|u|ou|g)\s*/\s*"
     rf"(?:(?P<d_value>{_NUMBER_PATTERN})\s*)?(?P<d_unit>ml|g)\b"
     rf")|"
     rf"(?P<simple>"
-    rf"(?P<s_value>{_NUMBER_PATTERN})\s*(?P<s_unit>mcg|mg|ml|iu|g)\b"
+    rf"(?P<s_value>{_NUMBER_PATTERN})\s*(?P<s_unit>mcg|mg|ml|iu|ui|u|ou|g)\b"
     rf")",
     flags=re.IGNORECASE,
 )
@@ -152,7 +152,8 @@ class DrugLookup:
 
     @staticmethod
     def _normalize_name(text: str) -> str:
-        t = _STRENGTH_PATTERN.sub(" ", str(text or ""))
+        raw_clean = str(text or "").replace("_", " ")
+        t = _STRENGTH_PATTERN.sub(" ", raw_clean)
         t = re.sub(r"^\d{1,3}\s+", "", t)
         t = re.sub(r"\s+\d{1,3}$", "", t)
         t = re.sub(r"[^\wÀ-ỹ]+", " ", t, flags=re.UNICODE)

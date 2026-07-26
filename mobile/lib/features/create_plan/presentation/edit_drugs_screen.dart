@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/network/network_error_mapper.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/step_wizard_progress.dart';
 import '../../lookup/data/drug_interaction_repository.dart';
 import '../data/plan_interaction_checker.dart';
 import '../domain/plan.dart';
@@ -205,23 +206,20 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
 
   Widget _buildInteractionPanel(AppLocalizations l10n) {
     if (_isCheckingInteractions) {
-      return Container(
-        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceSoft,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      return const Padding(
+        padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
+        child: Row(
           children: [
-            Text(
-              'Đang tự động kiểm tra tương tác thuốc...',
-              style: TextStyle(fontWeight: FontWeight.w700),
+            SizedBox(
+              width: 14,
+              height: 14,
+              child: CircularProgressIndicator(strokeWidth: 2),
             ),
-            SizedBox(height: 8),
-            LinearProgressIndicator(minHeight: 3),
+            SizedBox(width: 8),
+            Text(
+              'Đang kiểm tra tương tác thuốc...',
+              style: TextStyle(fontSize: 12, color: AppColors.textMuted),
+            ),
           ],
         ),
       );
@@ -229,131 +227,164 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
 
     if (_interactionError != null) {
       return Container(
-        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: AppColors.error.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColors.error.withValues(alpha: 0.35)),
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.error_outline, color: AppColors.error, size: 18),
+            const Icon(Icons.error_outline, color: AppColors.error, size: 16),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 _interactionError!,
-                style: const TextStyle(color: AppColors.error),
+                style: const TextStyle(color: AppColors.error, fontSize: 12),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             TextButton(
               onPressed: _refreshInteractionSummary,
-              child: Text(l10n.commonRetry),
+              child: Text(l10n.commonRetry, style: const TextStyle(fontSize: 12)),
             ),
           ],
         ),
       );
     }
 
-    if (_interactionSummary.requestedDrugNames.length < 2) {
-      return Container(
-        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceSoft,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: const Text(
-          'Cần ít nhất 2 thuốc để kiểm tra tương tác tự động.',
-          style: TextStyle(color: AppColors.textSecondary),
-        ),
-      );
+    if (!_interactionSummary.hasInteractions ||
+        _interactionSummary.requestedDrugNames.length < 2) {
+      return const SizedBox.shrink();
     }
 
-    if (!_interactionSummary.hasInteractions) {
-      return Container(
-        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.success.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.success.withValues(alpha: 0.4)),
-        ),
-        child: const Row(
-          children: [
-            Icon(Icons.verified_user_outlined, color: AppColors.success),
-            SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                'Chưa ghi nhận tương tác giữa các thuốc đã chọn.',
-                style: TextStyle(
-                  color: AppColors.success,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    final result = _interactionSummary.result;
-    final items = (result?.interactions ?? const []).take(3).toList();
     final severity = _severityLabel(l10n, _interactionSummary.highestSeverity);
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.error.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.error.withValues(alpha: 0.45)),
+        color: AppColors.error.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.warning_amber_rounded,
+          const Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 18),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Phát hiện ${_interactionSummary.totalInteractions} tương tác ($severity)',
+              style: const TextStyle(
                 color: AppColors.error,
-                size: 20,
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'Phát hiện tương tác mức $severity',
-                  style: const TextStyle(
-                    color: AppColors.error,
-                    fontWeight: FontWeight.w800,
-                  ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          InkWell(
+            onTap: () => _showInteractionDetailsSheet(l10n),
+            borderRadius: BorderRadius.circular(6),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+              child: Text(
+                'Chi tiết >',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.error,
                 ),
               ),
-            ],
+            ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            '${_interactionSummary.totalInteractions} cặp tương tác trong danh sách.',
-            style: const TextStyle(color: AppColors.error),
-          ),
-          if (items.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            for (final item in items)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(
-                  '- ${_interactionPairLabel(item)}: ${item.warning.isNotEmpty ? item.warning : _severityLabel(l10n, item.severity)}',
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 12,
-                    height: 1.35,
-                  ),
-                ),
-              ),
-          ],
         ],
+      ),
+    );
+  }
+
+  void _showInteractionDetailsSheet(AppLocalizations l10n) {
+    final result = _interactionSummary.result;
+    final items = result?.interactions ?? const [];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 24),
+                const SizedBox(width: 8),
+                const Text(
+                  'Chi tiết Tương tác thuốc',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const Divider(),
+            const SizedBox(height: 8),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: items.map((item) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceSoft,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _interactionPairLabel(item),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.error,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            item.warning.isNotEmpty
+                                ? item.warning
+                                : _severityLabel(l10n, item.severity),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textPrimary,
+                              height: 1.3,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -399,9 +430,15 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
         title: Text(l10n.editDrugsTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => widget.existingPlan != null
-              ? context.go('/plans/${widget.existingPlan!.id}')
-              : context.go('/create'),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else if (widget.existingPlan != null) {
+              context.go('/plans/${widget.existingPlan!.id}');
+            } else {
+              context.go('/create');
+            }
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -419,6 +456,10 @@ class _EditDrugsScreenState extends ConsumerState<EditDrugsScreen> {
       ),
       body: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 12, 16, 0),
+            child: StepWizardProgress(currentStep: 2),
+          ),
           _buildInteractionPanel(l10n),
           // Drug list
           Expanded(

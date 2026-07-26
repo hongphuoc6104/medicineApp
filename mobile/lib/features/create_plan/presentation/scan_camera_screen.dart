@@ -247,7 +247,13 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen> {
         title: Text(l10n.scanCameraTitle),
         leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: () => context.go('/create'),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/create');
+            }
+          },
         ),
         actions: [
           IconButton(
@@ -305,15 +311,15 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen> {
         icon = Icons.touch_app;
         break;
       case _ScanStage.scanning:
-        cardColor = Colors.orange;
+        cardColor = AppColors.warning;
         icon = Icons.camera_enhance;
         break;
       case _ScanStage.ocrProcessing:
-        cardColor = Colors.purple;
+        cardColor = AppColors.primaryDark;
         icon = Icons.psychology;
         break;
       case _ScanStage.uploading:
-        cardColor = Colors.blue;
+        cardColor = AppColors.info;
         icon = Icons.cloud_upload;
         break;
       case _ScanStage.error:

@@ -4,19 +4,13 @@ import 'package:medicine_app/l10n/app_localizations.dart';
 
 import '../../../core/theme/app_theme.dart';
 
-/// Tab 2: Create Plan — choose between scan and manual.
+/// Tab 2: Create Plan — choose option with clear visual hierarchy and zero fluff.
 class CreatePlanScreen extends StatelessWidget {
   const CreatePlanScreen({super.key});
 
   void _handleBack(BuildContext context) {
-    if (Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
-      return;
-    }
-
-    final location = GoRouterState.of(context).matchedLocation;
-    if (location.startsWith('/plans/')) {
-      context.go('/plans');
+    if (context.canPop()) {
+      context.pop();
       return;
     }
     context.go('/home');
@@ -33,146 +27,283 @@ class CreatePlanScreen extends StatelessWidget {
           onPressed: () => _handleBack(context),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 12),
-            Text(
-              l10n.createPlanStartTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              l10n.createPlanStartSubtitle,
-              style: const TextStyle(color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 12),
-            const _CreatePlanNote(),
-            const SizedBox(height: 20),
-            _OptionCard(
-              icon: Icons.document_scanner_outlined,
-              title: l10n.createPlanScanTitle,
-              subtitle: l10n.createPlanScanSubtitle,
-              color: AppColors.primary,
-              onTap: () => context.go('/create/scan'),
-            ),
-            const SizedBox(height: 16),
-            _OptionCard(
-              icon: Icons.edit_note,
-              title: l10n.createPlanManualTitle,
-              subtitle: l10n.createPlanManualSubtitle,
-              color: AppColors.info,
-              onTap: () => context.go('/create/edit'),
-            ),
-            const SizedBox(height: 16),
-            _OptionCard(
-              icon: Icons.history_toggle_off,
-              title: l10n.createPlanHistoryTitle,
-              subtitle: l10n.createPlanHistorySubtitle,
-              color: AppColors.success,
-              onTap: () => context.go('/create/reuse'),
-            ),
-            const SizedBox(height: 12),
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.createPlanStartTitle,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
+                    ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                l10n.createPlanStartSubtitle,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 14,
+                  height: 1.3,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Hero Primary Action Card (AI Scan)
+              _HeroOptionCard(
+                icon: Icons.center_focus_strong_rounded,
+                badgeText: 'Dễ nhất & Nhanh nhất',
+                title: l10n.createPlanScanTitle,
+                subtitle: l10n.createPlanScanSubtitle,
+                onTap: () => context.push('/create/scan'),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Secondary Options
+              _SecondaryOptionCard(
+                icon: Icons.edit_note_rounded,
+                title: l10n.createPlanManualTitle,
+                subtitle: l10n.createPlanManualSubtitle,
+                onTap: () => context.push('/create/edit'),
+              ),
+
+              const SizedBox(height: 12),
+
+              _SecondaryOptionCard(
+                icon: Icons.history_rounded,
+                title: l10n.createPlanHistoryTitle,
+                subtitle: l10n.createPlanHistorySubtitle,
+                onTap: () => context.push('/create/reuse'),
+              ),
+
+              const SizedBox(height: 24),
+              const _DisclaimerFootnote(),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _CreatePlanNote extends StatelessWidget {
-  const _CreatePlanNote();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceSoft,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: const Text(
-        'Chọn 1 cách bắt đầu. Mọi cách đều đi vào cùng một luồng tạo kế hoạch.',
-        style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
-      ),
-    );
-  }
-}
-
-class _OptionCard extends StatelessWidget {
+class _HeroOptionCard extends StatelessWidget {
   final IconData icon;
+  final String badgeText;
   final String title;
   final String subtitle;
-  final Color color;
   final VoidCallback onTap;
 
-  const _OptionCard({
+  const _HeroOptionCard({
     required this.icon,
+    required this.badgeText,
     required this.title,
     required this.subtitle,
-    required this.color,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.3)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, size: 28, color: color),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Ink(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [AppColors.primaryDark, AppColors.primary],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.28),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.22),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      badgeText,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.textSecondary,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  const Icon(
+                    Icons.arrow_forward_rounded,
+                    color: Colors.white,
+                    size: 22,
                   ),
                 ],
               ),
-            ),
-            Icon(Icons.chevron_right, color: AppColors.textMuted),
-          ],
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(icon, size: 30, color: Colors.white),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.white.withValues(alpha: 0.9),
+                            height: 1.25,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _SecondaryOptionCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  const _SecondaryOptionCard({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceSoft,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, size: 24, color: AppColors.primaryDark),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        color: AppColors.textSecondary,
+                        height: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.textMuted,
+                size: 22,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DisclaimerFootnote extends StatelessWidget {
+  const _DisclaimerFootnote();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Row(
+      children: [
+        const Icon(
+          Icons.shield_outlined,
+          size: 16,
+          color: AppColors.textMuted,
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            l10n.createPlanDisclaimer,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textMuted,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

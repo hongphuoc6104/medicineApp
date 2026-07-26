@@ -91,6 +91,9 @@ class NerExtractor:
         confs = probs.max(dim=-1).values[0]
 
         drug_words = []
+        dosage_words = []
+        qty_words = []
+        usage_words = []
         instruction_words = []
         max_conf = 0.0
 
@@ -103,11 +106,25 @@ class NerExtractor:
                 if label in ("B-DRUG", "I-DRUG"):
                     drug_words.append(raw_word)
                     max_conf = max(max_conf, confs[idx].item())
+                elif label in ("B-DOSAGE", "I-DOSAGE"):
+                    dosage_words.append(raw_word)
+                elif label in ("B-QTY", "I-QTY"):
+                    qty_words.append(raw_word)
+                elif label in ("B-USAGE", "I-USAGE"):
+                    usage_words.append(raw_word)
                 else:
                     instruction_words.append(raw_word)
 
         drug_name = " ".join(drug_words).strip()
-        instruction = " ".join(instruction_words).strip()
+        dosage = " ".join(dosage_words).strip()
+        qty_extracted = " ".join(qty_words).strip()
+        usage_extracted = " ".join(usage_words).strip()
+        
+        # Combine extracted dosage into drug_name if not already present
+        if dosage and dosage not in drug_name:
+            drug_name = f"{drug_name} {dosage}".strip()
+            
+        instruction = usage_extracted or " ".join(instruction_words).strip()
         
         return drug_name, instruction, max_conf
 

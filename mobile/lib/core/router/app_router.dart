@@ -158,6 +158,26 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
+      GoRoute(
+        path: '/lookup',
+        builder: (context, state) => const LookupScreen(),
+      ),
+      GoRoute(
+        path: '/lookup/ingredients',
+        builder: (context, state) => const ActiveIngredientCatalogScreen(),
+      ),
+      GoRoute(
+        path: '/lookup/ingredients/:name',
+        builder: (context, state) => ActiveIngredientInteractionsScreen(
+          ingredientName: Uri.decodeComponent(
+            state.pathParameters['name'] ?? '',
+          ),
+        ),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
 
       // ── Main Shell (Bottom Nav — 3 tabs) ──
       ShellRoute(
@@ -174,10 +194,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                 const NoTransitionPage(child: PlanListScreen()),
           ),
           GoRoute(
-            path: '/plans/create',
-            builder: (context, state) => const CreatePlanScreen(),
-          ),
-          GoRoute(
             path: '/plans/:id',
             builder: (context, state) =>
                 PlanDetailScreen(planId: state.pathParameters['id'] ?? ''),
@@ -188,29 +204,8 @@ final routerProvider = Provider<GoRouter>((ref) {
                 const NoTransitionPage(child: HistoryScreen()),
           ),
           GoRoute(
-            path: '/lookup',
-            pageBuilder: (context, state) =>
-                const NoTransitionPage(child: LookupScreen()),
-          ),
-          GoRoute(
-            path: '/lookup/ingredients',
-            builder: (context, state) => const ActiveIngredientCatalogScreen(),
-          ),
-          GoRoute(
-            path: '/lookup/ingredients/:name',
-            builder: (context, state) => ActiveIngredientInteractionsScreen(
-              ingredientName: Uri.decodeComponent(
-                state.pathParameters['name'] ?? '',
-              ),
-            ),
-          ),
-          GoRoute(
             path: '/history/scan/:id',
             redirect: (context, state) => '/history',
-          ),
-          GoRoute(
-            path: '/settings',
-            builder: (context, state) => const SettingsScreen(),
           ),
         ],
       ),

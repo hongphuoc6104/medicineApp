@@ -4,31 +4,70 @@ import 'package:google_fonts/google_fonts.dart';
 class AppColors {
   AppColors._();
 
+  // Primary Color (MÀU CHỦ ĐẠO GIỮ NGUYÊN)
   static const Color primary = Color(0xFF43C7C8);
-  static const Color primaryDark = Color(0xFF22AEB0);
-  static const Color primaryLight = Color(0xFFA7F1EE);
-  static const Color accent = Color(0xFF7ED8DF);
+  static const Color primaryDark = Color(0xFF1B8B8D);
+  static const Color primaryLight = Color(0xFFD3F6F5);
+  static const Color accent = Color(0xFF6BE5E6);
 
-  static const Color background = Color(0xFFF7FBFC);
+  // Background & Surfaces (Soft Mint Cyan Slate Palette)
+  static const Color background = Color(0xFFF3FAFA);
   static const Color surface = Colors.white;
-  static const Color surfaceHigh = Color(0xFFE6F0F1);
-  static const Color surfaceSoft = Color(0xFFF1F8F8);
+  static const Color surfaceHigh = Color(0xFFDDF0F0);
+  static const Color surfaceSoft = Color(0xFFEEF8F8);
   static const Color card = Colors.white;
-  static const Color border = Color(0xFFD6E7E8);
+  static const Color border = Color(0xFFCFE8E8);
 
-  static const Color textPrimary = Color(0xFF17373A);
-  static const Color textSecondary = Color(0xFF5A7B80);
-  static const Color textMuted = Color(0xFF8AA6AA);
+  // Typography (Slate Teal Harmonized Text Palette)
+  static const Color textPrimary = Color(0xFF0F2B2D);
+  static const Color textSecondary = Color(0xFF3B686A);
+  static const Color textMuted = Color(0xFF6F999B);
 
-  static const Color success = Color(0xFF29B37E);
-  static const Color warning = Color(0xFFF3B54A);
-  static const Color error = Color(0xFFE86161);
-  static const Color info = Color(0xFF53A7E8);
+  // Health Status & Semantics (Chuẩn y tế: Phân biệt rõ ràng Trạng thái & Mức độ khẩn cấp)
+  static const Color success = Color(0xFF10B981); // Emerald Green (Đã uống / Hoàn thành)
+  static const Color warning = Color(0xFFF59E0B); // Amber Gold (Chú ý / Bỏ qua)
+  static const Color error = Color(0xFFEF4444);   // Rose Red (Bỏ lỡ / Nguy hiểm / Lỗi)
+  static const Color info = Color(0xFF3B82F6);    // Royal Blue (Thông tin hệ thống)
 
   static const Color taken = success;
   static const Color missed = error;
   static const Color skipped = warning;
-  static const Color infoCard = Color(0xFFFFF9D8);
+  static const Color infoCard = Color(0xFFEFF6FF);
+
+  // Drug Interaction Severity Levels (Các cấp độ tương tác thuốc chuẩn dải màu Teal #43C7C8)
+  static const Color severityCriticalBg = Color(0xFFD2EFEB);
+  static const Color severityCriticalFg = Color(0xFF094345);
+
+  static const Color severityHighBg = Color(0xFFDCF4F2);
+  static const Color severityHighFg = Color(0xFF136E70);
+
+  static const Color severityModerateBg = Color(0xFFE5FAF8);
+  static const Color severityModerateFg = Color(0xFF1F989A);
+
+  static const Color severityLowBg = Color(0xFFF0FCFB);
+  static const Color severityLowFg = Color(0xFF43C7C8);
+
+  static const Color severityInfoBg = Color(0xFFF4FCFC);
+  static const Color severityInfoFg = Color(0xFF2BB9BB);
+}
+
+class AppSpacing {
+  AppSpacing._();
+
+  static const double xs = 4.0;
+  static const double sm = 8.0;
+  static const double md = 12.0;
+  static const double lg = 16.0;
+  static const double xl = 24.0;
+  static const double xxl = 32.0;
+
+  static const double radiusSm = 10.0;
+  static const double radiusMd = 16.0;
+  static const double radiusLg = 20.0;
+  static const double radiusXl = 24.0;
+
+  static const EdgeInsets pagePadding = EdgeInsets.symmetric(horizontal: lg, vertical: md);
+  static const EdgeInsets cardPadding = EdgeInsets.all(lg);
 }
 
 class AppTheme {

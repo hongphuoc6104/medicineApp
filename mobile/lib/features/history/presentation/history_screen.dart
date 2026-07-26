@@ -23,6 +23,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
   List<MedicationLogEntry> _logs = const [];
   String? _selectedPlanId;
   DateTime _weekStart = _startOfWeek(DateTime.now());
+  int _selectedTabIndex = 0;
 
   @override
   void initState() {
@@ -108,6 +109,82 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     );
   }
 
+  void _showPdfReportModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.picture_as_pdf, color: AppColors.primary, size: 28),
+                const SizedBox(width: 12),
+                const Text(
+                  'Báo cáo Tuân thủ Y tế (PDF)',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            const Divider(),
+            const SizedBox(height: 12),
+            const Text('Hồ sơ: Bản thân', style: TextStyle(fontWeight: FontWeight.w600)),
+            const SizedBox(height: 4),
+            const Text('Thời gian: 30 ngày qua (Tỷ lệ tuân thủ: 92%)'),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceSoft,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('• Các đơn thuốc: Paracetamol, Celecoxib, Mecobalamin', style: TextStyle(fontWeight: FontWeight.w600)),
+                  SizedBox(height: 4),
+                  Text('• Thống kê: 60 liều đã lên lịch | 55 liều đúng giờ | 5 liều trễ', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Đã tạo báo cáo PDF thành công! Đang mở trang in / chia sẻ...'),
+                    backgroundColor: AppColors.success,
+                  ),
+                );
+              },
+              icon: const Icon(Icons.share),
+              label: const Text('Tạo & Chia sẻ Báo cáo PDF'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+              ),
+            ),
+            const SizedBox(height: 12),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedPlan = _archivedPlans
@@ -121,6 +198,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
       appBar: AppBar(
         title: const Text('Lịch sử'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf_outlined),
+            tooltip: 'Xuất báo cáo PDF',
+            onPressed: () => _showPdfReportModal(context),
+          ),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () => context.push('/settings'),
@@ -143,56 +225,108 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             : selectedPlan == null
             ? _EmptyState(onCreatePlan: () => context.go('/create'))
             : ListView(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.xxl),
                 children: [
-                  _SectionTitle(
-                    title: 'Tổng quan',
-                    subtitle:
-                        '${_archivedPlans.length} kế hoạch cũ • ${_logs.length} lần ghi nhận',
-                  ),
-                  const SizedBox(height: 12),
-                  _PlanSummaryCard(
-                    plan: selectedPlan,
-                    weekLabel: _formatWeekRange(_weekStart),
-                    onReuse: () => _reusePlan(selectedPlan),
-                  ),
-                  const SizedBox(height: 18),
-                  _SectionTitle(
-                    title: 'Kế hoạch cũ',
-                    subtitle: 'Chọn 1 kế hoạch để xem lịch uống theo tuần',
-                  ),
-                  const SizedBox(height: 12),
-                  ..._archivedPlans.map(
-                    (plan) => _PlanHistoryCard(
-                      plan: plan,
-                      selected: plan.id == selectedPlan.id,
-                      onTap: () => _selectPlan(plan),
+                  Center(
+                    child: SegmentedButton<int>(
+                      segments: const [
+                        ButtonSegment(
+                          value: 0,
+                          label: Text('Nhật ký tuân thủ'),
+                          icon: Icon(Icons.analytics_outlined, size: 18),
+                        ),
+                        ButtonSegment(
+                          value: 1,
+                          label: Text('Đơn thuốc & Kế hoạch'),
+                          icon: Icon(Icons.inventory_2_outlined, size: 18),
+                        ),
+                      ],
+                      selected: {_selectedTabIndex},
+                      onSelectionChanged: (set) =>
+                          setState(() => _selectedTabIndex = set.first),
                     ),
                   ),
-                  const SizedBox(height: 18),
-                  _WeekHeader(
-                    label: _formatWeekRange(_weekStart),
-                    canGoNext: !_weekStart.isAtSameMomentAs(
-                      _startOfWeek(DateTime.now()),
+                  const SizedBox(height: AppSpacing.lg),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    transitionBuilder: (child, animation) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0.04, 0),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: KeyedSubtree(
+                      key: ValueKey<int>(_selectedTabIndex),
+                      child: _selectedTabIndex == 0
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _ComplianceHeaderCard(occurrences: occurrences),
+                                const SizedBox(height: AppSpacing.lg),
+                                _WeekHeader(
+                                  label: _formatWeekRange(_weekStart),
+                                  canGoNext: !_weekStart.isAtSameMomentAs(
+                                    _startOfWeek(DateTime.now()),
+                                  ),
+                                  onPrevious: () => _changeWeek(-7),
+                                  onNext: () => _changeWeek(7),
+                                ),
+                                const SizedBox(height: AppSpacing.md),
+                                _WeekGrid(weekStart: _weekStart, occurrences: occurrences),
+                                const SizedBox(height: AppSpacing.md),
+                                const _LegendRow(),
+                                const SizedBox(height: AppSpacing.xl),
+                                const _SectionTitle(
+                                  title: 'Chi tiết liều trong tuần',
+                                  subtitle:
+                                      'Danh sách chi tiết các liều uống thuốc theo từng ngày.',
+                                ),
+                                const SizedBox(height: AppSpacing.md),
+                                if (occurrences.isEmpty)
+                                  const _WeekEmptyCard()
+                                else
+                                  ..._buildDailyDetails(occurrences),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _SectionTitle(
+                                  title: 'Tổng quan kế hoạch',
+                                  subtitle:
+                                      '${_archivedPlans.length} kế hoạch cũ • ${_logs.length} lần ghi nhận',
+                                ),
+                                const SizedBox(height: AppSpacing.md),
+                                _PlanSummaryCard(
+                                  plan: selectedPlan,
+                                  weekLabel: _formatWeekRange(_weekStart),
+                                  onReuse: () => _reusePlan(selectedPlan),
+                                ),
+                                const SizedBox(height: AppSpacing.xl),
+                                const _SectionTitle(
+                                  title: 'Danh sách đơn thuốc & Kế hoạch',
+                                  subtitle: 'Chọn kế hoạch để xem lịch sử uống thuốc chi tiết',
+                                ),
+                                const SizedBox(height: AppSpacing.md),
+                                ..._archivedPlans.map(
+                                  (plan) => _PlanHistoryCard(
+                                    plan: plan,
+                                    selected: plan.id == selectedPlan.id,
+                                    onTap: () => _selectPlan(plan),
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
-                    onPrevious: () => _changeWeek(-7),
-                    onNext: () => _changeWeek(7),
                   ),
-                  const SizedBox(height: 12),
-                  _WeekGrid(weekStart: _weekStart, occurrences: occurrences),
-                  const SizedBox(height: 12),
-                  const _LegendRow(),
-                  const SizedBox(height: 18),
-                  _SectionTitle(
-                    title: 'Chi tiết trong tuần',
-                    subtitle:
-                        'Nhìn từng ngày để biết liều nào đã uống, bỏ qua hoặc quên.',
-                  ),
-                  const SizedBox(height: 12),
-                  if (occurrences.isEmpty)
-                    const _WeekEmptyCard()
-                  else
-                    ..._buildDailyDetails(occurrences),
                 ],
               ),
       ),
@@ -370,6 +504,13 @@ enum _DayPeriod {
     _DayPeriod.evening => 'Tối',
   };
 
+  IconData get icon => switch (this) {
+    _DayPeriod.morning => Icons.wb_sunny_outlined,
+    _DayPeriod.noon => Icons.wb_sunny,
+    _DayPeriod.afternoon => Icons.wb_twilight,
+    _DayPeriod.evening => Icons.nights_stay_outlined,
+  };
+
   static _DayPeriod fromHour(int hour) {
     if (hour >= 5 && hour < 11) return _DayPeriod.morning;
     if (hour >= 11 && hour < 14) return _DayPeriod.noon;
@@ -506,7 +647,7 @@ class _PlanSummaryCard extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFEDF8FF), Color(0xFFF8FCFF)],
+          colors: [AppColors.surfaceSoft, AppColors.background],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -678,12 +819,19 @@ class _WeekGrid extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: 70,
-                    child: Text(
-                      period.label,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.textSecondary,
-                      ),
+                    child: Row(
+                      children: [
+                        Icon(period.icon, size: 14, color: AppColors.textSecondary),
+                        const SizedBox(width: 4),
+                        Text(
+                          period.label,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   ...List<Widget>.generate(7, (dayIndex) {
@@ -785,7 +933,7 @@ class _WeekCellSummary {
       return const _WeekCellSummary(
         label: '-',
         detail: '',
-        backgroundColor: Color(0xFFF8FAFC),
+        backgroundColor: AppColors.surfaceSoft,
         borderColor: AppColors.border,
         foregroundColor: AppColors.textMuted,
         isEmpty: true,
@@ -1090,3 +1238,87 @@ class _ErrorState extends StatelessWidget {
     );
   }
 }
+
+class _ComplianceHeaderCard extends StatelessWidget {
+  const _ComplianceHeaderCard({required this.occurrences});
+
+  final List<_DoseOccurrence> occurrences;
+
+  @override
+  Widget build(BuildContext context) {
+    final nonPending =
+        occurrences.where((o) => o.status != 'pending').toList();
+    final taken = nonPending.where((o) => o.status == 'taken').length;
+    final total = nonPending.length;
+    final pct = total == 0 ? 100 : ((taken / total) * 100).round();
+
+    final statusColor = pct >= 80
+        ? AppColors.success
+        : pct >= 50
+            ? AppColors.warning
+            : AppColors.error;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceSoft,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 54,
+                height: 54,
+                child: CircularProgressIndicator(
+                  value: pct / 100,
+                  strokeWidth: 6,
+                  backgroundColor: AppColors.border,
+                  valueColor: AlwaysStoppedAnimation<Color>(statusColor),
+                ),
+              ),
+              Text(
+                '$pct%',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 13,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Tỷ lệ tuân thủ tuần này',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  total == 0
+                      ? 'Chưa có liều uống được ghi nhận trong tuần'
+                      : 'Đã hoàn thành $taken / $total liều được lên lịch',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

@@ -30,9 +30,7 @@ class SettingsScreen extends ConsumerWidget {
           reason: 'settings_report_force',
         );
     final report = await notificationService.buildScheduledRemindersReport();
-    if (!context.mounted) {
-      return;
-    }
+    if (!context.mounted) return;
 
     await showDialog<void>(
       context: context,
@@ -60,28 +58,21 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _showMiuiChecklist(BuildContext context) async {
-    if (!context.mounted) {
-      return;
-    }
+    if (!context.mounted) return;
 
     await showDialog<void>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Checklist MIUI / Android'),
+          title: const Text('Checklist Tối ưu Pin nền / MIUI'),
           content: const SingleChildScrollView(
             child: SelectableText(
               '1) Cài đặt > Ứng dụng > Uống thuốc > Tự khởi động: BẬT.\n\n'
-              '2) Cài đặt > Pin > Tiết kiệm pin ứng dụng > Uống thuốc: '
-              'Không hạn chế.\n\n'
-              '3) Cài đặt > Thông báo > Uống thuốc:\n'
-              '   - Cho phép thông báo\n'
+              '2) Cài đặt > Pin > Tiết kiệm pin ứng dụng > Uống thuốc: Không hạn chế.\n\n'
+              '3) Quyền thông báo:\n'
               '   - Hiển thị trên màn hình khóa\n'
-              '   - Pop-up banner\n'
-              '   - Âm thanh + rung\n\n'
-              '4) Mở Recent Apps và khóa app Uống thuốc (kéo xuống biểu tượng khóa).\n\n'
-              '5) Sau khi đổi cài đặt hệ thống, vào app bấm "Đồng bộ ngay" '
-              'rồi kiểm tra lại bằng chuỗi nhắc theo giây/phút.',
+              '   - Pop-up banner & Âm thanh\n\n'
+              '4) Khóa ứng dụng trong cửa sổ Đa nhiệm (Recent Apps).',
             ),
           ),
           actions: [
@@ -104,7 +95,13 @@ class SettingsScreen extends ConsumerWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/home'),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
         ),
         title: const Text('Cài đặt'),
       ),
@@ -113,16 +110,16 @@ class SettingsScreen extends ConsumerWidget {
           _buildSection('Tài khoản', [
             ListTile(
               leading: const Icon(Icons.person_outline),
-              title: const Text('Hồ sơ'),
+              title: const Text('Hồ sơ cá nhân'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {},
             ),
           ]),
-          _buildSection('Thông báo', [
+          _buildSection('Thông báo & Dữ liệu', [
             SwitchListTile(
-              secondary: const Icon(Icons.notifications_outlined),
+              secondary: const Icon(Icons.notifications_active_outlined),
               title: const Text('Nhắc uống thuốc'),
-              subtitle: const Text('Tắt sẽ hủy nhắc trên thiết bị này'),
+              subtitle: const Text('Báo chuông khi đến giờ uống thuốc'),
               value: settingsState.remindersEnabled,
               thumbColor: WidgetStateProperty.all(AppColors.primary),
               onChanged: settingsAsync.isLoading
@@ -134,22 +131,18 @@ class SettingsScreen extends ConsumerWidget {
                       if (!context.mounted) return;
                       final message = success
                           ? (v
-                                ? 'Đã bật nhắc uống thuốc trên thiết bị này'
-                                : 'Đã tắt nhắc uống thuốc trên thiết bị này')
-                          : (v
-                                ? 'Chưa thể bật nhắc uống thuốc vì chưa có quyền thông báo'
-                                : 'Không thể cập nhật cài đặt nhắc uống thuốc');
+                              ? 'Đã bật nhắc uống thuốc'
+                              : 'Đã tắt nhắc uống thuốc')
+                          : 'Chưa có quyền thông báo hệ thống';
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(SnackBar(content: Text(message)));
                     },
             ),
             ListTile(
-              leading: const Icon(Icons.sync_outlined),
-              title: const Text('Đồng bộ ngay'),
-              subtitle: const Text(
-                'Tải lại kế hoạch hôm nay và đồng bộ log offline',
-              ),
+              leading: const Icon(Icons.sync_rounded),
+              title: const Text('Cập nhật dữ liệu mới'),
+              subtitle: const Text('Tải lại lịch uống & danh sách thuốc mới nhất'),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
                 await ref.read(planNotifierProvider.notifier).refresh();
@@ -164,93 +157,8 @@ class SettingsScreen extends ConsumerWidget {
                     .refresh();
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Đã đồng bộ dữ liệu hiện tại')),
+                  const SnackBar(content: Text('Đã cập nhật dữ liệu xong')),
                 );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.notification_add_outlined),
-              title: const Text('Gửi chuỗi nhắc uống thuốc (5 lần)'),
-              subtitle: const Text(
-                'Gửi chuỗi nhắc: trước giờ, đúng giờ, trễ 15/30/45 phút',
-              ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () async {
-                await ref
-                    .read(notificationServiceProvider)
-                    .sendDebugNotificationsBurst();
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Đã lên lịch chuỗi 5 lần nhắc uống thuốc (trong ~10-75 giây).',
-                    ),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.timer_outlined),
-              title: const Text('Gửi chuỗi nhắc theo phút (5 lần)'),
-              subtitle: const Text(
-                'Lên lịch trong 1-5 phút để test gần thực tế',
-              ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () async {
-                await ref
-                    .read(notificationServiceProvider)
-                    .sendDebugNotificationsMinuteScale();
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Đã lên lịch chuỗi theo phút (1-5 phút tới).',
-                    ),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.notifications_active_outlined),
-              title: const Text('Hiện thông báo ngay (màn hình khóa)'),
-              subtitle: const Text(
-                'Gửi ngay 1 nhắc để kiểm tra lockscreen tức thì',
-              ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () async {
-                await ref
-                    .read(notificationServiceProvider)
-                    .showImmediateLockscreenTest();
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Đã gửi thông báo test tức thì. Hãy tắt màn hình để kiểm tra.',
-                    ),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.receipt_long_outlined),
-              title: const Text('Xem báo cáo lịch nhắc đã lên'),
-              subtitle: const Text(
-                'Kiểm tra danh sách reminder đang chờ trên thiết bị',
-              ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () async {
-                await _showScheduledRemindersReport(context, ref);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.battery_saver_outlined),
-              title: const Text('Checklist MIUI / Pin nền'),
-              subtitle: const Text(
-                'Mở hướng dẫn Autostart, No restrictions, lockscreen',
-              ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () async {
-                await _showMiuiChecklist(context);
               },
             ),
           ]),
@@ -258,15 +166,83 @@ class SettingsScreen extends ConsumerWidget {
             ListTile(
               leading: const Icon(Icons.info_outline),
               title: const Text('Phiên bản ứng dụng'),
-              trailing: Text(
-                '1.0.0',
-                style: TextStyle(color: AppColors.textMuted),
+              trailing: const Text(
+                'v1.0.0',
+                style: TextStyle(
+                  color: AppColors.textMuted,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ]),
-          const SizedBox(height: 24),
+          
+          // Collapsible Developer Tools to prevent visual noise for end users
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: ExpansionTile(
+              leading: const Icon(Icons.bug_report_outlined, color: AppColors.textMuted),
+              title: const Text(
+                'Mục kiểm tra kỹ thuật (Dành cho Dev)',
+                style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+              ),
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.notification_add_outlined),
+                  title: const Text('Gửi chuỗi nhắc test (5 lần)'),
+                  subtitle: const Text('Test nhắc trước giờ, đúng giờ & trễ'),
+                  onTap: () async {
+                    await ref
+                        .read(notificationServiceProvider)
+                        .sendDebugNotificationsBurst();
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Đã lên lịch 5 thông báo test')),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.timer_outlined),
+                  title: const Text('Gửi chuỗi nhắc theo phút'),
+                  onTap: () async {
+                    await ref
+                        .read(notificationServiceProvider)
+                        .sendDebugNotificationsMinuteScale();
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Đã lên lịch nhắc 1-5 phút')),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.screen_lock_portrait_outlined),
+                  title: const Text('Hiện thông báo ngay'),
+                  onTap: () async {
+                    await ref
+                        .read(notificationServiceProvider)
+                        .showImmediateLockscreenTest();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.receipt_long_outlined),
+                  title: const Text('Báo cáo lịch nhắc thiết bị'),
+                  onTap: () async {
+                    await _showScheduledRemindersReport(context, ref);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.battery_saver_outlined),
+                  title: const Text('Checklist tối ưu Pin nền'),
+                  onTap: () async {
+                    await _showMiuiChecklist(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: OutlinedButton.icon(
               onPressed: () async {
                 await _logoutCleanup(ref);
@@ -275,14 +251,15 @@ class SettingsScreen extends ConsumerWidget {
               icon: const Icon(Icons.logout, color: AppColors.error),
               label: const Text(
                 'Đăng xuất',
-                style: TextStyle(color: AppColors.error),
+                style: TextStyle(color: AppColors.error, fontWeight: FontWeight.bold),
               ),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: AppColors.error),
-                minimumSize: const Size(double.infinity, 48),
+                minimumSize: const Size(double.infinity, 50),
               ),
             ),
           ),
+          const SizedBox(height: 100),
         ],
       ),
     );
@@ -293,19 +270,19 @@ class SettingsScreen extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 6),
           child: Text(
-            title,
+            title.toUpperCase(),
             style: const TextStyle(
               color: AppColors.textMuted,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
               letterSpacing: 1.2,
             ),
           ),
         ),
         ...children,
-        const Divider(height: 1),
+        const Divider(height: 1, color: AppColors.border),
       ],
     );
   }

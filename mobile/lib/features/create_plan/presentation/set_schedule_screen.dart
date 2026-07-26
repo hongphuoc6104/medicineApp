@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/widgets/step_wizard_progress.dart';
 import '../../home/data/plan_notifier.dart';
 import '../../settings/data/settings_repository.dart';
 import '../data/plan_repository.dart';
@@ -77,19 +78,53 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       final firstDays = widget.drugs.isEmpty ? 7 : widget.drugs.first.totalDays;
       _totalDays = firstDays;
       _endDate = _startDate.add(Duration(days: _totalDays - 1));
+
+      // Build initial slots from default slot times + any parsed drug times
+      final allTimesSet = <String>{..._defaultSlotTimes};
+      for (final drug in widget.drugs) {
+        if (drug.doseSchedule.isNotEmpty) {
+          for (final ds in drug.doseSchedule) {
+            allTimesSet.add(ds.time);
+          }
+        } else if (drug.times.isNotEmpty) {
+          allTimesSet.addAll(drug.times);
+        }
+      }
+
+      final sortedTimes = allTimesSet.toList()..sort();
       _slots
         ..clear()
-        ..addAll(_defaultSlotTimes.map((time) => _TimeSlot(time: time)));
-      _drugSlotIndices = List<Set<int>>.generate(
-        widget.drugs.length,
-        (_) => _slots.isEmpty ? <int>{} : <int>{0},
-      );
-      _dosePillsByDrugSlot = List<Map<int, int>>.generate(
-        widget.drugs.length,
-        (index) => _slots.isEmpty
-            ? <int, int>{}
-            : <int, int>{0: widget.drugs[index].pillsPerDose},
-      );
+        ..addAll(sortedTimes.map((time) => _TimeSlot(time: time)));
+
+      _drugSlotIndices = List<Set<int>>.generate(widget.drugs.length, (_) => <int>{});
+      _dosePillsByDrugSlot = List<Map<int, int>>.generate(widget.drugs.length, (_) => <int, int>{});
+
+      for (int i = 0; i < widget.drugs.length; i++) {
+        final drug = widget.drugs[i];
+        if (drug.doseSchedule.isNotEmpty) {
+          for (final ds in drug.doseSchedule) {
+            final slotIdx = _slots.indexWhere((s) => s.time == ds.time);
+            if (slotIdx != -1) {
+              _drugSlotIndices[i].add(slotIdx);
+              _dosePillsByDrugSlot[i][slotIdx] = ds.pills;
+            }
+          }
+        } else if (drug.times.isNotEmpty) {
+          for (final t in drug.times) {
+            final slotIdx = _slots.indexWhere((s) => s.time == t);
+            if (slotIdx != -1) {
+              _drugSlotIndices[i].add(slotIdx);
+              _dosePillsByDrugSlot[i][slotIdx] = drug.pillsPerDose;
+            }
+          }
+        }
+
+        // Fallback if no slots matched for this drug
+        if (_drugSlotIndices[i].isEmpty && _slots.isNotEmpty) {
+          _drugSlotIndices[i].add(0);
+          _dosePillsByDrugSlot[i][0] = drug.pillsPerDose;
+        }
+      }
       return;
     }
 
@@ -461,7 +496,11 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
           backgroundColor: AppColors.success,
         ),
       );
-      context.go('/home');
+      if (widget.existingPlan != null) {
+        context.go('/plans/${widget.existingPlan!.id}');
+      } else {
+        context.go('/plans');
+      }
     } on DioException catch (e) {
       if (!mounted) return;
       final l10nInner = AppLocalizations.of(context);
@@ -513,6 +552,8 @@ class _SetScheduleScreenState extends ConsumerState<SetScheduleScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
         children: [
+          const StepWizardProgress(currentStep: 3),
+          const SizedBox(height: 12),
           // ── Header summary ──
           _SectionCard(
             child: Column(

@@ -937,55 +937,55 @@ abstract class AppLocalizations {
   /// No description provided for @createPlanStartTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Chọn cách bắt đầu tạo kế hoạch'**
+  /// **'Tạo lịch uống thuốc mới'**
   String get createPlanStartTitle;
 
   /// No description provided for @createPlanStartSubtitle.
   ///
   /// In vi, this message translates to:
-  /// **'Ứng dụng hỗ trợ trích xuất tên thuốc. Bạn kiểm tra lại danh sách trước khi lưu kế hoạch.'**
+  /// **'Chọn cách tạo lịch phù hợp nhất với bạn'**
   String get createPlanStartSubtitle;
 
   /// No description provided for @createPlanDisclaimer.
   ///
   /// In vi, this message translates to:
-  /// **'Lưu ý: Kết quả quét là bước gợi ý ban đầu, không thay thế hoàn toàn việc kiểm tra toa thuốc.'**
+  /// **'Lưu ý: Bạn nhớ dò lại tên thuốc cho đúng trước khi lưu.'**
   String get createPlanDisclaimer;
 
   /// No description provided for @createPlanScanTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Quét đơn thuốc'**
+  /// **'Chụp ảnh đơn thuốc'**
   String get createPlanScanTitle;
 
   /// No description provided for @createPlanScanSubtitle.
   ///
   /// In vi, this message translates to:
-  /// **'Chụp hoặc tải ảnh đơn thuốc,\nứng dụng trích xuất tên thuốc để bạn kiểm tra lại'**
+  /// **'Máy tự đọc tên thuốc & liều dùng từ hình chụp'**
   String get createPlanScanSubtitle;
 
   /// No description provided for @createPlanManualTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Nhập thủ công'**
+  /// **'Tự nhập bằng tay'**
   String get createPlanManualTitle;
 
   /// No description provided for @createPlanManualSubtitle.
   ///
   /// In vi, this message translates to:
-  /// **'Tự nhập danh sách thuốc\nkhi không dùng ảnh quét hoặc cần nhập mới hoàn toàn'**
+  /// **'Tự gõ tên thuốc và chọn giờ uống theo ý bạn'**
   String get createPlanManualSubtitle;
 
   /// No description provided for @createPlanHistoryTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Dùng lại từ lịch sử'**
+  /// **'Dùng lại đơn cũ'**
   String get createPlanHistoryTitle;
 
   /// No description provided for @createPlanHistorySubtitle.
   ///
   /// In vi, this message translates to:
-  /// **'Dùng lại kết quả đã quét trước đó\nđể tạo kế hoạch mới nhanh hơn'**
+  /// **'Mở lại danh sách thuốc bạn đã từng chụp trước đây'**
   String get createPlanHistorySubtitle;
 
   /// AppBar / top-bar title on scan camera screen

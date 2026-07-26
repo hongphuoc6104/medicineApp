@@ -165,13 +165,9 @@ void main() {
 
     expect(find.text(expectedDate), findsOneWidget);
     expect(find.text('Hôm nay không có liều uống nào.'), findsOneWidget);
-    expect(find.text('Quét đơn'), findsOneWidget);
+    expect(find.text('Quét đơn'), findsWidgets);
     expect(find.text('Tạo kế hoạch'), findsOneWidget);
     expect(find.text('Xem kế hoạch'), findsOneWidget);
-
-    final planTitle = tester.widget<Text>(find.text(plan.title).first);
-    expect(planTitle.maxLines, 2);
-    expect(planTitle.overflow, TextOverflow.ellipsis);
 
     expect(tester.takeException(), isNull);
   });
@@ -180,29 +176,31 @@ void main() {
     tester,
   ) async {
     final plan = _buildPlan();
+    final schedule = _buildDoseSchedule();
 
     await tester.pumpWidget(
       _buildHomeApp(
         plansState: PlansState(plans: [plan], loadedAt: DateTime.now()),
-        schedule: _buildDoseSchedule(),
+        schedule: schedule,
         size: const Size(320, 844),
       ),
     );
     await tester.pumpAndSettle();
 
-    final planTitle = tester.widget<Text>(find.text(plan.title).first);
-    expect(planTitle.maxLines, 2);
-    expect(planTitle.overflow, TextOverflow.ellipsis);
+    final doseTitle = tester.widget<Text>(
+      find.text(schedule.doses.first.primaryTitle).first,
+    );
+    expect(doseTitle.maxLines, 2);
+    expect(doseTitle.overflow, TextOverflow.ellipsis);
 
     const summaryText = 'Aspirin Forte, Cetirizine và 1 thuốc khác • 6 viên';
     final summary = tester.widget<Text>(find.text(summaryText).first);
     expect(summary.maxLines, 2);
     expect(summary.overflow, TextOverflow.ellipsis);
 
-    final gridView = tester.widget<GridView>(find.byType(GridView));
-    final delegate =
-        gridView.gridDelegate as SliverGridDelegateWithFixedCrossAxisCount;
-    expect(delegate.crossAxisCount, 1);
+    expect(find.text('Quét đơn'), findsWidgets);
+    expect(find.text('Nhập tay'), findsWidgets);
+    expect(find.text('Tra cứu'), findsWidgets);
 
     expect(tester.takeException(), isNull);
   });

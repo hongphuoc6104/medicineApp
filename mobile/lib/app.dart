@@ -136,15 +136,15 @@ class _NotificationActionBridgeState
       final (message, backgroundColor) = switch (result) {
         MarkDoseResult.synced => (
           'Đã ghi nhận uống thuốc: ${event.title}',
-          Colors.green,
+          AppColors.success,
         ),
         MarkDoseResult.queuedOffline => (
           'Đã lưu tạm offline: ${event.title}',
-          Colors.orange,
+          AppColors.warning,
         ),
         MarkDoseResult.failed => (
           'Không ghi nhận được liều uống từ thông báo.',
-          Colors.red,
+          AppColors.error,
         ),
       };
 

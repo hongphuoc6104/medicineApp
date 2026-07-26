@@ -381,17 +381,17 @@ class _SeverityBadge extends StatelessWidget {
 (Color, Color) _severityPalette(String severity) {
   switch (severity) {
     case 'contraindicated':
-      return (const Color(0xFFFDE4E4), const Color(0xFFB40000));
+      return (AppColors.severityCriticalBg, AppColors.severityCriticalFg);
     case 'major':
-      return (const Color(0xFFFFEBD6), const Color(0xFFB25500));
+      return (AppColors.severityHighBg, AppColors.severityHighFg);
     case 'moderate':
-      return (const Color(0xFFFFF4CC), const Color(0xFF8B6A00));
+      return (AppColors.severityModerateBg, AppColors.severityModerateFg);
     case 'minor':
-      return (const Color(0xFFE8F6EA), const Color(0xFF1B7A31));
+      return (AppColors.severityLowBg, AppColors.severityLowFg);
     case 'caution':
-      return (const Color(0xFFE6F1FF), const Color(0xFF1F5AA6));
+      return (AppColors.severityInfoBg, AppColors.severityInfoFg);
     default:
-      return (const Color(0xFFEFEFEF), const Color(0xFF575757));
+      return (AppColors.surfaceSoft, AppColors.textSecondary);
   }
 }
 

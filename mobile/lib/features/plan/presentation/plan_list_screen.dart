@@ -94,7 +94,7 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add_circle_outline),
-            onPressed: () => context.push('/plans/create'),
+            onPressed: () => context.push('/create'),
           ),
         ],
       ),
@@ -185,7 +185,7 @@ class _PlanListScreenState extends ConsumerState<PlanListScreen> {
               ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/plans/create'),
+        onPressed: () => context.push('/create'),
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add),
         label: const Text('Tạo kế hoạch'),

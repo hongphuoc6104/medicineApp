@@ -1195,33 +1195,33 @@ _SeverityPalette _severityPalette(String severity) {
   switch (severity) {
     case 'contraindicated':
       return const _SeverityPalette(
-        background: Color(0xFFFDE4E4),
-        foreground: Color(0xFFB40000),
+        background: AppColors.severityCriticalBg,
+        foreground: AppColors.severityCriticalFg,
       );
     case 'major':
       return const _SeverityPalette(
-        background: Color(0xFFFFEBD6),
-        foreground: Color(0xFFB25500),
+        background: AppColors.severityHighBg,
+        foreground: AppColors.severityHighFg,
       );
     case 'moderate':
       return const _SeverityPalette(
-        background: Color(0xFFFFF4CC),
-        foreground: Color(0xFF8B6A00),
+        background: AppColors.severityModerateBg,
+        foreground: AppColors.severityModerateFg,
       );
     case 'minor':
       return const _SeverityPalette(
-        background: Color(0xFFE8F6EA),
-        foreground: Color(0xFF1B7A31),
+        background: AppColors.severityLowBg,
+        foreground: AppColors.severityLowFg,
       );
     case 'caution':
       return const _SeverityPalette(
-        background: Color(0xFFE6F1FF),
-        foreground: Color(0xFF1F5AA6),
+        background: AppColors.severityInfoBg,
+        foreground: AppColors.severityInfoFg,
       );
     default:
       return const _SeverityPalette(
-        background: Color(0xFFEFEFEF),
-        foreground: Color(0xFF575757),
+        background: AppColors.surfaceSoft,
+        foreground: AppColors.textSecondary,
       );
   }
 }
