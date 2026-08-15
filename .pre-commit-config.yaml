@@ -12,6 +12,7 @@ repos:
       - id: check-json               # Kiểm tra syntax JSON
       - id: check-added-large-files  # Cảnh báo file lớn (>500KB)
         args: ['--maxkb=500']
+        exclude: '^docs/research/rxie/RxIE_Blueprint_Mo_hinh_OCR_Don_thuoc\.docx$'
       - id: check-merge-conflict     # Kiểm tra conflict markers
       - id: detect-private-key       # Phát hiện private key
 
