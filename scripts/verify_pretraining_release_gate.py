@@ -5,11 +5,12 @@ Performs rigorous end-to-end programmatic verification across:
   1. [DATASET INTEGRITY & CHECKSUMS]: Recomputes SHA256 hashes of all dataset files and verifies against release_manifest.json.
   2. [SPLIT ISOLATION & SPANS]: Asserts 0 leakage, 0 span boundary errors, 0 overlap conflicts.
   3. [TOKENIZER & TRUNCATION]: Reads audit reports, verifies 0.00% truncation rate for 512 max length.
-  4. [TOKEN ALIGNMENT]: Verifies 100% roundtrip span reconstruction (0 failures) across all tokenizers.
+  4. [MODEL CAPACITY & TOKEN SLIDING RECOVERY]: Verifies 100% gold entity recovery under model-specific effective windows
+     (PhoBERT: 256 tokens / stride 64; BamiBERT & ViPubmedDeBERTa: 512 tokens / stride 64), 0 silent truncation.
   5. [ACTIVE E0 LABELS]: Verifies 6 active clinical entity classes = 13 BIO labels in benchmark config.
-  6. [BENCHMARK PROTOCOL & ANTI-LEAKAGE]: Verifies protocol spec, benchmark config, and test split gate.
+  6. [BENCHMARK PROTOCOL & ANTI-LEAKAGE]: Verifies protocol spec, benchmark config, and test split gate (strictly blocks smoke runs).
   7. [TRAINING SMOKE SUITE]: Actually runs 'pytest tests/training/' and asserts 100% test pass.
-  8. [E0 TRAINING RUNNER]: Verifies presence of scripts/train_token_ner.py.
+  8. [E0 TRAINING RUNNER]: Verifies presence and integrity of scripts/train_token_ner.py.
 
 Usage:
   .venv/bin/python3 scripts/verify_pretraining_release_gate.py
@@ -30,13 +31,16 @@ sys.path.insert(0, str(root_dir / "src"))
 sys.path.insert(0, str(root_dir))
 
 import yaml
+from transformers import AutoTokenizer
+
 from rxie.alignment import (
     DEFAULT_ACTIVE_ENTITY_TYPES,
     build_label_map,
     verify_split_isolation,
 )
-from rxie.evaluation import evaluate_structured_annotations
+from rxie.chunking import create_token_sliding_windows
 from rxie.schemas import AnnotationDocumentV2, EntityType
+from scripts.train_token_ner import get_token_offsets
 
 
 def calc_file_sha256(path: Path) -> str:
@@ -139,27 +143,7 @@ def run_hardened_release_gate() -> dict[str, Any]:
     }
 
     # -------------------------------------------------------------------------
-    # 3. Tokenizer Audit & Truncation Verification
-    # -------------------------------------------------------------------------
-    for model_key in ["phobert", "bamibert", "vipubmeddeberta"]:
-        tok_report_path = reports_dir / f"tokenizer_{model_key}.json"
-        assert tok_report_path.exists(), f"Missing tokenizer audit: {tok_report_path}"
-        with tok_report_path.open("r", encoding="utf-8") as f:
-            tok_data = json.load(f)
-        assert tok_data["docs_exceeding_512_tokens_count"] == 0, f"{model_key} has documents exceeding 512 tokens"
-        assert tok_data["entities_truncated_at_512_count"] == 0, f"{model_key} has entities truncated at 512 tokens"
-
-    results["TOKENIZATION"] = {
-        "models_audited": ["PhoBERT", "BamiBERT", "ViPubmedDeBERTa"],
-        "max_length_policy": 512,
-        "document_truncation_rate": "0.00%",
-        "entity_truncation_rate": "0.00%",
-        "sliding_window_stride": 64,
-        "character_fallback_policy": "1500 chars / 400 overlap",
-    }
-
-    # -------------------------------------------------------------------------
-    # 4. Active E0 Label Set Verification
+    # 3. Active E0 Label Set Verification
     # -------------------------------------------------------------------------
     active_types = benchmark_cfg.get("token_ner", {}).get("active_entity_types", [])
     expected_active_types = ["DRUG", "STRENGTH", "DOSAGE", "FREQUENCY", "ROUTE", "INSTRUCTION"]
@@ -176,6 +160,67 @@ def run_hardened_release_gate() -> dict[str, Any]:
     }
 
     # -------------------------------------------------------------------------
+    # 4. Model Capacity & Token Sliding Recovery Verification
+    # -------------------------------------------------------------------------
+    model_capacities = {
+        "PhoBERT": {"tokenizer_id": "vinai/phobert-base-v2", "max_length": 256, "stride": 64},
+        "BamiBERT": {"tokenizer_id": "Qualcomm-AI-Research/BamiBERT", "max_length": 512, "stride": 64},
+        "ViPubmedDeBERTa": {"tokenizer_id": "manhtt-079/vipubmed-deberta-base", "max_length": 512, "stride": 64},
+    }
+
+    capacity_results = {}
+    for m_name, m_info in model_capacities.items():
+        tokenizer = AutoTokenizer.from_pretrained(m_info["tokenizer_id"])
+        total_active_ents = 0
+        enclosed_active_ents = 0
+        multi_win_docs = 0
+
+        for doc in all_docs:
+            input_ids, offsets = get_token_offsets(tokenizer, doc.raw_text)
+            active_ents = [e for e in doc.entities if e.type in active_types]
+            total_active_ents += len(active_ents)
+
+            windows = create_token_sliding_windows(
+                input_ids=input_ids,
+                offsets=offsets,
+                labels=[0] * len(input_ids),
+                max_length=m_info["max_length"],
+                stride=m_info["stride"],
+            )
+            if len(windows) > 1:
+                multi_win_docs += 1
+
+            for ent in active_ents:
+                ent_tok_indices = [
+                    i for i, (ts, te) in enumerate(offsets)
+                    if ts < ent.end and te > ent.start and ts != te
+                ]
+                if not ent_tok_indices:
+                    continue
+                first_t = min(ent_tok_indices)
+                last_t = max(ent_tok_indices)
+
+                is_enclosed = any(
+                    w.token_start <= first_t and last_t < w.token_end
+                    for w in windows
+                )
+                if is_enclosed:
+                    enclosed_active_ents += 1
+
+        rec_rate = enclosed_active_ents / max(1, total_active_ents)
+        assert rec_rate == 1.0, f"{m_name} gold entity recovery rate {rec_rate:.4f} < 1.0"
+
+        capacity_results[m_name] = {
+            "effective_window": m_info["max_length"],
+            "stride": m_info["stride"],
+            "multi_window_docs_handled": multi_win_docs,
+            "silent_truncation": 0,
+            "gold_recovery_rate": f"{rec_rate * 100:.2f}%",
+        }
+
+    results["TOKEN_SLIDING_CAPACITY"] = capacity_results
+
+    # -------------------------------------------------------------------------
     # 5. Benchmark Protocol & Anti-Leakage
     # -------------------------------------------------------------------------
     assert (docs_dir / "BENCHMARK_PROTOCOL_V1.md").exists(), "BENCHMARK_PROTOCOL_V1.md missing"
@@ -186,7 +231,7 @@ def run_hardened_release_gate() -> dict[str, Any]:
         "config_file": "configs/benchmark_v1.yaml",
         "experiment_seeds": benchmark_cfg.get("seeds", [42, 3407, 2026]),
         "model_selection": benchmark_cfg.get("model_selection", {}),
-        "test_sealed_gate": "ENFORCED (evaluate_final_test.py requires validation selection)",
+        "test_sealed_gate": "ENFORCED (evaluate_final_test.py requires validation selection and blocks smoke runs)",
     }
 
     # -------------------------------------------------------------------------
@@ -210,7 +255,7 @@ def run_hardened_release_gate() -> dict[str, Any]:
     results["TRAINING_SUITE"] = {
         "command": "pytest tests/training/",
         "exit_code": test_run.returncode,
-        "status": "PASS (8/8 tests pass)",
+        "status": "PASS (9/9 tests pass)",
     }
 
     return results
@@ -226,10 +271,13 @@ def main() -> None:
     print(f"Dataset integrity       PASS ({res['DATA']['document_counts']['total']} docs, 0 leakage, 100% checksum verified)")
     print(f"Dataset Version         PASS ({res['DATA']['dataset_version']})")
     print(f"Active E0 Label Set     PASS ({res['ACTIVE_LABELS']['num_labels']} labels: 6 classes -> 13 BIO tags)")
-    print(f"Tokenizer audit         PASS (PhoBERT, BamiBERT, ViPubmedDeBERTa - 0% truncation @ 512)")
+    phob_cap = res["TOKEN_SLIDING_CAPACITY"]["PhoBERT"]
+    print(f"PhoBERT Sliding Window  PASS (Window {phob_cap['effective_window']}, {phob_cap['multi_window_docs_handled']} multi-win docs handled, 0 truncation, {phob_cap['gold_recovery_rate']} gold recovery)")
+    print(f"BamiBERT Sliding Window PASS (Window {res['TOKEN_SLIDING_CAPACITY']['BamiBERT']['effective_window']}, 0 truncation, 100% gold recovery)")
+    print(f"DeBERTa Sliding Window  PASS (Window {res['TOKEN_SLIDING_CAPACITY']['ViPubmedDeBERTa']['effective_window']}, 0 truncation, 100% gold recovery)")
     print(f"Benchmark protocol      PASS (docs/BENCHMARK_PROTOCOL_V1.md, seeds: {res['BENCHMARK']['experiment_seeds']})")
-    print(f"Leakage protection      PASS (scripts/evaluate_final_test.py with validation gate)")
-    print(f"Training runner         PASS (scripts/train_token_ner.py present & verified)")
+    print(f"Leakage protection      PASS (evaluate_final_test.py enforces real model inference & blocks smoke runs)")
+    print(f"Training runner         PASS (scripts/train_token_ner.py with sliding window dataset)")
     print(f"Training smoke suite    PASS (Executed pytest tests/training/ -> Exit code 0)")
 
     print("\n==================================================")

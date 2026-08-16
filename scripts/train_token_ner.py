@@ -2,8 +2,10 @@
 """
 Official Token NER Training & Evaluation Runner for RxIE Benchmark V1 (E0, E1, E2).
 Supports PhoBERT, BamiBERT, and ViPubmedDeBERTa with:
+  - Token-level Sliding Window (256 tokens / stride 64 for PhoBERT; 512 tokens / stride 64 for BamiBERT & ViPubmedDeBERTa)
   - 13 active BIO labels (6 clinical entity classes)
   - Validation-based Checkpoint Selection & Early Stopping
+  - Multi-window Prediction Merging & Span Deduplication
   - Prescription-level Macro Entity F1 optimization
   - Run-level Git Provenance, Checkpoint Manifest & Full Multi-Metric Evaluation Export
 
@@ -44,13 +46,16 @@ from rxie.alignment import (
     DEFAULT_ACTIVE_ENTITY_TYPES,
     build_label_map,
 )
+from rxie.chunking import (
+    TokenWindow,
+    create_token_sliding_windows,
+    decode_windows_to_document,
+)
 from rxie.evaluation import evaluate_structured_annotations
 from rxie.schemas import (
     AnnotationDocumentV2,
-    EntityRelation,
     EntityType,
     GoldEntityV2,
-    RelationType,
 )
 
 
@@ -127,23 +132,23 @@ class RxieTokenDataset(Dataset):
         documents: list[AnnotationDocumentV2],
         tokenizer: Any,
         label_to_id: dict[str, int],
-        max_length: int = 512,
+        max_length: int = 256,
+        stride: int = 64,
     ) -> None:
         self.documents = documents
         self.tokenizer = tokenizer
         self.label_to_id = label_to_id
         self.max_length = max_length
+        self.stride = stride
         self.features: list[dict[str, Any]] = []
+        self.doc_window_map: dict[str, list[int]] = {}
+        self.multi_window_doc_count = 0
         self._prepare_features()
 
     def _prepare_features(self) -> None:
+        feature_idx = 0
         for doc in self.documents:
             input_ids, offsets = get_token_offsets(self.tokenizer, doc.raw_text)
-
-            # Truncate if exceeds max_length
-            if len(input_ids) > self.max_length:
-                input_ids = input_ids[: self.max_length]
-                offsets = offsets[: self.max_length]
 
             labels = []
             seen_entities = set()
@@ -165,14 +170,29 @@ class RxieTokenDataset(Dataset):
                 seen_entities.add(idx)
                 labels.append(self.label_to_id.get(tag, self.label_to_id["O"]))
 
-            attention_mask = [1] * len(input_ids)
-            self.features.append({
-                "input_ids": input_ids,
-                "attention_mask": attention_mask,
-                "labels": labels,
-                "document_id": doc.document_id,
-                "offsets": offsets,
-            })
+            windows = create_token_sliding_windows(
+                input_ids=input_ids,
+                offsets=offsets,
+                labels=labels,
+                max_length=self.max_length,
+                stride=self.stride,
+            )
+
+            if len(windows) > 1:
+                self.multi_window_doc_count += 1
+
+            self.doc_window_map[doc.document_id] = []
+            for win in windows:
+                self.features.append({
+                    "document_id": doc.document_id,
+                    "window": win,
+                    "input_ids": win.input_ids,
+                    "attention_mask": win.attention_mask,
+                    "labels": win.labels,
+                    "offsets": win.offsets,
+                })
+                self.doc_window_map[doc.document_id].append(feature_idx)
+                feature_idx += 1
 
     def __len__(self) -> int:
         return len(self.features)
@@ -186,126 +206,19 @@ class RxieTokenDataset(Dataset):
         }
 
 
-def decode_predictions_to_documents(
+def decode_all_predictions(
     documents: list[AnnotationDocumentV2],
-    raw_features: list[dict[str, Any]],
-    pred_labels: list[list[int]],
+    dataset: RxieTokenDataset,
+    all_preds: list[list[int]],
     id_to_label: dict[int, str],
 ) -> list[AnnotationDocumentV2]:
     pred_docs: list[AnnotationDocumentV2] = []
-    doc_map = {d.document_id: d for d in documents}
-
-    for feat, preds in zip(raw_features, pred_labels, strict=True):
-        doc_id = feat["document_id"]
-        source_doc = doc_map[doc_id]
-        raw_text = source_doc.raw_text
-        offsets = feat["offsets"]
-
-        # Parse BIO predictions into character spans
-        extracted_entities: list[GoldEntityV2] = []
-        current_entity_type: str | None = None
-        current_start: int = 0
-        current_end: int = 0
-        ent_counter = 1
-
-        for idx, (t_start, t_end) in enumerate(offsets):
-            if idx >= len(preds):
-                break
-            label_id = preds[idx]
-            if label_id == -100:
-                continue
-            tag = id_to_label.get(label_id, "O")
-
-            if tag.startswith("B-"):
-                if current_entity_type is not None:
-                    # Save previous entity
-                    span_text = raw_text[current_start:current_end]
-                    extracted_entities.append(GoldEntityV2(
-                        entity_id=f"e_{ent_counter}",
-                        type=EntityType(current_entity_type),
-                        text=span_text,
-                        start=current_start,
-                        end=current_end,
-                    ))
-                    ent_counter += 1
-                current_entity_type = tag[2:]
-                current_start = t_start
-                current_end = t_end
-            elif tag.startswith("I-"):
-                ent_type = tag[2:]
-                if current_entity_type == ent_type:
-                    current_end = t_end
-                else:
-                    if current_entity_type is not None:
-                        span_text = raw_text[current_start:current_end]
-                        extracted_entities.append(GoldEntityV2(
-                            entity_id=f"e_{ent_counter}",
-                            type=EntityType(current_entity_type),
-                            text=span_text,
-                            start=current_start,
-                            end=current_end,
-                        ))
-                        ent_counter += 1
-                    current_entity_type = ent_type
-                    current_start = t_start
-                    current_end = t_end
-            else:  # "O"
-                if current_entity_type is not None:
-                    span_text = raw_text[current_start:current_end]
-                    extracted_entities.append(GoldEntityV2(
-                        entity_id=f"e_{ent_counter}",
-                        type=EntityType(current_entity_type),
-                        text=span_text,
-                        start=current_start,
-                        end=current_end,
-                    ))
-                    ent_counter += 1
-                    current_entity_type = None
-
-        if current_entity_type is not None:
-            span_text = raw_text[current_start:current_end]
-            extracted_entities.append(GoldEntityV2(
-                entity_id=f"e_{ent_counter}",
-                type=EntityType(current_entity_type),
-                text=span_text,
-                start=current_start,
-                end=current_end,
-            ))
-
-        # Assign heuristic parent relations for structured evaluation
-        # Link each non-DRUG entity to the nearest preceding DRUG entity
-        drug_entities = [e for e in extracted_entities if e.type == EntityType.DRUG]
-        relations: list[EntityRelation] = []
-
-        for e in extracted_entities:
-            if e.type != EntityType.DRUG:
-                preceding_drugs = [d for d in drug_entities if d.end <= e.start]
-                if preceding_drugs:
-                    parent_drug = preceding_drugs[-1]
-                    e.parent_entity_id = parent_drug.entity_id
-                    rel_type = {
-                        EntityType.STRENGTH: RelationType.HAS_STRENGTH,
-                        EntityType.DOSAGE: RelationType.HAS_DOSAGE,
-                        EntityType.FREQUENCY: RelationType.HAS_FREQUENCY,
-                        EntityType.ROUTE: RelationType.HAS_ROUTE,
-                        EntityType.INSTRUCTION: RelationType.HAS_INSTRUCTION,
-                    }.get(e.type, RelationType.HAS_INSTRUCTION)
-                    relations.append(EntityRelation(
-                        head_entity_id=parent_drug.entity_id,
-                        tail_entity_id=e.entity_id,
-                        relation_type=rel_type,
-                    ))
-
-        pred_docs.append(AnnotationDocumentV2(
-            schema_version="rxie.annotation.v2",
-            document_id=source_doc.document_id,
-            prescription_id=source_doc.prescription_id,
-            patient_id=source_doc.patient_id,
-            raw_text=raw_text,
-            entities=extracted_entities,
-            relations=relations,
-        ))
-
+    for doc in documents:
+        win_indices = dataset.doc_window_map[doc.document_id]
+        doc_windows = [dataset.features[i]["window"] for i in win_indices]
+        doc_preds = [all_preds[i] for i in win_indices]
+        pred_doc = decode_windows_to_document(doc, doc_windows, doc_preds, id_to_label)
+        pred_docs.append(pred_doc)
     return pred_docs
 
 
@@ -335,7 +248,7 @@ def evaluate_model_on_split(
                 actual_len = sum(mask)
                 all_preds.append(p_list[:actual_len])
 
-    pred_docs = decode_predictions_to_documents(documents, dataset.features, all_preds, id_to_label)
+    pred_docs = decode_all_predictions(documents, dataset, all_preds, id_to_label)
     report = evaluate_structured_annotations(documents, pred_docs)
     return report.model_dump(mode="python"), pred_docs
 
@@ -365,7 +278,7 @@ def run_training() -> None:
     lr = args.learning_rate or hp_cfg["learning_rates"][1]  # default 2e-5
     epochs = args.epochs or hp_cfg["epochs_max"]
     batch_size = args.batch_size or hp_cfg["batch_size"]
-    max_length = hp_cfg["max_sequence_length"]
+    stride = hp_cfg.get("sliding_window_stride", 64)
 
     active_entity_types = cfg["token_ner"]["active_entity_types"]
     labels, label_to_id, id_to_label = build_label_map(active_entity_types)
@@ -375,10 +288,17 @@ def run_training() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     best_ckpt_dir = out_dir / "best_checkpoint"
 
+    tokenizer = AutoTokenizer.from_pretrained(model_cfg["tokenizer"])
+    model_config = AutoModelForTokenClassification.from_pretrained(model_cfg["backbone"]).config
+    max_pos = getattr(model_config, "max_position_embeddings", 512)
+    # PhoBERT has max_position_embeddings=258 (256 tokens + 2 special tokens)
+    effective_max_len = min(hp_cfg["max_sequence_length"], max_pos - (2 if max_pos == 258 else 0))
+
     print("==================================================")
     print(f"   RxIE Token NER Training: {model_cfg['name']}   ")
     print("==================================================")
     print(f"[*] Backbone: {model_cfg['backbone']}")
+    print(f"[*] Effective Max Token Window: {effective_max_len} | Stride: {stride}")
     print(f"[*] Seed: {args.seed} | Device: {device}")
     print(f"[*] Active Entity Classes ({len(active_entity_types)}): {active_entity_types}")
     print(f"[*] Total BIO Labels: {num_labels}")
@@ -389,17 +309,11 @@ def run_training() -> None:
     train_docs = [AnnotationDocumentV2.model_validate_json(l) for l in (root_dir / cfg["splits"]["train_file"]).open("r") if l.strip()]
     val_docs = [AnnotationDocumentV2.model_validate_json(l) for l in (root_dir / cfg["splits"]["val_file"]).open("r") if l.strip()]
 
-    tokenizer = AutoTokenizer.from_pretrained(model_cfg["tokenizer"])
-    # Model max sequence length
-    model_config = AutoModelForTokenClassification.from_pretrained(model_cfg["backbone"]).config
-    max_pos = getattr(model_config, "max_position_embeddings", 512)
-    # PhoBERT has max_position_embeddings=258 (256 tokens + 2 special tokens)
-    effective_max_len = min(max_length, max_pos - (2 if max_pos == 258 else 0))
+    train_dataset = RxieTokenDataset(train_docs, tokenizer, label_to_id, max_length=effective_max_len, stride=stride)
+    val_dataset = RxieTokenDataset(val_docs, tokenizer, label_to_id, max_length=effective_max_len, stride=stride)
 
-    print(f"[*] Effective Max Sequence Length for {args.model}: {effective_max_len} tokens")
-
-    train_dataset = RxieTokenDataset(train_docs, tokenizer, label_to_id, max_length=effective_max_len)
-    val_dataset = RxieTokenDataset(val_docs, tokenizer, label_to_id, max_length=effective_max_len)
+    print(f"[*] Train Windows: {len(train_dataset)} from {len(train_docs)} docs ({train_dataset.multi_window_doc_count} multi-window docs)")
+    print(f"[*] Val Windows:   {len(val_dataset)} from {len(val_docs)} docs ({val_dataset.multi_window_doc_count} multi-window docs)")
 
     collator = DataCollatorForTokenClassification(tokenizer=tokenizer, padding=True)
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=collator)
@@ -428,7 +342,9 @@ def run_training() -> None:
     best_pred_docs: list[AnnotationDocumentV2] = []
     best_val_report: dict[str, Any] = {}
 
+    is_smoke = args.smoke_steps is not None
     step_count = 0
+
     for epoch in range(1, epochs + 1):
         model.train()
         total_loss = 0.0
@@ -447,12 +363,12 @@ def run_training() -> None:
 
             total_loss += loss.item()
             step_count += 1
-            if args.smoke_steps and step_count >= args.smoke_steps:
+            if is_smoke and step_count >= args.smoke_steps:
                 break
 
-        avg_train_loss = total_loss / (len(train_dataloader) if not args.smoke_steps else step_count)
+        avg_train_loss = total_loss / (len(train_dataloader) if not is_smoke else step_count)
 
-        # Validation evaluation
+        # Validation evaluation with multi-window decoding
         val_report, pred_docs = evaluate_model_on_split(model, val_dataset, val_docs, id_to_label, device, batch_size=batch_size)
         primary_metric = val_report["prescription_macro_summary"]["prescription_macro_entity_f1"]
         micro_f1 = val_report["entity_micro"]["f1"]
@@ -469,7 +385,7 @@ def run_training() -> None:
         print(f"Epoch {epoch:02d}/{epochs:02d} | Train Loss: {avg_train_loss:.4f} | Val Rx-Macro F1: {primary_metric:.4f} | Val Micro F1: {micro_f1:.4f}")
 
         # Checkpoint selection
-        if primary_metric > best_val_metric:
+        if primary_metric > best_val_metric or is_smoke:
             best_val_metric = primary_metric
             best_epoch = epoch
             best_val_report = val_report
@@ -482,11 +398,11 @@ def run_training() -> None:
             tokenizer.save_pretrained(best_ckpt_dir)
         else:
             patience_counter += 1
-            if patience_counter >= patience and not args.smoke_steps:
+            if patience_counter >= patience and not is_smoke:
                 print(f"[!] Early stopping triggered at epoch {epoch} (Patience: {patience})")
                 break
 
-        if args.smoke_steps and step_count >= args.smoke_steps:
+        if is_smoke and step_count >= args.smoke_steps:
             print(f"[+] Smoke test completed after {step_count} steps.")
             break
 
@@ -515,10 +431,14 @@ def run_training() -> None:
         "model_id": args.model,
         "model_name": model_cfg["name"],
         "seed": args.seed,
-        "selected_on_validation": True,
+        "run_type": "smoke" if is_smoke else "benchmark_run",
+        "selected_on_validation": False if is_smoke else True,
+        "eligible_for_final_test": False if is_smoke else True,
         "best_epoch": best_epoch,
         "best_validation_metric": best_val_metric,
         "primary_metric_name": cfg["model_selection"]["primary_metric"],
+        "effective_max_length": effective_max_len,
+        "sliding_window_stride": stride,
         "active_entity_types": active_entity_types,
         "num_labels": num_labels,
         "labels": labels,
@@ -545,6 +465,7 @@ def run_training() -> None:
 
     print("==================================================")
     print(f"[+] Training completed successfully for {args.model} (Seed {args.seed})")
+    print(f"    - Run Type: {'SMOKE (Test Access Blocked)' if is_smoke else 'BENCHMARK RUN'}")
     print(f"    - Best Epoch: {best_epoch} | Best Rx-Macro F1: {best_val_metric:.4f}")
     print(f"    - Checkpoint & Manifest: {out_dir / 'checkpoint_manifest.json'}")
     print(f"    - Validation Metrics:    {out_dir / 'metrics_val.json'}")
