@@ -464,7 +464,12 @@ def decompose_instruction(instruction_raw: str | None) -> dict[str, str | None]:
 
 def decompose_medication(med: CanonicalMedication) -> CanonicalMedication:
     """Decompose instruction_raw and populate atomic fields of a CanonicalMedication."""
-    orig = med.instruction_original_raw or med.instruction_raw
+    orig = med.instruction_original_raw
+    if not orig:
+        if med.dosage_raw is not None or med.route_raw is not None or med.frequency_raw is not None:
+            return med
+        orig = med.instruction_raw
+
     if not orig:
         return med
 

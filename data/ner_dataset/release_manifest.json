@@ -1,6 +1,6 @@
 {
   "dataset_version": "rxie-dataset-v1.0",
-  "created_at": "2026-08-16T06:27:46.759258+00:00",
+  "created_at": "2026-08-16T06:52:58.597245+00:00",
   "schema_versions": {
     "span_pointer": "rxie.annotation.v2",
     "flat_bio": "rxie.annotation.v1",
@@ -18,13 +18,13 @@
     "total": 429
   },
   "file_checksums_sha256": {
-    "train.jsonl": "72b9d703314526081429903e4d0a25d3dccd16f3529ceba0aa3e210fd084b0da",
-    "val.jsonl": "f585b6e65814c2527bd094920614914c4fac6ebee52d366285dcc58557d7fa61",
-    "test.jsonl": "e86252420be357500985901499e5e61921a2107a5a57525fb6c83199305f30f3",
-    "bio_train.jsonl": "a941a4cfb138e70f83a4454c1c26f59bdabed80771d9a422d627f063d7cf1ba8",
-    "bio_val.jsonl": "69d7269611dc61bd678c52f39e116be6d330f9ec914481f67ec07c9ae28847d3",
-    "bio_test.jsonl": "1618cc47f437551d77be46f769070362620b6ad42f075ef83657fce4c22a7c22",
-    "full_dataset_audit_matrix.json": "a340deb048c20b529005f4f781c08fff4d13acefb9f29d6194898d5fbfd61cb6"
+    "train.jsonl": "2bb6878fda7c53c5d861bdd135a87706663bec58a569b63b265a10081e0b6772",
+    "val.jsonl": "c6018c4b5e175d286ad13cc8f4cff6c5ac4b4092b5e2f2411f64e38dd095f91d",
+    "test.jsonl": "b48a708b465863dd1abb75036bf02f248a699684379b9522a17ce58df929ca2e",
+    "bio_train.jsonl": "ebe0a55aa3612d3a8c1da4983bf5fae43342de5bc6fd112065fe79432fc2e531",
+    "bio_val.jsonl": "7eb4d0c3620b31760c687a96cffa9bc187c83d0d660a370ea4d918ad999eeb47",
+    "bio_test.jsonl": "12041bfcd84d12bfe0f2ea983db574c09f08acf13fe99700a3971f19151a65cc",
+    "full_dataset_audit_matrix.json": "a98bd2c8dd129f9d1212e51bcb772d5fab87f7f85bde03776bfc0d128b0ab249"
   },
   "quality_gates": {
     "zero_leakage_isolation": true,
