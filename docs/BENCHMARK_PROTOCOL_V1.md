@@ -1,105 +1,87 @@
-# RxIE Benchmark Protocol V1
+# RxIE Benchmark Protocol v1.2.0
 
-This document specifies the frozen benchmark protocol for all token classification experiments (E0: PhoBERT, E1: BamiBERT, E2: ViPubmedDeBERTa).
+This protocol is frozen for E0 PhoBERT, E1 BamiBERT, and E2 ViPubmedDeBERTa Token NER.
 
----
+## Dataset and labels
 
-## 1. Dataset & Split Isolation
+- Release: `rxie-dataset-v1.0.1`.
+- Train: 19 prescriptions, 279 captures.
+- Validation: 4 prescriptions, 115 captures.
+- Sealed Test: 4 prescriptions, 35 captures.
+- Active classes, in fixed order: `DRUG`, `STRENGTH`, `DOSAGE`, `FREQUENCY`, `ROUTE`, `INSTRUCTION`.
+- The head has `O + 2 * 6 = 13` BIO labels. `QUANTITY`, `FORM`, `DURATION`, and `NOTE` map to `O`.
+- Training, tuning, gates, and smoke tests do not parse the sealed Test split. Test is opened only after official cohort authorization and checksum verification.
 
-- **Dataset Release Version:** `rxie-dataset-v1.0.1`
-- **Schema Contracts:**
-  - Relational V2: `rxie.annotation.v2` (`train.jsonl`, `val.jsonl`, `test.jsonl`)
-  - Flat BIO V1: `rxie.annotation.v1` (`bio_train.jsonl`, `bio_val.jsonl`, `bio_test.jsonl`)
-- **Split Roles:**
-  - **Train Split:** 19 Prescriptions (279 documents). Role: Model training.
-  - **Validation Split:** 4 Prescriptions (115 documents). Role: Checkpoint selection and hyperparameter tuning.
-  - **Test Split (SEALED):** 4 Prescriptions (35 documents). Role: Final evaluation only. **No hyperparameter tuning or checkpoint selection permitted on Test.**
+## Tokenization and windows
 
----
+- Tokenization first returns content IDs and character offsets without model special tokens.
+- `max_input_tokens = 256` means total model input IDs including special tokens for all three benchmark backbones.
+- `content_capacity = max_input_tokens - tokenizer.num_special_tokens_to_add(False)`.
+- `content_overlap = 64`; step is `content_capacity - content_overlap`.
+- Every window independently receives the tokenizer's valid BOS/CLS and EOS/SEP envelope.
+- Special tokens have offset `(0, 0)`, no global token index, and label `-100`.
+- Every final input must have `len(input_ids) <= 256`.
+- Native 512-token BamiBERT/DeBERTa runs are outside the main benchmark and may be reported only as a separately named ablation.
 
-## 2. Active E0 / E1 / E2 Entity Classes & BIO Schema
+## Loss ownership and batching
 
-All Token NER models are trained and evaluated on the 6 active trainable clinical entity classes (13 BIO labels):
-- `DRUG`, `STRENGTH`, `DOSAGE`, `FREQUENCY`, `ROUTE`, `INSTRUCTION`
-- Inactive classes (`QUANTITY`, `FORM`, `DURATION`, `NOTE`) are mapped to `O` during flat token classification.
-- **Active Entity Macro F1:** Computed exclusively as the unweighted mean across the 6 active classes.
+- The training dataset consists of token windows, and DataLoader shuffles those windows with a seed-controlled generator.
+- The policy name is `Shuffled Token-Window Batching with Single-Loss Ownership`.
+- Every original content token has exactly one window with label other than `-100`.
+- Every active gold entity is assigned to one window that contains its complete token range. All entity tokens, including its `B-*`, share that owner.
+- This prevents duplicate overlap loss and orphan `I-*` supervision.
 
----
+## Inference merge
 
-## 3. Model Capacity & Token Sliding Window Policy
+- Each window returns logits associated with global content-token indices.
+- For duplicate overlap tokens, logits from the window where the token is farthest from a content edge win. Ties use the lower deterministic window index.
+- Argmax is applied after constructing one global logit sequence.
+- The global BIO sequence is decoded exactly once into document spans.
+- Token NER outputs `parent_entity_id = null` and `relations = []`. Parent, relation, and record metrics are `N/A` (`null`) for E0/E1/E2.
 
-Due to architectural positional embedding constraints:
-- **PhoBERT Base v2 (`vinai/phobert-base-v2`):** Effective window size = `256 tokens`, stride = `64 tokens`.
-- **BamiBERT (`Qualcomm-AI-Research/BamiBERT`):** Effective window size = `512 tokens`, stride = `64 tokens`.
-- **ViPubmedDeBERTa (`manhtt-079/vipubmed-deberta-base`):** Effective window size = `512 tokens`, stride = `64 tokens`.
+## Metrics
 
-**Fair Training Loss Policy:**
-- For multi-window documents during training, boundary overlap tokens are masked to `-100` (`mask_overlap_for_training=True`) so every token in the document receives gradient backpropagation exactly once.
-- During validation / test inference, predictions across all windows are merged and deduplicated back to document character spans.
+- Entity identity is `(document_id, type, start, end)`.
+- Entity Micro F1 is strict exact-span F1 over all active entities.
+- Active Macro F1 is the arithmetic mean of the six fixed per-class F1 values. Inactive classes never affect it.
+- For each prescription, active entities are pooled across captures while retaining `document_id`, then strict active-entity micro F1 is calculated.
+- Primary `prescription_macro_entity_f1` is the equal mean of those per-prescription micro F1 values over prescriptions with at least one active gold entity.
+- Empty-gold prescriptions are excluded from the primary metric; they never receive an artificial F1 of 1.
+- Empty-gold document and prescription false-positive rates are reported separately.
+- Validation currently has 3 prescriptions with active gold. This limitation must be disclosed with results; grouped cross-validation is reserved for a separately versioned protocol and must not be mixed with v1.2 results.
 
----
+## Tuning and global LR selection
 
-## 4. Standardized Experiment Seeds & Search Grid
+- Seeds: `42`, `3407`, `2026`.
+- Learning rates: `1e-5`, `2e-5`, `3e-5`, `5e-5`.
+- Tuning requires the complete Cartesian grid: 4 LR x 3 seeds = 12 runs.
+- For each LR, report mean and sample standard deviation across the three validation seeds for primary Prescription Macro F1 and secondary Entity Micro F1.
+- Select exactly one LR per backbone using: highest primary mean, highest secondary mean, lowest primary standard deviation, then smallest LR.
+- The selector writes an immutable `selection_manifest.json`; it does not copy or promote any tuning checkpoint. Selection validation reopens and hashes all 12 tuning manifests and metric files before official authorization. A hash over benchmark-critical code/config/protocol files must remain identical from tuning selection through official training.
 
-All candidate backbones share the same search space:
-- **Seeds:** `[42, 3407, 2026]`
-- **Optimizer:** `AdamW`
-- **Learning Rates:** `[1e-5, 2e-5, 3e-5, 5e-5]`
-- **Warmup Ratio:** `0.1`
-- **Weight Decay:** `0.01`
-- **Max Epochs:** `20`
-- **Batch Size:** `8`
-- **Early Stopping:** Patience of `3` evaluation epochs based on validation Prescription Macro Entity F1.
+## Protocol-B official runs
 
----
+- The training CLI exposes only `smoke`, `tuning`, and `official`; `final` is not a run type.
+- `official` requires a valid selector-produced selection manifest and cannot accept a caller-supplied LR.
+- After LR freeze, seeds `42`, `3407`, and `2026` each initialize a fresh model from the pinned pretrained backbone revision.
+- Official outputs are `experiments/<model>/official/seed_<seed>/` and are never tuning checkpoint copies.
+- Existing run, selection, prediction, or metric outputs are immutable and cause failure rather than overwrite.
 
-## 5. Checkpoint Selection & Anti-Leakage Promotion Protocol
+## Test sealing
 
-To strictly prevent test set data leakage:
-1. **Hyperparameter Tuning Phase:**
-   Run all learning rates across seeds in isolated tuning directories:
-   `experiments/<model>/tuning/lr_<lr>_seed_<seed>/`
-   Tuning checkpoints are marked with `selected_on_validation: false, eligible_for_final_test: false`.
-2. **Promotion Phase:**
-   Run `scripts/select_best_benchmark_checkpoint.py --model <model> --promote`.
-   Selects the best learning rate based on validation `prescription_macro_entity_f1` and copies to `experiments/<model>/final/seed_<seed>/` with `selected_on_validation: true, eligible_for_final_test: true`.
-3. **Final Test Evaluation:**
-   `scripts/evaluate_final_test.py --checkpoint-dir experiments/<model>/final/seed_<seed>/`
-   Executes real model inference on the sealed test set. Any attempt to run on tuning or smoke checkpoints is strictly blocked with `PermissionError`.
+- The official evaluator has no `--force` and no caller-selectable Test file.
+- The evaluator requires a clean worktree at the exact official training commit and revalidates checkpoint, environment, implementation, and cohort hashes before Test access.
+- Smoke, tuning, old final, self-certified, incomplete-cohort, wrong-LR, wrong-selection-hash, or wrong-path checkpoints fail before Test access.
+- All three official seeds must exist and share model, selected LR, protocol, and selection-manifest hash before Test is opened.
+- Test checksum must match the frozen release manifest.
+- Test inference is run once; existing Test outputs cause failure.
 
----
+## Provenance and determinism
 
-## 6. Standardized Experiment Directory Layout
+- Config pins immutable backbone and tokenizer revisions.
+- Manifests record source commit, dataset version/checksums, revisions, seed, LR, batch size, epochs, warmup, weight decay, steps, window policy, package versions, CUDA/cuDNN, and deterministic flags.
+- Python, NumPy, Torch, CUDA, and DataLoader generator receive the run seed.
+- cuDNN deterministic mode is enabled, benchmark mode is disabled, CUBLAS deterministic workspace is configured, and unsupported nondeterministic operations fail instead of warning.
+- Reproducibility is expected under the pinned software/hardware contract; cross-platform bitwise identity is not claimed.
 
-```text
-experiments/
-  E0_phobert/
-    tuning/
-      lr_1.0e-05_seed_42/
-      lr_2.0e-05_seed_42/
-      ...
-    final/
-      seed_42/
-        best_checkpoint/
-        checkpoint_manifest.json
-        environment.json
-        training_log.json
-        metrics_val.json
-        predictions_val.jsonl
-        metrics_test.json
-        predictions_test.jsonl
-      seed_3407/
-      seed_2026/
-```
-
----
-
-## 7. Mandatory Evaluation Metrics
-
-1. **Strict Entity Micro & Macro:** Precision, Recall, F1 for exact `(type, start, end)` spans across the 6 active classes.
-2. **Per-Class Metrics:** P, R, F1, and Gold Support for each individual class (`DRUG`, `STRENGTH`, `DOSAGE`, `ROUTE`, `FREQUENCY`, `INSTRUCTION`).
-3. **Prescription-Level Macro Summary:** Mean Macro Entity F1 computed across prescriptions to evaluate robustness across diverse prescription formats.
-4. **Relational Metrics:** Parent Assignment Accuracy, Relation PRF, Drug Record Exact Match.
-
----
-*Protocol locked on: 2026-08-16. Version: 1.1.0-final.*
+Protocol locked: 2026-08-17. Version: `1.2.0-final`.

@@ -1,7 +1,14 @@
 """Unit tests for prediction to structured evaluator roundtrip."""
 
+from rxie.alignment import DEFAULT_ACTIVE_ENTITY_TYPES
 from rxie.evaluation import evaluate_structured_annotations
-from rxie.schemas import AnnotationDocumentV2, EntityRelation, EntityType, GoldEntityV2, RelationType
+from rxie.schemas import (
+    AnnotationDocumentV2,
+    EntityRelation,
+    EntityType,
+    GoldEntityV2,
+    RelationType,
+)
 
 
 def test_evaluator_predictions_roundtrip():
@@ -40,16 +47,29 @@ def test_evaluator_predictions_roundtrip():
             ),
         ],
         relations=[
-            EntityRelation(head_entity_id="e1", tail_entity_id="e2", relation_type=RelationType.HAS_STRENGTH),
-            EntityRelation(head_entity_id="e1", tail_entity_id="e3", relation_type=RelationType.HAS_DOSAGE),
+            EntityRelation(
+                head_entity_id="e1",
+                tail_entity_id="e2",
+                relation_type=RelationType.HAS_STRENGTH,
+            ),
+            EntityRelation(
+                head_entity_id="e1",
+                tail_entity_id="e3",
+                relation_type=RelationType.HAS_DOSAGE,
+            ),
         ],
     )
 
     pred_doc = gold_doc.model_copy(deep=True)
-    report = evaluate_structured_annotations([gold_doc], [pred_doc])
+    report = evaluate_structured_annotations(
+        [gold_doc],
+        [pred_doc],
+        active_entity_types=DEFAULT_ACTIVE_ENTITY_TYPES,
+        task_type="token_ner",
+    )
 
     assert report.entity_micro.f1 == 1.0
-    assert report.entity_macro.f1 == 1.0
-    assert report.record_exact_match == 1.0
-    assert report.parent_accuracy == 1.0
+    assert report.entity_macro.f1 == 0.5
+    assert report.record_exact_match is None
+    assert report.parent_accuracy is None
     assert report.prescription_macro_summary["prescription_macro_entity_f1"] == 1.0

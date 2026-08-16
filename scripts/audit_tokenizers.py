@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402, E501, I001
 """
 P5: Tokenizer Audit Script for RxIE Pre-Training Sprint.
-Audits 3 Vietnamese pre-trained backbones across all documents in rxie-dataset-v1.x:
+Audits 3 Vietnamese backbones across unsealed Train and Validation documents:
   1. PhoBERT (vinai/phobert-base-v2)
   2. BamiBERT (Qualcomm-AI-Research/BamiBERT)
   3. ViPubmedDeBERTa (manhtt-079/vipubmed-deberta-base)
 
 Measures:
   - Document & Token Length distributions (P50, P90, P95, P99, MAX)
-  - % Documents exceeding standard max_length (256, 512)
+  - Documents requiring windows under the 256-total-input policy
   - Entity split across subtokens count and rate
   - Unknown (UNK) token rate
   - Entity truncation count and truncation rate
@@ -23,7 +24,6 @@ Outputs:
 from __future__ import annotations
 
 import json
-import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -32,23 +32,28 @@ root_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(root_dir / "src"))
 
 from transformers import AutoTokenizer
+
 from rxie.schemas import AnnotationDocumentV2
+from rxie.tokenization import tokenize_with_offsets
 
 
 MODELS = {
     "phobert": {
         "name": "PhoBERT (Base v2)",
         "hf_id": "vinai/phobert-base-v2",
+        "revision": "86cd7fd4c148980922ac11a2cf5e257f2ba639e1",
         "output_json": "tokenizer_phobert.json",
     },
     "bamibert": {
         "name": "BamiBERT (Biomedical RoBERTa)",
         "hf_id": "Qualcomm-AI-Research/BamiBERT",
+        "revision": "57bc1340debbe4e348ec549047a763caebe4a977",
         "output_json": "tokenizer_bamibert.json",
     },
     "vipubmeddeberta": {
         "name": "ViPubmedDeBERTa",
         "hf_id": "manhtt-079/vipubmed-deberta-base",
+        "revision": "a5478252c02549e7bd3f9a7bf2a530cecab57cbc",
         "output_json": "tokenizer_vipubmeddeberta.json",
     },
 }
@@ -74,9 +79,6 @@ def compute_percentiles(values: list[int | float]) -> dict[str, float]:
     }
 
 
-from rxie.tokenization import tokenize_with_offsets
-
-
 def audit_single_tokenizer(
     model_key: str,
     model_info: dict[str, str],
@@ -89,10 +91,10 @@ def audit_single_tokenizer(
     total_unk_tokens = 0
     total_entities = 0
     entities_split_subtokens = 0
-    entities_truncated_256 = 0
-    entities_truncated_512 = 0
-    docs_gt_256 = 0
-    docs_gt_512 = 0
+    special_token_count = int(tokenizer.num_special_tokens_to_add(pair=False))
+    content_capacity = 256 - special_token_count
+    entities_outside_first_window = 0
+    docs_requiring_windows = 0
 
     unk_id = getattr(tokenizer, "unk_token_id", None)
 
@@ -105,10 +107,8 @@ def audit_single_tokenizer(
         doc_token_lengths.append(num_tokens)
         total_tokens += num_tokens
 
-        if num_tokens > 256:
-            docs_gt_256 += 1
-        if num_tokens > 512:
-            docs_gt_512 += 1
+        if num_tokens > content_capacity:
+            docs_requiring_windows += 1
 
         if unk_id is not None:
             total_unk_tokens += sum(1 for tid in input_ids if tid == unk_id)
@@ -129,10 +129,8 @@ def audit_single_tokenizer(
 
             if matched_token_indices:
                 last_token_idx = max(matched_token_indices)
-                if last_token_idx >= 256:
-                    entities_truncated_256 += 1
-                if last_token_idx >= 512:
-                    entities_truncated_512 += 1
+                if last_token_idx >= content_capacity:
+                    entities_outside_first_window += 1
 
     char_stats = compute_percentiles(doc_char_lengths)
     token_stats = compute_percentiles(doc_token_lengths)
@@ -147,18 +145,29 @@ def audit_single_tokenizer(
         "total_entities": total_entities,
         "characters_per_document": char_stats,
         "tokens_per_document": token_stats,
-        "docs_exceeding_256_tokens_count": docs_gt_256,
-        "docs_exceeding_256_tokens_pct": (docs_gt_256 / num_docs * 100.0) if num_docs else 0.0,
-        "docs_exceeding_512_tokens_count": docs_gt_512,
-        "docs_exceeding_512_tokens_pct": (docs_gt_512 / num_docs * 100.0) if num_docs else 0.0,
+        "benchmark_max_input_tokens": 256,
+        "special_token_count": special_token_count,
+        "content_capacity": content_capacity,
+        "docs_requiring_sliding_window_count": docs_requiring_windows,
+        "docs_requiring_sliding_window_pct": (docs_requiring_windows / num_docs * 100.0)
+        if num_docs
+        else 0.0,
         "unknown_token_count": total_unk_tokens,
-        "unknown_token_rate": (total_unk_tokens / total_tokens * 100.0) if total_tokens else 0.0,
+        "unknown_token_rate": (total_unk_tokens / total_tokens * 100.0)
+        if total_tokens
+        else 0.0,
         "entities_split_subtokens_count": entities_split_subtokens,
-        "entities_split_subtokens_pct": (entities_split_subtokens / total_entities * 100.0) if total_entities else 0.0,
-        "entities_truncated_at_256_count": entities_truncated_256,
-        "entities_truncated_at_256_pct": (entities_truncated_256 / total_entities * 100.0) if total_entities else 0.0,
-        "entities_truncated_at_512_count": entities_truncated_512,
-        "entities_truncated_at_512_pct": (entities_truncated_512 / total_entities * 100.0) if total_entities else 0.0,
+        "entities_split_subtokens_pct": (
+            entities_split_subtokens / total_entities * 100.0
+        )
+        if total_entities
+        else 0.0,
+        "entities_outside_first_content_window_count": entities_outside_first_window,
+        "entities_outside_first_content_window_pct": (
+            entities_outside_first_window / total_entities * 100.0
+        )
+        if total_entities
+        else 0.0,
     }
 
 
@@ -168,7 +177,7 @@ def main() -> None:
     dataset_dir = root_dir / "data" / "ner_dataset"
 
     all_docs: list[AnnotationDocumentV2] = []
-    for split in ["train", "val", "test"]:
+    for split in ["train", "val"]:
         f_path = dataset_dir / f"{split}.jsonl"
         if f_path.exists():
             with f_path.open("r", encoding="utf-8") as f:
@@ -176,13 +185,15 @@ def main() -> None:
                     if line.strip():
                         all_docs.append(AnnotationDocumentV2.model_validate_json(line))
 
-    print(f"[*] Loaded {len(all_docs)} documents across train/val/test splits.")
+    print(f"[*] Loaded {len(all_docs)} unsealed Train/Validation documents.")
 
     audit_results: dict[str, dict[str, Any]] = {}
 
     for m_key, m_info in MODELS.items():
         print(f"[*] Auditing tokenizer for {m_info['name']} ({m_info['hf_id']})...")
-        tok = AutoTokenizer.from_pretrained(m_info["hf_id"])
+        tok = AutoTokenizer.from_pretrained(
+            m_info["hf_id"], revision=m_info["revision"]
+        )
         res = audit_single_tokenizer(m_key, m_info, all_docs, tok)
         audit_results[m_key] = res
 
@@ -209,35 +220,95 @@ def main() -> None:
     d = audit_results.get("vipubmeddeberta", {})
 
     metrics_rows = [
-        ("Vocabulary / Base", "BPE (Python)", "Byte-level BPE (Fast)", "DeBERTa BPE (Fast)"),
-        ("Avg Characters / Doc", f"{p.get('characters_per_document', {}).get('mean', 0):.1f}", f"{b.get('characters_per_document', {}).get('mean', 0):.1f}", f"{d.get('characters_per_document', {}).get('mean', 0):.1f}"),
-        ("Avg Tokens / Doc", f"{p.get('tokens_per_document', {}).get('mean', 0):.1f}", f"{b.get('tokens_per_document', {}).get('mean', 0):.1f}", f"{d.get('tokens_per_document', {}).get('mean', 0):.1f}"),
-        ("P50 Token Length", f"{p.get('tokens_per_document', {}).get('p50', 0):.0f}", f"{b.get('tokens_per_document', {}).get('p50', 0):.0f}", f"{d.get('tokens_per_document', {}).get('p50', 0):.0f}"),
-        ("P90 Token Length", f"{p.get('tokens_per_document', {}).get('p90', 0):.0f}", f"{b.get('tokens_per_document', {}).get('p90', 0):.0f}", f"{d.get('tokens_per_document', {}).get('p90', 0):.0f}"),
-        ("P95 Token Length", f"{p.get('tokens_per_document', {}).get('p95', 0):.0f}", f"{b.get('tokens_per_document', {}).get('p95', 0):.0f}", f"{d.get('tokens_per_document', {}).get('p95', 0):.0f}"),
-        ("P99 Token Length", f"{p.get('tokens_per_document', {}).get('p99', 0):.0f}", f"{b.get('tokens_per_document', {}).get('p99', 0):.0f}", f"{d.get('tokens_per_document', {}).get('p99', 0):.0f}"),
-        ("Max Token Length", f"{p.get('tokens_per_document', {}).get('max', 0):.0f}", f"{b.get('tokens_per_document', {}).get('max', 0):.0f}", f"{d.get('tokens_per_document', {}).get('max', 0):.0f}"),
-        ("% Docs > 256 Tokens", f"{p.get('docs_exceeding_256_tokens_pct', 0):.2f}%", f"{b.get('docs_exceeding_256_tokens_pct', 0):.2f}%", f"{d.get('docs_exceeding_256_tokens_pct', 0):.2f}%"),
-        ("% Docs > 512 Tokens", f"{p.get('docs_exceeding_512_tokens_pct', 0):.2f}%", f"{b.get('docs_exceeding_512_tokens_pct', 0):.2f}%", f"{d.get('docs_exceeding_512_tokens_pct', 0):.2f}%"),
-        ("UNK Token Rate", f"{p.get('unknown_token_rate', 0):.3f}%", f"{b.get('unknown_token_rate', 0):.3f}%", f"{d.get('unknown_token_rate', 0):.3f}%"),
-        ("Entities Split in Subtokens", f"{p.get('entities_split_subtokens_pct', 0):.1f}%", f"{b.get('entities_split_subtokens_pct', 0):.1f}%", f"{d.get('entities_split_subtokens_pct', 0):.1f}%"),
-        ("Entity Truncation Rate @ 256", f"{p.get('entities_truncated_at_256_pct', 0):.2f}%", f"{b.get('entities_truncated_at_256_pct', 0):.2f}%", f"{d.get('entities_truncated_at_256_pct', 0):.2f}%"),
-        ("Entity Truncation Rate @ 512", f"{p.get('entities_truncated_at_512_pct', 0):.2f}%", f"{b.get('entities_truncated_at_512_pct', 0):.2f}%", f"{d.get('entities_truncated_at_512_pct', 0):.2f}%"),
+        (
+            "Vocabulary / Base",
+            "BPE (Python)",
+            "Byte-level BPE (Fast)",
+            "DeBERTa BPE (Fast)",
+        ),
+        (
+            "Avg Characters / Doc",
+            f"{p.get('characters_per_document', {}).get('mean', 0):.1f}",
+            f"{b.get('characters_per_document', {}).get('mean', 0):.1f}",
+            f"{d.get('characters_per_document', {}).get('mean', 0):.1f}",
+        ),
+        (
+            "Avg Tokens / Doc",
+            f"{p.get('tokens_per_document', {}).get('mean', 0):.1f}",
+            f"{b.get('tokens_per_document', {}).get('mean', 0):.1f}",
+            f"{d.get('tokens_per_document', {}).get('mean', 0):.1f}",
+        ),
+        (
+            "P50 Token Length",
+            f"{p.get('tokens_per_document', {}).get('p50', 0):.0f}",
+            f"{b.get('tokens_per_document', {}).get('p50', 0):.0f}",
+            f"{d.get('tokens_per_document', {}).get('p50', 0):.0f}",
+        ),
+        (
+            "P90 Token Length",
+            f"{p.get('tokens_per_document', {}).get('p90', 0):.0f}",
+            f"{b.get('tokens_per_document', {}).get('p90', 0):.0f}",
+            f"{d.get('tokens_per_document', {}).get('p90', 0):.0f}",
+        ),
+        (
+            "P95 Token Length",
+            f"{p.get('tokens_per_document', {}).get('p95', 0):.0f}",
+            f"{b.get('tokens_per_document', {}).get('p95', 0):.0f}",
+            f"{d.get('tokens_per_document', {}).get('p95', 0):.0f}",
+        ),
+        (
+            "P99 Token Length",
+            f"{p.get('tokens_per_document', {}).get('p99', 0):.0f}",
+            f"{b.get('tokens_per_document', {}).get('p99', 0):.0f}",
+            f"{d.get('tokens_per_document', {}).get('p99', 0):.0f}",
+        ),
+        (
+            "Max Token Length",
+            f"{p.get('tokens_per_document', {}).get('max', 0):.0f}",
+            f"{b.get('tokens_per_document', {}).get('max', 0):.0f}",
+            f"{d.get('tokens_per_document', {}).get('max', 0):.0f}",
+        ),
+        (
+            "% Docs Requiring Windows @ 256 Total",
+            f"{p.get('docs_requiring_sliding_window_pct', 0):.2f}%",
+            f"{b.get('docs_requiring_sliding_window_pct', 0):.2f}%",
+            f"{d.get('docs_requiring_sliding_window_pct', 0):.2f}%",
+        ),
+        (
+            "UNK Token Rate",
+            f"{p.get('unknown_token_rate', 0):.3f}%",
+            f"{b.get('unknown_token_rate', 0):.3f}%",
+            f"{d.get('unknown_token_rate', 0):.3f}%",
+        ),
+        (
+            "Entities Split in Subtokens",
+            f"{p.get('entities_split_subtokens_pct', 0):.1f}%",
+            f"{b.get('entities_split_subtokens_pct', 0):.1f}%",
+            f"{d.get('entities_split_subtokens_pct', 0):.1f}%",
+        ),
+        (
+            "Entities Outside First Content Window",
+            f"{p.get('entities_outside_first_content_window_pct', 0):.2f}%",
+            f"{b.get('entities_outside_first_content_window_pct', 0):.2f}%",
+            f"{d.get('entities_outside_first_content_window_pct', 0):.2f}%",
+        ),
     ]
 
     for label, v1, v2, v3 in metrics_rows:
         md.append(f"| {label} | {v1} | {v2} | {v3} |")
 
-    md.extend([
-        "",
-        "## Key Findings & Policy Freeze",
-        "- **Length Distribution:** 100% of prescription OCR documents fit comfortably within `max_length = 512` with 0% document truncation.",
-        "- **Subtoken Representation:** BamiBERT and ViPubmedDeBERTa exhibit excellent subtoken coverage with 0% UNK tokens on biomedical names.",
-        "- **Chunking Protocol:** Overlapping sliding window (stride = 64) is standardized across models.",
-        "",
-        "---",
-        "*Generated by `scripts/audit_tokenizers.py`.*",
-    ])
+    md.extend(
+        [
+            "",
+            "## Key Findings & Policy Freeze",
+            "- **Input Contract:** All backbones use 256 total input IDs; content capacity is derived after special tokens.",
+            "- **Subtoken Representation:** BamiBERT and ViPubmedDeBERTa exhibit excellent subtoken coverage with 0% UNK tokens on biomedical names.",
+            "- **Chunking Protocol:** Content overlap 64 with per-window special tokens is standardized across models.",
+            "",
+            "---",
+            "*Generated by `scripts/audit_tokenizers.py`.*",
+        ]
+    )
 
     out_md = reports_dir / "tokenizer_comparison.md"
     out_md.write_text("\n".join(md) + "\n", encoding="utf-8")

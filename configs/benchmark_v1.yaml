@@ -1,5 +1,7 @@
 # RxIE Benchmark Configuration V1
-schema_version: "rxie.benchmark_config.v1"
+schema_version: "rxie.benchmark_config.v1.2"
+protocol_version: "rxie.benchmark_protocol.v1.2.0"
+official_protocol: "B"
 dataset_version: "rxie-dataset-v1.0.1"
 
 splits:
@@ -29,16 +31,25 @@ token_ner:
 models:
   E0_phobert:
     name: "PhoBERT Base v2 + Linear BIO"
-    backbone: "vinai/phobert-base-v2"
-    tokenizer: "vinai/phobert-base-v2"
+    backbone_id: "vinai/phobert-base-v2"
+    backbone_revision: "86cd7fd4c148980922ac11a2cf5e257f2ba639e1"
+    tokenizer_id: "vinai/phobert-base-v2"
+    tokenizer_revision: "86cd7fd4c148980922ac11a2cf5e257f2ba639e1"
+    max_input_tokens: 256
   E1_bamibert:
     name: "BamiBERT + Linear BIO"
-    backbone: "Qualcomm-AI-Research/BamiBERT"
-    tokenizer: "Qualcomm-AI-Research/BamiBERT"
+    backbone_id: "Qualcomm-AI-Research/BamiBERT"
+    backbone_revision: "57bc1340debbe4e348ec549047a763caebe4a977"
+    tokenizer_id: "Qualcomm-AI-Research/BamiBERT"
+    tokenizer_revision: "57bc1340debbe4e348ec549047a763caebe4a977"
+    max_input_tokens: 256
   E2_vipubmeddeberta:
     name: "ViPubmedDeBERTa + Linear BIO"
-    backbone: "manhtt-079/vipubmed-deberta-base"
-    tokenizer: "manhtt-079/vipubmed-deberta-base"
+    backbone_id: "manhtt-079/vipubmed-deberta-base"
+    backbone_revision: "a5478252c02549e7bd3f9a7bf2a530cecab57cbc"
+    tokenizer_id: "manhtt-079/vipubmed-deberta-base"
+    tokenizer_revision: "a5478252c02549e7bd3f9a7bf2a530cecab57cbc"
+    max_input_tokens: 256
 
 hyperparameters:
   optimizer: "AdamW"
@@ -51,8 +62,7 @@ hyperparameters:
   warmup_ratio: 0.1
   epochs_max: 20
   batch_size: 8
-  max_sequence_length: 512
-  sliding_window_stride: 64
+  content_overlap: 64
 
 early_stopping:
   metric: "prescription_macro_entity_f1"
@@ -71,3 +81,21 @@ output_convention:
   training_log_filename: "training_log.json"
   val_metrics_filename: "metrics_val.json"
   val_predictions_filename: "predictions_val.jsonl"
+
+sampling:
+  policy: "shuffled_token_window_batching_with_single_loss_ownership"
+
+determinism:
+  cudnn_deterministic: true
+  cudnn_benchmark: false
+  deterministic_algorithms: true
+
+selection:
+  require_complete_grid: true
+  std_definition: "sample_ddof_1"
+  tie_break:
+    - "primary_mean_desc"
+    - "secondary_mean_desc"
+    - "primary_std_asc"
+    - "learning_rate_asc"
+  manifest_path_template: "reports/benchmark_v1/{model}/selection_manifest.json"

@@ -1,6 +1,7 @@
 """Unit tests for dataset loading and validation in training infrastructure."""
 
 from pathlib import Path
+
 from rxie.schemas import AnnotationDocumentV2
 
 
@@ -8,7 +9,8 @@ def test_load_dataset_splits():
     root = Path(__file__).resolve().parent.parent.parent
     dataset_dir = root / "data" / "ner_dataset"
 
-    for split in ["train", "val", "test"]:
+    # Pre-training tests intentionally never parse the sealed Test split.
+    for split in ["train", "val"]:
         f_path = dataset_dir / f"{split}.jsonl"
         assert f_path.exists(), f"Split file {f_path} missing"
 
@@ -26,4 +28,6 @@ def test_load_dataset_splits():
                 assert ent.entity_id
                 assert ent.type
                 assert ent.start < ent.end
-                assert doc.raw_text[ent.start:ent.end] == ent.text
+                assert doc.raw_text[ent.start : ent.end] == ent.text
+
+    assert (dataset_dir / "test.jsonl").is_file()

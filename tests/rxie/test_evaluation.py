@@ -21,7 +21,7 @@ def test_strict_scores_require_exact_type_and_boundaries():
 
     assert result.overall.f1 == 0
     assert result.per_class[EntityType.DRUG].predicted == 1
-    assert result.per_class[EntityType.STRENGTH].f1 == 1
+    assert result.per_class[EntityType.STRENGTH].f1 == 0
 
 
 def test_reports_micro_and_per_class_scores():

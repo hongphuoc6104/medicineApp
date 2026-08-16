@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
+# ruff: noqa: E402, E501
 """
 P8: Sampling Strategy & Imbalance Audit Script for RxIE Pre-Training Sprint.
-Analyzes document and entity distributions per prescription across splits.
+Analyzes unsealed Train/Validation distributions per prescription.
 Locks the standard training sampler and ablation configuration.
 
 Outputs:
@@ -14,7 +15,7 @@ from __future__ import annotations
 import json
 import statistics
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -26,13 +27,8 @@ from rxie.schemas import AnnotationDocumentV2
 
 def run_sampling_audit() -> tuple[dict[str, Any], str]:
     dataset_dir = root_dir / "data" / "ner_dataset"
-    splits_cfg_path = root_dir / "data" / "manifests" / "balanced_prescription_splits.json"
-
-    with splits_cfg_path.open("r", encoding="utf-8") as f:
-        split_assignments = json.load(f)
-
     docs_by_split: dict[str, list[AnnotationDocumentV2]] = {}
-    for split in ["train", "val", "test"]:
+    for split in ["train", "val"]:
         f_path = dataset_dir / f"{split}.jsonl"
         docs: list[AnnotationDocumentV2] = []
         if f_path.exists():
@@ -88,10 +84,11 @@ def run_sampling_audit() -> tuple[dict[str, Any], str]:
 ## 3. Sampling Policy Freeze for Benchmark V1
 
 ### Baseline Policy (Fixed across E0, E1, E2)
-- **Sampler:** `Standard Shuffled Document-Level Sampling`
+- **Sampler:** `Shuffled Token-Window Batching with Single-Loss Ownership`
 - **Batch Size:** `8`
 - **Random Seeds:** `[42, 3407, 2026]`
-- **Rationale:** Keeps backbone comparisons completely pure and unconfounded by sampling alterations.
+- **E0 Expansion:** `279 train documents -> 474 token windows`.
+- **Rationale:** All backbones use the same 256-total-input, content-overlap-64 policy. Window counts are reported by the training runner.
 
 ### Ablation Policy (Scheduled post-baseline)
 - **Sampler:** `PrescriptionWeightedRandomSampler` ($w_i = 1 / N_{{p(i)}}$)

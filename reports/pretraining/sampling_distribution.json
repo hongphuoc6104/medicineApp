@@ -1,11 +1,11 @@
 {
   "summary": {
-    "total_prescriptions": 27,
+    "total_prescriptions": 23,
     "doc_counts_stats": {
       "min": 1,
       "max": 111,
       "median": 4.0,
-      "mean": 15.88888888888889
+      "mean": 17.130434782608695
     }
   },
   "per_prescription": {
@@ -33,11 +33,6 @@
       "split": "train",
       "document_count": 41,
       "entity_count": 194
-    },
-    "RX_006": {
-      "split": "test",
-      "document_count": 29,
-      "entity_count": 249
     },
     "RX_007": {
       "split": "train",
@@ -68,11 +63,6 @@
       "split": "train",
       "document_count": 5,
       "entity_count": 37
-    },
-    "RX_013": {
-      "split": "test",
-      "document_count": 4,
-      "entity_count": 45
     },
     "RX_014": {
       "split": "train",
@@ -128,16 +118,6 @@
       "split": "train",
       "document_count": 1,
       "entity_count": 7
-    },
-    "RX_025": {
-      "split": "test",
-      "document_count": 1,
-      "entity_count": 7
-    },
-    "RX_027": {
-      "split": "test",
-      "document_count": 1,
-      "entity_count": 3
     },
     "RX_031": {
       "split": "train",

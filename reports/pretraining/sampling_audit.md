@@ -1,8 +1,8 @@
 # RxIE Pre-Training Sprint: Sampling & Prescription Imbalance Audit (P8)
 
 ## 1. Distribution Summary
-- **Total Prescriptions Audited:** 27
-- **Documents per Prescription:** Min = 1, Max = 111, Median = 4.0, Mean = 15.9
+- **Total Prescriptions Audited:** 23
+- **Documents per Prescription:** Min = 1, Max = 111, Median = 4.0, Mean = 17.1
 - **Total Entities per Prescription:** Min = 0, Max = 1144, Median = 8.0
 
 ## 2. Per-Prescription Volume Breakdown
@@ -14,14 +14,12 @@
 | RX_003   | train |              52 |            705 |               13.6 |
 | RX_004   | train |              51 |           1144 |               22.4 |
 | RX_005   | train |              41 |            194 |                4.7 |
-| RX_006   | test  |              29 |            249 |                8.6 |
 | RX_007   | train |              25 |            176 |                7.0 |
 | RX_008   | train |              10 |             89 |                8.9 |
 | RX_009   | train |               7 |             32 |                4.6 |
 | RX_010   | train |               6 |              0 |                0.0 |
 | RX_011   | train |               6 |              0 |                0.0 |
 | RX_012   | train |               5 |             37 |                7.4 |
-| RX_013   | test  |               4 |             45 |               11.2 |
 | RX_014   | train |               4 |              0 |                0.0 |
 | RX_015   | train |               3 |             28 |                9.3 |
 | RX_016   | val   |               2 |             18 |                9.0 |
@@ -33,17 +31,16 @@
 | RX_022   | train |               1 |              4 |                4.0 |
 | RX_023   | val   |               1 |              8 |                8.0 |
 | RX_024   | train |               1 |              7 |                7.0 |
-| RX_025   | test  |               1 |              7 |                7.0 |
-| RX_027   | test  |               1 |              3 |                3.0 |
 | RX_031   | train |               1 |              0 |                0.0 |
 
 ## 3. Sampling Policy Freeze for Benchmark V1
 
 ### Baseline Policy (Fixed across E0, E1, E2)
-- **Sampler:** `Standard Shuffled Document-Level Sampling`
+- **Sampler:** `Shuffled Token-Window Batching with Single-Loss Ownership`
 - **Batch Size:** `8`
 - **Random Seeds:** `[42, 3407, 2026]`
-- **Rationale:** Keeps backbone comparisons completely pure and unconfounded by sampling alterations.
+- **E0 Expansion:** `279 train documents -> 474 token windows`.
+- **Rationale:** All backbones use the same 256-total-input, content-overlap-64 policy. Window counts are reported by the training runner.
 
 ### Ablation Policy (Scheduled post-baseline)
 - **Sampler:** `PrescriptionWeightedRandomSampler` ($w_i = 1 / N_{p(i)}$)

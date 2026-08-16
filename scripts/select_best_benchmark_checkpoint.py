@@ -1,124 +1,165 @@
 #!/usr/bin/env python3
-"""
-Hyperparameter Selection & Checkpoint Promotion Script for RxIE Benchmark V1.
-Compares all validation results in experiments/<model>/tuning/ for each seed,
-identifies the best hyperparameter (learning rate), and promotes the best checkpoint
-for final sealed test split evaluation.
-
-Usage:
-  python scripts/select_best_benchmark_checkpoint.py --model E0_phobert
-"""
+"""Select one benchmark learning rate across the complete tuning seed grid."""
 
 from __future__ import annotations
 
 import argparse
 import json
-import shutil
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 root_dir = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(root_dir / "src"))
+
+from rxie.benchmark_protocol import (  # noqa: E402
+    SELECTION_SCHEMA_VERSION,
+    payload_sha256,
+    select_global_learning_rate,
+    sha256_file,
+    validate_selection_manifest,
+)
+
+
+def collect_tuning_candidates(
+    *,
+    model_id: str,
+    experiments_dir: Path,
+    config: dict[str, Any],
+) -> list[dict[str, Any]]:
+    candidates = []
+    tuning_dir = experiments_dir / model_id / "tuning"
+    for learning_rate in config["hyperparameters"]["learning_rates"]:
+        for seed in config["seeds"]:
+            run_name = f"lr_{float(learning_rate):.1e}_seed_{int(seed)}"
+            run_dir = tuning_dir / run_name
+            manifest_path = run_dir / "checkpoint_manifest.json"
+            metrics_path = run_dir / "metrics_val.json"
+            if not manifest_path.is_file() or not metrics_path.is_file():
+                raise FileNotFoundError(f"Missing tuning artifacts for {run_name}")
+
+            with manifest_path.open("r", encoding="utf-8") as handle:
+                manifest = json.load(handle)
+            with metrics_path.open("r", encoding="utf-8") as handle:
+                metrics = json.load(handle)
+
+            if manifest.get("run_type") != "tuning":
+                raise ValueError(f"Candidate {run_name} is not a tuning run")
+            if manifest.get("model_id") != model_id:
+                raise ValueError(f"Candidate {run_name} model mismatch")
+            if int(manifest.get("seed", -1)) != int(seed):
+                raise ValueError(f"Candidate {run_name} seed mismatch")
+            if float(manifest.get("learning_rate", -1)) != float(learning_rate):
+                raise ValueError(f"Candidate {run_name} learning-rate mismatch")
+            if manifest.get("dataset_version") != config["dataset_version"]:
+                raise ValueError(f"Candidate {run_name} dataset mismatch")
+
+            primary = metrics["prescription_macro_summary"][
+                "prescription_macro_entity_f1"
+            ]
+            secondary = metrics["entity_micro"]["f1"]
+            if primary is None:
+                raise ValueError(
+                    f"Candidate {run_name} has no informative prescription metric"
+                )
+            if float(manifest.get("best_validation_metric")) != float(primary):
+                raise ValueError(f"Candidate {run_name} manifest/metrics mismatch")
+
+            try:
+                run_path = str(run_dir.resolve().relative_to(root_dir.resolve()))
+            except ValueError:
+                run_path = str(run_dir.resolve())
+            candidates.append(
+                {
+                    "seed": int(seed),
+                    "learning_rate": float(learning_rate),
+                    "primary_metric": float(primary),
+                    "secondary_metric": float(secondary),
+                    "run_path": run_path,
+                    "checkpoint_manifest_sha256": sha256_file(manifest_path),
+                    "metrics_val_sha256": sha256_file(metrics_path),
+                    "source_git_commit": manifest.get("source_git_commit"),
+                }
+            )
+    return candidates
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RxIE Hyperparameter Selection & Checkpoint Promotion")
-    parser.add_argument("--model", type=str, default="E0_phobert", choices=["E0_phobert", "E1_bamibert", "E2_vipubmeddeberta"])
-    parser.add_argument("--experiments-dir", type=Path, default=root_dir / "experiments")
-    parser.add_argument("--promote", action="store_true", help="Promote best tuning checkpoints to experiments/<model>/final/")
-
+    parser = argparse.ArgumentParser(description="RxIE global learning-rate selection")
+    parser.add_argument(
+        "--model",
+        required=True,
+        choices=["E0_phobert", "E1_bamibert", "E2_vipubmeddeberta"],
+    )
+    parser.add_argument(
+        "--config", type=Path, default=root_dir / "configs" / "benchmark_v1.yaml"
+    )
     args = parser.parse_args()
-    model_dir = args.experiments_dir / args.model
-    tuning_dir = model_dir / "tuning"
 
-    if not tuning_dir.exists():
-        print(f"[!] No tuning directory found at {tuning_dir}. Run hyperparameter tuning first.")
-        sys.exit(1)
+    with args.config.open("r", encoding="utf-8") as handle:
+        config = yaml.safe_load(handle)
+    candidates = collect_tuning_candidates(
+        model_id=args.model,
+        experiments_dir=root_dir / "experiments",
+        config=config,
+    )
+    aggregates, selected_lr = select_global_learning_rate(
+        candidates,
+        seeds=[int(seed) for seed in config["seeds"]],
+        learning_rates=[
+            float(lr) for lr in config["hyperparameters"]["learning_rates"]
+        ],
+    )
 
-    # Collect all tuning runs
-    runs: list[dict[str, Any]] = []
-    for run_path in tuning_dir.iterdir():
-        if not run_path.is_dir():
-            continue
-        manifest_path = run_path / "checkpoint_manifest.json"
-        metrics_path = run_path / "metrics_val.json"
+    output_path = root_dir / config["selection"]["manifest_path_template"].format(
+        model=args.model
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    if output_path.exists():
+        raise FileExistsError(f"Selection manifest already exists: {output_path}")
 
-        if manifest_path.exists() and metrics_path.exists():
-            with manifest_path.open("r", encoding="utf-8") as f:
-                manifest = json.load(f)
-            with metrics_path.open("r", encoding="utf-8") as f:
-                metrics = json.load(f)
+    selection_manifest = {
+        "schema_version": SELECTION_SCHEMA_VERSION,
+        "protocol_version": config["protocol_version"],
+        "model_id": args.model,
+        "dataset_version": config["dataset_version"],
+        "config_sha256": sha256_file(args.config),
+        "primary_metric": config["model_selection"]["primary_metric"],
+        "secondary_metric": config["model_selection"]["secondary_metric"],
+        "seeds": [int(seed) for seed in config["seeds"]],
+        "learning_rates": [
+            float(lr) for lr in config["hyperparameters"]["learning_rates"]
+        ],
+        "candidates": candidates,
+        "aggregates": aggregates,
+        "selected_lr": selected_lr,
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    selection_manifest["payload_sha256"] = payload_sha256(selection_manifest)
+    validate_selection_manifest(
+        selection_manifest,
+        config=config,
+        config_path=args.config,
+        model_id=args.model,
+        repository_root=root_dir,
+    )
+    with output_path.open("x", encoding="utf-8") as handle:
+        json.dump(
+            selection_manifest, handle, ensure_ascii=True, allow_nan=False, indent=2
+        )
+        handle.write("\n")
 
-            rx_macro_f1 = metrics.get("prescription_macro_summary", {}).get("prescription_macro_entity_f1", 0.0)
-            micro_f1 = metrics.get("entity_micro", {}).get("f1", 0.0)
-            active_macro_f1 = metrics.get("entity_macro", {}).get("f1", 0.0)
-
-            runs.append({
-                "path": run_path,
-                "seed": manifest.get("seed"),
-                "learning_rate": manifest.get("learning_rate"),
-                "best_epoch": manifest.get("best_epoch"),
-                "rx_macro_f1": rx_macro_f1,
-                "micro_f1": micro_f1,
-                "active_macro_f1": active_macro_f1,
-                "manifest": manifest,
-            })
-
-    if not runs:
-        print(f"[!] No valid tuning runs found with manifests in {tuning_dir}.")
-        sys.exit(1)
-
-    print("==================================================")
-    print(f"   RxIE Hyperparameter Selection: {args.model}   ")
-    print("==================================================")
-    print(f"{'Run Directory':<40} {'Seed':<6} {'LR':<10} {'Best Ep':<8} {'Rx-Macro F1':<12} {'Micro F1':<10}")
-    print("-" * 90)
-
-    for r in sorted(runs, key=lambda x: (x["seed"], -x["rx_macro_f1"])):
-        print(f"{r['path'].name:<40} {r['seed']:<6} {r['learning_rate']:<10} {r['best_epoch']:<8} {r['rx_macro_f1']:<12.4f} {r['micro_f1']:<10.4f}")
-
-    # Group by seed and find best run per seed
-    seeds = sorted({r["seed"] for r in runs})
-    best_per_seed: dict[int, dict[str, Any]] = {}
-
-    for s in seeds:
-        seed_runs = [r for r in runs if r["seed"] == s]
-        best_run = max(seed_runs, key=lambda x: (x["rx_macro_f1"], x["micro_f1"]))
-        best_per_seed[s] = best_run
-
-    print("==================================================")
-    print("                BEST RUNS PER SEED                ")
-    print("==================================================")
-    for s, br in best_per_seed.items():
-        print(f"Seed {s}: LR={br['learning_rate']} (Rx-Macro F1={br['rx_macro_f1']:.4f}, Micro F1={br['micro_f1']:.4f}) -> {br['path'].name}")
-
-    if args.promote:
-        final_dir = model_dir / "final"
-        final_dir.mkdir(parents=True, exist_ok=True)
-        print("\n[*] Promoting selected checkpoints to final evaluation directory...")
-
-        for s, br in best_per_seed.items():
-            dest_dir = final_dir / f"seed_{s}"
-            if dest_dir.exists():
-                shutil.rmtree(dest_dir)
-            shutil.copytree(br["path"], dest_dir)
-
-            # Update manifest in destination to reflect validated promotion
-            dest_manifest_path = dest_dir / "checkpoint_manifest.json"
-            with dest_manifest_path.open("r", encoding="utf-8") as f:
-                dest_manifest = json.load(f)
-
-            dest_manifest["run_type"] = "final"
-            dest_manifest["selected_on_validation"] = True
-            dest_manifest["eligible_for_final_test"] = True
-            dest_manifest["promoted_from_tuning_run"] = br["path"].name
-
-            with dest_manifest_path.open("w", encoding="utf-8") as f:
-                json.dump(dest_manifest, f, ensure_ascii=False, indent=2)
-
-            print(f"[+] Promoted Seed {s} -> {dest_dir} (Eligible for Test: YES)")
-
-    print("==================================================")
+    print("LR          Rx-Macro mean    SD          Micro mean")
+    for row in aggregates:
+        print(
+            f"{row['learning_rate']:<11.1e} {row['primary_mean']:<16.6f} "
+            f"{row['primary_std']:<11.6f} {row['secondary_mean']:.6f}"
+        )
+    print(f"selected_lr = {selected_lr:.1e}")
+    print(f"selection_manifest = {output_path}")
 
 
 if __name__ == "__main__":

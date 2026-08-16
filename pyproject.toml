@@ -39,7 +39,7 @@ packages = ["src/rxie"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["tests/rxie"]
+testpaths = ["tests/rxie", "tests/training"]
 
 [tool.ruff]
 line-length = 88
