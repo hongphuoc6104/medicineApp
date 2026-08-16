@@ -34,8 +34,8 @@
       "route_normalized": "uống",
       "instruction_raw": "sau ăn",
       "instruction_normalized": "sau ăn",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     }
   ],

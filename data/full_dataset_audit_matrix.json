@@ -1,9 +1,9 @@
 {
-  "total_records": 23767,
-  "matched": 3033,
-  "ambiguous": 1607,
-  "unresolved": 19127,
-  "overall_match_rate": 0.12761391845836664,
+  "total_records": 20841,
+  "matched": 3195,
+  "ambiguous": 1305,
+  "unresolved": 16341,
+  "overall_match_rate": 0.1533035842809846,
   "by_entity_type": {
     "DRUG": {
       "total": 3024,
@@ -21,17 +21,17 @@
     },
     "DOSAGE": {
       "total": 2867,
-      "matched": 417,
-      "ambiguous": 335,
+      "matched": 460,
+      "ambiguous": 292,
       "unresolved": 2115,
-      "match_rate": 0.1454482036972445
+      "match_rate": 0.16044645971398674
     },
     "FREQUENCY": {
-      "total": 2913,
-      "matched": 127,
-      "ambiguous": 3,
-      "unresolved": 2783,
-      "match_rate": 0.04359766563680055
+      "total": 2854,
+      "matched": 396,
+      "ambiguous": 399,
+      "unresolved": 2059,
+      "match_rate": 0.13875262789067974
     },
     "QUANTITY": {
       "total": 3024,
@@ -47,19 +47,12 @@
       "unresolved": 2245,
       "match_rate": 0.12268518518518519
     },
-    "FORM": {
-      "total": 2867,
-      "matched": 151,
-      "ambiguous": 654,
-      "unresolved": 2062,
-      "match_rate": 0.05266829438437391
-    },
     "INSTRUCTION": {
       "total": 3024,
-      "matched": 436,
-      "ambiguous": 103,
+      "matched": 437,
+      "ambiguous": 102,
       "unresolved": 2485,
-      "match_rate": 0.14417989417989419
+      "match_rate": 0.144510582010582
     }
   }
 }

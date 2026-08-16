@@ -31,16 +31,16 @@
       "quantity_unit_normalized": "viên",
       "dosage_raw": "1 viên",
       "dosage_normalized": "1 viên",
-      "frequency_raw": "Ngày buổi sáng",
-      "frequency_normalized": "ngày buổi sáng",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
       "duration_raw": null,
       "duration_normalized": null,
       "route_raw": "uống",
       "route_normalized": "uống",
       "instruction_raw": "buổi sáng",
       "instruction_normalized": "buổi sáng",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -57,16 +57,16 @@
       "quantity_unit_normalized": "viên",
       "dosage_raw": "2 viên",
       "dosage_normalized": "2 viên",
-      "frequency_raw": "Ngày tối",
-      "frequency_normalized": "ngày tối",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
       "duration_raw": null,
       "duration_normalized": null,
       "route_raw": "uống",
       "route_normalized": "uống",
       "instruction_raw": "sau ăn tối",
       "instruction_normalized": "sau ăn tối",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -83,16 +83,16 @@
       "quantity_unit_normalized": "viên",
       "dosage_raw": "1 viên",
       "dosage_normalized": "1 viên",
-      "frequency_raw": "Ngày buổi tối",
-      "frequency_normalized": "ngày buổi tối",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
       "duration_raw": null,
       "duration_normalized": null,
       "route_raw": "uống",
       "route_normalized": "uống",
       "instruction_raw": "buổi tối",
       "instruction_normalized": "buổi tối",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -109,16 +109,16 @@
       "quantity_unit_normalized": "viên",
       "dosage_raw": "1 viên",
       "dosage_normalized": "1 viên",
-      "frequency_raw": "Ngày buổi sáng",
-      "frequency_normalized": "ngày buổi sáng",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
       "duration_raw": null,
       "duration_normalized": null,
       "route_raw": "uống",
       "route_normalized": "uống",
       "instruction_raw": "buổi sáng",
       "instruction_normalized": "buổi sáng",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -135,16 +135,16 @@
       "quantity_unit_normalized": "viên",
       "dosage_raw": "1 viên",
       "dosage_normalized": "1 viên",
-      "frequency_raw": "Ngày sáng",
-      "frequency_normalized": "ngày sáng",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
       "duration_raw": null,
       "duration_normalized": null,
       "route_raw": "uống",
       "route_normalized": "uống",
       "instruction_raw": "trước ăn sáng 30 phút",
       "instruction_normalized": "trước ăn sáng 30 phút",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -169,8 +169,8 @@
       "route_normalized": "uống",
       "instruction_raw": "sau ăn no (khi đau)",
       "instruction_normalized": "sau ăn no (khi đau)",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -195,8 +195,8 @@
       "route_normalized": "uống",
       "instruction_raw": "sau ăn",
       "instruction_normalized": "sau ăn",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -221,8 +221,8 @@
       "route_normalized": "uống",
       "instruction_raw": "mỗi lần 1 viên",
       "instruction_normalized": "mỗi lần 1 viên",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -239,16 +239,16 @@
       "quantity_unit_normalized": "viên",
       "dosage_raw": "1 viên",
       "dosage_normalized": "1 viên",
-      "frequency_raw": "Ngày buổi tối",
-      "frequency_normalized": "ngày buổi tối",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
       "duration_raw": null,
       "duration_normalized": null,
       "route_raw": "uống",
       "route_normalized": "uống",
       "instruction_raw": "khi ngứa mũi",
       "instruction_normalized": "khi ngứa mũi",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -273,8 +273,8 @@
       "route_normalized": "uống",
       "instruction_raw": "khi đau đầu",
       "instruction_normalized": "khi đau đầu",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -299,8 +299,8 @@
       "route_normalized": "uống",
       "instruction_raw": "mỗi lần 1 viên",
       "instruction_normalized": "mỗi lần 1 viên",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -325,8 +325,8 @@
       "route_normalized": "uống",
       "instruction_raw": "sau ăn",
       "instruction_normalized": "sau ăn",
-      "form_raw": "ống",
-      "form_normalized": "ống",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -351,8 +351,8 @@
       "route_normalized": "uống",
       "instruction_raw": "hòa tan trong nước",
       "instruction_normalized": "hòa tan trong nước",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -377,8 +377,8 @@
       "route_normalized": "uống",
       "instruction_raw": "sau ăn",
       "instruction_normalized": "sau ăn",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {

@@ -607,9 +607,9 @@ def test_int_canonical_gt_decomposition_and_text_fingerprinting():
     amlodipine = gt.medications[0]
     assert amlodipine.drug_raw == "Amlodipine (Amlor 5mg) 5mg"
     assert amlodipine.dosage_raw == "1 viên"
-    assert amlodipine.frequency_raw == "Ngày buổi sáng"
+    assert amlodipine.frequency_raw == "Ngày"
     assert amlodipine.route_raw == "uống"
-    assert amlodipine.form_raw == "viên"
+    assert amlodipine.form_raw is None
 
     sample_ocr = "BVĐK TW CẦN THƠ BT29392135186 Amlodipine 5mg Metformin 750mg"
     fp_key, enc, _hosp, drugs = identify_prescription_fingerprint(sample_ocr)

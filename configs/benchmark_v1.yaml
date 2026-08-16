@@ -1,0 +1,63 @@
+# RxIE Benchmark Configuration V1
+schema_version: "rxie.benchmark_config.v1"
+dataset_version: "rxie-dataset-v1.0.1"
+
+splits:
+  train_file: "data/ner_dataset/train.jsonl"
+  val_file: "data/ner_dataset/val.jsonl"
+  test_file: "data/ner_dataset/test.jsonl"
+  train_bio_file: "data/ner_dataset/bio_train.jsonl"
+  val_bio_file: "data/ner_dataset/bio_val.jsonl"
+  test_bio_file: "data/ner_dataset/bio_test.jsonl"
+  test_split_sealed: true
+
+seeds:
+  - 42
+  - 3407
+  - 2026
+
+models:
+  E0_phobert:
+    name: "PhoBERT Base v2 + Linear BIO"
+    backbone: "vinai/phobert-base-v2"
+    tokenizer: "vinai/phobert-base-v2"
+  E1_bamibert:
+    name: "BamiBERT + Linear BIO"
+    backbone: "Qualcomm-AI-Research/BamiBERT"
+    tokenizer: "Qualcomm-AI-Research/BamiBERT"
+  E2_vipubmeddeberta:
+    name: "ViPubmedDeBERTa + Linear BIO"
+    backbone: "manhtt-079/vipubmed-deberta-base"
+    tokenizer: "manhtt-079/vipubmed-deberta-base"
+
+hyperparameters:
+  optimizer: "AdamW"
+  learning_rates:
+    - 1.0e-5
+    - 2.0e-5
+    - 3.0e-5
+    - 5.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  epochs_max: 20
+  batch_size: 8
+  max_sequence_length: 512
+  sliding_window_stride: 64
+
+early_stopping:
+  metric: "prescription_macro_entity_f1"
+  mode: "max"
+  patience: 3
+
+model_selection:
+  primary_metric: "prescription_macro_entity_f1"
+  secondary_metric: "entity_micro_f1"
+  split: "validation"
+  sealed_test: true
+
+output_convention:
+  base_dir: "experiments"
+  manifest_filename: "checkpoint_manifest.json"
+  training_log_filename: "training_log.json"
+  val_metrics_filename: "metrics_val.json"
+  val_predictions_filename: "predictions_val.jsonl"

@@ -27,16 +27,16 @@
       "quantity_unit_normalized": "viên",
       "dosage_raw": "1/2 viên",
       "dosage_normalized": "1/2 viên",
-      "frequency_raw": "Ngày tối",
-      "frequency_normalized": "ngày tối",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
       "duration_raw": null,
       "duration_normalized": null,
       "route_raw": "uống",
       "route_normalized": "uống",
       "instruction_raw": "tối",
       "instruction_normalized": "tối",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {
@@ -61,8 +61,8 @@
       "route_normalized": "uống",
       "instruction_raw": "trước ăn",
       "instruction_normalized": "trước ăn",
-      "form_raw": "viên",
-      "form_normalized": "viên",
+      "form_raw": null,
+      "form_normalized": null,
       "note": null
     },
     {

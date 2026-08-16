@@ -1,0 +1,147 @@
+{
+  "total_canonical_files": 27,
+  "total_medications": 85,
+  "modified_medications": 75,
+  "details_sample": [
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M01",
+      "before": {
+        "frequency_raw": "Ngày buổi sáng",
+        "instruction_raw": "buổi sáng",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "Ngày",
+        "instruction_raw": "buổi sáng",
+        "form_raw": null
+      }
+    },
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M02",
+      "before": {
+        "frequency_raw": "Ngày tối",
+        "instruction_raw": "sau ăn tối",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "Ngày",
+        "instruction_raw": "sau ăn tối",
+        "form_raw": null
+      }
+    },
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M03",
+      "before": {
+        "frequency_raw": "Ngày buổi tối",
+        "instruction_raw": "buổi tối",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "Ngày",
+        "instruction_raw": "buổi tối",
+        "form_raw": null
+      }
+    },
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M04",
+      "before": {
+        "frequency_raw": "Ngày buổi sáng",
+        "instruction_raw": "buổi sáng",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "Ngày",
+        "instruction_raw": "buổi sáng",
+        "form_raw": null
+      }
+    },
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M05",
+      "before": {
+        "frequency_raw": "Ngày sáng",
+        "instruction_raw": "trước ăn sáng 30 phút",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "Ngày",
+        "instruction_raw": "trước ăn sáng 30 phút",
+        "form_raw": null
+      }
+    },
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M06",
+      "before": {
+        "frequency_raw": "Ngày",
+        "instruction_raw": "sau ăn no (khi đau)",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "Ngày",
+        "instruction_raw": "sau ăn no (khi đau)",
+        "form_raw": null
+      }
+    },
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M07",
+      "before": {
+        "frequency_raw": "Ngày 2 lần",
+        "instruction_raw": "sau ăn",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "Ngày 2 lần",
+        "instruction_raw": "sau ăn",
+        "form_raw": null
+      }
+    },
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M08",
+      "before": {
+        "frequency_raw": "Ngày 2 lần",
+        "instruction_raw": "mỗi lần 1 viên",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "Ngày 2 lần",
+        "instruction_raw": "mỗi lần 1 viên",
+        "form_raw": null
+      }
+    },
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M09",
+      "before": {
+        "frequency_raw": "Ngày buổi tối",
+        "instruction_raw": "khi ngứa mũi",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "Ngày",
+        "instruction_raw": "khi ngứa mũi",
+        "form_raw": null
+      }
+    },
+    {
+      "prescription_id": "RX_001",
+      "medication_id": "RX_001_M10",
+      "before": {
+        "frequency_raw": "cách mỗi 4 - 6 giờ",
+        "instruction_raw": "khi đau đầu",
+        "form_raw": "viên"
+      },
+      "after": {
+        "frequency_raw": "cách mỗi 4 - 6 giờ",
+        "instruction_raw": "khi đau đầu",
+        "form_raw": null
+      }
+    }
+  ]
+}

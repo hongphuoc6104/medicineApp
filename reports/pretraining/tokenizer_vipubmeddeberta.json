@@ -1,0 +1,36 @@
+{
+  "model_key": "vipubmeddeberta",
+  "model_name": "ViPubmedDeBERTa",
+  "hf_id": "manhtt-079/vipubmed-deberta-base",
+  "num_documents": 429,
+  "total_tokens": 121373,
+  "total_entities": 3195,
+  "characters_per_document": {
+    "p50": 899.0,
+    "p90": 990.0,
+    "p95": 1018.0,
+    "p99": 1056.0,
+    "max": 1123.0,
+    "mean": 816.6643356643357
+  },
+  "tokens_per_document": {
+    "p50": 304.0,
+    "p90": 342.0,
+    "p95": 351.0,
+    "p99": 381.0,
+    "max": 390.0,
+    "mean": 282.9207459207459
+  },
+  "docs_exceeding_256_tokens_count": 299,
+  "docs_exceeding_256_tokens_pct": 69.6969696969697,
+  "docs_exceeding_512_tokens_count": 0,
+  "docs_exceeding_512_tokens_pct": 0.0,
+  "unknown_token_count": 0,
+  "unknown_token_rate": 0.0,
+  "entities_split_subtokens_count": 2177,
+  "entities_split_subtokens_pct": 68.13771517996871,
+  "entities_truncated_at_256_count": 188,
+  "entities_truncated_at_256_pct": 5.884194053208137,
+  "entities_truncated_at_512_count": 0,
+  "entities_truncated_at_512_pct": 0.0
+}

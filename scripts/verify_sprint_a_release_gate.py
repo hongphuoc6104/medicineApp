@@ -281,7 +281,7 @@ def run_gate_audit() -> dict:
         return h.hexdigest()
 
     release_manifest = {
-        "dataset_version": "rxie-dataset-v1.0",
+        "dataset_version": "rxie-dataset-v1.0.1",
         "created_at": datetime.now(timezone.utc).isoformat(),
         "schema_versions": {
             "span_pointer": "rxie.annotation.v2",

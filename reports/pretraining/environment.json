@@ -1,0 +1,45 @@
+{
+  "timestamp_utc": "2026-08-16T07:02:42.980957+00:00",
+  "system": {
+    "os": "Linux",
+    "os_release": "6.14.0-37-generic",
+    "architecture": "x86_64",
+    "python_version": "3.10.20",
+    "python_implementation": "CPython"
+  },
+  "hardware": {
+    "cpu_count": 12,
+    "cuda": {
+      "available": true,
+      "device_count": 1,
+      "device_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+      "cuda_version": "13.0",
+      "cudnn_version": 92000
+    }
+  },
+  "frameworks": {
+    "torch": "2.13.0",
+    "transformers": "4.57.6",
+    "tokenizers": "0.22.2",
+    "datasets": "3.6.0",
+    "seqeval": "1.2.2",
+    "pydantic": "2.13.4"
+  },
+  "reproducibility": {
+    "git_commit": "1985a16ab47c50c62b60df488543dff40c468780",
+    "dataset_version": "rxie-dataset-v1.0.1",
+    "dataset_checksums": {
+      "train.jsonl": "8a71b445577ebf42d8d9e1aa49290c7a8bb5805532a4c077bdb012d8ddb2030b",
+      "val.jsonl": "03b4e54a0e5d2e13f189d93b9920e93f4b96d64429a00be2967e41fcefbbc969",
+      "test.jsonl": "e3b7f63b74a6b22d53266709a460a1d525ebe1fa12730bc50ac170bd66c9517e",
+      "bio_train.jsonl": "c2c77fd2254229925850b399d597be148739ac0149d0a0a0b735cc3579cbc3bf",
+      "bio_val.jsonl": "d40f5bcc3b5ce38709e2f2befd59359fc0255c2eb5c5f7c85bb2e44211b7dd0f",
+      "bio_test.jsonl": "99df4f3e4b86063f4107270a9dd624be2fb6ba7b4b9bc4e3b1a32d1e55bf0629"
+    },
+    "model_revisions": {
+      "phobert": "vinai/phobert-base-v2",
+      "bamibert": "Qualcomm-AI-Research/BamiBERT",
+      "vipubmeddeberta": "manhtt-079/vipubmed-deberta-base"
+    }
+  }
+}

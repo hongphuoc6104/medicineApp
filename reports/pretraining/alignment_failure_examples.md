@@ -1,8 +1,8 @@
 # RxIE Pre-Training Sprint: Root-Cause Alignment Failure Audit Report
 
 ## Executive Summary
-- **Total Entity Checks:** 23767
-- **Total Unresolved Instances:** 19136
+- **Total Entity Checks:** 20841
+- **Total Unresolved Instances:** 16348
 - **Primary Identified Causes:**
   1. `TABLE_COLUMN_SEPARATED`: Explains almost all failures of composite `QUANTITY` (e.g. "30" on line A, "Viên" on line B).
   2. `OCR_CORRUPTED`: Vietnamese diacritic variations and optical recognition character substitutions (e.g., "buối" vs "buổi", "uông" vs "uống").
@@ -18,9 +18,9 @@
 | QUANTITY    |    4 |    1 |    0 |    0 |  565 | 2452 |   3022 |
 | ROUTE       |    3 |    1 | 1989 |  142 |  100 |   11 |   2246 |
 | DOSAGE      |    5 |    1 | 1698 |    4 |   70 |  338 |   2116 |
-| FREQUENCY   |    0 |    1 |  351 |  117 | 1527 |  787 |   2783 |
+| FREQUENCY   |    2 |    1 | 1355 |  134 |  502 |   66 |   2060 |
 | INSTRUCTION |    3 |    1 |  681 |  651 |  976 |  176 |   2488 |
-| FORM        |   10 |    1 | 2008 |    4 |   38 |    4 |   2065 |
+| FORM        |    0 |    0 |    0 |    0 |    0 |    0 |      0 |
 
 ## Concrete Failure Examples & Trace Diagnostics
 
@@ -50,8 +50,8 @@
   - **Diagnosis:** Target string exists in document, but parent DRUG entity was not matched.
 
 - **Doc:** `IMG_20260115_181847` (RX_002, Med: `RX_002_M01`)
-  - **Entity Type:** `FORM`
-  - **Canonical Text:** "viên"
+  - **Entity Type:** `FREQUENCY`
+  - **Canonical Text:** "Ngày"
   - **Diagnosis:** Target string exists in document, but parent DRUG entity was not matched.
 
 - **Doc:** `IMG_20260115_181847` (RX_002, Med: `RX_002_M02`)
@@ -67,15 +67,15 @@
   - **Canonical Text:** "2 viên"
   - **Diagnosis:** Individual tokens ['2', 'viên'] exist in document but are separated across columns/lines.
 
-- **Doc:** `IMG_20260115_181847` (RX_002, Med: `RX_002_M02`)
-  - **Entity Type:** `FREQUENCY`
-  - **Canonical Text:** "Ngày trưa"
-  - **Diagnosis:** Individual tokens ['Ngày', 'trưa'] exist in document but are separated across columns/lines.
+- **Doc:** `IMG_20260115_181852` (RX_002, Med: `RX_002_M01`)
+  - **Entity Type:** `DOSAGE`
+  - **Canonical Text:** "2 viên"
+  - **Diagnosis:** Individual tokens ['2', 'viên'] exist in document but are separated across columns/lines.
 
-- **Doc:** `IMG_20260115_181847` (RX_002, Med: `RX_002_M03`)
-  - **Entity Type:** `FREQUENCY`
-  - **Canonical Text:** "Ngày sáng"
-  - **Diagnosis:** Individual tokens ['Ngày', 'sáng'] exist in document but are separated across columns/lines.
+- **Doc:** `IMG_20260115_181855` (RX_002, Med: `RX_002_M01`)
+  - **Entity Type:** `DOSAGE`
+  - **Canonical Text:** "2 viên"
+  - **Diagnosis:** Individual tokens ['2', 'viên'] exist in document but are separated across columns/lines.
 
 
 ### Failure Cause: `OCR_CORRUPTED`
@@ -108,10 +108,10 @@
   - **Canonical Text:** "1 viên"
   - **Diagnosis:** Target string exists at offset 509, but is outside parent window [0, 502].
 
-- **Doc:** `IMG_20260122_005931` (RX_004, Med: `RX_004_M01`)
-  - **Entity Type:** `FORM`
-  - **Canonical Text:** "viên"
-  - **Diagnosis:** Target string exists at offset 511, but is outside parent window [0, 500].
+- **Doc:** `IMG_20260122_005931` (RX_004, Med: `RX_004_M02`)
+  - **Entity Type:** `QUANTITY`
+  - **Canonical Text:** "28 Viên"
+  - **Diagnosis:** Target string exists at offset 820, but is outside parent window [170, 677].
 
 
 ### Failure Cause: `CROPPED_OUT`

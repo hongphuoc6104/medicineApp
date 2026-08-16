@@ -1,7 +1,7 @@
 {
   "summary": {
-    "total_audited": 23767,
-    "total_unresolved": 19136,
+    "total_audited": 20841,
+    "total_unresolved": 16348,
     "failure_causes": [
       "CANDIDATE_WINDOW_ERROR",
       "CROPPED_OUT",
@@ -48,10 +48,11 @@
       "CROPPED_OUT": 1
     },
     "FREQUENCY": {
-      "OCR_TEXT_MISSING": 1527,
-      "TABLE_COLUMN_SEPARATED": 787,
-      "OCR_CORRUPTED": 117,
-      "DRUG_ANCHOR_MISSING": 351,
+      "DRUG_ANCHOR_MISSING": 1355,
+      "OCR_CORRUPTED": 134,
+      "OCR_TEXT_MISSING": 502,
+      "TABLE_COLUMN_SEPARATED": 66,
+      "CANDIDATE_WINDOW_ERROR": 2,
       "CROPPED_OUT": 1
     },
     "INSTRUCTION": {
@@ -62,14 +63,7 @@
       "CANDIDATE_WINDOW_ERROR": 3,
       "CROPPED_OUT": 1
     },
-    "FORM": {
-      "DRUG_ANCHOR_MISSING": 2008,
-      "OCR_CORRUPTED": 4,
-      "OCR_TEXT_MISSING": 38,
-      "CANDIDATE_WINDOW_ERROR": 10,
-      "TABLE_COLUMN_SEPARATED": 4,
-      "CROPPED_OUT": 1
-    }
+    "FORM": {}
   },
   "sample_examples": {
     "OCR_TEXT_MISSING": [
@@ -113,18 +107,6 @@
         "prescription_id": "RX_002",
         "document_id": "IMG_20260115_181847",
         "medication_id": "RX_002_M01",
-        "entity_type": "FREQUENCY",
-        "canonical_text": "Ngày (sáng, tối)",
-        "cause": "OCR_TEXT_MISSING",
-        "explanation": "Target text was not found anywhere in OCR document (OCR skipped or absent).",
-        "debug": {
-          "target": "Ngày (sáng, tối)"
-        }
-      },
-      {
-        "prescription_id": "RX_002",
-        "document_id": "IMG_20260115_181847",
-        "medication_id": "RX_002_M01",
         "entity_type": "INSTRUCTION",
         "canonical_text": "sáng, tối",
         "cause": "OCR_TEXT_MISSING",
@@ -143,6 +125,18 @@
         "explanation": "Target text was not found anywhere in OCR document (OCR skipped or absent).",
         "debug": {
           "target": "Aspirin (Aspirin Cardio)"
+        }
+      },
+      {
+        "prescription_id": "RX_002",
+        "document_id": "IMG_20260115_181847",
+        "medication_id": "RX_002_M02",
+        "entity_type": "STRENGTH",
+        "canonical_text": "81mg",
+        "cause": "OCR_TEXT_MISSING",
+        "explanation": "Target text was not found anywhere in OCR document (OCR skipped or absent).",
+        "debug": {
+          "target": "81mg"
         }
       }
     ],
@@ -163,12 +157,12 @@
         "prescription_id": "RX_002",
         "document_id": "IMG_20260115_181847",
         "medication_id": "RX_002_M01",
-        "entity_type": "FORM",
-        "canonical_text": "viên",
+        "entity_type": "FREQUENCY",
+        "canonical_text": "Ngày",
         "cause": "DRUG_ANCHOR_MISSING",
         "explanation": "Target string exists in document, but parent DRUG entity was not matched.",
         "debug": {
-          "char_offset": 0
+          "char_offset": 42
         }
       },
       {
@@ -199,24 +193,24 @@
         "prescription_id": "RX_002",
         "document_id": "IMG_20260115_181847",
         "medication_id": "RX_002_M02",
-        "entity_type": "INSTRUCTION",
-        "canonical_text": "sau ăn trưa",
+        "entity_type": "FREQUENCY",
+        "canonical_text": "Ngày",
         "cause": "DRUG_ANCHOR_MISSING",
         "explanation": "Target string exists in document, but parent DRUG entity was not matched.",
         "debug": {
-          "char_offset": 387
+          "char_offset": 42
         }
       },
       {
         "prescription_id": "RX_002",
         "document_id": "IMG_20260115_181847",
         "medication_id": "RX_002_M02",
-        "entity_type": "FORM",
-        "canonical_text": "viên",
+        "entity_type": "INSTRUCTION",
+        "canonical_text": "sau ăn trưa",
         "cause": "DRUG_ANCHOR_MISSING",
         "explanation": "Target string exists in document, but parent DRUG entity was not matched.",
         "debug": {
-          "char_offset": 0
+          "char_offset": 387
         }
       }
     ],
@@ -238,36 +232,6 @@
       },
       {
         "prescription_id": "RX_002",
-        "document_id": "IMG_20260115_181847",
-        "medication_id": "RX_002_M02",
-        "entity_type": "FREQUENCY",
-        "canonical_text": "Ngày trưa",
-        "cause": "TABLE_COLUMN_SEPARATED",
-        "explanation": "Individual tokens ['Ngày', 'trưa'] exist in document but are separated across columns/lines.",
-        "debug": {
-          "tokens": [
-            "Ngày",
-            "trưa"
-          ]
-        }
-      },
-      {
-        "prescription_id": "RX_002",
-        "document_id": "IMG_20260115_181847",
-        "medication_id": "RX_002_M03",
-        "entity_type": "FREQUENCY",
-        "canonical_text": "Ngày sáng",
-        "cause": "TABLE_COLUMN_SEPARATED",
-        "explanation": "Individual tokens ['Ngày', 'sáng'] exist in document but are separated across columns/lines.",
-        "debug": {
-          "tokens": [
-            "Ngày",
-            "sáng"
-          ]
-        }
-      },
-      {
-        "prescription_id": "RX_002",
         "document_id": "IMG_20260115_181852",
         "medication_id": "RX_002_M01",
         "entity_type": "DOSAGE",
@@ -283,30 +247,60 @@
       },
       {
         "prescription_id": "RX_002",
-        "document_id": "IMG_20260115_181852",
-        "medication_id": "RX_002_M02",
-        "entity_type": "FREQUENCY",
-        "canonical_text": "Ngày trưa",
+        "document_id": "IMG_20260115_181855",
+        "medication_id": "RX_002_M01",
+        "entity_type": "DOSAGE",
+        "canonical_text": "2 viên",
         "cause": "TABLE_COLUMN_SEPARATED",
-        "explanation": "Individual tokens ['Ngày', 'trưa'] exist in document but are separated across columns/lines.",
+        "explanation": "Individual tokens ['2', 'viên'] exist in document but are separated across columns/lines.",
         "debug": {
           "tokens": [
-            "Ngày",
-            "trưa"
+            "2",
+            "viên"
           ]
         }
       },
       {
         "prescription_id": "RX_002",
-        "document_id": "IMG_20260115_181852",
-        "medication_id": "RX_002_M03",
-        "entity_type": "FREQUENCY",
-        "canonical_text": "Ngày sáng",
+        "document_id": "IMG_20260115_181919",
+        "medication_id": "RX_002_M01",
+        "entity_type": "DOSAGE",
+        "canonical_text": "2 viên",
         "cause": "TABLE_COLUMN_SEPARATED",
-        "explanation": "Individual tokens ['Ngày', 'sáng'] exist in document but are separated across columns/lines.",
+        "explanation": "Individual tokens ['2', 'viên'] exist in document but are separated across columns/lines.",
         "debug": {
           "tokens": [
-            "Ngày",
+            "2",
+            "viên"
+          ]
+        }
+      },
+      {
+        "prescription_id": "RX_002",
+        "document_id": "IMG_20260115_181919",
+        "medication_id": "RX_002_M05",
+        "entity_type": "INSTRUCTION",
+        "canonical_text": "buổi sáng",
+        "cause": "TABLE_COLUMN_SEPARATED",
+        "explanation": "Individual tokens ['buổi', 'sáng'] exist in document but are separated across columns/lines.",
+        "debug": {
+          "tokens": [
+            "buổi",
+            "sáng"
+          ]
+        }
+      },
+      {
+        "prescription_id": "RX_002",
+        "document_id": "IMG_20260115_181919",
+        "medication_id": "RX_002_M06",
+        "entity_type": "INSTRUCTION",
+        "canonical_text": "buổi sáng",
+        "cause": "TABLE_COLUMN_SEPARATED",
+        "explanation": "Individual tokens ['buổi', 'sáng'] exist in document but are separated across columns/lines.",
+        "debug": {
+          "tokens": [
+            "buổi",
             "sáng"
           ]
         }
@@ -424,23 +418,6 @@
       {
         "prescription_id": "RX_004",
         "document_id": "IMG_20260122_005931",
-        "medication_id": "RX_004_M01",
-        "entity_type": "FORM",
-        "canonical_text": "viên",
-        "cause": "CANDIDATE_WINDOW_ERROR",
-        "explanation": "Target string exists at offset 511, but is outside parent window [0, 500].",
-        "debug": {
-          "char_offset": 511,
-          "drug_offset": 246,
-          "window": [
-            0,
-            500
-          ]
-        }
-      },
-      {
-        "prescription_id": "RX_004",
-        "document_id": "IMG_20260122_005931",
         "medication_id": "RX_004_M02",
         "entity_type": "QUANTITY",
         "canonical_text": "28 Viên",
@@ -486,6 +463,23 @@
           "window": [
             270,
             777
+          ]
+        }
+      },
+      {
+        "prescription_id": "RX_003",
+        "document_id": "IMG_20260122_010209",
+        "medication_id": "RX_003_M01",
+        "entity_type": "STRENGTH",
+        "canonical_text": "10mg",
+        "cause": "CANDIDATE_WINDOW_ERROR",
+        "explanation": "Target string exists at offset 358, but is outside parent window [449, 953].",
+        "debug": {
+          "char_offset": 358,
+          "drug_offset": 699,
+          "window": [
+            449,
+            953
           ]
         }
       }

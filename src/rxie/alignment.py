@@ -402,7 +402,10 @@ def verify_split_isolation(
 
 
 def align_token_labels(
-    document: AnnotationDocument, tokenizer: Any, **tokenizer_kwargs: Any
+    document: AnnotationDocument,
+    tokenizer: Any,
+    allow_whitespace_boundary: bool = False,
+    **tokenizer_kwargs: Any,
 ) -> dict[str, Any]:
     """Tokenize one document and add labels, using -100 for special tokens."""
     if not getattr(tokenizer, "is_fast", False):
@@ -429,7 +432,14 @@ def align_token_labels(
             labels.append(LABEL_TO_ID["O"])
             continue
         index, entity = overlapping[0]
-        if len(overlapping) > 1 or token_start < entity.start or token_end > entity.end:
+        if allow_whitespace_boundary:
+            has_bad_prefix = token_start < entity.start and not document.raw_text[token_start:entity.start].isspace()
+            has_bad_suffix = token_end > entity.end and not document.raw_text[entity.end:token_end].isspace()
+        else:
+            has_bad_prefix = token_start < entity.start
+            has_bad_suffix = token_end > entity.end
+
+        if len(overlapping) > 1 or has_bad_prefix or has_bad_suffix:
             raise ValueError(
                 f"token offset ({token_start}, {token_end}) crosses an entity boundary"
             )

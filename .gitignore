@@ -22,6 +22,9 @@ checkpoint-*/
 runs/*
 !runs/.gitkeep
 !runs/README.md
+experiments/*
+!experiments/.gitkeep
+!experiments/README.md
 wandb/
 mlruns/
 *.pt

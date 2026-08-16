@@ -13,10 +13,10 @@
 | STRENGTH    |                    85 |                       3024 |     684 |       103 |       2237 |   607 |  13 |   64 |
 | QUANTITY    |                    85 |                       3024 |       1 |         1 |       3022 |     1 |   0 |    0 |
 | ROUTE       |                    85 |                       3024 |     371 |       408 |       2245 |   332 |   6 |   33 |
-| DOSAGE      |                    75 |                       2867 |     417 |       335 |       2115 |   381 |   7 |   29 |
-| FREQUENCY   |                    84 |                       2913 |     127 |         3 |       2783 |   124 |   2 |    1 |
-| INSTRUCTION |                    85 |                       3024 |     436 |       103 |       2485 |   365 |   9 |   62 |
-| FORM        |                    75 |                       2867 |     151 |       654 |       2062 |   143 |   0 |    8 |
+| DOSAGE      |                    75 |                       2867 |     460 |       292 |       2115 |   423 |   7 |   30 |
+| FREQUENCY   |                    80 |                       2854 |     396 |       399 |       2059 |   352 |   7 |   37 |
+| INSTRUCTION |                    85 |                       3024 |     437 |       102 |       2485 |   366 |   9 |   62 |
+| FORM        |                     0 |                          0 |       0 |         0 |          0 |     0 |   0 |    0 |
 | DURATION    |                     0 |                          0 |       0 |         0 |          0 |     0 |   0 |    0 |
 
 ## Extended Coverage & Diversity Metrics
@@ -27,10 +27,10 @@
 | STRENGTH    |                 27 |                274 |                 26 |                    22 |
 | QUANTITY    |                 27 |                  1 |                 16 |                     1 |
 | ROUTE       |                 27 |                254 |                  5 |                     6 |
-| DOSAGE      |                 27 |                259 |                  7 |                     6 |
-| FREQUENCY   |                 27 |                124 |                 16 |                     6 |
+| DOSAGE      |                 27 |                263 |                  7 |                     6 |
+| FREQUENCY   |                 24 |                274 |                  8 |                     5 |
 | INSTRUCTION |                 27 |                228 |                 22 |                    13 |
-| FORM        |                 27 |                119 |                  3 |                     2 |
+| FORM        |                  0 |                  0 |                  0 |                     0 |
 | DURATION    |                  0 |                  0 |                  0 |                     0 |
 
 ## Diagnostic Findings & Gate P0 Observations

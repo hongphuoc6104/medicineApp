@@ -1,0 +1,36 @@
+{
+  "model_key": "bamibert",
+  "model_name": "BamiBERT (Biomedical RoBERTa)",
+  "hf_id": "Qualcomm-AI-Research/BamiBERT",
+  "num_documents": 429,
+  "total_tokens": 140921,
+  "total_entities": 3195,
+  "characters_per_document": {
+    "p50": 899.0,
+    "p90": 990.0,
+    "p95": 1018.0,
+    "p99": 1056.0,
+    "max": 1123.0,
+    "mean": 816.6643356643357
+  },
+  "tokens_per_document": {
+    "p50": 359.0,
+    "p90": 399.0,
+    "p95": 411.0,
+    "p99": 448.0,
+    "max": 462.0,
+    "mean": 328.4871794871795
+  },
+  "docs_exceeding_256_tokens_count": 334,
+  "docs_exceeding_256_tokens_pct": 77.85547785547784,
+  "docs_exceeding_512_tokens_count": 0,
+  "docs_exceeding_512_tokens_pct": 0.0,
+  "unknown_token_count": 0,
+  "unknown_token_rate": 0.0,
+  "entities_split_subtokens_count": 2265,
+  "entities_split_subtokens_pct": 70.89201877934272,
+  "entities_truncated_at_256_count": 473,
+  "entities_truncated_at_256_pct": 14.804381846635367,
+  "entities_truncated_at_512_count": 0,
+  "entities_truncated_at_512_pct": 0.0
+}
