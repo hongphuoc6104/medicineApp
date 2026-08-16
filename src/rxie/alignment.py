@@ -30,6 +30,37 @@ LABELS = ("O",) + tuple(
 LABEL_TO_ID = {label: index for index, label in enumerate(LABELS)}
 ID_TO_LABEL = {index: label for label, index in LABEL_TO_ID.items()}
 
+DEFAULT_ACTIVE_ENTITY_TYPES = (
+    EntityType.DRUG,
+    EntityType.STRENGTH,
+    EntityType.DOSAGE,
+    EntityType.FREQUENCY,
+    EntityType.ROUTE,
+    EntityType.INSTRUCTION,
+)
+
+
+def build_label_map(
+    entity_types: Iterable[EntityType | str] | None = None,
+) -> tuple[tuple[str, ...], dict[str, int], dict[int, str]]:
+    """Build BIO label tuple and bidirectional index mappings for a subset of entity types."""
+    types = (
+        [EntityType(t) if isinstance(t, str) else t for t in entity_types]
+        if entity_types is not None
+        else list(DEFAULT_ACTIVE_ENTITY_TYPES)
+    )
+    labels = ("O",) + tuple(
+        label
+        for entity_type in types
+        for label in (f"B-{entity_type.value}", f"I-{entity_type.value}")
+    )
+    label_to_id = {label: index for index, label in enumerate(labels)}
+    id_to_label = {index: label for label, index in label_to_id.items()}
+    return labels, label_to_id, id_to_label
+
+
+E0_LABELS, E0_LABEL_TO_ID, E0_ID_TO_LABEL = build_label_map(DEFAULT_ACTIVE_ENTITY_TYPES)
+
 
 class MatchStatus(str, Enum):
     MATCHED = "MATCHED"
@@ -405,6 +436,7 @@ def align_token_labels(
     document: AnnotationDocument,
     tokenizer: Any,
     allow_whitespace_boundary: bool = False,
+    label_to_id: dict[str, int] | None = None,
     **tokenizer_kwargs: Any,
 ) -> dict[str, Any]:
     """Tokenize one document and add labels, using -100 for special tokens."""
@@ -416,6 +448,8 @@ def align_token_labels(
     offsets = encoded.pop("offset_mapping")
     if offsets and isinstance(offsets[0][0], (list, tuple)):
         raise ValueError("overflowing/batched tokenizer output is not supported")
+
+    active_label_to_id = label_to_id if label_to_id is not None else LABEL_TO_ID
 
     labels: list[int] = []
     seen_entities: set[int] = set()
@@ -429,7 +463,7 @@ def align_token_labels(
             if entity.start < token_end and token_start < entity.end
         ]
         if not overlapping:
-            labels.append(LABEL_TO_ID["O"])
+            labels.append(active_label_to_id["O"])
             continue
         index, entity = overlapping[0]
         if allow_whitespace_boundary:
@@ -444,10 +478,17 @@ def align_token_labels(
                 f"token offset ({token_start}, {token_end}) crosses an entity boundary"
             )
         prefix = "B" if index not in seen_entities else "I"
+        tag = f"{prefix}-{entity.type.value}"
         seen_entities.add(index)
-        labels.append(LABEL_TO_ID[f"{prefix}-{entity.type.value}"])
+        labels.append(active_label_to_id.get(tag, active_label_to_id["O"]))
 
-    missing = set(range(len(document.entities))) - seen_entities
+    # Only check missing for entities whose tags are supported in active_label_to_id
+    active_entity_indices = {
+        idx
+        for idx, ent in enumerate(document.entities)
+        if f"B-{ent.type.value}" in active_label_to_id
+    }
+    missing = active_entity_indices - seen_entities
     if missing:
         raise ValueError("one or more entities have no aligned tokens")
     encoded["labels"] = labels

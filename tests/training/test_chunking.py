@@ -19,7 +19,7 @@ def test_chunking_short_document():
             GoldEntity(type=EntityType.DOSAGE, text="1 viên", start=25, end=31),
         ],
     )
-    chunks = chunk_document_by_characters(doc, max_chars=1000, stride_chars=200)
+    chunks = chunk_document_by_characters(doc, max_chars=1000, overlap_chars=200)
     assert len(chunks) == 1
     assert chunks[0].char_start == 0
     assert chunks[0].char_end == len(doc.raw_text)
@@ -52,6 +52,6 @@ def test_chunking_long_document_recoverability():
     )
 
     # Chunk with small window size to force multiple splits
-    chunks = chunk_document_by_characters(doc, max_chars=800, stride_chars=300)
+    chunks = chunk_document_by_characters(doc, max_chars=800, overlap_chars=300)
     assert len(chunks) >= 3
     assert verify_gold_entities_recoverable(doc, chunks), "Every gold entity must be recoverable across chunks"

@@ -1,4 +1,16 @@
-"""Sliding window chunking and long-document handling policy."""
+"""
+Sliding window chunking and long-document handling policy.
+
+Two Distinct Policies:
+  1. Token-Level Policy (Training/Benchmark):
+     - Window Size: 512 tokens
+     - Stride: 64 tokens
+     (Enforced during tokenization and model inference via configs/benchmark_v1.yaml)
+
+  2. Character-Level Fallback Policy (Generic Text Partitioning):
+     - max_chars: 1500 characters
+     - overlap_chars: 400 characters (step = max_chars - overlap_chars = 1100 chars)
+"""
 
 from __future__ import annotations
 
@@ -21,7 +33,7 @@ class DocumentChunk:
 def chunk_document_by_characters(
     document: AnnotationDocument,
     max_chars: int = 1500,
-    stride_chars: int = 400,
+    overlap_chars: int = 400,
 ) -> list[DocumentChunk]:
     """
     Partition long document into overlapping character chunks.
@@ -76,7 +88,7 @@ def chunk_document_by_characters(
         chunk_idx += 1
         if end >= total_len:
             break
-        start += max_chars - stride_chars
+        start += max_chars - overlap_chars
 
     # Update total_chunks count
     num_chunks = len(chunks)

@@ -16,6 +16,16 @@ seeds:
   - 3407
   - 2026
 
+token_ner:
+  active_entity_types:
+    - DRUG
+    - STRENGTH
+    - DOSAGE
+    - FREQUENCY
+    - ROUTE
+    - INSTRUCTION
+  num_labels: 13
+
 models:
   E0_phobert:
     name: "PhoBERT Base v2 + Linear BIO"
