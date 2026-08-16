@@ -1,0 +1,194 @@
+{
+  "summary": {
+    "total_prescriptions": 27,
+    "total_medications": 85,
+    "splits_document_counts": {
+      "train": 279,
+      "val": 115,
+      "test": 35
+    }
+  },
+  "by_class": {
+    "DRUG": {
+      "canonical_medications": 85,
+      "expected_capture_instances": 3024,
+      "matched": 846,
+      "ambiguous": 0,
+      "unresolved": 2178,
+      "train_count": 755,
+      "val_count": 13,
+      "test_count": 78,
+      "prescriptions_with_class": 27,
+      "ocr_documents_with_class": 280,
+      "unique_surface_forms_gt": 47,
+      "unique_surface_forms_dataset": 32,
+      "sample_surface_forms_gt": [
+        "Amitriptyline LowDose (Amitriptyline) 25mg",
+        "Amlodipine (Amlor 5mg) 5mg",
+        "Amlodipine (Amlor) 5mg",
+        "Artificial Tears (Refresh 15ml) 15ml",
+        "Artificial Tears (Systane Ultra) 10ml"
+      ]
+    },
+    "STRENGTH": {
+      "canonical_medications": 85,
+      "expected_capture_instances": 3024,
+      "matched": 684,
+      "ambiguous": 103,
+      "unresolved": 2237,
+      "train_count": 607,
+      "val_count": 13,
+      "test_count": 64,
+      "prescriptions_with_class": 27,
+      "ocr_documents_with_class": 274,
+      "unique_surface_forms_gt": 26,
+      "unique_surface_forms_dataset": 22,
+      "sample_surface_forms_gt": [
+        "1%",
+        "1000mg",
+        "100U/ml",
+        "100mg",
+        "10mg"
+      ]
+    },
+    "QUANTITY": {
+      "canonical_medications": 85,
+      "expected_capture_instances": 3024,
+      "matched": 1,
+      "ambiguous": 1,
+      "unresolved": 3022,
+      "train_count": 1,
+      "val_count": 0,
+      "test_count": 0,
+      "prescriptions_with_class": 27,
+      "ocr_documents_with_class": 1,
+      "unique_surface_forms_gt": 16,
+      "unique_surface_forms_dataset": 1,
+      "sample_surface_forms_gt": [
+        "1 Bút tiêm",
+        "1 Lọ",
+        "1 Tuýp",
+        "10 Viên",
+        "10 Viên sủi"
+      ]
+    },
+    "ROUTE": {
+      "canonical_medications": 85,
+      "expected_capture_instances": 3024,
+      "matched": 371,
+      "ambiguous": 408,
+      "unresolved": 2245,
+      "train_count": 332,
+      "val_count": 6,
+      "test_count": 33,
+      "prescriptions_with_class": 27,
+      "ocr_documents_with_class": 254,
+      "unique_surface_forms_gt": 5,
+      "unique_surface_forms_dataset": 6,
+      "sample_surface_forms_gt": [
+        "Bôi",
+        "Nhỏ mắt",
+        "Tiêm dưới da",
+        "Uống",
+        "uống"
+      ]
+    },
+    "DOSAGE": {
+      "canonical_medications": 75,
+      "expected_capture_instances": 2867,
+      "matched": 417,
+      "ambiguous": 335,
+      "unresolved": 2115,
+      "train_count": 381,
+      "val_count": 7,
+      "test_count": 29,
+      "prescriptions_with_class": 27,
+      "ocr_documents_with_class": 259,
+      "unique_surface_forms_gt": 7,
+      "unique_surface_forms_dataset": 6,
+      "sample_surface_forms_gt": [
+        "1 viên",
+        "1 ống",
+        "1-2 viên",
+        "1/2 viên",
+        "10 đơn vị"
+      ]
+    },
+    "FREQUENCY": {
+      "canonical_medications": 84,
+      "expected_capture_instances": 2913,
+      "matched": 127,
+      "ambiguous": 3,
+      "unresolved": 2783,
+      "train_count": 124,
+      "val_count": 2,
+      "test_count": 1,
+      "prescriptions_with_class": 27,
+      "ocr_documents_with_class": 124,
+      "unique_surface_forms_gt": 16,
+      "unique_surface_forms_dataset": 6,
+      "sample_surface_forms_gt": [
+        "2 lần/ngày",
+        "3-4 lần/ngày",
+        "Ngày",
+        "Ngày (sáng, tối)",
+        "Ngày 2 lần"
+      ]
+    },
+    "INSTRUCTION": {
+      "canonical_medications": 85,
+      "expected_capture_instances": 3024,
+      "matched": 436,
+      "ambiguous": 103,
+      "unresolved": 2485,
+      "train_count": 365,
+      "val_count": 9,
+      "test_count": 62,
+      "prescriptions_with_class": 27,
+      "ocr_documents_with_class": 228,
+      "unique_surface_forms_gt": 22,
+      "unique_surface_forms_dataset": 13,
+      "sample_surface_forms_gt": [
+        "buổi sáng",
+        "buổi tối",
+        "hòa tan trong nước",
+        "khi khô",
+        "khi mỏi, khô"
+      ]
+    },
+    "FORM": {
+      "canonical_medications": 75,
+      "expected_capture_instances": 2867,
+      "matched": 151,
+      "ambiguous": 654,
+      "unresolved": 2062,
+      "train_count": 143,
+      "val_count": 0,
+      "test_count": 8,
+      "prescriptions_with_class": 27,
+      "ocr_documents_with_class": 119,
+      "unique_surface_forms_gt": 3,
+      "unique_surface_forms_dataset": 2,
+      "sample_surface_forms_gt": [
+        "viên",
+        "đơn vị",
+        "ống"
+      ]
+    },
+    "DURATION": {
+      "canonical_medications": 0,
+      "expected_capture_instances": 0,
+      "matched": 0,
+      "ambiguous": 0,
+      "unresolved": 0,
+      "train_count": 0,
+      "val_count": 0,
+      "test_count": 0,
+      "prescriptions_with_class": 0,
+      "ocr_documents_with_class": 0,
+      "unique_surface_forms_gt": 0,
+      "unique_surface_forms_dataset": 0,
+      "sample_surface_forms_gt": []
+    }
+  }
+}
