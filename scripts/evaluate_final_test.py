@@ -139,7 +139,9 @@ def main() -> None:
         with pred_file.open("r", encoding="utf-8") as f:
             pred_docs = [AnnotationDocumentV2.model_validate_json(line) for line in f if line.strip()]
 
-    report = evaluate_structured_annotations(gold_test_docs, pred_docs)
+    report = evaluate_structured_annotations(
+        gold_test_docs, pred_docs, active_entity_types=manifest_data.get("active_entity_types")
+    )
 
     out_metrics_path = ckpt_dir / "metrics_test.json"
     with out_metrics_path.open("w", encoding="utf-8") as f:
@@ -147,7 +149,7 @@ def main() -> None:
 
     print(f"[+] Exported Final Test Metrics -> {out_metrics_path}")
     print(f"    - Strict Entity Micro F1: {report.entity_micro.f1:.4f}")
-    print(f"    - Strict Entity Macro F1: {report.entity_macro.f1:.4f}")
+    print(f"    - Active Entity Macro F1: {report.entity_macro.f1:.4f}")
     print(f"    - Prescription Macro F1:  {report.prescription_macro_summary.get('prescription_macro_entity_f1', 0):.4f}")
     print("==================================================")
 

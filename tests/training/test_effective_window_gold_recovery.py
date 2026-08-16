@@ -7,7 +7,7 @@ from transformers import AutoTokenizer
 from rxie.alignment import DEFAULT_ACTIVE_ENTITY_TYPES, build_label_map
 from rxie.chunking import create_token_sliding_windows
 from rxie.schemas import AnnotationDocumentV2, EntityType
-from scripts.train_token_ner import get_token_offsets
+from rxie.tokenization import tokenize_with_offsets
 
 root_dir = Path(__file__).resolve().parent.parent.parent
 
@@ -29,7 +29,7 @@ def test_phobert_token_sliding_window_gold_recovery():
     stride = 64
 
     for doc in docs:
-        input_ids, offsets = get_token_offsets(tokenizer, doc.raw_text)
+        input_ids, offsets = tokenize_with_offsets(tokenizer, doc.raw_text)
         active_doc_ents = [e for e in doc.entities if e.type in active_types]
         total_active_entities += len(active_doc_ents)
 
@@ -78,7 +78,7 @@ def test_bamibert_token_window_gold_recovery():
     enclosed_active = 0
 
     for doc in docs:
-        input_ids, offsets = get_token_offsets(tokenizer, doc.raw_text)
+        input_ids, offsets = tokenize_with_offsets(tokenizer, doc.raw_text)
         active_doc_ents = [e for e in doc.entities if e.type in active_types]
         total_active += len(active_doc_ents)
 

@@ -9,17 +9,17 @@ Audit of tokenization characteristics across **429 documents** and **3 candidate
 | :--- | :---: | :---: | :---: |
 | Vocabulary / Base | BPE (Python) | Byte-level BPE (Fast) | DeBERTa BPE (Fast) |
 | Avg Characters / Doc | 816.7 | 816.7 | 816.7 |
-| Avg Tokens / Doc | 357.8 | 328.5 | 282.9 |
-| P50 Token Length | 394 | 359 | 304 |
-| P90 Token Length | 429 | 399 | 342 |
-| P95 Token Length | 445 | 411 | 351 |
-| P99 Token Length | 472 | 448 | 381 |
-| Max Token Length | 494 | 462 | 390 |
-| % Docs > 256 Tokens | 88.34% | 77.86% | 69.70% |
+| Avg Tokens / Doc | 296.9 | 328.5 | 282.9 |
+| P50 Token Length | 324 | 359 | 304 |
+| P90 Token Length | 356 | 399 | 342 |
+| P95 Token Length | 367 | 411 | 351 |
+| P99 Token Length | 391 | 448 | 381 |
+| Max Token Length | 411 | 462 | 390 |
+| % Docs > 256 Tokens | 72.26% | 77.86% | 69.70% |
 | % Docs > 512 Tokens | 0.00% | 0.00% | 0.00% |
-| UNK Token Rate | 12.328% | 0.000% | 0.000% |
-| Entities Split in Subtokens | 6.2% | 70.9% | 68.1% |
-| Entity Truncation Rate @ 256 | 0.00% | 14.80% | 5.88% |
+| UNK Token Rate | 0.046% | 0.000% | 0.000% |
+| Entities Split in Subtokens | 71.1% | 70.9% | 68.1% |
+| Entity Truncation Rate @ 256 | 8.54% | 14.80% | 5.88% |
 | Entity Truncation Rate @ 512 | 0.00% | 0.00% | 0.00% |
 
 ## Key Findings & Policy Freeze

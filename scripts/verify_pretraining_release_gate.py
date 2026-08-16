@@ -40,7 +40,7 @@ from rxie.alignment import (
 )
 from rxie.chunking import create_token_sliding_windows
 from rxie.schemas import AnnotationDocumentV2, EntityType
-from scripts.train_token_ner import get_token_offsets
+from rxie.tokenization import tokenize_with_offsets
 
 
 def calc_file_sha256(path: Path) -> str:
@@ -176,7 +176,7 @@ def run_hardened_release_gate() -> dict[str, Any]:
         multi_win_docs = 0
 
         for doc in all_docs:
-            input_ids, offsets = get_token_offsets(tokenizer, doc.raw_text)
+            input_ids, offsets = tokenize_with_offsets(tokenizer, doc.raw_text)
             active_ents = [e for e in doc.entities if e.type in active_types]
             total_active_ents += len(active_ents)
 

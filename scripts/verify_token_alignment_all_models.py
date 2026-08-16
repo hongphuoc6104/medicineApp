@@ -43,40 +43,7 @@ def v2_to_flat_v1(doc_v2: AnnotationDocumentV2) -> AnnotationDocument:
     )
 
 
-def get_token_offsets(tokenizer: Any, text: str) -> tuple[list[int], list[tuple[int, int]]]:
-    """Extract input IDs and token (start, end) character offsets across fast and python tokenizers."""
-    if getattr(tokenizer, "is_fast", False):
-        enc = tokenizer(text, return_offsets_mapping=True, add_special_tokens=True)
-        return enc["input_ids"], enc["offset_mapping"]
-
-    # Word-level BPE alignment for PhoBERT
-    import re
-    input_ids = [tokenizer.bos_token_id] if tokenizer.bos_token_id is not None else []
-    offsets = [(0, 0)] if tokenizer.bos_token_id is not None else []
-
-    for m in re.finditer(r"\S+", text):
-        w_text = m.group(0)
-        w_start, w_end = m.start(), m.end()
-        sub_tokens = tokenizer.tokenize(w_text)
-        sub_ids = tokenizer.convert_tokens_to_ids(sub_tokens)
-
-        cur = w_start
-        for st, sid in zip(sub_tokens, sub_ids, strict=True):
-            clean = st.replace("@@", "").replace("_", "")
-            idx = text.lower().find(clean.lower(), cur)
-            if idx != -1 and idx < w_end:
-                offsets.append((idx, idx + len(clean)))
-                cur = idx + len(clean)
-            else:
-                offsets.append((cur, w_end))
-                cur = w_end
-            input_ids.append(sid)
-
-    if tokenizer.eos_token_id is not None:
-        input_ids.append(tokenizer.eos_token_id)
-        offsets.append((0, 0))
-
-    return input_ids, offsets
+from rxie.tokenization import tokenize_with_offsets
 
 
 def verify_tokenizer_on_dataset(
@@ -91,7 +58,7 @@ def verify_tokenizer_on_dataset(
 
     for doc in documents:
         try:
-            input_ids, offsets = get_token_offsets(tokenizer, doc.raw_text)
+            input_ids, offsets = tokenize_with_offsets(tokenizer, doc.raw_text)
 
             # Check BIO assignment
             labels = []

@@ -3,7 +3,7 @@
   "model_name": "PhoBERT (Base v2)",
   "hf_id": "vinai/phobert-base-v2",
   "num_documents": 429,
-  "total_tokens": 153476,
+  "total_tokens": 127360,
   "total_entities": 3195,
   "characters_per_document": {
     "p50": 899.0,
@@ -14,23 +14,23 @@
     "mean": 816.6643356643357
   },
   "tokens_per_document": {
-    "p50": 394.0,
-    "p90": 429.0,
-    "p95": 445.0,
-    "p99": 472.0,
-    "max": 494.0,
-    "mean": 357.75291375291374
+    "p50": 324.0,
+    "p90": 356.0,
+    "p95": 367.0,
+    "p99": 391.0,
+    "max": 411.0,
+    "mean": 296.87645687645687
   },
-  "docs_exceeding_256_tokens_count": 379,
-  "docs_exceeding_256_tokens_pct": 88.34498834498834,
+  "docs_exceeding_256_tokens_count": 310,
+  "docs_exceeding_256_tokens_pct": 72.26107226107226,
   "docs_exceeding_512_tokens_count": 0,
   "docs_exceeding_512_tokens_pct": 0.0,
-  "unknown_token_count": 18920,
-  "unknown_token_rate": 12.327660350804035,
-  "entities_split_subtokens_count": 199,
-  "entities_split_subtokens_pct": 6.228482003129891,
-  "entities_truncated_at_256_count": 0,
-  "entities_truncated_at_256_pct": 0.0,
+  "unknown_token_count": 58,
+  "unknown_token_rate": 0.04554020100502513,
+  "entities_split_subtokens_count": 2272,
+  "entities_split_subtokens_pct": 71.11111111111111,
+  "entities_truncated_at_256_count": 273,
+  "entities_truncated_at_256_pct": 8.544600938967136,
   "entities_truncated_at_512_count": 0,
   "entities_truncated_at_512_pct": 0.0
 }

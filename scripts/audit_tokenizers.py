@@ -74,36 +74,7 @@ def compute_percentiles(values: list[int | float]) -> dict[str, float]:
     }
 
 
-def get_token_offsets(tokenizer: Any, text: str) -> tuple[list[int], list[tuple[int, int]]]:
-    """Extract input IDs and token (start, end) character offsets across fast and python tokenizers."""
-    if getattr(tokenizer, "is_fast", False):
-        enc = tokenizer(text, return_offsets_mapping=True, add_special_tokens=True)
-        return enc["input_ids"], enc["offset_mapping"]
-
-    # Fallback for Python-based PhobertTokenizer
-    input_ids = tokenizer.encode(text, add_special_tokens=True)
-    tokens = tokenizer.convert_ids_to_tokens(input_ids)
-    offsets = []
-    cursor = 0
-    raw_lower = text.lower()
-
-    for tok in tokens:
-        if tok in [tokenizer.bos_token, tokenizer.eos_token, tokenizer.cls_token, tokenizer.sep_token, tokenizer.pad_token]:
-            offsets.append((0, 0))
-            continue
-        clean_tok = tok.replace("@@", "").replace(" ", "").replace("_", "")
-        if not clean_tok:
-            offsets.append((cursor, cursor))
-            continue
-        idx = raw_lower.find(clean_tok.lower(), cursor)
-        if idx != -1:
-            offsets.append((idx, idx + len(clean_tok)))
-            cursor = idx + len(clean_tok)
-        else:
-            offsets.append((cursor, min(len(text), cursor + len(clean_tok))))
-            cursor = min(len(text), cursor + len(clean_tok))
-
-    return input_ids, offsets
+from rxie.tokenization import tokenize_with_offsets
 
 
 def audit_single_tokenizer(
@@ -129,7 +100,7 @@ def audit_single_tokenizer(
         raw_text = doc.raw_text
         doc_char_lengths.append(len(raw_text))
 
-        input_ids, offsets = get_token_offsets(tokenizer, raw_text)
+        input_ids, offsets = tokenize_with_offsets(tokenizer, raw_text)
         num_tokens = len(input_ids)
         doc_token_lengths.append(num_tokens)
         total_tokens += num_tokens

@@ -2,16 +2,26 @@
 """
 Official Token NER Training & Evaluation Runner for RxIE Benchmark V1 (E0, E1, E2).
 Supports PhoBERT, BamiBERT, and ViPubmedDeBERTa with:
-  - Token-level Sliding Window (256 tokens / stride 64 for PhoBERT; 512 tokens / stride 64 for BamiBERT & ViPubmedDeBERTa)
+  - Token-level Sliding Window with Non-Duplicate Loss Masking during Training
   - 13 active BIO labels (6 clinical entity classes)
-  - Validation-based Checkpoint Selection & Early Stopping
-  - Multi-window Prediction Merging & Span Deduplication
-  - Prescription-level Macro Entity F1 optimization
+  - Isolated Output Directory Convention:
+      Tuning: experiments/<model>/tuning/lr_<lr>_seed_<seed>/
+      Final:  experiments/<model>/final/seed_<seed>/
+      Smoke:  experiments/<model>/smoke/seed_<seed>/
+  - Strict Anti-Leakage Gate: Only 'final' runs promoted after tuning are eligible for sealed test evaluation
+  - Single Source of Truth Tokenization via rxie.tokenization.tokenize_with_offsets
+  - Active-class Macro F1 Evaluation (exclusively across 6 active trainable classes)
   - Run-level Git Provenance, Checkpoint Manifest & Full Multi-Metric Evaluation Export
 
 Usage:
-  python scripts/train_token_ner.py --model E0_phobert --seed 42 --learning-rate 2e-5
-  python scripts/train_token_ner.py --model E0_phobert --seed 42 --smoke-steps 3
+  # Hyperparameter tuning run (validation only, test blocked):
+  python scripts/train_token_ner.py --model E0_phobert --run-type tuning --learning-rate 2e-5 --seed 42
+
+  # Final promoted run (eligible for sealed test evaluation):
+  python scripts/train_token_ner.py --model E0_phobert --run-type final --learning-rate 2e-5 --seed 42
+
+  # Quick smoke run (validation only, test blocked):
+  python scripts/train_token_ner.py --model E0_phobert --run-type smoke --smoke-steps 3 --seed 42
 """
 
 from __future__ import annotations
@@ -57,6 +67,7 @@ from rxie.schemas import (
     EntityType,
     GoldEntityV2,
 )
+from rxie.tokenization import tokenize_with_offsets
 
 
 def set_seed(seed: int) -> None:
@@ -91,41 +102,6 @@ def get_file_sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def get_token_offsets(tokenizer: Any, text: str) -> tuple[list[int], list[tuple[int, int]]]:
-    """Extract input IDs and token (start, end) character offsets across fast and python tokenizers."""
-    if getattr(tokenizer, "is_fast", False):
-        enc = tokenizer(text, return_offsets_mapping=True, add_special_tokens=True)
-        return enc["input_ids"], enc["offset_mapping"]
-
-    import re
-    input_ids = [tokenizer.bos_token_id] if tokenizer.bos_token_id is not None else []
-    offsets = [(0, 0)] if tokenizer.bos_token_id is not None else []
-
-    for m in re.finditer(r"\S+", text):
-        w_text = m.group(0)
-        w_start, w_end = m.start(), m.end()
-        sub_tokens = tokenizer.tokenize(w_text)
-        sub_ids = tokenizer.convert_tokens_to_ids(sub_tokens)
-
-        cur = w_start
-        for st, sid in zip(sub_tokens, sub_ids, strict=True):
-            clean = st.replace("@@", "").replace("_", "")
-            idx = text.lower().find(clean.lower(), cur)
-            if idx != -1 and idx < w_end:
-                offsets.append((idx, idx + len(clean)))
-                cur = idx + len(clean)
-            else:
-                offsets.append((cur, w_end))
-                cur = w_end
-            input_ids.append(sid)
-
-    if tokenizer.eos_token_id is not None:
-        input_ids.append(tokenizer.eos_token_id)
-        offsets.append((0, 0))
-
-    return input_ids, offsets
-
-
 class RxieTokenDataset(Dataset):
     def __init__(
         self,
@@ -134,12 +110,14 @@ class RxieTokenDataset(Dataset):
         label_to_id: dict[str, int],
         max_length: int = 256,
         stride: int = 64,
+        is_training: bool = False,
     ) -> None:
         self.documents = documents
         self.tokenizer = tokenizer
         self.label_to_id = label_to_id
         self.max_length = max_length
         self.stride = stride
+        self.is_training = is_training
         self.features: list[dict[str, Any]] = []
         self.doc_window_map: dict[str, list[int]] = {}
         self.multi_window_doc_count = 0
@@ -148,7 +126,7 @@ class RxieTokenDataset(Dataset):
     def _prepare_features(self) -> None:
         feature_idx = 0
         for doc in self.documents:
-            input_ids, offsets = get_token_offsets(self.tokenizer, doc.raw_text)
+            input_ids, offsets = tokenize_with_offsets(self.tokenizer, doc.raw_text)
 
             labels = []
             seen_entities = set()
@@ -176,6 +154,7 @@ class RxieTokenDataset(Dataset):
                 labels=labels,
                 max_length=self.max_length,
                 stride=self.stride,
+                mask_overlap_for_training=self.is_training,
             )
 
             if len(windows) > 1:
@@ -229,6 +208,7 @@ def evaluate_model_on_split(
     id_to_label: dict[int, str],
     device: torch.device,
     batch_size: int = 8,
+    active_entity_types: Any = None,
 ) -> tuple[dict[str, Any], list[AnnotationDocumentV2]]:
     model.eval()
     collator = DataCollatorForTokenClassification(tokenizer=dataset.tokenizer, padding=True)
@@ -249,7 +229,7 @@ def evaluate_model_on_split(
                 all_preds.append(p_list[:actual_len])
 
     pred_docs = decode_all_predictions(documents, dataset, all_preds, id_to_label)
-    report = evaluate_structured_annotations(documents, pred_docs)
+    report = evaluate_structured_annotations(documents, pred_docs, active_entity_types=active_entity_types)
     return report.model_dump(mode="python"), pred_docs
 
 
@@ -257,6 +237,7 @@ def run_training() -> None:
     parser = argparse.ArgumentParser(description="RxIE Token NER Training Runner")
     parser.add_argument("--config", type=Path, default=root_dir / "configs" / "benchmark_v1.yaml")
     parser.add_argument("--model", type=str, default="E0_phobert", choices=["E0_phobert", "E1_bamibert", "E2_vipubmeddeberta"])
+    parser.add_argument("--run-type", type=str, default="tuning", choices=["tuning", "final", "smoke"], help="Execution mode: tuning (default), final (promoted for test eval), or smoke")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--learning-rate", type=float, default=None)
     parser.add_argument("--epochs", type=int, default=None)
@@ -280,13 +261,30 @@ def run_training() -> None:
     batch_size = args.batch_size or hp_cfg["batch_size"]
     stride = hp_cfg.get("sliding_window_stride", 64)
 
+    # Set run type flags
+    is_smoke = args.smoke_steps is not None or args.run_type == "smoke"
+    effective_run_type = args.run_type
+    selected_on_validation = (effective_run_type == "final")
+    eligible_for_final_test = (effective_run_type == "final")
+
+    # Isolated output directory convention
+    if args.output_dir is not None:
+        out_dir = args.output_dir
+    else:
+        lr_str = f"{lr:.1e}"
+        if effective_run_type == "tuning":
+            out_dir = root_dir / "experiments" / args.model / "tuning" / f"lr_{lr_str}_seed_{args.seed}"
+        elif effective_run_type == "smoke":
+            out_dir = root_dir / "experiments" / args.model / "smoke" / f"seed_{args.seed}"
+        else:  # final
+            out_dir = root_dir / "experiments" / args.model / "final" / f"seed_{args.seed}"
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    best_ckpt_dir = out_dir / "best_checkpoint"
+
     active_entity_types = cfg["token_ner"]["active_entity_types"]
     labels, label_to_id, id_to_label = build_label_map(active_entity_types)
     num_labels = len(labels)
-
-    out_dir = args.output_dir or root_dir / "experiments" / args.model / f"seed_{args.seed}"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    best_ckpt_dir = out_dir / "best_checkpoint"
 
     tokenizer = AutoTokenizer.from_pretrained(model_cfg["tokenizer"])
     model_config = AutoModelForTokenClassification.from_pretrained(model_cfg["backbone"]).config
@@ -298,19 +296,20 @@ def run_training() -> None:
     print(f"   RxIE Token NER Training: {model_cfg['name']}   ")
     print("==================================================")
     print(f"[*] Backbone: {model_cfg['backbone']}")
+    print(f"[*] Run Type: {effective_run_type.upper()} | Seed: {args.seed} | Device: {device}")
     print(f"[*] Effective Max Token Window: {effective_max_len} | Stride: {stride}")
-    print(f"[*] Seed: {args.seed} | Device: {device}")
     print(f"[*] Active Entity Classes ({len(active_entity_types)}): {active_entity_types}")
     print(f"[*] Total BIO Labels: {num_labels}")
     print(f"[*] Learning Rate: {lr} | Epochs: {epochs} | Batch Size: {batch_size}")
     print(f"[*] Output Directory: {out_dir}")
+    print(f"[*] Eligible for Sealed Test Split: {eligible_for_final_test}")
 
     # Load datasets
     train_docs = [AnnotationDocumentV2.model_validate_json(l) for l in (root_dir / cfg["splits"]["train_file"]).open("r") if l.strip()]
     val_docs = [AnnotationDocumentV2.model_validate_json(l) for l in (root_dir / cfg["splits"]["val_file"]).open("r") if l.strip()]
 
-    train_dataset = RxieTokenDataset(train_docs, tokenizer, label_to_id, max_length=effective_max_len, stride=stride)
-    val_dataset = RxieTokenDataset(val_docs, tokenizer, label_to_id, max_length=effective_max_len, stride=stride)
+    train_dataset = RxieTokenDataset(train_docs, tokenizer, label_to_id, max_length=effective_max_len, stride=stride, is_training=True)
+    val_dataset = RxieTokenDataset(val_docs, tokenizer, label_to_id, max_length=effective_max_len, stride=stride, is_training=False)
 
     print(f"[*] Train Windows: {len(train_dataset)} from {len(train_docs)} docs ({train_dataset.multi_window_doc_count} multi-window docs)")
     print(f"[*] Val Windows:   {len(val_dataset)} from {len(val_docs)} docs ({val_dataset.multi_window_doc_count} multi-window docs)")
@@ -327,7 +326,7 @@ def run_training() -> None:
     ).to(device)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=hp_cfg["weight_decay"])
-    total_steps = len(train_dataloader) * epochs if not args.smoke_steps else args.smoke_steps
+    total_steps = len(train_dataloader) * epochs if not is_smoke else (args.smoke_steps or 3)
     scheduler = get_linear_schedule_with_warmup(
         optimizer,
         num_warmup_steps=int(total_steps * hp_cfg["warmup_ratio"]),
@@ -342,7 +341,6 @@ def run_training() -> None:
     best_pred_docs: list[AnnotationDocumentV2] = []
     best_val_report: dict[str, Any] = {}
 
-    is_smoke = args.smoke_steps is not None
     step_count = 0
 
     for epoch in range(1, epochs + 1):
@@ -363,26 +361,30 @@ def run_training() -> None:
 
             total_loss += loss.item()
             step_count += 1
-            if is_smoke and step_count >= args.smoke_steps:
+            if is_smoke and step_count >= (args.smoke_steps or 3):
                 break
 
         avg_train_loss = total_loss / (len(train_dataloader) if not is_smoke else step_count)
 
-        # Validation evaluation with multi-window decoding
-        val_report, pred_docs = evaluate_model_on_split(model, val_dataset, val_docs, id_to_label, device, batch_size=batch_size)
+        # Validation evaluation with multi-window decoding and active-class macro PRF
+        val_report, pred_docs = evaluate_model_on_split(
+            model, val_dataset, val_docs, id_to_label, device, batch_size=batch_size, active_entity_types=active_entity_types
+        )
         primary_metric = val_report["prescription_macro_summary"]["prescription_macro_entity_f1"]
         micro_f1 = val_report["entity_micro"]["f1"]
+        active_macro_f1 = val_report["entity_macro"]["f1"]
 
         log_entry = {
             "epoch": epoch,
             "train_loss": avg_train_loss,
             "val_prescription_macro_f1": primary_metric,
             "val_entity_micro_f1": micro_f1,
+            "val_active_entity_macro_f1": active_macro_f1,
             "val_record_exact_match": val_report["record_exact_match"],
         }
         training_log.append(log_entry)
 
-        print(f"Epoch {epoch:02d}/{epochs:02d} | Train Loss: {avg_train_loss:.4f} | Val Rx-Macro F1: {primary_metric:.4f} | Val Micro F1: {micro_f1:.4f}")
+        print(f"Epoch {epoch:02d}/{epochs:02d} | Train Loss: {avg_train_loss:.4f} | Val Rx-Macro F1: {primary_metric:.4f} | Active Macro F1: {active_macro_f1:.4f} | Micro F1: {micro_f1:.4f}")
 
         # Checkpoint selection
         if primary_metric > best_val_metric or is_smoke:
@@ -402,7 +404,7 @@ def run_training() -> None:
                 print(f"[!] Early stopping triggered at epoch {epoch} (Patience: {patience})")
                 break
 
-        if is_smoke and step_count >= args.smoke_steps:
+        if is_smoke and step_count >= (args.smoke_steps or 3):
             print(f"[+] Smoke test completed after {step_count} steps.")
             break
 
@@ -431,9 +433,10 @@ def run_training() -> None:
         "model_id": args.model,
         "model_name": model_cfg["name"],
         "seed": args.seed,
-        "run_type": "smoke" if is_smoke else "benchmark_run",
-        "selected_on_validation": False if is_smoke else True,
-        "eligible_for_final_test": False if is_smoke else True,
+        "learning_rate": lr,
+        "run_type": effective_run_type,
+        "selected_on_validation": selected_on_validation,
+        "eligible_for_final_test": eligible_for_final_test,
         "best_epoch": best_epoch,
         "best_validation_metric": best_val_metric,
         "primary_metric_name": cfg["model_selection"]["primary_metric"],
@@ -465,7 +468,8 @@ def run_training() -> None:
 
     print("==================================================")
     print(f"[+] Training completed successfully for {args.model} (Seed {args.seed})")
-    print(f"    - Run Type: {'SMOKE (Test Access Blocked)' if is_smoke else 'BENCHMARK RUN'}")
+    print(f"    - Run Type: {effective_run_type.upper()}")
+    print(f"    - Eligible for Test: {eligible_for_final_test}")
     print(f"    - Best Epoch: {best_epoch} | Best Rx-Macro F1: {best_val_metric:.4f}")
     print(f"    - Checkpoint & Manifest: {out_dir / 'checkpoint_manifest.json'}")
     print(f"    - Validation Metrics:    {out_dir / 'metrics_val.json'}")

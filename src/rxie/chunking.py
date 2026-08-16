@@ -150,9 +150,12 @@ def create_token_sliding_windows(
     labels: list[int],
     max_length: int = 256,
     stride: int = 64,
+    mask_overlap_for_training: bool = False,
 ) -> list[TokenWindow]:
     """
     Split a sequence of token IDs, offsets, and labels into sliding windows of max_length with stride overlap.
+    If mask_overlap_for_training=True, masks the duplicate boundary overlap tokens to -100 so each token
+    in the document receives gradient backpropagation exactly once.
     """
     total_tokens = len(input_ids)
     if total_tokens <= max_length:
@@ -178,7 +181,7 @@ def create_token_sliding_windows(
         end = min(total_tokens, start + max_length)
         w_input_ids = input_ids[start:end]
         w_offsets = offsets[start:end]
-        w_labels = labels[start:end]
+        w_labels = list(labels[start:end])
         w_att_mask = [1] * len(w_input_ids)
 
         windows.append(
@@ -199,19 +202,36 @@ def create_token_sliding_windows(
         start += step
 
     num_windows = len(windows)
-    return [
-        TokenWindow(
-            window_idx=w.window_idx,
-            total_windows=num_windows,
-            token_start=w.token_start,
-            token_end=w.token_end,
-            input_ids=w.input_ids,
-            attention_mask=w.attention_mask,
-            labels=w.labels,
-            offsets=w.offsets,
+    final_windows: list[TokenWindow] = []
+
+    for idx, w in enumerate(windows):
+        w_labels = list(w.labels)
+        if mask_overlap_for_training and num_windows > 1:
+            half_stride = stride // 2
+            # Mask left overlap for all windows except the first
+            if idx > 0:
+                for k in range(min(half_stride, len(w_labels))):
+                    w_labels[k] = -100
+            # Mask right overlap for all windows except the last
+            if idx < num_windows - 1:
+                right_mask_count = stride - half_stride
+                for k in range(max(0, len(w_labels) - right_mask_count), len(w_labels)):
+                    w_labels[k] = -100
+
+        final_windows.append(
+            TokenWindow(
+                window_idx=w.window_idx,
+                total_windows=num_windows,
+                token_start=w.token_start,
+                token_end=w.token_end,
+                input_ids=w.input_ids,
+                attention_mask=w.attention_mask,
+                labels=w_labels,
+                offsets=w.offsets,
+            )
         )
-        for w in windows
-    ]
+
+    return final_windows
 
 
 def decode_windows_to_document(

@@ -90,30 +90,48 @@ def _calc_prf(tp: int, pred: int, gold: int) -> PrfScore:
     return PrfScore(precision, recall, f1, tp, pred, gold)
 
 
+from .alignment import DEFAULT_ACTIVE_ENTITY_TYPES
+
+
 def evaluate_strict_entities(
     gold_entities: list[GoldEntityV2] | list[Entity] | Iterable[Any],
     pred_entities: list[GoldEntityV2] | list[Entity] | Iterable[Any],
+    active_entity_types: Iterable[EntityType | str] | None = None,
 ) -> EntityEvaluation:
     gold_keys = {(e.type, e.start, e.end) for e in gold_entities}
     pred_keys = {(e.type, e.start, e.end) for e in pred_entities}
 
-    overall_tp = len(gold_keys & pred_keys)
-    overall_prf = _calc_prf(overall_tp, len(pred_keys), len(gold_keys))
+    if active_entity_types is not None:
+        target_types = {EntityType(t) if isinstance(t, str) else t for t in active_entity_types}
+        eval_gold_keys = {k for k in gold_keys if k[0] in target_types}
+        eval_pred_keys = {k for k in pred_keys if k[0] in target_types}
+    else:
+        target_types = set(EntityType)
+        eval_gold_keys = gold_keys
+        eval_pred_keys = pred_keys
+
+    overall_tp = len(eval_gold_keys & eval_pred_keys)
+    overall_prf = _calc_prf(overall_tp, len(eval_pred_keys), len(eval_gold_keys))
 
     per_class: dict[EntityType, PrfScore] = {}
     f1_list: list[float] = []
+    p_list: list[float] = []
+    r_list: list[float] = []
 
     for ent_type in EntityType:
         g_c = {k for k in gold_keys if k[0] == ent_type}
         p_c = {k for k in pred_keys if k[0] == ent_type}
         score = _calc_prf(len(g_c & p_c), len(p_c), len(g_c))
         per_class[ent_type] = score
-        f1_list.append(score.f1)
+        if ent_type in target_types:
+            f1_list.append(score.f1)
+            p_list.append(score.precision)
+            r_list.append(score.recall)
 
-    macro_f1 = sum(f1_list) / len(f1_list)
-    macro_p = sum(s.precision for s in per_class.values()) / len(per_class)
-    macro_r = sum(s.recall for s in per_class.values()) / len(per_class)
-    macro_prf = PrfScore(macro_p, macro_r, macro_f1, overall_tp, len(pred_keys), len(gold_keys))
+    macro_f1 = sum(f1_list) / len(f1_list) if f1_list else 0.0
+    macro_p = sum(p_list) / len(p_list) if p_list else 0.0
+    macro_r = sum(r_list) / len(r_list) if r_list else 0.0
+    macro_prf = PrfScore(macro_p, macro_r, macro_f1, overall_tp, len(eval_pred_keys), len(eval_gold_keys))
 
     return EntityEvaluation(overall=overall_prf, macro=macro_prf, per_class=per_class)
 
@@ -267,10 +285,11 @@ def evaluate_records(
 def evaluate_dual_level(
     gold_docs: list[AnnotationDocumentV2],
     pred_docs: list[AnnotationDocumentV2],
+    active_entity_types: Iterable[EntityType | str] | None = None,
 ) -> StructuredEvaluationReport:
     all_gold_ents = [e for d in gold_docs for e in d.entities]
     all_pred_ents = [e for d in pred_docs for e in d.entities]
-    entity_eval = evaluate_strict_entities(all_gold_ents, all_pred_ents)
+    entity_eval = evaluate_strict_entities(all_gold_ents, all_pred_ents, active_entity_types=active_entity_types)
 
     record_eval = evaluate_records(gold_docs, pred_docs)
 
@@ -297,7 +316,7 @@ def evaluate_dual_level(
         p_sub = by_rx_pred[rx_id]
         g_sub_ents = [e for d in g_sub for e in d.entities]
         p_sub_ents = [e for d in p_sub for e in d.entities]
-        sub_ent_eval = evaluate_strict_entities(g_sub_ents, p_sub_ents)
+        sub_ent_eval = evaluate_strict_entities(g_sub_ents, p_sub_ents, active_entity_types=active_entity_types)
         sub_rec_eval = evaluate_records(g_sub, p_sub)
 
         rx_breakdown[rx_id] = {
