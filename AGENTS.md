@@ -10,3 +10,6 @@
   mock entities or medications.
 - Keep mobile and Python contracts covered by tests before changing field names.
 - Treat `data/legacy/` as DRUG-only baseline data, not ten-class ground truth.
+- Whenever dataset annotations, ground truth, or alignment logic change, do not reuse previous release version names; increment the release version (e.g., `rxie-dataset-v1.0` -> `rxie-dataset-v1.0.1`) and record new SHA256 checksums in `release_manifest.json`.
+- Every gitignored artifact/data directory (`artifacts/`, `checkpoints/`, `runs/`, `experiments/`, `data/input/`, `data/output/`, `data/private/`) must maintain a `README.md` documenting its structure, lifecycle, and exclusion policy.
+- Before committing and pushing to remote git branches, verify all test suites pass (`pytest tests/`) and no untracked binaries or checkpoints are staged.
