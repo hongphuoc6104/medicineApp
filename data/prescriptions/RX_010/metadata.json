@@ -1,0 +1,79 @@
+{
+  "prescription_id": "RX_010",
+  "patient_id": "PAT_010",
+  "hospital_hint": "BỆNH VIỆN NHÂN DÂN 115",
+  "encounter_code_hint": "DN9076331781",
+  "diagnoses_hint": [
+    "H04.1: Hội chứng khô mắt"
+  ],
+  "grouping_status": "verified",
+  "image_count": 6,
+  "images": [
+    {
+      "image_id": "IMG_20260209_002532",
+      "filename": "IMG_20260209_002532.jpg",
+      "relative_path": "data/output/Labels lớn/IMG_20260209_002532.json",
+      "ocr_file": "data/output/Labels lớn/IMG_20260209_002532.json",
+      "word_count": 79,
+      "line_count": 14,
+      "mean_confidence": 0.8089025914669037,
+      "detected_angle": 82.9863395690918,
+      "similarity_to_group": 0.39
+    },
+    {
+      "image_id": "IMG_20260209_180633",
+      "filename": "IMG_20260209_180633.jpg",
+      "relative_path": "data/output/Labels lớn 3/IMG_20260209_180633.json",
+      "ocr_file": "data/output/Labels lớn 3/IMG_20260209_180633.json",
+      "word_count": 78,
+      "line_count": 13,
+      "mean_confidence": 0.785961178632883,
+      "detected_angle": -3.5432257652282715,
+      "similarity_to_group": 0.441
+    },
+    {
+      "image_id": "IMG_20260209_181527",
+      "filename": "IMG_20260209_181527.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181527.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181527.json",
+      "word_count": 78,
+      "line_count": 13,
+      "mean_confidence": 0.6765247652163873,
+      "detected_angle": -2.862029790878296,
+      "similarity_to_group": 0.572
+    },
+    {
+      "image_id": "IMG_20260209_181932",
+      "filename": "IMG_20260209_181932.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_181932.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_181932.json",
+      "word_count": 79,
+      "line_count": 13,
+      "mean_confidence": 0.8095579284888047,
+      "detected_angle": 0.7590065598487854,
+      "similarity_to_group": 0.421
+    },
+    {
+      "image_id": "IMG_20260209_181936",
+      "filename": "IMG_20260209_181936.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_181936.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_181936.json",
+      "word_count": 78,
+      "line_count": 13,
+      "mean_confidence": 0.7542711175405062,
+      "detected_angle": 74.94019317626953,
+      "similarity_to_group": 0.517
+    },
+    {
+      "image_id": "IMG_20260209_181937",
+      "filename": "IMG_20260209_181937.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_181937.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_181937.json",
+      "word_count": 79,
+      "line_count": 13,
+      "mean_confidence": 0.7803565355447623,
+      "detected_angle": 74.78683471679688,
+      "similarity_to_group": 0.452
+    }
+  ]
+}

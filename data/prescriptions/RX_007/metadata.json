@@ -1,0 +1,291 @@
+{
+  "prescription_id": "RX_007",
+  "patient_id": "PAT_007",
+  "hospital_hint": "BỆNH VIỆN XANH PÔN",
+  "encounter_code_hint": "DN5094556145",
+  "diagnoses_hint": [
+    "E78.0: Tăng cholesterol máu thuần",
+    "I25.1: Bệnh tim thiếu máu cục bộ mạn",
+    "I63.9: Di chứng nhồi máu não",
+    "H04.1: Hội chứng khô mắt"
+  ],
+  "grouping_status": "verified",
+  "image_count": 25,
+  "images": [
+    {
+      "image_id": "IMG_20260122_010148",
+      "filename": "IMG_20260122_010148.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010148.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010148.json",
+      "word_count": 164,
+      "line_count": 37,
+      "mean_confidence": 0.6929586344474071,
+      "detected_angle": -162.06573486328125,
+      "similarity_to_group": 0.168
+    },
+    {
+      "image_id": "IMG_20260122_010157",
+      "filename": "IMG_20260122_010157.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010157.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010157.json",
+      "word_count": 162,
+      "line_count": 39,
+      "mean_confidence": 0.6795201637806036,
+      "detected_angle": -72.31050872802734,
+      "similarity_to_group": 0.164
+    },
+    {
+      "image_id": "IMG_20260122_010232",
+      "filename": "IMG_20260122_010232.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010232.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010232.json",
+      "word_count": 147,
+      "line_count": 37,
+      "mean_confidence": 0.5694276448842641,
+      "detected_angle": -87.8113784790039,
+      "similarity_to_group": 0.173
+    },
+    {
+      "image_id": "IMG_20260122_010236",
+      "filename": "IMG_20260122_010236.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010236.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010236.json",
+      "word_count": 123,
+      "line_count": 34,
+      "mean_confidence": 0.6129008750705158,
+      "detected_angle": 0.7553037106990814,
+      "similarity_to_group": 0.113
+    },
+    {
+      "image_id": "IMG_20260122_010243",
+      "filename": "IMG_20260122_010243.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010243.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010243.json",
+      "word_count": 179,
+      "line_count": 44,
+      "mean_confidence": 0.7548630881038579,
+      "detected_angle": -6.88250994682312,
+      "similarity_to_group": 0.148
+    },
+    {
+      "image_id": "IMG_20260122_010246",
+      "filename": "IMG_20260122_010246.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010246.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010246.json",
+      "word_count": 153,
+      "line_count": 38,
+      "mean_confidence": 0.5938422868126317,
+      "detected_angle": 103.91888046264648,
+      "similarity_to_group": 0.169
+    },
+    {
+      "image_id": "IMG_20260209_180200",
+      "filename": "IMG_20260209_180200.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_180200.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_180200.json",
+      "word_count": 168,
+      "line_count": 38,
+      "mean_confidence": 0.7770791853729048,
+      "detected_angle": 4.523538827896118,
+      "similarity_to_group": 0.132
+    },
+    {
+      "image_id": "IMG_20260209_180203",
+      "filename": "IMG_20260209_180203.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_180203.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_180203.json",
+      "word_count": 169,
+      "line_count": 39,
+      "mean_confidence": 0.7747374421510941,
+      "detected_angle": 0.0,
+      "similarity_to_group": 0.136
+    },
+    {
+      "image_id": "IMG_20260209_180210",
+      "filename": "IMG_20260209_180210.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_180210.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_180210.json",
+      "word_count": 167,
+      "line_count": 40,
+      "mean_confidence": 0.7760032385587692,
+      "detected_angle": -2.1108015179634094,
+      "similarity_to_group": 0.134
+    },
+    {
+      "image_id": "IMG_20260209_180212",
+      "filename": "IMG_20260209_180212.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_180212.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_180212.json",
+      "word_count": 168,
+      "line_count": 39,
+      "mean_confidence": 0.7568042003191434,
+      "detected_angle": 3.9536683559417725,
+      "similarity_to_group": 0.131
+    },
+    {
+      "image_id": "IMG_20260209_180214",
+      "filename": "IMG_20260209_180214.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_180214.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_180214.json",
+      "word_count": 166,
+      "line_count": 38,
+      "mean_confidence": 0.7828523798992759,
+      "detected_angle": 0.0,
+      "similarity_to_group": 0.126
+    },
+    {
+      "image_id": "IMG_20260209_180218",
+      "filename": "IMG_20260209_180218.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_180218.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_180218.json",
+      "word_count": 166,
+      "line_count": 38,
+      "mean_confidence": 0.8018578134085003,
+      "detected_angle": 0.0,
+      "similarity_to_group": 0.134
+    },
+    {
+      "image_id": "IMG_20260209_181104",
+      "filename": "IMG_20260209_181104.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181104.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181104.json",
+      "word_count": 167,
+      "line_count": 37,
+      "mean_confidence": 0.745405389650448,
+      "detected_angle": -1.0149201154708862,
+      "similarity_to_group": 0.141
+    },
+    {
+      "image_id": "IMG_20260209_181106",
+      "filename": "IMG_20260209_181106.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181106.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181106.json",
+      "word_count": 166,
+      "line_count": 37,
+      "mean_confidence": 0.7646728262707994,
+      "detected_angle": 3.555612325668335,
+      "similarity_to_group": 0.129
+    },
+    {
+      "image_id": "IMG_20260209_181107",
+      "filename": "IMG_20260209_181107.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181107.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181107.json",
+      "word_count": 168,
+      "line_count": 38,
+      "mean_confidence": 0.715233724368246,
+      "detected_angle": -7.165774583816528,
+      "similarity_to_group": 0.148
+    },
+    {
+      "image_id": "IMG_20260209_181119",
+      "filename": "IMG_20260209_181119.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181119.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181119.json",
+      "word_count": 169,
+      "line_count": 41,
+      "mean_confidence": 0.6777271788294722,
+      "detected_angle": -3.5456080436706543,
+      "similarity_to_group": 0.152
+    },
+    {
+      "image_id": "IMG_20260209_181123",
+      "filename": "IMG_20260209_181123.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181123.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181123.json",
+      "word_count": 137,
+      "line_count": 32,
+      "mean_confidence": 0.5846530729904771,
+      "detected_angle": 7.803799867630005,
+      "similarity_to_group": 0.16
+    },
+    {
+      "image_id": "IMG_20260209_181130",
+      "filename": "IMG_20260209_181130.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181130.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181130.json",
+      "word_count": 169,
+      "line_count": 38,
+      "mean_confidence": 0.7735215064726377,
+      "detected_angle": -8.869254112243652,
+      "similarity_to_group": 0.143
+    },
+    {
+      "image_id": "IMG_20260209_181133",
+      "filename": "IMG_20260209_181133.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181133.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181133.json",
+      "word_count": 163,
+      "line_count": 37,
+      "mean_confidence": 0.7474972444611627,
+      "detected_angle": 13.570600509643555,
+      "similarity_to_group": 0.141
+    },
+    {
+      "image_id": "IMG_20260209_181752",
+      "filename": "IMG_20260209_181752.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_181752.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_181752.json",
+      "word_count": 169,
+      "line_count": 40,
+      "mean_confidence": 0.8002826943993568,
+      "detected_angle": -89.94514846801758,
+      "similarity_to_group": 0.134
+    },
+    {
+      "image_id": "IMG_20260209_181757",
+      "filename": "IMG_20260209_181757.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_181757.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_181757.json",
+      "word_count": 169,
+      "line_count": 39,
+      "mean_confidence": 0.8131271417324359,
+      "detected_angle": 0.8666824698448181,
+      "similarity_to_group": 0.12
+    },
+    {
+      "image_id": "IMG_20260209_181759",
+      "filename": "IMG_20260209_181759.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_181759.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_181759.json",
+      "word_count": 168,
+      "line_count": 38,
+      "mean_confidence": 0.8111358049668764,
+      "detected_angle": 0.8854297697544098,
+      "similarity_to_group": 0.128
+    },
+    {
+      "image_id": "IMG_20260209_181801",
+      "filename": "IMG_20260209_181801.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_181801.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_181801.json",
+      "word_count": 170,
+      "line_count": 39,
+      "mean_confidence": 0.7569557229677836,
+      "detected_angle": 3.4589993953704834,
+      "similarity_to_group": 0.133
+    },
+    {
+      "image_id": "IMG_20260209_181803",
+      "filename": "IMG_20260209_181803.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_181803.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_181803.json",
+      "word_count": 169,
+      "line_count": 38,
+      "mean_confidence": 0.7811666162390458,
+      "detected_angle": 2.8672642707824707,
+      "similarity_to_group": 0.13
+    },
+    {
+      "image_id": "IMG_20260209_181806",
+      "filename": "IMG_20260209_181806.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_181806.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_181806.json",
+      "word_count": 166,
+      "line_count": 38,
+      "mean_confidence": 0.7586456945067958,
+      "detected_angle": -5.3823325634002686,
+      "similarity_to_group": 0.134
+    }
+  ]
+}

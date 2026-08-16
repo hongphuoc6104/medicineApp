@@ -1,0 +1,26 @@
+{
+  "prescription_id": "RX_019",
+  "patient_id": "PAT_019",
+  "hospital_hint": "BỆNH VIỆN NHÂN DÂN 115",
+  "encounter_code_hint": "DN8584108914",
+  "diagnoses_hint": [
+    "M17: Thoái hóa khớp",
+    "I10: Tăng huyết áp vô căn",
+    "E78.0: Tăng cholesterol máu thuần"
+  ],
+  "grouping_status": "verified",
+  "image_count": 1,
+  "images": [
+    {
+      "image_id": "IMG_20260122_010316",
+      "filename": "IMG_20260122_010316.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010316.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010316.json",
+      "word_count": 154,
+      "line_count": 48,
+      "mean_confidence": 0.6432202762613694,
+      "detected_angle": -25.079465866088867,
+      "similarity_to_group": 1.0
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "prescription_id": "RX_013",
+  "patient_id": "PAT_013",
+  "hospital_hint": "BỆNH VIỆN NHÂN DÂN 115",
+  "encounter_code_hint": "DN9885441167",
+  "diagnoses_hint": [
+    "I25.1: Bệnh tim thiếu máu cục bộ mạn",
+    "I10: Tăng huyết áp vô căn"
+  ],
+  "grouping_status": "verified",
+  "image_count": 4,
+  "images": [
+    {
+      "image_id": "IMG_20260122_010032",
+      "filename": "IMG_20260122_010032.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010032.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010032.json",
+      "word_count": 190,
+      "line_count": 47,
+      "mean_confidence": 0.57417863734225,
+      "detected_angle": -0.6046968698501587,
+      "similarity_to_group": 0.467
+    },
+    {
+      "image_id": "IMG_20260209_180351",
+      "filename": "IMG_20260209_180351.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_180351.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_180351.json",
+      "word_count": 87,
+      "line_count": 35,
+      "mean_confidence": 0.48916963338851926,
+      "detected_angle": 3.2119247913360596,
+      "similarity_to_group": 0.25
+    },
+    {
+      "image_id": "IMG_20260209_180938",
+      "filename": "IMG_20260209_180938.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_180938.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_180938.json",
+      "word_count": 194,
+      "line_count": 52,
+      "mean_confidence": 0.7352855033599414,
+      "detected_angle": 0.615363359451294,
+      "similarity_to_group": 0.372
+    },
+    {
+      "image_id": "IMG_20260209_180946",
+      "filename": "IMG_20260209_180946.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_180946.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_180946.json",
+      "word_count": 183,
+      "line_count": 52,
+      "mean_confidence": 0.7139877447715173,
+      "detected_angle": -1.4611613154411316,
+      "similarity_to_group": 0.349
+    }
+  ]
+}

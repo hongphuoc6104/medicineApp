@@ -1,0 +1,532 @@
+{
+  "metadata": {
+    "fileName": "IMG_20260122_010138.jpg",
+    "filePath": "/data/data/com.medicineapp.medicine_app/files/input/Data01/IMG_20260122_010138.jpg",
+    "fileSizeBytes": 6465337,
+    "imageWidth": 4000,
+    "imageHeight": 3000,
+    "processedAt": "2026-08-15T15:40:11.983219Z",
+    "recognizerScript": "latin"
+  },
+  "fullText": "D0NHINOG\ns",
+  "blocks": [
+    {
+      "text": "D0NHINOG",
+      "boundingBox": {
+        "left": 1801.0,
+        "top": 966.0,
+        "right": 1912.0,
+        "bottom": 1575.0,
+        "width": 111.0,
+        "height": 609.0
+      },
+      "recognizedLanguages": [
+        "und"
+      ],
+      "cornerPoints": [
+        {
+          "x": 1896,
+          "y": 966
+        },
+        {
+          "x": 1912,
+          "y": 1573
+        },
+        {
+          "x": 1817,
+          "y": 1575
+        },
+        {
+          "x": 1801,
+          "y": 968
+        }
+      ],
+      "lines": [
+        {
+          "text": "D0NHINOG",
+          "boundingBox": {
+            "left": 1801.0,
+            "top": 966.0,
+            "right": 1912.0,
+            "bottom": 1575.0,
+            "width": 111.0,
+            "height": 609.0
+          },
+          "confidence": 0.28466796875,
+          "angle": 88.4395751953125,
+          "recognizedLanguages": [
+            "hr"
+          ],
+          "cornerPoints": [
+            {
+              "x": 1896,
+              "y": 966
+            },
+            {
+              "x": 1912,
+              "y": 1573
+            },
+            {
+              "x": 1817,
+              "y": 1575
+            },
+            {
+              "x": 1801,
+              "y": 968
+            }
+          ],
+          "elements": [
+            {
+              "text": "D0NHINOG",
+              "boundingBox": {
+                "left": 1801.0,
+                "top": 966.0,
+                "right": 1912.0,
+                "bottom": 1575.0,
+                "width": 111.0,
+                "height": 609.0
+              },
+              "confidence": 0.28466796875,
+              "angle": 88.4395751953125,
+              "recognizedLanguages": [
+                "hr"
+              ],
+              "cornerPoints": [
+                {
+                  "x": 1896,
+                  "y": 966
+                },
+                {
+                  "x": 1912,
+                  "y": 1573
+                },
+                {
+                  "x": 1817,
+                  "y": 1575
+                },
+                {
+                  "x": 1801,
+                  "y": 968
+                }
+              ],
+              "symbols": [
+                {
+                  "text": "D",
+                  "boundingBox": {
+                    "left": 1802.0,
+                    "top": 966.0,
+                    "right": 1899.0,
+                    "bottom": 1085.0,
+                    "width": 97.0,
+                    "height": 119.0
+                  },
+                  "confidence": 0.12109375,
+                  "angle": 88.4395751953125,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1896,
+                      "y": 966
+                    },
+                    {
+                      "x": 1899,
+                      "y": 1083
+                    },
+                    {
+                      "x": 1805,
+                      "y": 1085
+                    },
+                    {
+                      "x": 1802,
+                      "y": 968
+                    }
+                  ]
+                },
+                {
+                  "text": "0",
+                  "boundingBox": {
+                    "left": 1805.0,
+                    "top": 1093.0,
+                    "right": 1900.0,
+                    "bottom": 1146.0,
+                    "width": 95.0,
+                    "height": 53.0
+                  },
+                  "confidence": 0.1015625,
+                  "angle": 88.4395751953125,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1899,
+                      "y": 1093
+                    },
+                    {
+                      "x": 1900,
+                      "y": 1144
+                    },
+                    {
+                      "x": 1806,
+                      "y": 1146
+                    },
+                    {
+                      "x": 1805,
+                      "y": 1095
+                    }
+                  ]
+                },
+                {
+                  "text": "N",
+                  "boundingBox": {
+                    "left": 1807.0,
+                    "top": 1171.0,
+                    "right": 1902.0,
+                    "bottom": 1224.0,
+                    "width": 95.0,
+                    "height": 53.0
+                  },
+                  "confidence": 0.08203125,
+                  "angle": 88.4395751953125,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1901,
+                      "y": 1171
+                    },
+                    {
+                      "x": 1902,
+                      "y": 1222
+                    },
+                    {
+                      "x": 1808,
+                      "y": 1224
+                    },
+                    {
+                      "x": 1807,
+                      "y": 1173
+                    }
+                  ]
+                },
+                {
+                  "text": "H",
+                  "boundingBox": {
+                    "left": 1809.0,
+                    "top": 1236.0,
+                    "right": 1904.0,
+                    "bottom": 1283.0,
+                    "width": 95.0,
+                    "height": 47.0
+                  },
+                  "confidence": 0.2578125,
+                  "angle": 88.4395751953125,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1903,
+                      "y": 1236
+                    },
+                    {
+                      "x": 1904,
+                      "y": 1281
+                    },
+                    {
+                      "x": 1810,
+                      "y": 1283
+                    },
+                    {
+                      "x": 1809,
+                      "y": 1238
+                    }
+                  ]
+                },
+                {
+                  "text": "I",
+                  "boundingBox": {
+                    "left": 1810.0,
+                    "top": 1288.0,
+                    "right": 1905.0,
+                    "bottom": 1355.0,
+                    "width": 95.0,
+                    "height": 67.0
+                  },
+                  "confidence": 0.125,
+                  "angle": 88.4395751953125,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1904,
+                      "y": 1288
+                    },
+                    {
+                      "x": 1905,
+                      "y": 1353
+                    },
+                    {
+                      "x": 1811,
+                      "y": 1355
+                    },
+                    {
+                      "x": 1810,
+                      "y": 1290
+                    }
+                  ]
+                },
+                {
+                  "text": "N",
+                  "boundingBox": {
+                    "left": 1813.0,
+                    "top": 1396.0,
+                    "right": 1908.0,
+                    "bottom": 1465.0,
+                    "width": 95.0,
+                    "height": 69.0
+                  },
+                  "confidence": 0.5859375,
+                  "angle": 88.4395751953125,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1907,
+                      "y": 1396
+                    },
+                    {
+                      "x": 1908,
+                      "y": 1463
+                    },
+                    {
+                      "x": 1814,
+                      "y": 1465
+                    },
+                    {
+                      "x": 1813,
+                      "y": 1398
+                    }
+                  ]
+                },
+                {
+                  "text": "O",
+                  "boundingBox": {
+                    "left": 1816.0,
+                    "top": 1483.0,
+                    "right": 1911.0,
+                    "bottom": 1532.0,
+                    "width": 95.0,
+                    "height": 49.0
+                  },
+                  "confidence": 0.60546875,
+                  "angle": 88.4395751953125,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1910,
+                      "y": 1483
+                    },
+                    {
+                      "x": 1911,
+                      "y": 1530
+                    },
+                    {
+                      "x": 1817,
+                      "y": 1532
+                    },
+                    {
+                      "x": 1816,
+                      "y": 1485
+                    }
+                  ]
+                },
+                {
+                  "text": "G",
+                  "boundingBox": {
+                    "left": 1817.0,
+                    "top": 1550.0,
+                    "right": 1911.0,
+                    "bottom": 1575.0,
+                    "width": 94.0,
+                    "height": 25.0
+                  },
+                  "confidence": 0.3984375,
+                  "angle": 88.4395751953125,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1911,
+                      "y": 1550
+                    },
+                    {
+                      "x": 1911,
+                      "y": 1573
+                    },
+                    {
+                      "x": 1817,
+                      "y": 1575
+                    },
+                    {
+                      "x": 1817,
+                      "y": 1552
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "text": "s",
+      "boundingBox": {
+        "left": 3153.0,
+        "top": 794.0,
+        "right": 3244.0,
+        "bottom": 823.0,
+        "width": 91.0,
+        "height": 29.0
+      },
+      "recognizedLanguages": [
+        "und"
+      ],
+      "cornerPoints": [
+        {
+          "x": 3244,
+          "y": 797
+        },
+        {
+          "x": 3243,
+          "y": 823
+        },
+        {
+          "x": 3153,
+          "y": 820
+        },
+        {
+          "x": 3154,
+          "y": 794
+        }
+      ],
+      "lines": [
+        {
+          "text": "s",
+          "boundingBox": {
+            "left": 3153.0,
+            "top": 794.0,
+            "right": 3244.0,
+            "bottom": 823.0,
+            "width": 91.0,
+            "height": 29.0
+          },
+          "confidence": 0.390625,
+          "angle": 91.85209655761719,
+          "recognizedLanguages": [
+            "und-Latn"
+          ],
+          "cornerPoints": [
+            {
+              "x": 3244,
+              "y": 797
+            },
+            {
+              "x": 3243,
+              "y": 823
+            },
+            {
+              "x": 3153,
+              "y": 820
+            },
+            {
+              "x": 3154,
+              "y": 794
+            }
+          ],
+          "elements": [
+            {
+              "text": "s",
+              "boundingBox": {
+                "left": 3153.0,
+                "top": 794.0,
+                "right": 3244.0,
+                "bottom": 823.0,
+                "width": 91.0,
+                "height": 29.0
+              },
+              "confidence": 0.390625,
+              "angle": 91.85209655761719,
+              "recognizedLanguages": [
+                "und-Latn"
+              ],
+              "cornerPoints": [
+                {
+                  "x": 3244,
+                  "y": 797
+                },
+                {
+                  "x": 3243,
+                  "y": 823
+                },
+                {
+                  "x": 3153,
+                  "y": 820
+                },
+                {
+                  "x": 3154,
+                  "y": 794
+                }
+              ],
+              "symbols": [
+                {
+                  "text": "s",
+                  "boundingBox": {
+                    "left": 3153.0,
+                    "top": 794.0,
+                    "right": 3244.0,
+                    "bottom": 823.0,
+                    "width": 91.0,
+                    "height": 29.0
+                  },
+                  "confidence": 0.390625,
+                  "angle": 91.85209655761719,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 3244,
+                      "y": 797
+                    },
+                    {
+                      "x": 3243,
+                      "y": 823
+                    },
+                    {
+                      "x": 3153,
+                      "y": 820
+                    },
+                    {
+                      "x": 3154,
+                      "y": 794
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": "rxie.canonical_gt.v1",
+  "prescription_id": "RX_018",
+  "patient_id": "PAT_018",
+  "encounter_id": "DN8432577215",
+  "hospital_name": "BỆNH VIỆN XANH PÔN",
+  "prescription_date": null,
+  "annotation_status": "verified",
+  "verified_by": "human_expert_review",
+  "verified_at": "2026-08-16T00:00:00Z",
+  "diagnoses": [
+    "H10.1: Viêm kết mạc cấp"
+  ],
+  "medications": [
+    {
+      "medication_id": "RX_018_M01",
+      "drug_raw": "Vitamin C (Upsa C) 1000mg",
+      "drug_normalized": "ascorbic acid",
+      "brand_raw": "Upsa C",
+      "brand_normalized": "upsa c",
+      "strength_raw": "1000mg",
+      "strength_normalized": "1000 mg",
+      "quantity_value_raw": "7",
+      "quantity_value_normalized": 7,
+      "quantity_unit_raw": "Viên sủi",
+      "quantity_unit_normalized": "viên sủi",
+      "dosage_raw": "1 viên",
+      "dosage_normalized": "1 viên",
+      "frequency_raw": "buổi sáng",
+      "frequency_normalized": "buổi sáng",
+      "duration_raw": null,
+      "duration_normalized": null,
+      "route_raw": "Uống",
+      "route_normalized": "uống",
+      "instruction_raw": "buổi sáng",
+      "instruction_normalized": "buổi sáng",
+      "form_raw": "viên",
+      "form_normalized": "viên",
+      "note": null
+    }
+  ],
+  "metadata": {
+    "image_count": 1,
+    "representative_keywords": [
+      "trần",
+      "date",
+      "xanh",
+      "pôn",
+      "ngô",
+      "manh"
+    ],
+    "sample_images": [
+      "IMG_20260122_010128"
+    ]
+  },
+  "notes": null
+}

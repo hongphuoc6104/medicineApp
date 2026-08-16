@@ -1,0 +1,89 @@
+{
+  "schema_version": "rxie.canonical_gt.v1",
+  "prescription_id": "RX_007",
+  "patient_id": "PAT_007",
+  "encounter_id": "DN5094556145",
+  "hospital_name": "BỆNH VIỆN XANH PÔN",
+  "prescription_date": null,
+  "annotation_status": "verified",
+  "verified_by": "human_expert_review",
+  "verified_at": "2026-08-16T00:00:00Z",
+  "diagnoses": [
+    "E78.0: Tăng cholesterol máu thuần",
+    "I25.1: Bệnh tim thiếu máu cục bộ mạn",
+    "I63.9: Di chứng nhồi máu não",
+    "H04.1: Hội chứng khô mắt"
+  ],
+  "medications": [
+    {
+      "medication_id": "RX_007_M01",
+      "drug_raw": "Omega-3 (Omega-3) 1000mg",
+      "drug_normalized": "omega-3",
+      "brand_raw": "Omega-3",
+      "brand_normalized": "omega-3",
+      "strength_raw": "1000mg",
+      "strength_normalized": "1000 mg",
+      "quantity_value_raw": "28",
+      "quantity_value_normalized": 28,
+      "quantity_unit_raw": "Viên",
+      "quantity_unit_normalized": "viên",
+      "dosage_raw": "1 viên",
+      "dosage_normalized": "1 viên",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
+      "duration_raw": null,
+      "duration_normalized": null,
+      "route_raw": "uống",
+      "route_normalized": "uống",
+      "instruction_raw": "sau ăn",
+      "instruction_normalized": "sau ăn",
+      "form_raw": "viên",
+      "form_normalized": "viên",
+      "note": null
+    },
+    {
+      "medication_id": "RX_007_M02",
+      "drug_raw": "Artificial Tears (Systane Ultra) 10ml",
+      "drug_normalized": "artificial tears",
+      "brand_raw": "Systane Ultra",
+      "brand_normalized": "systane ultra",
+      "strength_raw": "10ml",
+      "strength_normalized": "10 ml",
+      "quantity_value_raw": "1",
+      "quantity_value_normalized": 1,
+      "quantity_unit_raw": "Lọ",
+      "quantity_unit_normalized": "lọ",
+      "dosage_raw": null,
+      "dosage_normalized": null,
+      "frequency_raw": "3-4 lần/ngày",
+      "frequency_normalized": "3-4 lần/ngày",
+      "duration_raw": null,
+      "duration_normalized": null,
+      "route_raw": "Nhỏ mắt",
+      "route_normalized": "nhỏ mắt",
+      "instruction_raw": "khi khô",
+      "instruction_normalized": "khi khô",
+      "form_raw": null,
+      "form_normalized": null,
+      "note": null
+    }
+  ],
+  "metadata": {
+    "image_count": 25,
+    "representative_keywords": [
+      "máu",
+      "omega",
+      "khô",
+      "theo",
+      "mang",
+      "chứng"
+    ],
+    "sample_images": [
+      "IMG_20260122_010148",
+      "IMG_20260122_010157",
+      "IMG_20260122_010232",
+      "IMG_20260122_010236"
+    ]
+  },
+  "notes": null
+}

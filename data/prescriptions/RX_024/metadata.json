@@ -1,0 +1,24 @@
+{
+  "prescription_id": "RX_024",
+  "patient_id": "PAT_024",
+  "hospital_hint": "BỆNH VIỆN XANH PÔN",
+  "encounter_code_hint": "DN5113086912",
+  "diagnoses_hint": [
+    "L20.9: Viêm da cơ địa"
+  ],
+  "grouping_status": "verified",
+  "image_count": 1,
+  "images": [
+    {
+      "image_id": "IMG_20260209_003013",
+      "filename": "IMG_20260209_003013.jpg",
+      "relative_path": "data/output/Labels lớn/IMG_20260209_003013.json",
+      "ocr_file": "data/output/Labels lớn/IMG_20260209_003013.json",
+      "word_count": 133,
+      "line_count": 37,
+      "mean_confidence": 0.8040216951756864,
+      "detected_angle": -90.0,
+      "similarity_to_group": 1.0
+    }
+  ]
+}

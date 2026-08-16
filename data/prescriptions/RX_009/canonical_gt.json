@@ -1,0 +1,60 @@
+{
+  "schema_version": "rxie.canonical_gt.v1",
+  "prescription_id": "RX_009",
+  "patient_id": "PAT_009",
+  "encounter_id": "BT2939321351869-93002",
+  "hospital_name": "BVĐK TW CẦN THƠ",
+  "prescription_date": null,
+  "annotation_status": "verified",
+  "verified_by": "human_expert_review",
+  "verified_at": "2026-08-16T00:00:00Z",
+  "diagnoses": [
+    "H04.1: Hội chứng khô mắt"
+  ],
+  "medications": [
+    {
+      "medication_id": "RX_009_M01",
+      "drug_raw": "Omega-3 (Omega-3) 1000mg",
+      "drug_normalized": "omega-3",
+      "brand_raw": "Omega-3",
+      "brand_normalized": "omega-3",
+      "strength_raw": "1000mg",
+      "strength_normalized": "1000 mg",
+      "quantity_value_raw": "30",
+      "quantity_value_normalized": 30,
+      "quantity_unit_raw": "Viên",
+      "quantity_unit_normalized": "viên",
+      "dosage_raw": "1 viên",
+      "dosage_normalized": "1 viên",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
+      "duration_raw": null,
+      "duration_normalized": null,
+      "route_raw": "uống",
+      "route_normalized": "uống",
+      "instruction_raw": "sau ăn",
+      "instruction_normalized": "sau ăn",
+      "form_raw": "viên",
+      "form_normalized": "viên",
+      "note": null
+    }
+  ],
+  "metadata": {
+    "image_count": 7,
+    "representative_keywords": [
+      "omega",
+      "thị",
+      "lại",
+      "thơ",
+      "trần",
+      "lợi"
+    ],
+    "sample_images": [
+      "IMG_20260122_005810",
+      "IMG_20260122_005816",
+      "IMG_20260122_005818",
+      "IMG_20260122_005821"
+    ]
+  },
+  "notes": null
+}

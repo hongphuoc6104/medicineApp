@@ -1,0 +1,85 @@
+{
+  "schema_version": "rxie.canonical_gt.v1",
+  "prescription_id": "RX_015",
+  "patient_id": "PAT_015",
+  "encounter_id": "DN5113086912",
+  "hospital_name": "BỆNH VIỆN XANH PÔN",
+  "prescription_date": null,
+  "annotation_status": "verified",
+  "verified_by": "human_expert_review",
+  "verified_at": "2026-08-16T00:00:00Z",
+  "diagnoses": [
+    "L20.9: Viêm da cơ địa"
+  ],
+  "medications": [
+    {
+      "medication_id": "RX_015_M01",
+      "drug_raw": "Fexofenadine (Telfast) 180mg",
+      "drug_normalized": "fexofenadine",
+      "brand_raw": "Telfast",
+      "brand_normalized": "telfast",
+      "strength_raw": "180mg",
+      "strength_normalized": "180 mg",
+      "quantity_value_raw": "28",
+      "quantity_value_normalized": 28,
+      "quantity_unit_raw": "Viên",
+      "quantity_unit_normalized": "viên",
+      "dosage_raw": "1 viên",
+      "dosage_normalized": "1 viên",
+      "frequency_raw": "Ngày sáng",
+      "frequency_normalized": "ngày sáng",
+      "duration_raw": null,
+      "duration_normalized": null,
+      "route_raw": "uống",
+      "route_normalized": "uống",
+      "instruction_raw": "sáng",
+      "instruction_normalized": "sáng",
+      "form_raw": "viên",
+      "form_normalized": "viên",
+      "note": null
+    },
+    {
+      "medication_id": "RX_015_M02",
+      "drug_raw": "Cetirizine (Zyrtec) 10mg",
+      "drug_normalized": "cetirizine",
+      "brand_raw": "Zyrtec",
+      "brand_normalized": "zyrtec",
+      "strength_raw": "10mg",
+      "strength_normalized": "10 mg",
+      "quantity_value_raw": "28",
+      "quantity_value_normalized": 28,
+      "quantity_unit_raw": "Viên",
+      "quantity_unit_normalized": "viên",
+      "dosage_raw": "1 viên",
+      "dosage_normalized": "1 viên",
+      "frequency_raw": "Ngày tối",
+      "frequency_normalized": "ngày tối",
+      "duration_raw": null,
+      "duration_normalized": null,
+      "route_raw": "uống",
+      "route_normalized": "uống",
+      "instruction_raw": "tối",
+      "instruction_normalized": "tối",
+      "form_raw": "viên",
+      "form_normalized": "viên",
+      "note": null
+    }
+  ],
+  "metadata": {
+    "image_count": 3,
+    "representative_keywords": [
+      "hoàng",
+      "lại",
+      "thị",
+      "xanh",
+      "đức",
+      "hiếm"
+    ],
+    "sample_images": [
+      "IMG_20260122_005905",
+      "IMG_20260209_181338",
+      "IMG_20260209_181344"
+    ]
+  },
+  "notes": null
+}

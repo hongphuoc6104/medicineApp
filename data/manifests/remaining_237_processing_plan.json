@@ -1,0 +1,11 @@
+{
+  "description": "237 Captures to be processed with Preprocessing V1 Frozen spec.",
+  "total_count": 0,
+  "pipeline_spec": {
+    "rotation": "ALWAYS_APPLY",
+    "perspective": "DROP",
+    "deskew": "CONDITIONAL_GE_6_DEG",
+    "selector": "P6_HYBRID_QUALITY_GUARD"
+  },
+  "image_ids": []
+}

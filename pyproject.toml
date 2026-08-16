@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rxie"
+version = "0.1.0"
+description = "Prescription OCR entity classification service"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.110,<1",
+  "pydantic>=2.6,<3",
+  "uvicorn[standard]>=0.27,<1",
+]
+
+[project.optional-dependencies]
+train = [
+  "accelerate>=0.27",
+  "datasets>=2.17,<4",
+  "numpy>=1.26",
+  "seqeval>=1.2",
+  "torch>=2.1",
+  "transformers>=4.38,<5",
+]
+dev = [
+  "httpx>=0.27",
+  "pre-commit>=3.6",
+  "pytest>=8",
+  "ruff>=0.3",
+]
+
+[project.scripts]
+rxie-api = "rxie.api:run"
+rxie-convert-legacy = "rxie.legacy:main"
+rxie-train = "rxie.train:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rxie"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests/rxie"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

@@ -1,16 +1,8 @@
-# medicine_app
+# RxIE Android scanner
 
-A new Flutter project.
+Minimal Flutter Android client that scans prescriptions, performs on-device OCR,
+and posts OCR JSON to `POST /entities`. It never uploads image bytes.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter run --dart-define RXIE_API_URL=http://10.0.2.2:8000
+```

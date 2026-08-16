@@ -1,0 +1,26 @@
+{
+  "schema_version": "rxie.ocr.v1",
+  "document_id": "synthetic-example-001",
+  "ocr_engine": {
+    "name": "fixture",
+    "version": "1"
+  },
+  "pages": [
+    {
+      "width": 1000,
+      "height": 1400,
+      "page_index": 0,
+      "regions": [
+        {
+          "region_id": "p0-l0",
+          "text": "Paracetamol 500 mg - Uong 1 vien sau an",
+          "confidence": null,
+          "reading_order": 0,
+          "bbox": {
+            "points": [[50, 100], [850, 100], [850, 150], [50, 150]]
+          }
+        }
+      ]
+    }
+  ]
+}

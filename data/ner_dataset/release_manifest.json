@@ -1,0 +1,36 @@
+{
+  "dataset_version": "rxie-dataset-v1.0",
+  "created_at": "2026-08-16T06:27:46.759258+00:00",
+  "schema_versions": {
+    "span_pointer": "rxie.annotation.v2",
+    "flat_bio": "rxie.annotation.v1",
+    "ocr": "rxie.ocr.v1"
+  },
+  "split_counts": {
+    "train": 19,
+    "val": 4,
+    "test": 4
+  },
+  "document_counts": {
+    "train": 279,
+    "val": 115,
+    "test": 35,
+    "total": 429
+  },
+  "file_checksums_sha256": {
+    "train.jsonl": "72b9d703314526081429903e4d0a25d3dccd16f3529ceba0aa3e210fd084b0da",
+    "val.jsonl": "f585b6e65814c2527bd094920614914c4fac6ebee52d366285dcc58557d7fa61",
+    "test.jsonl": "e86252420be357500985901499e5e61921a2107a5a57525fb6c83199305f30f3",
+    "bio_train.jsonl": "a941a4cfb138e70f83a4454c1c26f59bdabed80771d9a422d627f063d7cf1ba8",
+    "bio_val.jsonl": "69d7269611dc61bd678c52f39e116be6d330f9ec914481f67ec07c9ae28847d3",
+    "bio_test.jsonl": "1618cc47f437551d77be46f769070362620b6ad42f075ef83657fce4c22a7c22",
+    "full_dataset_audit_matrix.json": "a340deb048c20b529005f4f781c08fff4d13acefb9f29d6194898d5fbfd61cb6"
+  },
+  "quality_gates": {
+    "zero_leakage_isolation": true,
+    "zero_overlap_spans": true,
+    "zero_span_boundary_errors": true,
+    "zero_dangling_parents": true,
+    "perfect_evaluator_verified": true
+  }
+}

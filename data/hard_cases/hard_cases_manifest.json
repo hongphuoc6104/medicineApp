@@ -1,0 +1,240 @@
+{
+  "description": "OCR failure, extreme blur, black image fixtures for stress testing.",
+  "total_hard_groups": 8,
+  "groups": [
+    {
+      "prescription_id": "RX_026",
+      "patient_id": "PAT_026",
+      "grouping_status": "needs_review",
+      "image_count": 1,
+      "encounter_code_hint": null,
+      "hospital_hint": null,
+      "doctor_hint": null,
+      "diagnoses_hint": [],
+      "representative_keywords": [
+        "d0nhinog"
+      ],
+      "images": [
+        {
+          "image_id": "IMG_20260122_010138",
+          "filename": "IMG_20260122_010138.jpg",
+          "relative_path": "data/output/Data01/IMG_20260122_010138.json",
+          "ocr_file": "data/output/Data01/IMG_20260122_010138.json",
+          "word_count": 2,
+          "line_count": 2,
+          "mean_confidence": 0.337646484375,
+          "detected_angle": 90.14583587646484,
+          "similarity_to_group": 1.0
+        }
+      ],
+      "min_similarity": 1.0,
+      "median_similarity": 1.0
+    },
+    {
+      "prescription_id": "RX_028",
+      "patient_id": "PAT_028",
+      "grouping_status": "needs_review",
+      "image_count": 1,
+      "encounter_code_hint": null,
+      "hospital_hint": null,
+      "doctor_hint": null,
+      "diagnoses_hint": [],
+      "representative_keywords": [
+        "xem",
+        "iep",
+        "irong",
+        "sou",
+        "aomeprawole",
+        "nexium"
+      ],
+      "images": [
+        {
+          "image_id": "IMG_20260209_180524",
+          "filename": "IMG_20260209_180524.jpg",
+          "relative_path": "data/output/Labels lớn 3/IMG_20260209_180524.json",
+          "ocr_file": "data/output/Labels lớn 3/IMG_20260209_180524.json",
+          "word_count": 29,
+          "line_count": 11,
+          "mean_confidence": 0.41077310659668664,
+          "detected_angle": 94.81854248046875,
+          "similarity_to_group": 1.0
+        }
+      ],
+      "min_similarity": 1.0,
+      "median_similarity": 1.0
+    },
+    {
+      "prescription_id": "RX_029",
+      "patient_id": "PAT_029",
+      "grouping_status": "needs_review",
+      "image_count": 1,
+      "encounter_code_hint": null,
+      "hospital_hint": null,
+      "doctor_hint": null,
+      "diagnoses_hint": [],
+      "representative_keywords": [],
+      "images": [
+        {
+          "image_id": "IMG_20260209_180838",
+          "filename": "IMG_20260209_180838.jpg",
+          "relative_path": "data/output/Labels lớn 4/IMG_20260209_180838.json",
+          "ocr_file": "data/output/Labels lớn 4/IMG_20260209_180838.json",
+          "word_count": 0,
+          "line_count": 0,
+          "mean_confidence": 0.0,
+          "detected_angle": 0.0,
+          "similarity_to_group": 1.0
+        }
+      ],
+      "min_similarity": 1.0,
+      "median_similarity": 1.0
+    },
+    {
+      "prescription_id": "RX_030",
+      "patient_id": "PAT_030",
+      "grouping_status": "needs_review",
+      "image_count": 1,
+      "encounter_code_hint": null,
+      "hospital_hint": null,
+      "doctor_hint": null,
+      "diagnoses_hint": [],
+      "representative_keywords": [],
+      "images": [
+        {
+          "image_id": "IMG_20260209_181121",
+          "filename": "IMG_20260209_181121.jpg",
+          "relative_path": "data/output/Labels lớn 4/IMG_20260209_181121.json",
+          "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181121.json",
+          "word_count": 0,
+          "line_count": 0,
+          "mean_confidence": 0.0,
+          "detected_angle": 0.0,
+          "similarity_to_group": 1.0
+        }
+      ],
+      "min_similarity": 1.0,
+      "median_similarity": 1.0
+    },
+    {
+      "prescription_id": "RX_032",
+      "patient_id": "PAT_032",
+      "grouping_status": "needs_review",
+      "image_count": 1,
+      "encounter_code_hint": null,
+      "hospital_hint": null,
+      "doctor_hint": null,
+      "diagnoses_hint": [],
+      "representative_keywords": [],
+      "images": [
+        {
+          "image_id": "IMG_20260209_003018",
+          "filename": "IMG_20260209_003018.jpg",
+          "relative_path": "data/output/Labels lớn/IMG_20260209_003018.json",
+          "ocr_file": "data/output/Labels lớn/IMG_20260209_003018.json",
+          "word_count": 0,
+          "line_count": 0,
+          "mean_confidence": 0.0,
+          "detected_angle": 0.0,
+          "similarity_to_group": 1.0
+        }
+      ],
+      "min_similarity": 1.0,
+      "median_similarity": 1.0
+    },
+    {
+      "prescription_id": "RX_033",
+      "patient_id": "PAT_033",
+      "grouping_status": "needs_review",
+      "image_count": 1,
+      "encounter_code_hint": null,
+      "hospital_hint": null,
+      "doctor_hint": null,
+      "diagnoses_hint": [],
+      "representative_keywords": [
+        "vaiprie",
+        "acid",
+        "wepakinj"
+      ],
+      "images": [
+        {
+          "image_id": "IMG_20260209_003101",
+          "filename": "IMG_20260209_003101.jpg",
+          "relative_path": "data/output/Labels lớn/IMG_20260209_003101.json",
+          "ocr_file": "data/output/Labels lớn/IMG_20260209_003101.json",
+          "word_count": 4,
+          "line_count": 2,
+          "mean_confidence": 0.34577710926532745,
+          "detected_angle": 89.73834228515625,
+          "similarity_to_group": 1.0
+        }
+      ],
+      "min_similarity": 1.0,
+      "median_similarity": 1.0
+    },
+    {
+      "prescription_id": "RX_034",
+      "patient_id": "PAT_034",
+      "grouping_status": "needs_review",
+      "image_count": 1,
+      "encounter_code_hint": null,
+      "hospital_hint": null,
+      "doctor_hint": null,
+      "diagnoses_hint": [],
+      "representative_keywords": [
+        "thuộc",
+        "elf",
+        "tpcm",
+        "bsve",
+        "väne"
+      ],
+      "images": [
+        {
+          "image_id": "IMG_20260209_003104",
+          "filename": "IMG_20260209_003104.jpg",
+          "relative_path": "data/output/Labels lớn/IMG_20260209_003104.json",
+          "ocr_file": "data/output/Labels lớn/IMG_20260209_003104.json",
+          "word_count": 10,
+          "line_count": 5,
+          "mean_confidence": 0.4771406829357147,
+          "detected_angle": 7.452488899230957,
+          "similarity_to_group": 1.0
+        }
+      ],
+      "min_similarity": 1.0,
+      "median_similarity": 1.0
+    },
+    {
+      "prescription_id": "RX_035",
+      "patient_id": "PAT_035",
+      "grouping_status": "needs_review",
+      "image_count": 1,
+      "encounter_code_hint": null,
+      "hospital_hint": null,
+      "doctor_hint": null,
+      "diagnoses_hint": [],
+      "representative_keywords": [
+        "rve",
+        "cgak",
+        "20s",
+        "tran",
+        "thane",
+        "pcc"
+      ],
+      "images": [
+        {
+          "image_id": "IMG_20260209_003120",
+          "filename": "IMG_20260209_003120.jpg",
+          "relative_path": "data/output/Labels lớn/IMG_20260209_003120.json",
+          "ocr_file": "data/output/Labels lớn/IMG_20260209_003120.json",
+          "word_count": 13,
+          "line_count": 5,
+          "mean_confidence": 0.43155598640441895,
+          "detected_angle": 90.29048919677734,
+          "similarity_to_group": 1.0
+        }
+      ],
+      "min_similarity": 1.0,
+      "median_similarity": 1.0
+    }
+  ]
+}

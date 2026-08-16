@@ -1,0 +1,2002 @@
+{
+  "IMG_20260122_005140": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -26.23,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005220": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 17.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005437": {
+    "orientation_detected": 180,
+    "rotation_applied": 180,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 32.67,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005751": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -3.16,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_005757": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005810": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.42,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005816": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.51,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005818": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 28.16,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005821": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -10.88,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_005825": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -1.47,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005840": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.57,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005905": {
+    "orientation_detected": 180,
+    "rotation_applied": 180,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 41.31,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005921": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005923": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 20.21,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005931": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.06,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_005933": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.81,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005955": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 26.4,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_005957": {
+    "orientation_detected": 180,
+    "rotation_applied": 180,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 44.14,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010000": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 1.82,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010006": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.06,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010011": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.22,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010021": {
+    "orientation_detected": 180,
+    "rotation_applied": 180,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 32.43,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010028": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.26,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_010032": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.61,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010040": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010049": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 14.88,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_010050": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -18.25,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010100": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010107": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 8.54,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_010110": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -27.02,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010113": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 1.17,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010115": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 35.98,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010118": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": true,
+    "document_confidence": 0.539,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010125": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 14.28,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_010128": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -19.72,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010131": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -3.0,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_010132": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 23.86,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010135": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -17.18,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010138": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010148": {
+    "orientation_detected": 180,
+    "rotation_applied": 180,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 17.9,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010151": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 12.35,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_010157": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 17.76,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010203": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -25.54,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010204": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 33.65,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010209": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -20.86,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010215": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 39.56,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010228": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -34.42,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010232": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010236": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.61,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_010243": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -6.88,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_010246": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 16.8,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010316": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -25.15,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010346": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 43.13,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260122_010438": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.45,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260122_010505": {
+    "orientation_detected": 180,
+    "rotation_applied": 180,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.51,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181847": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181852": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181855": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181919": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.64,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181921": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181922": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181925": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181929": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -18.43,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181932": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 13.86,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260115_181935": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -1.14,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260115_181937": {
+    "orientation_detected": 180,
+    "rotation_applied": 180,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_002313": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_002409": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180036": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180038": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -1.29,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180040": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180042": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -3.14,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180046": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180058": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -2.37,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180106": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180115": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.41,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180129": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 9.68,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180134": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.17,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180135": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180137": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -4.03,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180140": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 6.48,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180142": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.65,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180145": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 8.04,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180149": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 8.42,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180151": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180152": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 7.03,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180200": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 4.7,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180203": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180208": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180210": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -2.36,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180212": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 4.56,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180214": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180216": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.54,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180218": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180222": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180224": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -2.67,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180226": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -1.8,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180234": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.52,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180244": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.91,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180247": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180251": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.06,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180301": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180307": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -3.13,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180313": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -5.13,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180318": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -2.0,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180325": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -2.07,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180336": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -2.1,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180341": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -5.07,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180351": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.66,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180353": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180355": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 11.08,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180357": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 8.61,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180402": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180405": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.95,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180406": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.13,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180408": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.66,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181642": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.99,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181647": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.65,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181650": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181656": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181658": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -17.42,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181701": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181703": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.76,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181709": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.37,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181711": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.03,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181713": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 4.0,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181716": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 17.95,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181721": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 6.28,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181723": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 7.75,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181726": {
+    "orientation_detected": 180,
+    "rotation_applied": 180,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.8,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181732": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.69,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181736": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 4.64,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181737": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.02,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181739": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 1.29,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181752": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.12,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181757": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.89,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181759": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.89,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181801": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.61,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181803": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.99,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181806": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -5.43,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181823": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.28,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181826": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181829": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 6.11,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181831": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181834": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 2.34,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181841": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.99,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181843": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 10.19,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181846": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -10.39,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181849": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.04,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181854": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -2.69,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181857": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -2.19,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181858": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181903": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 4.37,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181906": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 5.19,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181918": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -7.5,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181920": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -11.31,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181922": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -3.15,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181925": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -3.68,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181927": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.52,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181932": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.76,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181936": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -15.06,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181937": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -15.21,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181940": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 4.72,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181941": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 4.94,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181943": {
+    "orientation_detected": 270,
+    "rotation_applied": 270,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.65,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_181945": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -10.22,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_181958": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -3.2,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182006": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -4.87,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182008": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182010": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -6.44,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182011": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -4.37,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182019": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -1.17,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182021": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.88,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182022": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -0.86,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182024": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 9.37,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182025": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 10.39,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182027": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 10.56,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182029": {
+    "orientation_detected": 90,
+    "rotation_applied": 90,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 10.45,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182031": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182039": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 6.92,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182041": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 1.78,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182044": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182046": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 5.35,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182051": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182054": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182055": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.14,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_182057": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -1.17,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182101": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182102": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182104": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_182105": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.76,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "_storage_emulated_0_DCIM_Camera_IMG_20260209_182037": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180410": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 1.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180412": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180415": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 11.31,
+    "deskew_applied": true,
+    "crop_applied": false
+  },
+  "IMG_20260209_180420": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 0.0,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180421": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": -1.13,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180423": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 1.17,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180425": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 1.29,
+    "deskew_applied": false,
+    "crop_applied": false
+  },
+  "IMG_20260209_180428": {
+    "orientation_detected": 0,
+    "rotation_applied": 0,
+    "document_detected": false,
+    "document_confidence": 0.0,
+    "perspective_applied": false,
+    "deskew_detected_angle": 3.76,
+    "deskew_applied": true,
+    "crop_applied": false
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "prescription_id": "RX_009",
+  "patient_id": "PAT_009",
+  "hospital_hint": "BVĐK TW CẦN THƠ",
+  "encounter_code_hint": "BT2939321351869-93002",
+  "diagnoses_hint": [
+    "H04.1: Hội chứng khô mắt"
+  ],
+  "grouping_status": "verified",
+  "image_count": 7,
+  "images": [
+    {
+      "image_id": "IMG_20260122_005810",
+      "filename": "IMG_20260122_005810.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_005810.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_005810.json",
+      "word_count": 121,
+      "line_count": 30,
+      "mean_confidence": 0.7396342774232229,
+      "detected_angle": 90.41902160644531,
+      "similarity_to_group": 0.249
+    },
+    {
+      "image_id": "IMG_20260122_005816",
+      "filename": "IMG_20260122_005816.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_005816.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_005816.json",
+      "word_count": 118,
+      "line_count": 33,
+      "mean_confidence": 0.7040919390591708,
+      "detected_angle": 90.51082611083984,
+      "similarity_to_group": 0.268
+    },
+    {
+      "image_id": "IMG_20260122_005818",
+      "filename": "IMG_20260122_005818.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_005818.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_005818.json",
+      "word_count": 122,
+      "line_count": 30,
+      "mean_confidence": 0.744729733467102,
+      "detected_angle": 118.16292953491211,
+      "similarity_to_group": 0.234
+    },
+    {
+      "image_id": "IMG_20260122_005821",
+      "filename": "IMG_20260122_005821.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_005821.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_005821.json",
+      "word_count": 68,
+      "line_count": 20,
+      "mean_confidence": 0.4565424740314484,
+      "detected_angle": 79.57283782958984,
+      "similarity_to_group": 0.228
+    },
+    {
+      "image_id": "IMG_20260122_005825",
+      "filename": "IMG_20260122_005825.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_005825.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_005825.json",
+      "word_count": 122,
+      "line_count": 32,
+      "mean_confidence": 0.7358935959637165,
+      "detected_angle": -1.4256208539009094,
+      "similarity_to_group": 0.232
+    },
+    {
+      "image_id": "IMG_20260122_010438",
+      "filename": "IMG_20260122_010438.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010438.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010438.json",
+      "word_count": 102,
+      "line_count": 27,
+      "mean_confidence": 0.655186285575231,
+      "detected_angle": 2.643660306930542,
+      "similarity_to_group": 0.299
+    },
+    {
+      "image_id": "IMG_20260209_002948",
+      "filename": "IMG_20260209_002948.jpg",
+      "relative_path": "data/output/Labels lớn/IMG_20260209_002948.json",
+      "ocr_file": "data/output/Labels lớn/IMG_20260209_002948.json",
+      "word_count": 135,
+      "line_count": 32,
+      "mean_confidence": 0.7528360597789288,
+      "detected_angle": -106.7394790649414,
+      "similarity_to_group": 0.314
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "prescription_id": "RX_014",
+  "patient_id": "PAT_014",
+  "hospital_hint": "BỆNH VIỆN XANH PÔN",
+  "encounter_code_hint": "DN8432577215",
+  "diagnoses_hint": [
+    "H10.1: Viêm kết mạc cấp"
+  ],
+  "grouping_status": "verified",
+  "image_count": 4,
+  "images": [
+    {
+      "image_id": "IMG_20260122_010125",
+      "filename": "IMG_20260122_010125.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010125.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010125.json",
+      "word_count": 112,
+      "line_count": 30,
+      "mean_confidence": 0.7134487152099609,
+      "detected_angle": -75.63446044921875,
+      "similarity_to_group": 0.44
+    },
+    {
+      "image_id": "IMG_20260122_010131",
+      "filename": "IMG_20260122_010131.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010131.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010131.json",
+      "word_count": 114,
+      "line_count": 33,
+      "mean_confidence": 0.7381414093754508,
+      "detected_angle": 87.00984191894531,
+      "similarity_to_group": 0.373
+    },
+    {
+      "image_id": "IMG_20260122_010132",
+      "filename": "IMG_20260122_010132.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010132.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010132.json",
+      "word_count": 109,
+      "line_count": 30,
+      "mean_confidence": 0.6775565574566523,
+      "detected_angle": 23.763216018676758,
+      "similarity_to_group": 0.444
+    },
+    {
+      "image_id": "IMG_20260122_010135",
+      "filename": "IMG_20260122_010135.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010135.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010135.json",
+      "word_count": 112,
+      "line_count": 33,
+      "mean_confidence": 0.7033490592783148,
+      "detected_angle": -17.31818389892578,
+      "similarity_to_group": 0.428
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "prescription_id": "RX_012",
+  "patient_id": "PAT_012",
+  "hospital_hint": "BỆNH VIỆN XANH PÔN",
+  "encounter_code_hint": "DN5094556145",
+  "diagnoses_hint": [
+    "E78.0: Tăng cholesterol máu thuần",
+    "I25.1: Bệnh tim thiếu máu cục bộ mạn",
+    "I63.9: Di chứng nhồi máu não",
+    "H04.1: Hội chứng khô mắt"
+  ],
+  "grouping_status": "verified",
+  "image_count": 5,
+  "images": [
+    {
+      "image_id": "IMG_20260122_010151",
+      "filename": "IMG_20260122_010151.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010151.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010151.json",
+      "word_count": 167,
+      "line_count": 40,
+      "mean_confidence": 0.7271555960178375,
+      "detected_angle": 12.311150074005127,
+      "similarity_to_group": 0.448
+    },
+    {
+      "image_id": "IMG_20260209_180216",
+      "filename": "IMG_20260209_180216.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_180216.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_180216.json",
+      "word_count": 167,
+      "line_count": 38,
+      "mean_confidence": 0.8127176526345705,
+      "detected_angle": -0.2721919119358063,
+      "similarity_to_group": 0.378
+    },
+    {
+      "image_id": "IMG_20260209_181113",
+      "filename": "IMG_20260209_181113.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181113.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181113.json",
+      "word_count": 169,
+      "line_count": 37,
+      "mean_confidence": 0.7553589102384206,
+      "detected_angle": 1.7346915006637573,
+      "similarity_to_group": 0.407
+    },
+    {
+      "image_id": "IMG_20260209_181131",
+      "filename": "IMG_20260209_181131.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181131.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181131.json",
+      "word_count": 164,
+      "line_count": 38,
+      "mean_confidence": 0.6782090083548897,
+      "detected_angle": -8.013475894927979,
+      "similarity_to_group": 0.47
+    },
+    {
+      "image_id": "IMG_20260209_181134",
+      "filename": "IMG_20260209_181134.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181134.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181134.json",
+      "word_count": 165,
+      "line_count": 39,
+      "mean_confidence": 0.766309597553351,
+      "detected_angle": -4.432729721069336,
+      "similarity_to_group": 0.422
+    }
+  ]
+}

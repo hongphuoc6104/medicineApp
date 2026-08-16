@@ -1,0 +1,1250 @@
+{
+  "metadata": {
+    "fileName": "IMG_20260209_181227.jpg",
+    "filePath": "/data/data/com.medicineapp.medicine_app/files/input/Labels lớn 4/IMG_20260209_181227.jpg",
+    "fileSizeBytes": 4168362,
+    "imageWidth": 3000,
+    "imageHeight": 4000,
+    "processedAt": "2026-08-15T15:52:22.891311Z",
+    "recognizerScript": "latin"
+  },
+  "fullText": "9ONTHUỐC\nSlymerin (Myyamna) 1Mm",
+  "blocks": [
+    {
+      "text": "9ONTHUỐC",
+      "boundingBox": {
+        "left": 1004.0,
+        "top": 907.0,
+        "right": 1440.0,
+        "bottom": 995.0,
+        "width": 436.0,
+        "height": 88.0
+      },
+      "recognizedLanguages": [
+        "und"
+      ],
+      "cornerPoints": [
+        {
+          "x": 1004,
+          "y": 915
+        },
+        {
+          "x": 1439,
+          "y": 907
+        },
+        {
+          "x": 1440,
+          "y": 987
+        },
+        {
+          "x": 1005,
+          "y": 995
+        }
+      ],
+      "lines": [
+        {
+          "text": "9ONTHUỐC",
+          "boundingBox": {
+            "left": 1004.0,
+            "top": 907.0,
+            "right": 1440.0,
+            "bottom": 995.0,
+            "width": 436.0,
+            "height": 88.0
+          },
+          "confidence": 0.35791015625,
+          "angle": -0.986281156539917,
+          "recognizedLanguages": [
+            "en"
+          ],
+          "cornerPoints": [
+            {
+              "x": 1004,
+              "y": 915
+            },
+            {
+              "x": 1439,
+              "y": 907
+            },
+            {
+              "x": 1440,
+              "y": 987
+            },
+            {
+              "x": 1005,
+              "y": 995
+            }
+          ],
+          "elements": [
+            {
+              "text": "9ONTHUỐC",
+              "boundingBox": {
+                "left": 1004.0,
+                "top": 907.0,
+                "right": 1440.0,
+                "bottom": 995.0,
+                "width": 436.0,
+                "height": 88.0
+              },
+              "confidence": 0.35791015625,
+              "angle": -0.986281156539917,
+              "recognizedLanguages": [
+                "en"
+              ],
+              "cornerPoints": [
+                {
+                  "x": 1004,
+                  "y": 915
+                },
+                {
+                  "x": 1439,
+                  "y": 907
+                },
+                {
+                  "x": 1440,
+                  "y": 987
+                },
+                {
+                  "x": 1005,
+                  "y": 995
+                }
+              ],
+              "symbols": [
+                {
+                  "text": "9",
+                  "boundingBox": {
+                    "left": 1004.0,
+                    "top": 914.0,
+                    "right": 1078.0,
+                    "bottom": 995.0,
+                    "width": 74.0,
+                    "height": 81.0
+                  },
+                  "confidence": 0.33984375,
+                  "angle": -0.986281156539917,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1004,
+                      "y": 916
+                    },
+                    {
+                      "x": 1077,
+                      "y": 914
+                    },
+                    {
+                      "x": 1078,
+                      "y": 993
+                    },
+                    {
+                      "x": 1005,
+                      "y": 995
+                    }
+                  ]
+                },
+                {
+                  "text": "O",
+                  "boundingBox": {
+                    "left": 1089.0,
+                    "top": 913.0,
+                    "right": 1131.0,
+                    "bottom": 993.0,
+                    "width": 42.0,
+                    "height": 80.0
+                  },
+                  "confidence": 0.22265625,
+                  "angle": -0.986281156539917,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1089,
+                      "y": 914
+                    },
+                    {
+                      "x": 1130,
+                      "y": 913
+                    },
+                    {
+                      "x": 1131,
+                      "y": 992
+                    },
+                    {
+                      "x": 1090,
+                      "y": 993
+                    }
+                  ]
+                },
+                {
+                  "text": "N",
+                  "boundingBox": {
+                    "left": 1146.0,
+                    "top": 912.0,
+                    "right": 1190.0,
+                    "bottom": 992.0,
+                    "width": 44.0,
+                    "height": 80.0
+                  },
+                  "confidence": 0.65625,
+                  "angle": -0.986281156539917,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1146,
+                      "y": 913
+                    },
+                    {
+                      "x": 1189,
+                      "y": 912
+                    },
+                    {
+                      "x": 1190,
+                      "y": 991
+                    },
+                    {
+                      "x": 1147,
+                      "y": 992
+                    }
+                  ]
+                },
+                {
+                  "text": "T",
+                  "boundingBox": {
+                    "left": 1204.0,
+                    "top": 911.0,
+                    "right": 1247.0,
+                    "bottom": 991.0,
+                    "width": 43.0,
+                    "height": 80.0
+                  },
+                  "confidence": 0.640625,
+                  "angle": -0.986281156539917,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1204,
+                      "y": 912
+                    },
+                    {
+                      "x": 1246,
+                      "y": 911
+                    },
+                    {
+                      "x": 1247,
+                      "y": 990
+                    },
+                    {
+                      "x": 1205,
+                      "y": 991
+                    }
+                  ]
+                },
+                {
+                  "text": "H",
+                  "boundingBox": {
+                    "left": 1265.0,
+                    "top": 910.0,
+                    "right": 1303.0,
+                    "bottom": 990.0,
+                    "width": 38.0,
+                    "height": 80.0
+                  },
+                  "confidence": 0.29296875,
+                  "angle": -0.986281156539917,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1265,
+                      "y": 911
+                    },
+                    {
+                      "x": 1302,
+                      "y": 910
+                    },
+                    {
+                      "x": 1303,
+                      "y": 989
+                    },
+                    {
+                      "x": 1266,
+                      "y": 990
+                    }
+                  ]
+                },
+                {
+                  "text": "U",
+                  "boundingBox": {
+                    "left": 1308.0,
+                    "top": 909.0,
+                    "right": 1346.0,
+                    "bottom": 989.0,
+                    "width": 38.0,
+                    "height": 80.0
+                  },
+                  "confidence": 0.21484375,
+                  "angle": -0.986281156539917,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1308,
+                      "y": 910
+                    },
+                    {
+                      "x": 1345,
+                      "y": 909
+                    },
+                    {
+                      "x": 1346,
+                      "y": 988
+                    },
+                    {
+                      "x": 1309,
+                      "y": 989
+                    }
+                  ]
+                },
+                {
+                  "text": "Ố",
+                  "boundingBox": {
+                    "left": 1363.0,
+                    "top": 908.0,
+                    "right": 1407.0,
+                    "bottom": 988.0,
+                    "width": 44.0,
+                    "height": 80.0
+                  },
+                  "confidence": 0.09765625,
+                  "angle": -0.986281156539917,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1363,
+                      "y": 909
+                    },
+                    {
+                      "x": 1406,
+                      "y": 908
+                    },
+                    {
+                      "x": 1407,
+                      "y": 987
+                    },
+                    {
+                      "x": 1364,
+                      "y": 988
+                    }
+                  ]
+                },
+                {
+                  "text": "C",
+                  "boundingBox": {
+                    "left": 1424.0,
+                    "top": 907.0,
+                    "right": 1440.0,
+                    "bottom": 987.0,
+                    "width": 16.0,
+                    "height": 80.0
+                  },
+                  "confidence": 0.3984375,
+                  "angle": -0.986281156539917,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1424,
+                      "y": 908
+                    },
+                    {
+                      "x": 1439,
+                      "y": 907
+                    },
+                    {
+                      "x": 1440,
+                      "y": 986
+                    },
+                    {
+                      "x": 1425,
+                      "y": 987
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Slymerin (Myyamna) 1Mm",
+      "boundingBox": {
+        "left": 602.0,
+        "top": 1690.0,
+        "right": 1297.0,
+        "bottom": 1761.0,
+        "width": 695.0,
+        "height": 71.0
+      },
+      "recognizedLanguages": [
+        "und"
+      ],
+      "cornerPoints": [
+        {
+          "x": 604,
+          "y": 1690
+        },
+        {
+          "x": 1297,
+          "y": 1702
+        },
+        {
+          "x": 1295,
+          "y": 1761
+        },
+        {
+          "x": 602,
+          "y": 1749
+        }
+      ],
+      "lines": [
+        {
+          "text": "Slymerin (Myyamna) 1Mm",
+          "boundingBox": {
+            "left": 602.0,
+            "top": 1690.0,
+            "right": 1297.0,
+            "bottom": 1761.0,
+            "width": 695.0,
+            "height": 71.0
+          },
+          "confidence": 0.3207031190395355,
+          "angle": 1.0201767683029175,
+          "recognizedLanguages": [
+            "en"
+          ],
+          "cornerPoints": [
+            {
+              "x": 604,
+              "y": 1690
+            },
+            {
+              "x": 1297,
+              "y": 1702
+            },
+            {
+              "x": 1295,
+              "y": 1761
+            },
+            {
+              "x": 602,
+              "y": 1749
+            }
+          ],
+          "elements": [
+            {
+              "text": "Slymerin",
+              "boundingBox": {
+                "left": 602.0,
+                "top": 1690.0,
+                "right": 819.0,
+                "bottom": 1752.0,
+                "width": 217.0,
+                "height": 62.0
+              },
+              "confidence": 0.390625,
+              "angle": 1.0201767683029175,
+              "recognizedLanguages": [
+                "en"
+              ],
+              "cornerPoints": [
+                {
+                  "x": 604,
+                  "y": 1690
+                },
+                {
+                  "x": 819,
+                  "y": 1693
+                },
+                {
+                  "x": 817,
+                  "y": 1752
+                },
+                {
+                  "x": 602,
+                  "y": 1749
+                }
+              ],
+              "symbols": [
+                {
+                  "text": "S",
+                  "boundingBox": {
+                    "left": 602.0,
+                    "top": 1691.0,
+                    "right": 648.0,
+                    "bottom": 1749.0,
+                    "width": 46.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.28125,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 604,
+                      "y": 1691
+                    },
+                    {
+                      "x": 648,
+                      "y": 1691
+                    },
+                    {
+                      "x": 646,
+                      "y": 1749
+                    },
+                    {
+                      "x": 602,
+                      "y": 1749
+                    }
+                  ]
+                },
+                {
+                  "text": "l",
+                  "boundingBox": {
+                    "left": 652.0,
+                    "top": 1691.0,
+                    "right": 675.0,
+                    "bottom": 1749.0,
+                    "width": 23.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.16015625,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 654,
+                      "y": 1691
+                    },
+                    {
+                      "x": 675,
+                      "y": 1691
+                    },
+                    {
+                      "x": 673,
+                      "y": 1749
+                    },
+                    {
+                      "x": 652,
+                      "y": 1749
+                    }
+                  ]
+                },
+                {
+                  "text": "y",
+                  "boundingBox": {
+                    "left": 678.0,
+                    "top": 1692.0,
+                    "right": 706.0,
+                    "bottom": 1750.0,
+                    "width": 28.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.65234375,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 680,
+                      "y": 1692
+                    },
+                    {
+                      "x": 706,
+                      "y": 1692
+                    },
+                    {
+                      "x": 704,
+                      "y": 1750
+                    },
+                    {
+                      "x": 678,
+                      "y": 1750
+                    }
+                  ]
+                },
+                {
+                  "text": "m",
+                  "boundingBox": {
+                    "left": 718.0,
+                    "top": 1693.0,
+                    "right": 745.0,
+                    "bottom": 1751.0,
+                    "width": 27.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.62890625,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 720,
+                      "y": 1693
+                    },
+                    {
+                      "x": 745,
+                      "y": 1693
+                    },
+                    {
+                      "x": 743,
+                      "y": 1751
+                    },
+                    {
+                      "x": 718,
+                      "y": 1751
+                    }
+                  ]
+                },
+                {
+                  "text": "e",
+                  "boundingBox": {
+                    "left": 751.0,
+                    "top": 1693.0,
+                    "right": 770.0,
+                    "bottom": 1751.0,
+                    "width": 19.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.23828125,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 753,
+                      "y": 1693
+                    },
+                    {
+                      "x": 770,
+                      "y": 1693
+                    },
+                    {
+                      "x": 768,
+                      "y": 1751
+                    },
+                    {
+                      "x": 751,
+                      "y": 1751
+                    }
+                  ]
+                },
+                {
+                  "text": "r",
+                  "boundingBox": {
+                    "left": 773.0,
+                    "top": 1694.0,
+                    "right": 786.0,
+                    "bottom": 1752.0,
+                    "width": 13.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.421875,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 775,
+                      "y": 1694
+                    },
+                    {
+                      "x": 786,
+                      "y": 1694
+                    },
+                    {
+                      "x": 784,
+                      "y": 1752
+                    },
+                    {
+                      "x": 773,
+                      "y": 1752
+                    }
+                  ]
+                },
+                {
+                  "text": "i",
+                  "boundingBox": {
+                    "left": 780.0,
+                    "top": 1694.0,
+                    "right": 799.0,
+                    "bottom": 1752.0,
+                    "width": 19.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.46875,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 782,
+                      "y": 1694
+                    },
+                    {
+                      "x": 799,
+                      "y": 1694
+                    },
+                    {
+                      "x": 797,
+                      "y": 1752
+                    },
+                    {
+                      "x": 780,
+                      "y": 1752
+                    }
+                  ]
+                },
+                {
+                  "text": "n",
+                  "boundingBox": {
+                    "left": 807.0,
+                    "top": 1694.0,
+                    "right": 819.0,
+                    "bottom": 1752.0,
+                    "width": 12.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.2734375,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 809,
+                      "y": 1694
+                    },
+                    {
+                      "x": 819,
+                      "y": 1694
+                    },
+                    {
+                      "x": 817,
+                      "y": 1752
+                    },
+                    {
+                      "x": 807,
+                      "y": 1752
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "(Myyamna)",
+              "boundingBox": {
+                "left": 831.0,
+                "top": 1694.0,
+                "right": 1134.0,
+                "bottom": 1758.0,
+                "width": 303.0,
+                "height": 64.0
+              },
+              "confidence": 0.3194444477558136,
+              "angle": 1.020176649093628,
+              "recognizedLanguages": [
+                "en"
+              ],
+              "cornerPoints": [
+                {
+                  "x": 833,
+                  "y": 1694
+                },
+                {
+                  "x": 1134,
+                  "y": 1699
+                },
+                {
+                  "x": 1132,
+                  "y": 1758
+                },
+                {
+                  "x": 831,
+                  "y": 1753
+                }
+              ],
+              "symbols": [
+                {
+                  "text": "(",
+                  "boundingBox": {
+                    "left": 831.0,
+                    "top": 1695.0,
+                    "right": 882.0,
+                    "bottom": 1753.0,
+                    "width": 51.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.49609375,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 833,
+                      "y": 1695
+                    },
+                    {
+                      "x": 882,
+                      "y": 1695
+                    },
+                    {
+                      "x": 880,
+                      "y": 1753
+                    },
+                    {
+                      "x": 831,
+                      "y": 1753
+                    }
+                  ]
+                },
+                {
+                  "text": "M",
+                  "boundingBox": {
+                    "left": 900.0,
+                    "top": 1696.0,
+                    "right": 930.0,
+                    "bottom": 1754.0,
+                    "width": 30.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.09375,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 902,
+                      "y": 1696
+                    },
+                    {
+                      "x": 930,
+                      "y": 1696
+                    },
+                    {
+                      "x": 928,
+                      "y": 1754
+                    },
+                    {
+                      "x": 900,
+                      "y": 1754
+                    }
+                  ]
+                },
+                {
+                  "text": "y",
+                  "boundingBox": {
+                    "left": 933.0,
+                    "top": 1696.0,
+                    "right": 956.0,
+                    "bottom": 1754.0,
+                    "width": 23.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.58984375,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 935,
+                      "y": 1696
+                    },
+                    {
+                      "x": 956,
+                      "y": 1696
+                    },
+                    {
+                      "x": 954,
+                      "y": 1754
+                    },
+                    {
+                      "x": 933,
+                      "y": 1754
+                    }
+                  ]
+                },
+                {
+                  "text": "y",
+                  "boundingBox": {
+                    "left": 963.0,
+                    "top": 1697.0,
+                    "right": 983.0,
+                    "bottom": 1755.0,
+                    "width": 20.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.14453125,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 965,
+                      "y": 1697
+                    },
+                    {
+                      "x": 983,
+                      "y": 1697
+                    },
+                    {
+                      "x": 981,
+                      "y": 1755
+                    },
+                    {
+                      "x": 963,
+                      "y": 1755
+                    }
+                  ]
+                },
+                {
+                  "text": "a",
+                  "boundingBox": {
+                    "left": 978.0,
+                    "top": 1697.0,
+                    "right": 1007.0,
+                    "bottom": 1755.0,
+                    "width": 29.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.1796875,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 980,
+                      "y": 1697
+                    },
+                    {
+                      "x": 1007,
+                      "y": 1697
+                    },
+                    {
+                      "x": 1005,
+                      "y": 1755
+                    },
+                    {
+                      "x": 978,
+                      "y": 1755
+                    }
+                  ]
+                },
+                {
+                  "text": "m",
+                  "boundingBox": {
+                    "left": 1022.0,
+                    "top": 1698.0,
+                    "right": 1060.0,
+                    "bottom": 1756.0,
+                    "width": 38.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.34375,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1024,
+                      "y": 1698
+                    },
+                    {
+                      "x": 1060,
+                      "y": 1698
+                    },
+                    {
+                      "x": 1058,
+                      "y": 1756
+                    },
+                    {
+                      "x": 1022,
+                      "y": 1756
+                    }
+                  ]
+                },
+                {
+                  "text": "n",
+                  "boundingBox": {
+                    "left": 1075.0,
+                    "top": 1699.0,
+                    "right": 1104.0,
+                    "bottom": 1757.0,
+                    "width": 29.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.171875,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1077,
+                      "y": 1699
+                    },
+                    {
+                      "x": 1104,
+                      "y": 1699
+                    },
+                    {
+                      "x": 1102,
+                      "y": 1757
+                    },
+                    {
+                      "x": 1075,
+                      "y": 1757
+                    }
+                  ]
+                },
+                {
+                  "text": "a",
+                  "boundingBox": {
+                    "left": 1109.0,
+                    "top": 1700.0,
+                    "right": 1128.0,
+                    "bottom": 1758.0,
+                    "width": 19.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.35546875,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1111,
+                      "y": 1700
+                    },
+                    {
+                      "x": 1128,
+                      "y": 1700
+                    },
+                    {
+                      "x": 1126,
+                      "y": 1758
+                    },
+                    {
+                      "x": 1109,
+                      "y": 1758
+                    }
+                  ]
+                },
+                {
+                  "text": ")",
+                  "boundingBox": {
+                    "left": 1130.0,
+                    "top": 1700.0,
+                    "right": 1134.0,
+                    "bottom": 1758.0,
+                    "width": 4.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.5,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1132,
+                      "y": 1700
+                    },
+                    {
+                      "x": 1134,
+                      "y": 1700
+                    },
+                    {
+                      "x": 1132,
+                      "y": 1758
+                    },
+                    {
+                      "x": 1130,
+                      "y": 1758
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "text": "1Mm",
+              "boundingBox": {
+                "left": 1149.0,
+                "top": 1700.0,
+                "right": 1297.0,
+                "bottom": 1760.0,
+                "width": 148.0,
+                "height": 60.0
+              },
+              "confidence": 0.1380208283662796,
+              "angle": 1.0201767683029175,
+              "recognizedLanguages": [
+                "en"
+              ],
+              "cornerPoints": [
+                {
+                  "x": 1151,
+                  "y": 1700
+                },
+                {
+                  "x": 1297,
+                  "y": 1702
+                },
+                {
+                  "x": 1295,
+                  "y": 1760
+                },
+                {
+                  "x": 1149,
+                  "y": 1758
+                }
+              ],
+              "symbols": [
+                {
+                  "text": "1",
+                  "boundingBox": {
+                    "left": 1149.0,
+                    "top": 1700.0,
+                    "right": 1184.0,
+                    "bottom": 1758.0,
+                    "width": 35.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.1171875,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1151,
+                      "y": 1700
+                    },
+                    {
+                      "x": 1184,
+                      "y": 1700
+                    },
+                    {
+                      "x": 1182,
+                      "y": 1758
+                    },
+                    {
+                      "x": 1149,
+                      "y": 1758
+                    }
+                  ]
+                },
+                {
+                  "text": "M",
+                  "boundingBox": {
+                    "left": 1189.0,
+                    "top": 1701.0,
+                    "right": 1222.0,
+                    "bottom": 1759.0,
+                    "width": 33.0,
+                    "height": 58.0
+                  },
+                  "confidence": 0.1796875,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1191,
+                      "y": 1701
+                    },
+                    {
+                      "x": 1222,
+                      "y": 1701
+                    },
+                    {
+                      "x": 1220,
+                      "y": 1759
+                    },
+                    {
+                      "x": 1189,
+                      "y": 1759
+                    }
+                  ]
+                },
+                {
+                  "text": "m",
+                  "boundingBox": {
+                    "left": 1237.0,
+                    "top": 1702.0,
+                    "right": 1297.0,
+                    "bottom": 1761.0,
+                    "width": 60.0,
+                    "height": 59.0
+                  },
+                  "confidence": 0.1171875,
+                  "angle": 1.0201767683029175,
+                  "recognizedLanguages": [
+                    ""
+                  ],
+                  "cornerPoints": [
+                    {
+                      "x": 1239,
+                      "y": 1702
+                    },
+                    {
+                      "x": 1297,
+                      "y": 1703
+                    },
+                    {
+                      "x": 1295,
+                      "y": 1761
+                    },
+                    {
+                      "x": 1237,
+                      "y": 1760
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

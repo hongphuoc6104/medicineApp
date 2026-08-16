@@ -1,95 +1,67 @@
-import unittest
+import pytest
+from pydantic import ValidationError
 
-from research.rxie.schema import (
-    Entity,
-    EntityType,
-    MedicationRecord,
-    OcrBlock,
-    ParentAssignment,
-    PrescriptionDocument,
-    Relation,
-    RelationType,
-)
+from rxie.schemas import OcrDocument
+from rxie.text import build_document_text
 
 
-def _document(parent_id="drug-1", relation_type=RelationType.HAS_STRENGTH):
-    raw_text = "Paracetamol 500 mg"
-    return PrescriptionDocument(
-        document_id="rx-1",
-        raw_text=raw_text,
-        ocr_engine="fixture",
-        ocr_blocks=(
-            OcrBlock(
-                region_id="region-1",
-                text=raw_text,
-                confidence=0.9,
-                reading_order=0,
-                bbox=((0, 0), (100, 0), (100, 20), (0, 20)),
-            ),
-        ),
-        entities=(
-            Entity(
-                "drug-1",
-                EntityType.DRUG,
-                0,
-                11,
-                "Paracetamol",
-                source_region_ids=("region-1",),
-            ),
-            Entity(
-                "strength-1",
-                EntityType.STRENGTH,
-                12,
-                18,
-                "500 mg",
-                source_region_ids=("region-1",),
-            ),
-        ),
-        parent_assignments=(ParentAssignment("strength-1", parent_id),),
-        relations=(
-            (Relation("drug-1", "strength-1", relation_type),)
-            if parent_id is not None
-            else ()
-        ),
-        records=(MedicationRecord(drug="Paracetamol", strength="500 mg"),),
-    )
+def payload():
+    return {
+        "schema_version": "rxie.ocr.v1",
+        "document_id": "rx-1",
+        "ocr_engine": {"name": "mobile-ocr", "version": "1.2.0"},
+        "pages": [
+            {
+                "width": 200,
+                "height": 100,
+                "page_index": 0,
+                "regions": [
+                    {
+                        "region_id": "r2",
+                        "text": "500 mg",
+                        "confidence": None,
+                        "reading_order": 1,
+                        "bbox": {
+                            "points": [[0, 20], [50, 20], [50, 40], [0, 40]]
+                        },
+                    },
+                    {
+                        "region_id": "r1",
+                        "text": "Paracetamol",
+                        "confidence": 0.9,
+                        "reading_order": 0,
+                        "bbox": {
+                            "points": [[0, 0], [100, 0], [100, 20], [0, 20]]
+                        },
+                    },
+                ],
+            }
+        ],
+    }
 
 
-class PrescriptionDocumentTest(unittest.TestCase):
-    def test_accepts_valid_structured_annotation(self):
-        document = _document()
+def test_builds_deterministic_raw_text_and_offsets():
+    text = build_document_text(OcrDocument.model_validate(payload()))
 
-        self.assertEqual(document.parent_assignments[0].drug_id, "drug-1")
-        self.assertEqual(document.records[0].strength, "500 mg")
+    assert text.raw_text == "Paracetamol\n500 mg"
+    assert [(span.region_id, span.start, span.end) for span in text.regions] == [
+        ("r1", 0, 11),
+        ("r2", 12, 18),
+    ]
+    assert text.source_regions(6, 15) == ["r1", "r2"]
 
-    def test_supports_explicit_null_parent(self):
-        document = _document(parent_id=None)
 
-        self.assertIsNone(document.parent_assignments[0].drug_id)
+def test_rejects_duplicate_region_ids():
+    value = payload()
+    value["pages"][0]["regions"][1]["region_id"] = "r2"
 
-    def test_rejects_relation_type_that_conflicts_with_attribute(self):
-        with self.assertRaisesRegex(ValueError, "conflicts"):
-            _document(relation_type=RelationType.HAS_QUANTITY)
+    with pytest.raises(ValidationError, match="region_id must be unique"):
+        OcrDocument.model_validate(value)
 
-    def test_rejects_unknown_source_region(self):
-        document = _document()
-        invalid_entity = Entity(
-            "drug-2",
-            EntityType.DRUG,
-            0,
-            11,
-            "Paracetamol",
-            source_region_ids=("missing-region",),
-        )
 
-        with self.assertRaisesRegex(ValueError, "unknown OCR regions"):
-            PrescriptionDocument(
-                document_id=document.document_id,
-                raw_text=document.raw_text,
-                ocr_engine=document.ocr_engine,
-                ocr_blocks=document.ocr_blocks,
-                entities=(invalid_entity,),
-                parent_assignments=(),
-                relations=(),
-                records=(),
-            )
+def test_rejects_bbox_outside_page():
+    value = payload()
+    value["pages"][0]["regions"][0]["bbox"]["points"][1][0] = 201
+
+    with pytest.raises(ValidationError, match="within page dimensions"):
+        OcrDocument.model_validate(value)

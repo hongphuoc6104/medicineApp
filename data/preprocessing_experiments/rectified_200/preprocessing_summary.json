@@ -1,0 +1,4215 @@
+{
+  "total_images": 200,
+  "raw_ocr_matched": 200,
+  "orientation_rotated": 73,
+  "document_rectified": 0,
+  "deskew_applied": 80,
+  "cropped": 0,
+  "rotations_by_angle": {
+    "90": 42,
+    "180": 8,
+    "270": 23
+  },
+  "records": [
+    {
+      "image_id": "IMG_20260122_005140",
+      "relative_path": "Data/Data01/IMG_20260122_005140.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -26.23,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005220",
+      "relative_path": "Data/Data01/IMG_20260122_005220.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 17.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005437",
+      "relative_path": "Data/Data01/IMG_20260122_005437.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 180,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 32.67,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005751",
+      "relative_path": "Data/Data01/IMG_20260122_005751.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3215,
+        4159
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -3.16,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005757",
+      "relative_path": "Data/Data01/IMG_20260122_005757.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005810",
+      "relative_path": "Data/Data01/IMG_20260122_005810.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.42,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005816",
+      "relative_path": "Data/Data01/IMG_20260122_005816.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.51,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005818",
+      "relative_path": "Data/Data01/IMG_20260122_005818.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 28.16,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005821",
+      "relative_path": "Data/Data01/IMG_20260122_005821.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3701,
+        4494
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -10.88,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005825",
+      "relative_path": "Data/Data01/IMG_20260122_005825.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -1.47,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005840",
+      "relative_path": "Data/Data01/IMG_20260122_005840.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.57,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005905",
+      "relative_path": "Data/Data01/IMG_20260122_005905.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 180,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 41.31,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005921",
+      "relative_path": "Data/Data01/IMG_20260122_005921.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005923",
+      "relative_path": "Data/Data01/IMG_20260122_005923.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 20.21,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005931",
+      "relative_path": "Data/Data01/IMG_20260122_005931.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3141,
+        4105
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.06,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005933",
+      "relative_path": "Data/Data01/IMG_20260122_005933.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.81,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005955",
+      "relative_path": "Data/Data01/IMG_20260122_005955.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 26.4,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_005957",
+      "relative_path": "Data/Data01/IMG_20260122_005957.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 180,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 44.14,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010000",
+      "relative_path": "Data/Data01/IMG_20260122_010000.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 1.82,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010006",
+      "relative_path": "Data/Data01/IMG_20260122_010006.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.06,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010011",
+      "relative_path": "Data/Data01/IMG_20260122_010011.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.22,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010021",
+      "relative_path": "Data/Data01/IMG_20260122_010021.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 180,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 32.43,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010028",
+      "relative_path": "Data/Data01/IMG_20260122_010028.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        4115,
+        3155
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.26,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010032",
+      "relative_path": "Data/Data01/IMG_20260122_010032.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.61,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010040",
+      "relative_path": "Data/Data01/IMG_20260122_010040.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010049",
+      "relative_path": "Data/Data01/IMG_20260122_010049.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3926,
+        4636
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 14.88,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010050",
+      "relative_path": "Data/Data01/IMG_20260122_010050.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -18.25,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010100",
+      "relative_path": "Data/Data01/IMG_20260122_010100.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010107",
+      "relative_path": "Data/Data01/IMG_20260122_010107.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3560,
+        4401
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 8.54,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010110",
+      "relative_path": "Data/Data01/IMG_20260122_010110.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -27.02,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010113",
+      "relative_path": "Data/Data01/IMG_20260122_010113.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 1.17,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010115",
+      "relative_path": "Data/Data01/IMG_20260122_010115.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 35.98,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010118",
+      "relative_path": "Data/Data01/IMG_20260122_010118.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.539,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010125",
+      "relative_path": "Data/Data01/IMG_20260122_010125.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3894,
+        4616
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 14.28,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010128",
+      "relative_path": "Data/Data01/IMG_20260122_010128.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -19.72,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010131",
+      "relative_path": "Data/Data01/IMG_20260122_010131.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3205,
+        4151
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -3.0,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010132",
+      "relative_path": "Data/Data01/IMG_20260122_010132.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 23.86,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010135",
+      "relative_path": "Data/Data01/IMG_20260122_010135.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -17.18,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010138",
+      "relative_path": "Data/Data01/IMG_20260122_010138.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010148",
+      "relative_path": "Data/Data01/IMG_20260122_010148.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 180,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 17.9,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010151",
+      "relative_path": "Data/Data01/IMG_20260122_010151.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3786,
+        4549
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 12.35,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010157",
+      "relative_path": "Data/Data01/IMG_20260122_010157.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 17.76,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010203",
+      "relative_path": "Data/Data01/IMG_20260122_010203.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -25.54,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010204",
+      "relative_path": "Data/Data01/IMG_20260122_010204.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 33.65,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010209",
+      "relative_path": "Data/Data01/IMG_20260122_010209.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -20.86,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010215",
+      "relative_path": "Data/Data01/IMG_20260122_010215.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 39.56,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010228",
+      "relative_path": "Data/Data01/IMG_20260122_010228.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -34.42,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010232",
+      "relative_path": "Data/Data01/IMG_20260122_010232.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010236",
+      "relative_path": "Data/Data01/IMG_20260122_010236.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3178,
+        4132
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.61,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010243",
+      "relative_path": "Data/Data01/IMG_20260122_010243.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3457,
+        4330
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -6.88,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010246",
+      "relative_path": "Data/Data01/IMG_20260122_010246.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 16.8,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010316",
+      "relative_path": "Data/Data01/IMG_20260122_010316.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -25.15,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010346",
+      "relative_path": "Data/Data01/IMG_20260122_010346.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 43.13,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010438",
+      "relative_path": "Data/Data01/IMG_20260122_010438.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4124,
+        3168
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.45,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260122_010505",
+      "relative_path": "Data/Data01/IMG_20260122_010505.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 180,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.51,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181847",
+      "relative_path": "Data/IMG_20260115_181847.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181852",
+      "relative_path": "Data/IMG_20260115_181852.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181855",
+      "relative_path": "Data/IMG_20260115_181855.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181919",
+      "relative_path": "Data/IMG_20260115_181919.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.64,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181921",
+      "relative_path": "Data/IMG_20260115_181921.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181922",
+      "relative_path": "Data/IMG_20260115_181922.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181925",
+      "relative_path": "Data/IMG_20260115_181925.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181929",
+      "relative_path": "Data/IMG_20260115_181929.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -18.43,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181932",
+      "relative_path": "Data/IMG_20260115_181932.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3870,
+        4602
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 13.86,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181935",
+      "relative_path": "Data/IMG_20260115_181935.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -1.14,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260115_181937",
+      "relative_path": "Data/IMG_20260115_181937.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 180,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_002313",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_002313.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_002409",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_002409.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180036",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180036.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180038",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180038.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -1.29,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180040",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180040.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180042",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180042.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3214,
+        4158
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -3.14,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180046",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180046.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180058",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180058.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4120,
+        3162
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -2.37,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180106",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180106.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180115",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180115.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.41,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180129",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180129.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3629,
+        4447
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 9.68,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180134",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180134.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3149,
+        4110
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.17,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180135",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180135.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180137",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180137.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3273,
+        4201
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -4.03,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180140",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180140.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3432,
+        4312
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 6.48,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180142",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180142.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3248,
+        4182
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.65,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180145",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180145.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3529,
+        4380
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 8.04,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180149",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180149.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3553,
+        4395
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 8.42,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180151",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180151.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180152",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180152.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3467,
+        4337
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 7.03,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180200",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180200.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3317,
+        4232
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 4.7,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180203",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180203.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180208",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180208.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180210",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180210.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3162,
+        4120
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -2.36,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180212",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180212.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3308,
+        4225
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 4.56,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180214",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180214.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180216",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180216.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.54,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180218",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180218.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180222",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180222.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180224",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180224.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3182,
+        4135
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -2.67,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180226",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180226.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -1.8,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180234",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180234.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.52,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180244",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180244.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.91,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180247",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180247.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180251",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180251.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3208,
+        4154
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.06,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180301",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180301.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180307",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180307.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3213,
+        4157
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -3.13,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180313",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180313.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3345,
+        4252
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -5.13,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180318",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180318.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3137,
+        4102
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -2.0,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180325",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180325.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3142,
+        4105
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -2.07,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180336",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180336.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3144,
+        4107
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -2.1,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180341",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180341.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3341,
+        4249
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -5.07,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180351",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180351.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3249,
+        4183
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.66,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180353",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180353.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180355",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180355.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3712,
+        4501
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 11.08,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180357",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180357.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3565,
+        4404
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 8.61,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180402",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180402.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180405",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180405.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.95,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180406",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180406.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3214,
+        4158
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.13,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180408",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_180408.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3182,
+        4134
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.66,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181642",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181642.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3271,
+        4199
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.99,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181647",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181647.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.65,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181650",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181650.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181656",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181656.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181658",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181658.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -17.42,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181701",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181701.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        4000,
+        3000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181703",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181703.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.76,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181709",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181709.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.37,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181711",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181711.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3140,
+        4104
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.03,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181713",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181713.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3271,
+        4199
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 4.0,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181716",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181716.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 17.95,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181721",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181721.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3419,
+        4304
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 6.28,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181723",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181723.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3512,
+        4368
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 7.75,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181726",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181726.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3258,
+        4189
+      ],
+      "preprocessing": {
+        "orientation_rotation": 180,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.8,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181732",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181732.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3251,
+        4184
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.69,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181736",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181736.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3313,
+        4229
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 4.64,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181737",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181737.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3138,
+        4103
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.02,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181739",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181739.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 1.29,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181752",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181752.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.12,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181757",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181757.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.89,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181759",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181759.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.89,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181801",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181801.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3245,
+        4180
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.61,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181803",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181803.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3204,
+        4150
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.99,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181806",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181806.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3364,
+        4265
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -5.43,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181823",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181823.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3223,
+        4165
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.28,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181826",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181826.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181829",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181829.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3408,
+        4296
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 6.11,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181831",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181831.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181834",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181834.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3161,
+        4119
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 2.34,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181841",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181841.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.99,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181843",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181843.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3660,
+        4467
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 10.19,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181846",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181846.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3671,
+        4475
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -10.39,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181849",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181849.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.04,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181854",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181854.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3184,
+        4136
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -2.69,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181857",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181857.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3150,
+        4111
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -2.19,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181858",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181858.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181903",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181903.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3295,
+        4216
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 4.37,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181906",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181906.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3349,
+        4255
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 5.19,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181918",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181918.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3496,
+        4357
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -7.5,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181920",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181920.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3726,
+        4510
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -11.31,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181922",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181922.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3215,
+        4158
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -3.15,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181925",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181925.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3250,
+        4184
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -3.68,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181927",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181927.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.52,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181932",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181932.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.76,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181936",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181936.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -15.06,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181937",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181937.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -15.21,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181940",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181940.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3319,
+        4233
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 4.72,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181941",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181941.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3333,
+        4243
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 4.94,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181943",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181943.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 270,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.65,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181945",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181945.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3662,
+        4468
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -10.22,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_181958",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_181958.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3218,
+        4161
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -3.2,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182006",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182006.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3328,
+        4240
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -4.87,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182008",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182008.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182010",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182010.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3429,
+        4311
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -6.44,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182011",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182011.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3296,
+        4217
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -4.37,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182019",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182019.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -1.17,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182021",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182021.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.88,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182022",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182022.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -0.86,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182024",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182024.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3611,
+        4434
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 9.37,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182025",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182025.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3671,
+        4475
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 10.39,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182027",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182027.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3682,
+        4481
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 10.56,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182029",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182029.jpg",
+      "original_dims": [
+        4000,
+        3000
+      ],
+      "rectified_dims": [
+        3675,
+        4477
+      ],
+      "preprocessing": {
+        "orientation_rotation": 90,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 10.45,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182031",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182031.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182039",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182039.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3460,
+        4332
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 6.92,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182041",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182041.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 1.78,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182044",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182044.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182046",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182046.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3359,
+        4262
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 5.35,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182051",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182051.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182054",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182054.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182055",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182055.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3214,
+        4158
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.14,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182057",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182057.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -1.17,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182101",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182101.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182102",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182102.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182104",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182104.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_182105",
+      "relative_path": "Data/Labels lớn 2/IMG_20260209_182105.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.76,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "_storage_emulated_0_DCIM_Camera_IMG_20260209_182037",
+      "relative_path": "Data/Labels lớn 2/_storage_emulated_0_DCIM_Camera_IMG_20260209_182037.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180410",
+      "relative_path": "Data/Labels lớn 3/IMG_20260209_180410.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 1.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180412",
+      "relative_path": "Data/Labels lớn 3/IMG_20260209_180412.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180415",
+      "relative_path": "Data/Labels lớn 3/IMG_20260209_180415.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3726,
+        4510
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 11.31,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180420",
+      "relative_path": "Data/Labels lớn 3/IMG_20260209_180420.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 0.0,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180421",
+      "relative_path": "Data/Labels lớn 3/IMG_20260209_180421.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": -1.13,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180423",
+      "relative_path": "Data/Labels lớn 3/IMG_20260209_180423.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 1.17,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180425",
+      "relative_path": "Data/Labels lớn 3/IMG_20260209_180425.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3000,
+        4000
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 1.29,
+        "deskew_applied": false,
+        "cropped": false
+      }
+    },
+    {
+      "image_id": "IMG_20260209_180428",
+      "relative_path": "Data/Labels lớn 3/IMG_20260209_180428.jpg",
+      "original_dims": [
+        3000,
+        4000
+      ],
+      "rectified_dims": [
+        3255,
+        4187
+      ],
+      "preprocessing": {
+        "orientation_rotation": 0,
+        "document_detected": false,
+        "document_confidence": 0.0,
+        "perspective_corrected": false,
+        "deskew_angle": 3.76,
+        "deskew_applied": true,
+        "cropped": false
+      }
+    }
+  ]
+}

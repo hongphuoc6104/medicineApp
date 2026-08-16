@@ -1,0 +1,22 @@
+{
+  "prescription_id": "RX_034",
+  "patient_id": "PAT_034",
+  "hospital_hint": null,
+  "encounter_code_hint": null,
+  "diagnoses_hint": [],
+  "grouping_status": "needs_review",
+  "image_count": 1,
+  "images": [
+    {
+      "image_id": "IMG_20260209_003104",
+      "filename": "IMG_20260209_003104.jpg",
+      "relative_path": "data/output/Labels lớn/IMG_20260209_003104.json",
+      "ocr_file": "data/output/Labels lớn/IMG_20260209_003104.json",
+      "word_count": 10,
+      "line_count": 5,
+      "mean_confidence": 0.4771406829357147,
+      "detected_angle": 7.452488899230957,
+      "similarity_to_group": 1.0
+    }
+  ]
+}

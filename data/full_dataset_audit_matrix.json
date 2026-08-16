@@ -1,0 +1,58 @@
+{
+  "total_records": 12695,
+  "matched": 1984,
+  "ambiguous": 214,
+  "unresolved": 10497,
+  "overall_match_rate": 0.1562820007877117,
+  "by_entity_type": {
+    "DRUG": {
+      "total": 3024,
+      "matched": 846,
+      "ambiguous": 0,
+      "unresolved": 2178,
+      "match_rate": 0.27976190476190477
+    },
+    "STRENGTH": {
+      "total": 3024,
+      "matched": 684,
+      "ambiguous": 103,
+      "unresolved": 2237,
+      "match_rate": 0.2261904761904762
+    },
+    "QUANTITY": {
+      "total": 3024,
+      "matched": 1,
+      "ambiguous": 1,
+      "unresolved": 3022,
+      "match_rate": 0.00033068783068783067
+    },
+    "INSTRUCTION": {
+      "total": 2913,
+      "matched": 449,
+      "ambiguous": 108,
+      "unresolved": 2356,
+      "match_rate": 0.15413662890490903
+    },
+    "FREQUENCY": {
+      "total": 266,
+      "matched": 4,
+      "ambiguous": 2,
+      "unresolved": 260,
+      "match_rate": 0.015037593984962405
+    },
+    "DOSAGE": {
+      "total": 222,
+      "matched": 0,
+      "ambiguous": 0,
+      "unresolved": 222,
+      "match_rate": 0.0
+    },
+    "FORM": {
+      "total": 222,
+      "matched": 0,
+      "ambiguous": 0,
+      "unresolved": 222,
+      "match_rate": 0.0
+    }
+  }
+}

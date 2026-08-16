@@ -1,0 +1,46 @@
+{
+  "prescription_id": "RX_015",
+  "patient_id": "PAT_015",
+  "hospital_hint": "BỆNH VIỆN XANH PÔN",
+  "encounter_code_hint": "DN5113086912",
+  "diagnoses_hint": [
+    "L20.9: Viêm da cơ địa"
+  ],
+  "grouping_status": "verified",
+  "image_count": 3,
+  "images": [
+    {
+      "image_id": "IMG_20260122_005905",
+      "filename": "IMG_20260122_005905.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_005905.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_005905.json",
+      "word_count": 127,
+      "line_count": 36,
+      "mean_confidence": 0.7464099079370499,
+      "detected_angle": -138.80047607421875,
+      "similarity_to_group": 0.646
+    },
+    {
+      "image_id": "IMG_20260209_181338",
+      "filename": "IMG_20260209_181338.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181338.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181338.json",
+      "word_count": 133,
+      "line_count": 35,
+      "mean_confidence": 0.786406295640128,
+      "detected_angle": -2.406639814376831,
+      "similarity_to_group": 0.616
+    },
+    {
+      "image_id": "IMG_20260209_181344",
+      "filename": "IMG_20260209_181344.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181344.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181344.json",
+      "word_count": 134,
+      "line_count": 35,
+      "mean_confidence": 0.7921048590115138,
+      "detected_angle": 0.0,
+      "similarity_to_group": 0.569
+    }
+  ]
+}

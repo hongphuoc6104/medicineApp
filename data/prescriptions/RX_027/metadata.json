@@ -1,0 +1,27 @@
+{
+  "prescription_id": "RX_027",
+  "patient_id": "PAT_027",
+  "hospital_hint": "BỆNH VIỆN XANH PÔN",
+  "encounter_code_hint": "DN5094556145",
+  "diagnoses_hint": [
+    "E78.0: Tăng cholesterol máu thuần",
+    "I25.1: Bệnh tim thiếu máu cục bộ mạn",
+    "I63.9: Di chứng nhồi máu não",
+    "H04.1: Hội chứng khô mắt"
+  ],
+  "grouping_status": "verified",
+  "image_count": 1,
+  "images": [
+    {
+      "image_id": "IMG_20260122_010228",
+      "filename": "IMG_20260122_010228.jpg",
+      "relative_path": "data/output/Data01/IMG_20260122_010228.json",
+      "ocr_file": "data/output/Data01/IMG_20260122_010228.json",
+      "word_count": 84,
+      "line_count": 23,
+      "mean_confidence": 0.5921530788359435,
+      "detected_angle": 55.06807327270508,
+      "similarity_to_group": 1.0
+    }
+  ]
+}

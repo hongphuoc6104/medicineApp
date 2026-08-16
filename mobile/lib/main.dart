@@ -1,26 +1,34 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
-import 'app.dart';
-import 'core/notifications/notification_service.dart';
+import 'scan/api_client.dart';
+import 'scan/ml_kit_scanner.dart';
+import 'scan/scan_screen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
-  await initializeDateFormatting('vi_VN');
-  await NotificationService.instance.initialize();
+const apiUrl = String.fromEnvironment(
+  'RXIE_API_URL',
+  defaultValue: 'http://10.0.2.2:8000',
+);
 
-  const sendDebugNotifications = bool.fromEnvironment(
-    'SEND_DEBUG_NOTIFS',
-    defaultValue: false,
-  );
-  if (sendDebugNotifications) {
-    unawaited(NotificationService.instance.sendDebugNotificationsBurst());
+void main() {
+  runApp(const RxieApp());
+}
+
+class RxieApp extends StatelessWidget {
+  const RxieApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'RxIE Scanner',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff12645c)),
+        useMaterial3: true,
+      ),
+      home: ScanScreen(
+        scanner: MlKitPrescriptionScanner(),
+        apiClient: RxieApiClient(baseUrl: apiUrl),
+      ),
+    );
   }
-
-  runApp(const ProviderScope(child: MedicineApp()));
 }

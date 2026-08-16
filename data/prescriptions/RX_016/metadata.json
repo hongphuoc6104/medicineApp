@@ -1,0 +1,35 @@
+{
+  "prescription_id": "RX_016",
+  "patient_id": "PAT_016",
+  "hospital_hint": "BỆNH VIỆN XANH PÔN",
+  "encounter_code_hint": "DN5113086912",
+  "diagnoses_hint": [
+    "L20.9: Viêm da cơ địa"
+  ],
+  "grouping_status": "verified",
+  "image_count": 2,
+  "images": [
+    {
+      "image_id": "IMG_20260209_180336",
+      "filename": "IMG_20260209_180336.jpg",
+      "relative_path": "data/output/Labels lớn 2/IMG_20260209_180336.json",
+      "ocr_file": "data/output/Labels lớn 2/IMG_20260209_180336.json",
+      "word_count": 135,
+      "line_count": 38,
+      "mean_confidence": 0.816314338069213,
+      "detected_angle": -2.026453733444214,
+      "similarity_to_group": 0.79
+    },
+    {
+      "image_id": "IMG_20260209_181346",
+      "filename": "IMG_20260209_181346.jpg",
+      "relative_path": "data/output/Labels lớn 4/IMG_20260209_181346.json",
+      "ocr_file": "data/output/Labels lớn 4/IMG_20260209_181346.json",
+      "word_count": 135,
+      "line_count": 37,
+      "mean_confidence": 0.7613526953233255,
+      "detected_angle": -2.221738815307617,
+      "similarity_to_group": 0.809
+    }
+  ]
+}

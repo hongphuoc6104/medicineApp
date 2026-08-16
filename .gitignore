@@ -1,181 +1,79 @@
-# ============================================
-# Virtual environments
-# ============================================
-venv/
-.venv/
-ENV/
-createPrescription/prescription_generator/venv/
-
-# ============================================
-# Model weights (very large files)
-# ============================================
-*.pt
-*.pth
-*.onnx
-*.h5
-*.pb
-*.tflite
-models/weights/
-models/phobert_ner_model/
-models/zero_pima/
-best/
-
-# ============================================
-# Datasets & large data directories
-# ============================================
-VAIPE_Full/
-data/pills/
-data/pres/
-data/synthetic_train/
-data/createPrescription/
-
-# Data output (generated)
-data/output/
-# Data input (images - large files)
-data/input/
-data/input/**  # ignore all prescription input images
-
-data/output/
-data/output/**  # ignore generated output files and intermediate results
-
-# Nhưng giữ lại .gitkeep
-!data/input/.gitkeep
-!data/output/.gitkeep
-
-# ============================================
-# Archives & large binary files
-# ============================================
-*.zip
-*.tar.gz
-*.tar.bz2
-*.rar
-*.7z
-
-# ============================================
-# Research papers & PDFs
-# ============================================
-*.pdf
-
-# ============================================
-# Jupyter Notebooks (contain large output cells)
-# ============================================
-*.ipynb
-
-# ============================================
-# Sub-projects with their own repos
-# ============================================
-Zero-PIMA/
-YOLO11-Seg-Label-Detector-main/
-archive/*
-!archive/README.md
-!archive/plan_bin/
-!archive/plan_bin/**
-
-# ============================================
-# Generated output & debug
-# ============================================
-output/
-debug/
-createPrescription/prescription_generator/output/
-
-# ============================================
-# XML schema (not needed in repo)
-# ============================================
-drugbank.xsd
-
-# ============================================
-# IDE & Editor configs
-# ============================================
-.idea/
-.vscode/
-.gemini/
-*.swp
-*.swo
-*~
-
-# ============================================
 # Python
-# ============================================
+.venv/
+venv/
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-!mobile/lib/
-!mobile/lib/**
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
-
-# ============================================
-# OS files
-# ============================================
-.DS_Store
-Thumbs.db
-
-# ============================================
-# Environment variables
-# ============================================
-.env
-.env.local
-
-# ============================================
-# Logs
-# ============================================
-*.log
-logs/
-
-# ============================================
-# Testing
-# ============================================
+.pytest_cache/
+.ruff_cache/
 .coverage
 htmlcov/
-.tox/
-.pytest_cache/
-runs/
-server-node/node_modules/
-server-node/.env
-server-node/storage/
-# Ignore large data files and generated datasets
-data/drug_interactions_vn.json
-data/synthetic_train/
-data/ner_dataset/
-# Ignore large model directories (exclude any required README or metadata if needed)
-models/phobert_ner_model/
-models/zero_pima/
+build/
+dist/
+
+# Model and experiment artifacts
+artifacts/*
+!artifacts/.gitkeep
+!artifacts/README.md
+checkpoints/*
+!checkpoints/.gitkeep
+!checkpoints/README.md
+checkpoint-*/
+runs/*
+!runs/.gitkeep
+!runs/README.md
+wandb/
+mlruns/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+*.npy
+*.npz
+*.parquet
+*.arrow
+*.pkl
+*.pickle
+*.joblib
+
+# Private prescription data and generated OCR output
+data/input/*
+!data/input/.gitkeep
+!data/input/README.md
+data/output/*
+!data/output/.gitkeep
+!data/output/README.md
+data/private/*
+!data/private/.gitkeep
+!data/private/README.md
+
+# Image binaries (Patient privacy & repo size protection)
+*.jpg
+*.jpeg
+*.png
+*.heic
+*.webp
+*.bmp
+*.tiff
+
+# Flutter
 mobile/.dart_tool/
-# Large drug database JSON
-data/drug_db_vn_full.json
-docs/thesis_report/diagram_tools/node_modules/
-docs/thesis_report/mcp_tools/node_modules/
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/android/.gradle/
+mobile/android/local.properties
 
-# ============================================
-# Thesis report generated and backup files
-# ============================================
-docs/thesis_report/*.aux
-docs/thesis_report/*.lof
-docs/thesis_report/*.lot
-docs/thesis_report/*.out
-docs/thesis_report/*.toc
-docs/thesis_report/*.synctex.gz
-docs/thesis_report/*.fdb_latexmk
-docs/thesis_report/*.fls
-docs/thesis_report/*.xdv
-docs/thesis_report/*.bak*
-docs/thesis_report/backup/
-docs/thesis_report/image/images*/
-
-# Large reference materials used only for local comparison
-docs/mẫu bài luận/
+# Environment and editor files
+.env
+.env.*
+.agents/
+*.log
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db

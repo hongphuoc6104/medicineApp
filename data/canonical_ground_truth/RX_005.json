@@ -1,0 +1,60 @@
+{
+  "schema_version": "rxie.canonical_gt.v1",
+  "prescription_id": "RX_005",
+  "patient_id": "PAT_005",
+  "encounter_id": "BT2939321351869-93002",
+  "hospital_name": "BVĐK TW CẦN THƠ",
+  "prescription_date": null,
+  "annotation_status": "verified",
+  "verified_by": "human_expert_review",
+  "verified_at": "2026-08-16T00:00:00Z",
+  "diagnoses": [
+    "K73.9: Viêm gan mạn tính"
+  ],
+  "medications": [
+    {
+      "medication_id": "RX_005_M01",
+      "drug_raw": "Silymarin (Silygamma) 140mg",
+      "drug_normalized": "silymarin",
+      "brand_raw": "Silygamma",
+      "brand_normalized": "silygamma",
+      "strength_raw": "140mg",
+      "strength_normalized": "140 mg",
+      "quantity_value_raw": "60",
+      "quantity_value_normalized": 60,
+      "quantity_unit_raw": "Viên",
+      "quantity_unit_normalized": "viên",
+      "dosage_raw": "2 viên",
+      "dosage_normalized": "2 viên",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
+      "duration_raw": null,
+      "duration_normalized": null,
+      "route_raw": "uống",
+      "route_normalized": "uống",
+      "instruction_raw": "sau ăn",
+      "instruction_normalized": "sau ăn",
+      "form_raw": "viên",
+      "form_normalized": "viên",
+      "note": null
+    }
+  ],
+  "metadata": {
+    "image_count": 41,
+    "representative_keywords": [
+      "lại",
+      "tính",
+      "văn",
+      "mang",
+      "gan",
+      "theo"
+    ],
+    "sample_images": [
+      "IMG_20260122_005751",
+      "IMG_20260122_005757",
+      "IMG_20260209_003034",
+      "IMG_20260209_003039"
+    ]
+  },
+  "notes": null
+}

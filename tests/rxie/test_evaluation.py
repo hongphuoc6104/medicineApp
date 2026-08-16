@@ -1,46 +1,37 @@
-import unittest
-
-from research.rxie.evaluation import (
-    parent_accuracy,
-    record_exact_match,
-    relation_prf,
-    strict_entity_prf,
-)
-from research.rxie.schema import (
-    Entity,
-    EntityType,
-    MedicationRecord,
-    ParentAssignment,
-    Relation,
-    RelationType,
-)
+from rxie.evaluation import strict_entity_evaluation
+from rxie.schemas import Entity, EntityType
 
 
-class EvaluationTest(unittest.TestCase):
-    def test_strict_entity_prf_requires_exact_boundary_and_type(self):
-        gold = [Entity("gold", EntityType.DRUG, 0, 11, "Paracetamol")]
-        predicted = [Entity("pred", EntityType.DRUG, 0, 10, "Paracetamo")]
+def entity(entity_type, start, end, text="x"):
+    return Entity(
+        type=entity_type,
+        text=text,
+        start=start,
+        end=end,
+        confidence=1,
+        source_region_ids=["r1"],
+    )
 
-        score = strict_entity_prf(gold, predicted)
 
-        self.assertEqual(score.precision, 0.0)
-        self.assertEqual(score.recall, 0.0)
-        self.assertEqual(score.f1, 0.0)
+def test_strict_scores_require_exact_type_and_boundaries():
+    gold = [entity(EntityType.DRUG, 0, 11, "Paracetamol")]
+    predicted = [entity(EntityType.DRUG, 0, 10, "Paracetamo")]
 
-    def test_relation_prf_uses_parent_attribute_and_relation_type(self):
-        gold = [Relation("drug-1", "qty-1", RelationType.HAS_QUANTITY)]
-        predicted = [Relation("drug-1", "qty-1", RelationType.HAS_DOSE)]
+    result = strict_entity_evaluation(gold, predicted)
 
-        self.assertEqual(relation_prf(gold, predicted).f1, 0.0)
+    assert result.overall.f1 == 0
+    assert result.per_class[EntityType.DRUG].predicted == 1
+    assert result.per_class[EntityType.STRENGTH].f1 == 1
 
-    def test_parent_accuracy_scores_explicit_null_assignment(self):
-        gold = [ParentAssignment("note-1", None)]
-        predicted = [ParentAssignment("note-1", None)]
 
-        self.assertEqual(parent_accuracy(gold, predicted), 1.0)
+def test_reports_micro_and_per_class_scores():
+    drug = entity(EntityType.DRUG, 0, 11, "Paracetamol")
+    strength = entity(EntityType.STRENGTH, 12, 18, "500 mg")
 
-    def test_record_exact_match_checks_complete_multiset(self):
-        gold = [MedicationRecord(drug="Paracetamol", strength="500 mg")]
-        predicted = [MedicationRecord(drug="Paracetamol", strength="650 mg")]
+    result = strict_entity_evaluation([drug, strength], [drug])
 
-        self.assertEqual(record_exact_match(gold, predicted), 0.0)
+    assert result.overall.precision == 1
+    assert result.overall.recall == 0.5
+    assert result.overall.f1 == 2 / 3
+    assert result.per_class[EntityType.DRUG].f1 == 1
+    assert result.per_class[EntityType.STRENGTH].f1 == 0

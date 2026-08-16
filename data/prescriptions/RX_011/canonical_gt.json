@@ -1,0 +1,60 @@
+{
+  "schema_version": "rxie.canonical_gt.v1",
+  "prescription_id": "RX_011",
+  "patient_id": "PAT_011",
+  "encounter_id": "DN5113086912",
+  "hospital_name": "BỆNH VIỆN XANH PÔN",
+  "prescription_date": null,
+  "annotation_status": "verified",
+  "verified_by": "human_expert_review",
+  "verified_at": "2026-08-16T00:00:00Z",
+  "diagnoses": [
+    "G40.9: Bệnh động kinh"
+  ],
+  "medications": [
+    {
+      "medication_id": "RX_011_M01",
+      "drug_raw": "Valproic Acid (Depakine) 200mg",
+      "drug_normalized": "sodium valproate",
+      "brand_raw": "Depakine",
+      "brand_normalized": "depakine",
+      "strength_raw": "200mg",
+      "strength_normalized": "200 mg",
+      "quantity_value_raw": "30",
+      "quantity_value_normalized": 30,
+      "quantity_unit_raw": "Viên",
+      "quantity_unit_normalized": "viên",
+      "dosage_raw": "2 viên",
+      "dosage_normalized": "2 viên",
+      "frequency_raw": "Ngày",
+      "frequency_normalized": "ngày",
+      "duration_raw": null,
+      "duration_normalized": null,
+      "route_raw": "uống",
+      "route_normalized": "uống",
+      "instruction_raw": "sau ăn",
+      "instruction_normalized": "sau ăn",
+      "form_raw": "viên",
+      "form_normalized": "viên",
+      "note": null
+    }
+  ],
+  "metadata": {
+    "image_count": 6,
+    "representative_keywords": [
+      "lại",
+      "thanh",
+      "kinh",
+      "văn",
+      "depakin",
+      "theo"
+    ],
+    "sample_images": [
+      "IMG_20260209_003059",
+      "IMG_20260209_003101_1",
+      "IMG_20260209_003110",
+      "IMG_20260209_003111"
+    ]
+  },
+  "notes": null
+}
