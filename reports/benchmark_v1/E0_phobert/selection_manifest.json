@@ -1,0 +1,243 @@
+{
+  "schema_version": "rxie.selection_manifest.v1",
+  "protocol_version": "rxie.benchmark_protocol.v1.2.0",
+  "model_id": "E0_phobert",
+  "dataset_version": "rxie-dataset-v1.0.1",
+  "config_sha256": "aadc3baf2c248831ed6db043073c6d8451b69dbb219ce12b848a005ebcb1f4b8",
+  "primary_metric": "prescription_macro_entity_f1",
+  "secondary_metric": "entity_micro_f1",
+  "seeds": [
+    42,
+    3407,
+    2026
+  ],
+  "learning_rates": [
+    1e-05,
+    2e-05,
+    3e-05,
+    5e-05
+  ],
+  "candidates": [
+    {
+      "seed": 42,
+      "learning_rate": 1e-05,
+      "primary_metric": 0.0,
+      "secondary_metric": 0.0,
+      "run_path": "experiments/E0_phobert/tuning/lr_1.0e-05_seed_42",
+      "checkpoint_manifest_sha256": "e939aa07b0c1d4bbd55cdfd0424585d1a694308963881dcc5781b8ee4946bf38",
+      "metrics_val_sha256": "22b83f0181fb071120c58f026de2dab8d6b5e45bc7a2494795723863b3012b0c",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 3407,
+      "learning_rate": 1e-05,
+      "primary_metric": 0.6154761904761905,
+      "secondary_metric": 0.04505386875612145,
+      "run_path": "experiments/E0_phobert/tuning/lr_1.0e-05_seed_3407",
+      "checkpoint_manifest_sha256": "837ee6c003fb3b7eee1a9ef96cf22bdab9a1b4b779ddc8a000648477acddc84f",
+      "metrics_val_sha256": "418eb85503d3148c82c19894018eaee5986013c8a3da853a21f59485b12d4523",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 2026,
+      "learning_rate": 1e-05,
+      "primary_metric": 0.0,
+      "secondary_metric": 0.0,
+      "run_path": "experiments/E0_phobert/tuning/lr_1.0e-05_seed_2026",
+      "checkpoint_manifest_sha256": "551f3643389efa2a3dc13921a872cf0ac68d262c19aa8d86f619977534a82565",
+      "metrics_val_sha256": "22b83f0181fb071120c58f026de2dab8d6b5e45bc7a2494795723863b3012b0c",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 42,
+      "learning_rate": 2e-05,
+      "primary_metric": 0.753577106518283,
+      "secondary_metric": 0.04704097116843702,
+      "run_path": "experiments/E0_phobert/tuning/lr_2.0e-05_seed_42",
+      "checkpoint_manifest_sha256": "1bebc8da5445a938d88b642c81633d70ba109a94d550b77a22d9e87958adff6c",
+      "metrics_val_sha256": "524581f0acf8ea213cfdf2373fd695a432a6841d582d385ed74e26f3a7300d12",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 3407,
+      "learning_rate": 2e-05,
+      "primary_metric": 0.7669858641130872,
+      "secondary_metric": 0.07244785949506037,
+      "run_path": "experiments/E0_phobert/tuning/lr_2.0e-05_seed_3407",
+      "checkpoint_manifest_sha256": "f5eac1cedfbe1e002c097a04ea11c10f5069705345e014b098e72caa7f9aa8ab",
+      "metrics_val_sha256": "bfdd94c965f301853ad04ad143b22da71a5a44d2fe45b79cac2c8c527eb3da7c",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 2026,
+      "learning_rate": 2e-05,
+      "primary_metric": 0.7171442936148819,
+      "secondary_metric": 0.041580041580041575,
+      "run_path": "experiments/E0_phobert/tuning/lr_2.0e-05_seed_2026",
+      "checkpoint_manifest_sha256": "9c3cda57287c2ec75daad86a27e3b62d5dd5e746457c72c768b205dab272c21a",
+      "metrics_val_sha256": "98b762814b249867d14cea7ae97645add59ec03d883157f9beba04224ac32362",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 42,
+      "learning_rate": 3e-05,
+      "primary_metric": 0.773792443806791,
+      "secondary_metric": 0.05830388692579505,
+      "run_path": "experiments/E0_phobert/tuning/lr_3.0e-05_seed_42",
+      "checkpoint_manifest_sha256": "a0cd6758f9ccac77823d07915501f9e12807334dcaed47cf67152bbd1e5ddd94",
+      "metrics_val_sha256": "ec2a0ef124df8430b0a613421cd7add4c2a18251216027c37d00eac02738f5b0",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 3407,
+      "learning_rate": 3e-05,
+      "primary_metric": 0.7583333333333333,
+      "secondary_metric": 0.04741379310344827,
+      "run_path": "experiments/E0_phobert/tuning/lr_3.0e-05_seed_3407",
+      "checkpoint_manifest_sha256": "3469e4e68ca7c3102ab3935ef16bcc8f4ec68fc2d7d24e5c7872a3a1f282c1fa",
+      "metrics_val_sha256": "4e03ab91461a3f0a043d69dac03d9e3addc0e0eae00a211a45401740011936e3",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 2026,
+      "learning_rate": 3e-05,
+      "primary_metric": 0.7799953314659197,
+      "secondary_metric": 0.05582922824302135,
+      "run_path": "experiments/E0_phobert/tuning/lr_3.0e-05_seed_2026",
+      "checkpoint_manifest_sha256": "055223176e4fb0d0d1a6ccca3d15e7baa1d0892b750c8c8667f0ce6769568985",
+      "metrics_val_sha256": "5bf25e66e4cc9bf4c9310f214771856008200d88b48bae25450e2d9fa5203f52",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 42,
+      "learning_rate": 5e-05,
+      "primary_metric": 0.7941176470588235,
+      "secondary_metric": 0.15625000000000003,
+      "run_path": "experiments/E0_phobert/tuning/lr_5.0e-05_seed_42",
+      "checkpoint_manifest_sha256": "3bd97fd84f2652d957684b6be1c66ab9f3fc4a40e968826dbe670f0b282578f7",
+      "metrics_val_sha256": "e54460929dae31dabb188cb1d5a34b2b00c2786836574e3cc8408ffe558a053d",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 3407,
+      "learning_rate": 5e-05,
+      "primary_metric": 0.8009049773755655,
+      "secondary_metric": 0.0559322033898305,
+      "run_path": "experiments/E0_phobert/tuning/lr_5.0e-05_seed_3407",
+      "checkpoint_manifest_sha256": "93320a0f5aa952fc44e72e9a460e1e8a3db170e22c1e852299a9a00aad0b5191",
+      "metrics_val_sha256": "02322d991affc07e3d6b48cbee61d7488fc7c39ce364a548e26038dd99e9cc3d",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    },
+    {
+      "seed": 2026,
+      "learning_rate": 5e-05,
+      "primary_metric": 0.7731849496555379,
+      "secondary_metric": 0.05672461116193961,
+      "run_path": "experiments/E0_phobert/tuning/lr_5.0e-05_seed_2026",
+      "checkpoint_manifest_sha256": "2cdbd38f6579172686fa0948250a1f4022cade1aa7cba2e6517f8554a91c001c",
+      "metrics_val_sha256": "b99ed688a84a319122783e6de17cc512b678bb64010ef5b7d4028b725c534061",
+      "source_git_commit": "f39c2be7e0fa270e94d4f387c36df9e389047242"
+    }
+  ],
+  "aggregates": [
+    {
+      "learning_rate": 1e-05,
+      "primary_mean": 0.20515873015873018,
+      "primary_std": 0.355345344251234,
+      "secondary_mean": 0.015017956252040483,
+      "secondary_std": 0.026011863254380787,
+      "seed_values": [
+        {
+          "seed": 42,
+          "primary": 0.0,
+          "secondary": 0.0
+        },
+        {
+          "seed": 2026,
+          "primary": 0.0,
+          "secondary": 0.0
+        },
+        {
+          "seed": 3407,
+          "primary": 0.6154761904761905,
+          "secondary": 0.04505386875612145
+        }
+      ]
+    },
+    {
+      "learning_rate": 2e-05,
+      "primary_mean": 0.7459024214154173,
+      "primary_std": 0.025791881106328886,
+      "secondary_mean": 0.05368962408117966,
+      "secondary_std": 0.016472977413760987,
+      "seed_values": [
+        {
+          "seed": 42,
+          "primary": 0.753577106518283,
+          "secondary": 0.04704097116843702
+        },
+        {
+          "seed": 2026,
+          "primary": 0.7171442936148819,
+          "secondary": 0.041580041580041575
+        },
+        {
+          "seed": 3407,
+          "primary": 0.7669858641130872,
+          "secondary": 0.07244785949506037
+        }
+      ]
+    },
+    {
+      "learning_rate": 3e-05,
+      "primary_mean": 0.7707070362020146,
+      "primary_std": 0.011155731524187598,
+      "secondary_mean": 0.053848969424088226,
+      "secondary_std": 0.005708730560058923,
+      "seed_values": [
+        {
+          "seed": 42,
+          "primary": 0.773792443806791,
+          "secondary": 0.05830388692579505
+        },
+        {
+          "seed": 2026,
+          "primary": 0.7799953314659197,
+          "secondary": 0.05582922824302135
+        },
+        {
+          "seed": 3407,
+          "primary": 0.7583333333333333,
+          "secondary": 0.04741379310344827
+        }
+      ]
+    },
+    {
+      "learning_rate": 5e-05,
+      "primary_mean": 0.7894025246966422,
+      "primary_std": 0.014449023093881871,
+      "secondary_mean": 0.08963560485059004,
+      "secondary_std": 0.057691118973032814,
+      "seed_values": [
+        {
+          "seed": 42,
+          "primary": 0.7941176470588235,
+          "secondary": 0.15625000000000003
+        },
+        {
+          "seed": 2026,
+          "primary": 0.7731849496555379,
+          "secondary": 0.05672461116193961
+        },
+        {
+          "seed": 3407,
+          "primary": 0.8009049773755655,
+          "secondary": 0.0559322033898305
+        }
+      ]
+    }
+  ],
+  "selected_lr": 5e-05,
+  "created_at_utc": "2026-08-17T16:56:13.197412+00:00",
+  "payload_sha256": "2c1571209387fd12d30b09b1d237d236328de956289b76d7ba8c618a9c950d3f"
+}
