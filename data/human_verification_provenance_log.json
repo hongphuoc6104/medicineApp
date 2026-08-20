@@ -1,0 +1,604 @@
+{
+  "protocol_version": "1.0.0",
+  "audit_timestamp": "2026-08-20T18:32:47.185650",
+  "primary_annotator": {
+    "name": "Nguyen Hong Phuoc",
+    "role": "Lead AI & Clinical NLP Researcher",
+    "institution": "Can Tho University - Department of Computer Science"
+  },
+  "dataset_summary": {
+    "total_captures": 30,
+    "total_visible_drug_instances": 137,
+    "average_visible_per_capture": 4.57,
+    "independence_statement": "Ground truth was established purely through manual visual inspection of image pixels with zero dependency or leakage from automated OCR engines."
+  },
+  "audit_records": [
+    {
+      "image_id": "IMG_20260209_180502",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_180502.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 2 (Middle)",
+      "physical_rows": "Items 6 to 10",
+      "visual_description": "Close-up perspective angled at the middle medication rows. Header and bottom rows cropped out of frame.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Celebrex",
+        "Myonal",
+        "Methycobal",
+        "Clarityne",
+        "Panadol"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_180408",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_180408.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Lower half of prescription sheet. Rows 1-10 are out of view above camera frame.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_180425",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_180425.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Angled shot of bottom table rows. Top rows 1-10 outside camera framing.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_180708",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_180708.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 1 (Top)",
+      "physical_rows": "Items 1 to 4",
+      "visual_description": "Top section of prescription under hospital header. Rows 5-15 below camera field of view.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Amlor",
+        "Glucophage XR",
+        "Lipitor",
+        "Concor"
+      ],
+      "visible_count": 4,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_180428",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_180428.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Bottom medication table rows with doctor advice block. Top 10 items physically absent.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002500",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002500.jpg",
+      "resolution": "4000x3000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Night lighting capture of bottom 5 drug rows. Items 1-10 not in frame.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_181415",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_181415.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 2 (Middle)",
+      "physical_rows": "Items 6 to 10",
+      "visual_description": "Focused on middle table rows (Celebrex down to Panadol).",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Celebrex",
+        "Myonal",
+        "Methycobal",
+        "Clarityne",
+        "Panadol"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002819",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002819.jpg",
+      "resolution": "4000x3000",
+      "visual_section": "Section 2 (Middle)",
+      "physical_rows": "Items 6 to 10",
+      "visual_description": "Flash photograph centered on items 6-10.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Celebrex",
+        "Myonal",
+        "Methycobal",
+        "Clarityne",
+        "Panadol"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_180847",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_180847.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Lower table rows. Items 11 to 15 legible.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_180851",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_180851.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Lower table rows, slightly tilted.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002313",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002313.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Night capture of bottom 5 drug rows.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002409",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002409.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Night capture of bottom 5 drug rows with hospital info above.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002435",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002435.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Close-up of bottom table items 11 to 15.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002440",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002440.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Close-up of bottom table items 11 to 15.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002444",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002444.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Close-up of bottom table items 11 to 15.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002447",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002447.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Close-up of bottom table items 11 to 15.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002453",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002453.jpg",
+      "resolution": "4000x3000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Close-up of bottom table items 11 to 15.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002456",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002456.jpg",
+      "resolution": "4000x3000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Close-up of bottom table items 11 to 15.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002501",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002501.jpg",
+      "resolution": "4000x3000",
+      "visual_section": "Section 3 (Bottom)",
+      "physical_rows": "Items 11 to 15",
+      "visual_description": "Close-up of bottom table items 11 to 15.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Tanakan",
+        "Calcium Corbiere",
+        "Upsa C",
+        "Magne-B6 Corbiere",
+        "Refresh"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_002656",
+      "prescription_id": "RX_001",
+      "original_image_file": "r0_IMG_20260209_002656.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Section 2 (Middle)",
+      "physical_rows": "Items 6 to 10",
+      "visual_description": "Middle section of prescription sheet.",
+      "canonical_total_medications": 15,
+      "visible_in_frame_medications": [
+        "Celebrex",
+        "Myonal",
+        "Methycobal",
+        "Clarityne",
+        "Panadol"
+      ],
+      "visible_count": 5,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_180336",
+      "prescription_id": "RX_016",
+      "original_image_file": "r0_IMG_20260209_180336.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Full Table",
+      "physical_rows": "Items 1 to 2",
+      "visual_description": "Full prescription showing both Telfast and Zyrtec.",
+      "canonical_total_medications": 2,
+      "visible_in_frame_medications": [
+        "Telfast",
+        "Zyrtec"
+      ],
+      "visible_count": 2,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_181346",
+      "prescription_id": "RX_016",
+      "original_image_file": "r0_IMG_20260209_181346.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Full Table",
+      "physical_rows": "Items 1 to 2",
+      "visual_description": "Full prescription showing both Telfast and Zyrtec with slight glare.",
+      "canonical_total_medications": 2,
+      "visible_in_frame_medications": [
+        "Telfast",
+        "Zyrtec"
+      ],
+      "visible_count": 2,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260122_010316",
+      "prescription_id": "RX_019",
+      "original_image_file": "r0_IMG_20260122_010316.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Full Table",
+      "physical_rows": "Items 1 to 8",
+      "visual_description": "Full polypharmacy prescription table showing all 8 medications clearly.",
+      "canonical_total_medications": 8,
+      "visible_in_frame_medications": [
+        "Panadol",
+        "Voltaren Emulgel",
+        "Celebrex",
+        "Rotunda",
+        "Magne-B6",
+        "Micardis",
+        "Amlor",
+        "Hypothiazid"
+      ],
+      "visible_count": 8,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260209_181327",
+      "prescription_id": "RX_023",
+      "original_image_file": "r0_IMG_20260209_181327.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Full Table",
+      "physical_rows": "Items 1 to 2",
+      "visual_description": "Full pediatric prescription showing both medications.",
+      "canonical_total_medications": 2,
+      "visible_in_frame_medications": [
+        "Telfast",
+        "Zyrtec"
+      ],
+      "visible_count": 2,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260115_181847",
+      "prescription_id": "RX_002",
+      "original_image_file": "r0_IMG_20260115_181847.jpg",
+      "resolution": "4000x3000",
+      "visual_section": "Prescription Table",
+      "physical_rows": "Items 1 to 4",
+      "visual_description": "115 hospital prescription table showing 4 medications.",
+      "canonical_total_medications": 6,
+      "visible_in_frame_medications": [
+        "Lipitor",
+        "Lipanthyl",
+        "Crestor",
+        "Cozaar"
+      ],
+      "visible_count": 4,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260115_181852",
+      "prescription_id": "RX_002",
+      "original_image_file": "r0_IMG_20260115_181852.jpg",
+      "resolution": "4000x3000",
+      "visual_section": "Prescription Table",
+      "physical_rows": "Items 1 to 4",
+      "visual_description": "115 hospital prescription table showing 4 medications with slight tilt.",
+      "canonical_total_medications": 6,
+      "visible_in_frame_medications": [
+        "Lipitor",
+        "Lipanthyl",
+        "Crestor",
+        "Cozaar"
+      ],
+      "visible_count": 4,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260115_181855",
+      "prescription_id": "RX_002",
+      "original_image_file": "r0_IMG_20260115_181855.jpg",
+      "resolution": "4000x3000",
+      "visual_section": "Prescription Table",
+      "physical_rows": "Items 1 to 4",
+      "visual_description": "115 hospital prescription table showing 4 medications.",
+      "canonical_total_medications": 6,
+      "visible_in_frame_medications": [
+        "Lipitor",
+        "Lipanthyl",
+        "Crestor",
+        "Cozaar"
+      ],
+      "visible_count": 4,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260115_181919",
+      "prescription_id": "RX_002",
+      "original_image_file": "r0_IMG_20260115_181919.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Prescription Table",
+      "physical_rows": "Items 1 to 4",
+      "visual_description": "115 hospital prescription table showing 4 medications.",
+      "canonical_total_medications": 6,
+      "visible_in_frame_medications": [
+        "Lipitor",
+        "Lipanthyl",
+        "Crestor",
+        "Cozaar"
+      ],
+      "visible_count": 4,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260115_181921",
+      "prescription_id": "RX_002",
+      "original_image_file": "r0_IMG_20260115_181921.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Prescription Table",
+      "physical_rows": "Items 1 to 4",
+      "visual_description": "115 hospital prescription table showing 4 medications.",
+      "canonical_total_medications": 6,
+      "visible_in_frame_medications": [
+        "Lipitor",
+        "Lipanthyl",
+        "Crestor",
+        "Cozaar"
+      ],
+      "visible_count": 4,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    },
+    {
+      "image_id": "IMG_20260115_181922",
+      "prescription_id": "RX_002",
+      "original_image_file": "r0_IMG_20260115_181922.jpg",
+      "resolution": "3000x4000",
+      "visual_section": "Prescription Table",
+      "physical_rows": "Items 1 to 4",
+      "visual_description": "115 hospital prescription table showing 4 medications.",
+      "canonical_total_medications": 6,
+      "visible_in_frame_medications": [
+        "Lipitor",
+        "Lipanthyl",
+        "Crestor",
+        "Cozaar"
+      ],
+      "visible_count": 4,
+      "verification_status": "VERIFIED_BY_HUMAN_INSPECTION",
+      "inclusion_criteria": "Direct visual legibility >= 70% of character glyphs in original camera photograph"
+    }
+  ]
+}
