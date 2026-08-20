@@ -1,0 +1,895 @@
+{
+  "condition": "r1",
+  "image_id": "IMG_20260209_002435",
+  "prescription_id": "RX_001",
+  "file_name": "r1_IMG_20260209_002435.jpg",
+  "text": "15\n13\n14\n12\nBỘ Y TỂ\nBVDK IW CẦN THƠ\nĐIỂN THOA 0292. 382 0071\nHọ tên: LÊ VĂN TRÂN\nMå số thẻ BHYT:\nChần Đoán:\nThuốc dieu trị :\nSTT\n11\nLê Thị Kim Đài\nĐịa chi liên hệ: ấp 3, Xã Vị thủy, Thành phố Cân Thd\nĐƠN THUỐC\nTuối: 58\nBT2939321351 869- 93002\nGiới tính: Nam\nZ95.4: Sự có mặt của van tim thay thế khác;\nSáng uống 1 ông sau ăn\n10;E78;I25;J44; K21: Bệnh tăng huyết áp vô cắn (nguyên\nphát); Rối loạn chuyến hóa lipoprotein và tinh trạng tắng lipid\nmáu khác; Bệnh tim thiểu máu cục bộ mạn; Các bệnh phối tác\nnghen mãn tính khác; Bệnh trào ngược da dày - thực quản,\nVAN CƠ HỌC\nGinkgo Biloba (Tanakan 40mg) 40mg\nNgày uống 2 lãn, mỏi làn 1 viên\nThuốc dieu trị\nCalcium D3 (Calcium Corbiere 10ml)\n1Oml\nTrưa uong 1 viên sau ăn\nVitamin C (Upsa C 1000mg) 1000mg\nSáng uống I viên (hòa tan trong nước)\nMagnesium B6 (Magne-B6 Corbiere Tab)\nTab\nArtificial Tears (Refresh 15ml) 15ml\nNhỏ mất khi mỏi, khô\n60\n30\n10\n30\n25389434\n1\nVien\nÕng\nViên sủi\nViên\nLọ",
+  "block_count": 39,
+  "line_count": 49,
+  "x_offset": 608.0,
+  "y_offset": 729.0,
+  "lines": [
+    {
+      "text": "15",
+      "bbox": {
+        "left": 697.0,
+        "top": 2465.0,
+        "right": 741.0,
+        "bottom": 2500.0
+      },
+      "local_bbox": {
+        "left": 89.0,
+        "top": 1736.0,
+        "right": 133.0,
+        "bottom": 1771.0
+      },
+      "confidence": 0.841796875,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "13",
+      "bbox": {
+        "left": 739.0,
+        "top": 2153.0,
+        "right": 780.0,
+        "bottom": 2184.0
+      },
+      "local_bbox": {
+        "left": 131.0,
+        "top": 1424.0,
+        "right": 172.0,
+        "bottom": 1455.0
+      },
+      "confidence": 0.92578125,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "14",
+      "bbox": {
+        "left": 718.0,
+        "top": 2305.0,
+        "right": 761.0,
+        "bottom": 2340.0
+      },
+      "local_bbox": {
+        "left": 110.0,
+        "top": 1576.0,
+        "right": 153.0,
+        "bottom": 1611.0
+      },
+      "confidence": 0.921875,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "12",
+      "bbox": {
+        "left": 758.0,
+        "top": 2001.0,
+        "right": 799.0,
+        "bottom": 2034.0
+      },
+      "local_bbox": {
+        "left": 150.0,
+        "top": 1272.0,
+        "right": 191.0,
+        "bottom": 1305.0
+      },
+      "confidence": 0.896484375,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "BỘ Y TỂ",
+      "bbox": {
+        "left": 1015.0,
+        "top": 888.0,
+        "right": 1155.0,
+        "bottom": 930.0
+      },
+      "local_bbox": {
+        "left": 407.0,
+        "top": 159.0,
+        "right": 547.0,
+        "bottom": 201.0
+      },
+      "confidence": 0.58984375,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "BVDK IW CẦN THƠ",
+      "bbox": {
+        "left": 922.0,
+        "top": 926.0,
+        "right": 1272.0,
+        "bottom": 977.0
+      },
+      "local_bbox": {
+        "left": 314.0,
+        "top": 197.0,
+        "right": 664.0,
+        "bottom": 248.0
+      },
+      "confidence": 0.5807291865348816,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "ĐIỂN THOA 0292. 382 0071",
+      "bbox": {
+        "left": 895.0,
+        "top": 963.0,
+        "right": 1258.0,
+        "bottom": 1006.0
+      },
+      "local_bbox": {
+        "left": 287.0,
+        "top": 234.0,
+        "right": 650.0,
+        "bottom": 277.0
+      },
+      "confidence": 0.548632800579071,
+      "block_index": 5,
+      "line_index": 1
+    },
+    {
+      "text": "Họ tên: LÊ VĂN TRÂN",
+      "bbox": {
+        "left": 840.0,
+        "top": 1054.0,
+        "right": 1231.0,
+        "bottom": 1108.0
+      },
+      "local_bbox": {
+        "left": 232.0,
+        "top": 325.0,
+        "right": 623.0,
+        "bottom": 379.0
+      },
+      "confidence": 0.6572916507720947,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Må số thẻ BHYT:",
+      "bbox": {
+        "left": 811.0,
+        "top": 1120.0,
+        "right": 1112.0,
+        "bottom": 1174.0
+      },
+      "local_bbox": {
+        "left": 203.0,
+        "top": 391.0,
+        "right": 504.0,
+        "bottom": 445.0
+      },
+      "confidence": 0.6959635615348816,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Chần Đoán:",
+      "bbox": {
+        "left": 789.0,
+        "top": 1265.0,
+        "right": 1003.0,
+        "bottom": 1309.0
+      },
+      "local_bbox": {
+        "left": 181.0,
+        "top": 536.0,
+        "right": 395.0,
+        "bottom": 580.0
+      },
+      "confidence": 0.6627604365348816,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Thuốc dieu trị :",
+      "bbox": {
+        "left": 757.0,
+        "top": 1607.0,
+        "right": 1044.0,
+        "bottom": 1667.0
+      },
+      "local_bbox": {
+        "left": 149.0,
+        "top": 878.0,
+        "right": 436.0,
+        "bottom": 938.0
+      },
+      "confidence": 0.7818509340286255,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "STT",
+      "bbox": {
+        "left": 779.0,
+        "top": 1675.0,
+        "right": 859.0,
+        "bottom": 1710.0
+      },
+      "local_bbox": {
+        "left": 171.0,
+        "top": 946.0,
+        "right": 251.0,
+        "bottom": 981.0
+      },
+      "confidence": 0.7890625,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "11",
+      "bbox": {
+        "left": 779.0,
+        "top": 1853.0,
+        "right": 815.0,
+        "bottom": 1883.0
+      },
+      "local_bbox": {
+        "left": 171.0,
+        "top": 1124.0,
+        "right": 207.0,
+        "bottom": 1154.0
+      },
+      "confidence": 0.734375,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Lê Thị Kim Đài",
+      "bbox": {
+        "left": 779.0,
+        "top": 1738.0,
+        "right": 1068.0,
+        "bottom": 1795.0
+      },
+      "local_bbox": {
+        "left": 171.0,
+        "top": 1009.0,
+        "right": 460.0,
+        "bottom": 1066.0
+      },
+      "confidence": 0.7844460010528564,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Địa chi liên hệ: ấp 3, Xã Vị thủy, Thành phố Cân Thd",
+      "bbox": {
+        "left": 800.0,
+        "top": 1189.0,
+        "right": 1761.0,
+        "bottom": 1289.0
+      },
+      "local_bbox": {
+        "left": 192.0,
+        "top": 460.0,
+        "right": 1153.0,
+        "bottom": 560.0
+      },
+      "confidence": 0.7032226324081421,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "ĐƠN THUỐC",
+      "bbox": {
+        "left": 1350.0,
+        "top": 928.0,
+        "right": 1713.0,
+        "bottom": 992.0
+      },
+      "local_bbox": {
+        "left": 742.0,
+        "top": 199.0,
+        "right": 1105.0,
+        "bottom": 263.0
+      },
+      "confidence": 0.6953125,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "Tuối: 58",
+      "bbox": {
+        "left": 1328.0,
+        "top": 1084.0,
+        "right": 1456.0,
+        "bottom": 1119.0
+      },
+      "local_bbox": {
+        "left": 720.0,
+        "top": 355.0,
+        "right": 848.0,
+        "bottom": 390.0
+      },
+      "confidence": 0.6183035969734192,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "BT2939321351 869- 93002",
+      "bbox": {
+        "left": 1149.0,
+        "top": 1139.0,
+        "right": 1594.0,
+        "bottom": 1200.0
+      },
+      "local_bbox": {
+        "left": 541.0,
+        "top": 410.0,
+        "right": 986.0,
+        "bottom": 471.0
+      },
+      "confidence": 0.8111979365348816,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Giới tính: Nam",
+      "bbox": {
+        "left": 1567.0,
+        "top": 1093.0,
+        "right": 1786.0,
+        "bottom": 1140.0
+      },
+      "local_bbox": {
+        "left": 959.0,
+        "top": 364.0,
+        "right": 1178.0,
+        "bottom": 411.0
+      },
+      "confidence": 0.7027994990348816,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Z95.4: Sự có mặt của van tim thay thế khác;",
+      "bbox": {
+        "left": 1131.0,
+        "top": 1283.0,
+        "right": 1860.0,
+        "bottom": 1364.0
+      },
+      "local_bbox": {
+        "left": 523.0,
+        "top": 554.0,
+        "right": 1252.0,
+        "bottom": 635.0
+      },
+      "confidence": 0.8200827240943909,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng uống 1 ông sau ăn",
+      "bbox": {
+        "left": 880.0,
+        "top": 2063.0,
+        "right": 1300.0,
+        "bottom": 2134.0
+      },
+      "local_bbox": {
+        "left": 272.0,
+        "top": 1334.0,
+        "right": 692.0,
+        "bottom": 1405.0
+      },
+      "confidence": 0.7419577240943909,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "10;E78;I25;J44; K21: Bệnh tăng huyết áp vô cắn (nguyên",
+      "bbox": {
+        "left": 1135.0,
+        "top": 1334.0,
+        "right": 2092.0,
+        "bottom": 1434.0
+      },
+      "local_bbox": {
+        "left": 527.0,
+        "top": 605.0,
+        "right": 1484.0,
+        "bottom": 705.0
+      },
+      "confidence": 0.7448199987411499,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "phát); Rối loạn chuyến hóa lipoprotein và tinh trạng tắng lipid",
+      "bbox": {
+        "left": 1110.0,
+        "top": 1386.0,
+        "right": 2163.0,
+        "bottom": 1492.0
+      },
+      "local_bbox": {
+        "left": 502.0,
+        "top": 657.0,
+        "right": 1555.0,
+        "bottom": 763.0
+      },
+      "confidence": 0.8155218362808228,
+      "block_index": 20,
+      "line_index": 1
+    },
+    {
+      "text": "máu khác; Bệnh tim thiểu máu cục bộ mạn; Các bệnh phối tác",
+      "bbox": {
+        "left": 1109.0,
+        "top": 1439.0,
+        "right": 2164.0,
+        "bottom": 1542.0
+      },
+      "local_bbox": {
+        "left": 501.0,
+        "top": 710.0,
+        "right": 1556.0,
+        "bottom": 813.0
+      },
+      "confidence": 0.8017153739929199,
+      "block_index": 20,
+      "line_index": 2
+    },
+    {
+      "text": "nghen mãn tính khác; Bệnh trào ngược da dày - thực quản,",
+      "bbox": {
+        "left": 1089.0,
+        "top": 1491.0,
+        "right": 2100.0,
+        "bottom": 1594.0
+      },
+      "local_bbox": {
+        "left": 481.0,
+        "top": 762.0,
+        "right": 1492.0,
+        "bottom": 865.0
+      },
+      "confidence": 0.7862847447395325,
+      "block_index": 20,
+      "line_index": 3
+    },
+    {
+      "text": "VAN CƠ HỌC",
+      "bbox": {
+        "left": 1083.0,
+        "top": 1544.0,
+        "right": 1346.0,
+        "bottom": 1601.0
+      },
+      "local_bbox": {
+        "left": 475.0,
+        "top": 815.0,
+        "right": 738.0,
+        "bottom": 872.0
+      },
+      "confidence": 0.84765625,
+      "block_index": 20,
+      "line_index": 4
+    },
+    {
+      "text": "Ginkgo Biloba (Tanakan 40mg) 40mg",
+      "bbox": {
+        "left": 895.0,
+        "top": 1831.0,
+        "right": 1656.0,
+        "bottom": 1931.0
+      },
+      "local_bbox": {
+        "left": 287.0,
+        "top": 1102.0,
+        "right": 1048.0,
+        "bottom": 1202.0
+      },
+      "confidence": 0.8654364347457886,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 2 lãn, mỏi làn 1 viên",
+      "bbox": {
+        "left": 893.0,
+        "top": 1884.0,
+        "right": 1456.0,
+        "bottom": 1963.0
+      },
+      "local_bbox": {
+        "left": 285.0,
+        "top": 1155.0,
+        "right": 848.0,
+        "bottom": 1234.0
+      },
+      "confidence": 0.75830078125,
+      "block_index": 21,
+      "line_index": 1
+    },
+    {
+      "text": "Thuốc dieu trị",
+      "bbox": {
+        "left": 1406.0,
+        "top": 1716.0,
+        "right": 1676.0,
+        "bottom": 1772.0
+      },
+      "local_bbox": {
+        "left": 798.0,
+        "top": 987.0,
+        "right": 1068.0,
+        "bottom": 1043.0
+      },
+      "confidence": 0.7565104365348816,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "Calcium D3 (Calcium Corbiere 10ml)",
+      "bbox": {
+        "left": 880.0,
+        "top": 1950.0,
+        "right": 1649.0,
+        "bottom": 2049.0
+      },
+      "local_bbox": {
+        "left": 272.0,
+        "top": 1221.0,
+        "right": 1041.0,
+        "bottom": 1320.0
+      },
+      "confidence": 0.8958333134651184,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "1Oml",
+      "bbox": {
+        "left": 878.0,
+        "top": 2007.0,
+        "right": 974.0,
+        "bottom": 2049.0
+      },
+      "local_bbox": {
+        "left": 270.0,
+        "top": 1278.0,
+        "right": 366.0,
+        "bottom": 1320.0
+      },
+      "confidence": 0.673828125,
+      "block_index": 23,
+      "line_index": 1
+    },
+    {
+      "text": "Trưa uong 1 viên sau ăn",
+      "bbox": {
+        "left": 833.0,
+        "top": 2371.0,
+        "right": 1278.0,
+        "bottom": 2443.0
+      },
+      "local_bbox": {
+        "left": 225.0,
+        "top": 1642.0,
+        "right": 670.0,
+        "bottom": 1714.0
+      },
+      "confidence": 0.7222222089767456,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "Vitamin C (Upsa C 1000mg) 1000mg",
+      "bbox": {
+        "left": 860.0,
+        "top": 2125.0,
+        "right": 1616.0,
+        "bottom": 2231.0
+      },
+      "local_bbox": {
+        "left": 252.0,
+        "top": 1396.0,
+        "right": 1008.0,
+        "bottom": 1502.0
+      },
+      "confidence": 0.8893229365348816,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng uống I viên (hòa tan trong nước)",
+      "bbox": {
+        "left": 850.0,
+        "top": 2183.0,
+        "right": 1557.0,
+        "bottom": 2279.0
+      },
+      "local_bbox": {
+        "left": 242.0,
+        "top": 1454.0,
+        "right": 949.0,
+        "bottom": 1550.0
+      },
+      "confidence": 0.828906238079071,
+      "block_index": 25,
+      "line_index": 1
+    },
+    {
+      "text": "Magnesium B6 (Magne-B6 Corbiere Tab)",
+      "bbox": {
+        "left": 843.0,
+        "top": 2258.0,
+        "right": 1715.0,
+        "bottom": 2362.0
+      },
+      "local_bbox": {
+        "left": 235.0,
+        "top": 1529.0,
+        "right": 1107.0,
+        "bottom": 1633.0
+      },
+      "confidence": 0.8673095703125,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "Tab",
+      "bbox": {
+        "left": 838.0,
+        "top": 2314.0,
+        "right": 914.0,
+        "bottom": 2355.0
+      },
+      "local_bbox": {
+        "left": 230.0,
+        "top": 1585.0,
+        "right": 306.0,
+        "bottom": 1626.0
+      },
+      "confidence": 0.8619791865348816,
+      "block_index": 26,
+      "line_index": 1
+    },
+    {
+      "text": "Artificial Tears (Refresh 15ml) 15ml",
+      "bbox": {
+        "left": 821.0,
+        "top": 2441.0,
+        "right": 1579.0,
+        "bottom": 2544.0
+      },
+      "local_bbox": {
+        "left": 213.0,
+        "top": 1712.0,
+        "right": 971.0,
+        "bottom": 1815.0
+      },
+      "confidence": 0.8851318359375,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "Nhỏ mất khi mỏi, khô",
+      "bbox": {
+        "left": 814.0,
+        "top": 2498.0,
+        "right": 1214.0,
+        "bottom": 2568.0
+      },
+      "local_bbox": {
+        "left": 206.0,
+        "top": 1769.0,
+        "right": 606.0,
+        "bottom": 1839.0
+      },
+      "confidence": 0.7353515625,
+      "block_index": 27,
+      "line_index": 1
+    },
+    {
+      "text": "60",
+      "bbox": {
+        "left": 1861.0,
+        "top": 1927.0,
+        "right": 1907.0,
+        "bottom": 1961.0
+      },
+      "local_bbox": {
+        "left": 1253.0,
+        "top": 1198.0,
+        "right": 1299.0,
+        "bottom": 1232.0
+      },
+      "confidence": 0.896484375,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "30",
+      "bbox": {
+        "left": 1853.0,
+        "top": 2080.0,
+        "right": 1899.0,
+        "bottom": 2114.0
+      },
+      "local_bbox": {
+        "left": 1245.0,
+        "top": 1351.0,
+        "right": 1291.0,
+        "bottom": 1385.0
+      },
+      "confidence": 0.869140625,
+      "block_index": 29,
+      "line_index": 0
+    },
+    {
+      "text": "10",
+      "bbox": {
+        "left": 1847.0,
+        "top": 2233.0,
+        "right": 1892.0,
+        "bottom": 2267.0
+      },
+      "local_bbox": {
+        "left": 1239.0,
+        "top": 1504.0,
+        "right": 1284.0,
+        "bottom": 1538.0
+      },
+      "confidence": 0.87890625,
+      "block_index": 30,
+      "line_index": 0
+    },
+    {
+      "text": "30",
+      "bbox": {
+        "left": 1836.0,
+        "top": 2390.0,
+        "right": 1883.0,
+        "bottom": 2425.0
+      },
+      "local_bbox": {
+        "left": 1228.0,
+        "top": 1661.0,
+        "right": 1275.0,
+        "bottom": 1696.0
+      },
+      "confidence": 0.908203125,
+      "block_index": 31,
+      "line_index": 0
+    },
+    {
+      "text": "25389434",
+      "bbox": {
+        "left": 2061.0,
+        "top": 993.0,
+        "right": 2197.0,
+        "bottom": 1024.0
+      },
+      "local_bbox": {
+        "left": 1453.0,
+        "top": 264.0,
+        "right": 1589.0,
+        "bottom": 295.0
+      },
+      "confidence": 0.63037109375,
+      "block_index": 32,
+      "line_index": 0
+    },
+    {
+      "text": "1",
+      "bbox": {
+        "left": 1845.0,
+        "top": 2551.0,
+        "right": 1862.0,
+        "bottom": 2586.0
+      },
+      "local_bbox": {
+        "left": 1237.0,
+        "top": 1822.0,
+        "right": 1254.0,
+        "bottom": 1857.0
+      },
+      "confidence": 0.875,
+      "block_index": 33,
+      "line_index": 0
+    },
+    {
+      "text": "Vien",
+      "bbox": {
+        "left": 2038.0,
+        "top": 1932.0,
+        "right": 2130.0,
+        "bottom": 1981.0
+      },
+      "local_bbox": {
+        "left": 1430.0,
+        "top": 1203.0,
+        "right": 1522.0,
+        "bottom": 1252.0
+      },
+      "confidence": 0.6005859375,
+      "block_index": 34,
+      "line_index": 0
+    },
+    {
+      "text": "Õng",
+      "bbox": {
+        "left": 2036.0,
+        "top": 2079.0,
+        "right": 2127.0,
+        "bottom": 2140.0
+      },
+      "local_bbox": {
+        "left": 1428.0,
+        "top": 1350.0,
+        "right": 1519.0,
+        "bottom": 1411.0
+      },
+      "confidence": 0.6354166865348816,
+      "block_index": 35,
+      "line_index": 0
+    },
+    {
+      "text": "Viên sủi",
+      "bbox": {
+        "left": 1994.0,
+        "top": 2240.0,
+        "right": 2154.0,
+        "bottom": 2285.0
+      },
+      "local_bbox": {
+        "left": 1386.0,
+        "top": 1511.0,
+        "right": 1546.0,
+        "bottom": 1556.0
+      },
+      "confidence": 0.7137276530265808,
+      "block_index": 36,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2020.0,
+        "top": 2399.0,
+        "right": 2116.0,
+        "bottom": 2441.0
+      },
+      "local_bbox": {
+        "left": 1412.0,
+        "top": 1670.0,
+        "right": 1508.0,
+        "bottom": 1712.0
+      },
+      "confidence": 0.73828125,
+      "block_index": 37,
+      "line_index": 0
+    },
+    {
+      "text": "Lọ",
+      "bbox": {
+        "left": 2032.0,
+        "top": 2564.0,
+        "right": 2091.0,
+        "bottom": 2610.0
+      },
+      "local_bbox": {
+        "left": 1424.0,
+        "top": 1835.0,
+        "right": 1483.0,
+        "bottom": 1881.0
+      },
+      "confidence": 0.576171875,
+      "block_index": 38,
+      "line_index": 0
+    }
+  ]
+}

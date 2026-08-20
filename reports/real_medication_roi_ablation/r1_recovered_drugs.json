@@ -1,0 +1,240 @@
+[
+  {
+    "image_id": "IMG_20260115_181852",
+    "prescription_id": "RX_002",
+    "r0_extracted": [
+      "Rosuvastatin",
+      "Fenofibrate ( Lipanthyl ) 200",
+      "Atorvastatin ( Lipitor ) 10"
+    ],
+    "r1_extracted": [
+      "Losartan ( Cozaar ) 50",
+      "Rosuvastatin ( Crestor ) 10",
+      "Fenofibrate ( Lipanthyl ) 200",
+      "Atorvastatin ( Lipitor ) 10"
+    ],
+    "gt_drugs": [
+      "Nitromint",
+      "Aspirin Cardio",
+      "Plavix",
+      "Coversyl",
+      "Amlor",
+      "Cozaar"
+    ],
+    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+  },
+  {
+    "image_id": "IMG_20260209_002456",
+    "prescription_id": "RX_001",
+    "r0_extracted": [
+      "Artificial Tears ( Refresh ml 15",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Vitamin C 1000 mg",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Ginkgo Biloba ( Tanakan 40 mg"
+    ],
+    "r1_extracted": [
+      "Artificial Tears ( Refresh ml 15",
+      "Magnesiun B6 ( Magne-B6 Corbiere Tab",
+      "Upsa C 1000 mg",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Ginkgo Biloba ( Tanakan 40 mg"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ],
+    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+  },
+  {
+    "image_id": "IMG_20260209_002501",
+    "prescription_id": "RX_001",
+    "r0_extracted": [
+      "Artificial Tears ( Retresh 1 ml 5",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Vitamin C 1000 mg",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Ginkgo Biloba ( Tanakan 4O mg 40"
+    ],
+    "r1_extracted": [
+      "Atificial ' Tears ( Refresh ml 15",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "VitaminC ( Upsa C 1000 ng )",
+      "Calcium D3 ( Calium Corbiere 1O ml",
+      "Ginkgo Biloba ( Tanakan 40 mg"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ],
+    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+  },
+  {
+    "image_id": "IMG_20260209_002819",
+    "prescription_id": "RX_001",
+    "r0_extracted": [
+      "Paracetamol ( Panadol S00mg ) 500",
+      "Loratadine ( Clarityne mg 10",
+      "Mecobalamin ( Methycobal 500",
+      "Eperisone ( Myonal mg 50"
+    ],
+    "r1_extracted": [
+      "Paracetamol ( Panadol 500 ng )",
+      "Loratadine ( Clarityne 10 mg",
+      "Mecobalamin ( Methycobal 500",
+      "Eperisone ( Myonal mg 50",
+      "Celecoxib ( Celebrex 200 mg )"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ],
+    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+  },
+  {
+    "image_id": "IMG_20260209_180408",
+    "prescription_id": "RX_001",
+    "r0_extracted": [
+      "Ginkgo Biloba ( Tanakan 40 mg",
+      "Calcium D3 ( Calcium Corbiere 10O ml",
+      "Vitamin C 1000 mg",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab"
+    ],
+    "r1_extracted": [
+      "man tính Bệnh",
+      "Ginkgo Biloba ( Tanakan 40 mg",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Vitamin C 1000 mg",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Artificial Tears ( Refresh ml 15"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ],
+    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+  },
+  {
+    "image_id": "IMG_20260209_180425",
+    "prescription_id": "RX_001",
+    "r0_extracted": [
+      "Calciumn D3 ( Calcium Corbiere 1O m",
+      "Vitamin C 1000 mg",
+      "Magnesium B6 ( MagneB6 Corbiere Tab",
+      "Artificial Tears ( Refresh ml 15"
+    ],
+    "r1_extracted": [
+      "Ginkgo Biloba ( Tanakan 40 mg",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Vitamin C 1000 mg",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Artificial Tears ( Refresh ml 15"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ],
+    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+  },
+  {
+    "image_id": "IMG_20260209_181415",
+    "prescription_id": "RX_001",
+    "r0_extracted": [
+      "Địa chi iên hế",
+      "Celecoxib ( Celebrex 200 ng )",
+      "Eperisone ( Myonal 50 mg",
+      "Loratadine ( Clarityne mg 10",
+      "viên khí đau đãu"
+    ],
+    "r1_extracted": [
+      "Celecoxib ( Celebrex 200 mng )",
+      "Eperisone ( Myonal 50 mg",
+      "Loratadine ( Clarityne mg 10",
+      "Paracetamol ( Panadol mg 500",
+      "1 viên khí đau đâu"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ],
+    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+  }
+]

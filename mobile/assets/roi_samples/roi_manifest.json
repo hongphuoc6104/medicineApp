@@ -1,0 +1,1372 @@
+[
+  {
+    "image_id": "VAIPE_P_TRAIN_0",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_0.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_0.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_0.png",
+    "c1_box": [
+      4,
+      0,
+      754,
+      877
+    ],
+    "c2_box": [
+      14,
+      344,
+      738,
+      582
+    ],
+    "gold_drugs": [
+      {
+        "id": 23,
+        "text": "1) RENAPRIL 5MG 5mg",
+        "box": [
+          46,
+          386,
+          294,
+          413
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) NOVOXIM-500 0,5g",
+        "box": [
+          44,
+          438,
+          281,
+          466
+        ]
+      },
+      {
+        "id": 30,
+        "text": "3) HOẠT HUYẾT DƯỠNG NÃO 150mg+20mg",
+        "box": [
+          45,
+          488,
+          501,
+          518
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1.png",
+    "c1_box": [
+      4,
+      28,
+      752,
+      879
+    ],
+    "c2_box": [
+      14,
+      344,
+      738,
+      582
+    ],
+    "gold_drugs": [
+      {
+        "id": 25,
+        "text": "1) GLUCOFAST 850 850mg",
+        "box": [
+          46,
+          386,
+          326,
+          413
+        ]
+      },
+      {
+        "id": 30,
+        "text": "2) DIAMICRON MR TAB 30MG 60'S 30mg",
+        "box": [
+          45,
+          438,
+          471,
+          466
+        ]
+      },
+      {
+        "id": 34,
+        "text": "3) ENALAPRIL 5mg",
+        "box": [
+          44,
+          491,
+          257,
+          518
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_10",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_10.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_10.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_10.png",
+    "c1_box": [
+      4,
+      0,
+      752,
+      774
+    ],
+    "c2_box": [
+      16,
+      344,
+      738,
+      478
+    ],
+    "gold_drugs": [
+      {
+        "id": 24,
+        "text": "1) MEGLUCON 1000 1000mg",
+        "box": [
+          46,
+          386,
+          349,
+          413
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_100",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_100.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_100.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_100.png",
+    "c1_box": [
+      4,
+      28,
+      754,
+      877
+    ],
+    "c2_box": [
+      14,
+      345,
+      738,
+      582
+    ],
+    "gold_drugs": [
+      {
+        "id": 24,
+        "text": "1) TROYSAR AM 5mg +50mg",
+        "box": [
+          46,
+          387,
+          347,
+          412
+        ]
+      },
+      {
+        "id": 28,
+        "text": "2) LENINARTO 10 10mg",
+        "box": [
+          44,
+          438,
+          299,
+          466
+        ]
+      },
+      {
+        "id": 32,
+        "text": "3) STACETAM 800MG 800mg",
+        "box": [
+          45,
+          489,
+          351,
+          518
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1000",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1000.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1000.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1000.png",
+    "c1_box": [
+      4,
+      0,
+      752,
+      826
+    ],
+    "c2_box": [
+      15,
+      345,
+      738,
+      530
+    ],
+    "gold_drugs": [
+      {
+        "id": 22,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          387,
+          349,
+          412
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          45,
+          438,
+          334,
+          466
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1001",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1001.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1001.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1001.png",
+    "c1_box": [
+      4,
+      0,
+      752,
+      826
+    ],
+    "c2_box": [
+      15,
+      345,
+      738,
+      530
+    ],
+    "gold_drugs": [
+      {
+        "id": 23,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          387,
+          349,
+          412
+        ]
+      },
+      {
+        "id": 28,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          45,
+          438,
+          334,
+          466
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1002",
+    "orig_width": 770,
+    "orig_height": 1420,
+    "c0_file": "c0_VAIPE_P_TRAIN_1002.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1002.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1002.png",
+    "c1_box": [
+      2,
+      4,
+      755,
+      856
+    ],
+    "c2_box": [
+      14,
+      345,
+      737,
+      561
+    ],
+    "gold_drugs": [
+      {
+        "id": 22,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          401,
+          348,
+          430
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          44,
+          454,
+          333,
+          483
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1003",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1003.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1003.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1003.png",
+    "c1_box": [
+      4,
+      28,
+      752,
+      826
+    ],
+    "c2_box": [
+      15,
+      345,
+      738,
+      530
+    ],
+    "gold_drugs": [
+      {
+        "id": 22,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          387,
+          349,
+          412
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          45,
+          438,
+          334,
+          466
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1004",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1004.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1004.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1004.png",
+    "c1_box": [
+      4,
+      28,
+      750,
+      826
+    ],
+    "c2_box": [
+      15,
+      345,
+      738,
+      530
+    ],
+    "gold_drugs": [
+      {
+        "id": 22,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          387,
+          349,
+          412
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          45,
+          438,
+          334,
+          466
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1005",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1005.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1005.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1005.png",
+    "c1_box": [
+      4,
+      0,
+      754,
+      826
+    ],
+    "c2_box": [
+      15,
+      345,
+      738,
+      530
+    ],
+    "gold_drugs": [
+      {
+        "id": 23,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          387,
+          349,
+          412
+        ]
+      },
+      {
+        "id": 28,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          45,
+          438,
+          334,
+          466
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1006",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1006.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1006.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1006.png",
+    "c1_box": [
+      4,
+      0,
+      750,
+      826
+    ],
+    "c2_box": [
+      15,
+      345,
+      738,
+      530
+    ],
+    "gold_drugs": [
+      {
+        "id": 24,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          387,
+          349,
+          412
+        ]
+      },
+      {
+        "id": 29,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          45,
+          438,
+          334,
+          466
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1007",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1007.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1007.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1007.png",
+    "c1_box": [
+      4,
+      28,
+      752,
+      826
+    ],
+    "c2_box": [
+      15,
+      345,
+      738,
+      530
+    ],
+    "gold_drugs": [
+      {
+        "id": 24,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          387,
+          349,
+          412
+        ]
+      },
+      {
+        "id": 29,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          45,
+          438,
+          334,
+          466
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1008",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1008.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1008.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1008.png",
+    "c1_box": [
+      4,
+      28,
+      752,
+      826
+    ],
+    "c2_box": [
+      15,
+      345,
+      738,
+      530
+    ],
+    "gold_drugs": [
+      {
+        "id": 22,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          387,
+          349,
+          412
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          45,
+          438,
+          334,
+          466
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1009",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1009.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1009.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1009.png",
+    "c1_box": [
+      4,
+      14,
+      752,
+      844
+    ],
+    "c2_box": [
+      14,
+      364,
+      738,
+      548
+    ],
+    "gold_drugs": [
+      {
+        "id": 24,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          406,
+          349,
+          431
+        ]
+      },
+      {
+        "id": 29,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          44,
+          454,
+          334,
+          485
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_101",
+    "orig_width": 770,
+    "orig_height": 1420,
+    "c0_file": "c0_VAIPE_P_TRAIN_101.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_101.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_101.png",
+    "c1_box": [
+      2,
+      37,
+      755,
+      907
+    ],
+    "c2_box": [
+      14,
+      346,
+      737,
+      615
+    ],
+    "gold_drugs": [
+      {
+        "id": 23,
+        "text": "1) TROYSAR AM 5mg +50mg",
+        "box": [
+          46,
+          402,
+          346,
+          431
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) LENINARTO 10 10mg",
+        "box": [
+          44,
+          454,
+          299,
+          483
+        ]
+      },
+      {
+        "id": 31,
+        "text": "3) STACETAM 800MG 800mg",
+        "box": [
+          44,
+          506,
+          350,
+          534
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1010",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1010.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1010.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1010.png",
+    "c1_box": [
+      4,
+      14,
+      752,
+      844
+    ],
+    "c2_box": [
+      14,
+      364,
+      738,
+      548
+    ],
+    "gold_drugs": [
+      {
+        "id": 22,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          406,
+          349,
+          431
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) PARTAMOL TAB. 500mg",
+        "box": [
+          44,
+          454,
+          334,
+          485
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1011",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1011.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1011.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1011.png",
+    "c1_box": [
+      6,
+      0,
+      752,
+      931
+    ],
+    "c2_box": [
+      14,
+      344,
+      738,
+      613
+    ],
+    "gold_drugs": [
+      {
+        "id": 24,
+        "text": "1) CEFADROXIL 500MG 500mg",
+        "box": [
+          46,
+          386,
+          371,
+          413
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) VACO LORATADINE 10mg",
+        "box": [
+          45,
+          438,
+          357,
+          466
+        ]
+      },
+      {
+        "id": 30,
+        "text": "3) PANACTOL 500mg",
+        "box": [
+          44,
+          491,
+          274,
+          518
+        ]
+      },
+      {
+        "id": 33,
+        "text": "4) COSYNDO B 175mg+175mg+125mcg",
+        "box": [
+          46,
+          542,
+          454,
+          571
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1012",
+    "orig_width": 1150,
+    "orig_height": 1600,
+    "c0_file": "c0_VAIPE_P_TRAIN_1012.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1012.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1012.png",
+    "c1_box": [
+      1,
+      54,
+      1123,
+      1600
+    ],
+    "c2_box": [
+      18,
+      641,
+      1103,
+      1156
+    ],
+    "gold_drugs": [
+      {
+        "id": 29,
+        "text": "1) MEGLUCON 1000 1000mg",
+        "box": [
+          64,
+          705,
+          517,
+          747
+        ]
+      },
+      {
+        "id": 33,
+        "text": "2) GOLDDICRON 30mg",
+        "box": [
+          64,
+          784,
+          432,
+          825
+        ]
+      },
+      {
+        "id": 37,
+        "text": "3) HANGITOR PLUS 40mg+12,5mg",
+        "box": [
+          64,
+          860,
+          595,
+          903
+        ]
+      },
+      {
+        "id": 41,
+        "text": "4) KAGASDINE 20mg",
+        "box": [
+          65,
+          942,
+          407,
+          980
+        ]
+      },
+      {
+        "id": 45,
+        "text": "5) CHORLATCYN 125mg+50mg+50mg+25mg",
+        "box": [
+          65,
+          1020,
+          742,
+          1060
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1013",
+    "orig_width": 770,
+    "orig_height": 1420,
+    "c0_file": "c0_VAIPE_P_TRAIN_1013.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1013.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1013.png",
+    "c1_box": [
+      3,
+      4,
+      752,
+      907
+    ],
+    "c2_box": [
+      14,
+      345,
+      737,
+      590
+    ],
+    "gold_drugs": [
+      {
+        "id": 20,
+        "text": "1) KAVASDIN 5 5mg",
+        "box": [
+          46,
+          401,
+          270,
+          430
+        ]
+      },
+      {
+        "id": 23,
+        "text": "2) DICLOFENAC 50mg",
+        "box": [
+          44,
+          454,
+          286,
+          483
+        ]
+      },
+      {
+        "id": 26,
+        "text": "3) MYPARA 500 500mg",
+        "box": [
+          44,
+          505,
+          288,
+          534
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1014",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1014.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1014.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1014.png",
+    "c1_box": [
+      4,
+      0,
+      752,
+      774
+    ],
+    "c2_box": [
+      16,
+      344,
+      738,
+      478
+    ],
+    "gold_drugs": [
+      {
+        "id": 23,
+        "text": "1) MYPARA 500 500mg",
+        "box": [
+          46,
+          386,
+          291,
+          413
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1015",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1015.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1015.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1015.png",
+    "c1_box": [
+      4,
+      0,
+      752,
+      774
+    ],
+    "c2_box": [
+      16,
+      344,
+      738,
+      478
+    ],
+    "gold_drugs": [
+      {
+        "id": 23,
+        "text": "1) MYPARA 500 500mg",
+        "box": [
+          46,
+          386,
+          291,
+          413
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1016",
+    "orig_width": 1150,
+    "orig_height": 1600,
+    "c0_file": "c0_VAIPE_P_TRAIN_1016.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1016.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1016.png",
+    "c1_box": [
+      1,
+      57,
+      1093,
+      1203
+    ],
+    "c2_box": [
+      0,
+      413,
+      891,
+      779
+    ],
+    "gold_drugs": [
+      {
+        "id": 12,
+        "text": "1) Metformin (Metformin 500) 500mg",
+        "box": [
+          37,
+          477,
+          577,
+          520
+        ]
+      },
+      {
+        "id": 15,
+        "text": "2) Atorvastatin (Atoris 20mg) 20mg",
+        "box": [
+          35,
+          607,
+          545,
+          647
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1017",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1017.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1017.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1017.png",
+    "c1_box": [
+      4,
+      0,
+      750,
+      879
+    ],
+    "c2_box": [
+      14,
+      345,
+      738,
+      582
+    ],
+    "gold_drugs": [
+      {
+        "id": 23,
+        "text": "1) CEFADROXIL 0,5g",
+        "box": [
+          46,
+          387,
+          274,
+          412
+        ]
+      },
+      {
+        "id": 28,
+        "text": "2) MYPARA 500 500mg",
+        "box": [
+          44,
+          438,
+          291,
+          466
+        ]
+      },
+      {
+        "id": 33,
+        "text": "3) MENISON 16MG 16mg",
+        "box": [
+          45,
+          489,
+          309,
+          518
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1018",
+    "orig_width": 1150,
+    "orig_height": 1600,
+    "c0_file": "c0_VAIPE_P_TRAIN_1018.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1018.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1018.png",
+    "c1_box": [
+      1,
+      57,
+      1116,
+      1203
+    ],
+    "c2_box": [
+      0,
+      412,
+      938,
+      779
+    ],
+    "gold_drugs": [
+      {
+        "id": 11,
+        "text": "1) Amoxicilin (Fabamox 500) 500mg",
+        "box": [
+          37,
+          476,
+          565,
+          520
+        ]
+      },
+      {
+        "id": 14,
+        "text": "2) Đinh lăng, bạch quả (Hoạt huyết dưỡng não) 150mg+20mg",
+        "box": [
+          35,
+          602,
+          892,
+          647
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1019",
+    "orig_width": 1150,
+    "orig_height": 1600,
+    "c0_file": "c0_VAIPE_P_TRAIN_1019.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1019.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1019.png",
+    "c1_box": [
+      2,
+      49,
+      1121,
+      1250
+    ],
+    "c2_box": [
+      18,
+      526,
+      1103,
+      807
+    ],
+    "gold_drugs": [
+      {
+        "id": 22,
+        "text": "1) FABAMOX 500 500mg",
+        "box": [
+          64,
+          590,
+          455,
+          632
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) HOẠT HUYẾT DƯỠNG NÃO 150mg+20mg",
+        "box": [
+          64,
+          665,
+          750,
+          710
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_102",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_102.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_102.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_102.png",
+    "c1_box": [
+      4,
+      0,
+      752,
+      880
+    ],
+    "c2_box": [
+      14,
+      345,
+      738,
+      582
+    ],
+    "gold_drugs": [
+      {
+        "id": 25,
+        "text": "1) TROYSAR AM 5mg +50mg",
+        "box": [
+          46,
+          387,
+          347,
+          412
+        ]
+      },
+      {
+        "id": 30,
+        "text": "2) LENINARTO 10 10mg",
+        "box": [
+          44,
+          438,
+          299,
+          466
+        ]
+      },
+      {
+        "id": 34,
+        "text": "3) STACETAM 800MG 800mg",
+        "box": [
+          45,
+          489,
+          351,
+          518
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1020",
+    "orig_width": 770,
+    "orig_height": 1420,
+    "c0_file": "c0_VAIPE_P_TRAIN_1020.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1020.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1020.png",
+    "c1_box": [
+      3,
+      4,
+      755,
+      856
+    ],
+    "c2_box": [
+      14,
+      345,
+      737,
+      561
+    ],
+    "gold_drugs": [
+      {
+        "id": 21,
+        "text": "1) FABAMOX 500 500mg",
+        "box": [
+          46,
+          401,
+          306,
+          430
+        ]
+      },
+      {
+        "id": 26,
+        "text": "2) HOẠT HUYẾT DƯỠNG NÃO 150mg+20mg",
+        "box": [
+          44,
+          452,
+          503,
+          484
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1021",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1021.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1021.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1021.png",
+    "c1_box": [
+      6,
+      0,
+      752,
+      826
+    ],
+    "c2_box": [
+      15,
+      344,
+      738,
+      508
+    ],
+    "gold_drugs": [
+      {
+        "id": 24,
+        "text": "1) PANACTOL 500mg",
+        "box": [
+          46,
+          386,
+          274,
+          413
+        ]
+      },
+      {
+        "id": 29,
+        "text": "2) VITAMIN C STADA 1G 1g",
+        "box": [
+          45,
+          438,
+          346,
+          466
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1022",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1022.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1022.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1022.png",
+    "c1_box": [
+      6,
+      26,
+      752,
+      877
+    ],
+    "c2_box": [
+      15,
+      344,
+      738,
+      582
+    ],
+    "gold_drugs": [
+      {
+        "id": 21,
+        "text": "1) CARDILOPIN 5mg",
+        "box": [
+          46,
+          386,
+          267,
+          413
+        ]
+      },
+      {
+        "id": 25,
+        "text": "2) HOẠT HUYẾT DƯỠNG NÃO 150mg+20mg",
+        "box": [
+          45,
+          435,
+          513,
+          466
+        ]
+      },
+      {
+        "id": 29,
+        "text": "3) COSYNDO B 175mg+175mg+125mcg",
+        "box": [
+          45,
+          491,
+          454,
+          519
+        ]
+      }
+    ]
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1023",
+    "orig_width": 760,
+    "orig_height": 1070,
+    "c0_file": "c0_VAIPE_P_TRAIN_1023.png",
+    "c1_file": "c1_VAIPE_P_TRAIN_1023.png",
+    "c2_file": "c2_VAIPE_P_TRAIN_1023.png",
+    "c1_box": [
+      4,
+      28,
+      752,
+      877
+    ],
+    "c2_box": [
+      14,
+      345,
+      738,
+      582
+    ],
+    "gold_drugs": [
+      {
+        "id": 22,
+        "text": "1) CEFADROXIL 500MG 0,5g",
+        "box": [
+          46,
+          387,
+          349,
+          412
+        ]
+      },
+      {
+        "id": 27,
+        "text": "2) DIXIREIN 375mg",
+        "box": [
+          44,
+          438,
+          254,
+          466
+        ]
+      },
+      {
+        "id": 32,
+        "text": "3) PARTAMOL TAB. 500mg",
+        "box": [
+          45,
+          489,
+          334,
+          518
+        ]
+      }
+    ]
+  }
+]

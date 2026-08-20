@@ -1,0 +1,589 @@
+{
+  "condition": "r1",
+  "image_id": "IMG_20260209_002500",
+  "prescription_id": "RX_001",
+  "file_name": "r1_IMG_20260209_002500.jpg",
+  "text": "Le\nViên\n30\nAruticsal Teas (Refresh 15nl) 15nl\nTrua uống 1 viên sau ãn\n10\nViên sủi\nTab\nMagnesium B6 (Magne-B6 Corbiere Tatb)\n30\nÖng\n13\nSáng uong 1 viên (hàa tan trong nước)\nVitamin C(Upsa C 1000mg) 1000mg\nSáng uồng 1 ông sau än\n60\nViên\n12\n10ml\nCalcium D3 (Calcium Corbiere 10ml)\n11\nNgày uong 2 làn, mỗi làn 1 viên\nGinkgo Biloba (Tanakan 40mg) 40mg\nLE ThiKim Đài\nThuốc điều trị\nSTT\nThuốc dieu trị :\nVAN CƠ HỌC\nnghen mān tính khác; Bệnh trào ngược dạ dày - thực quản;\nmáu khác; Bệnh tim thiểu mấu cục bộ mạn; Các bệnh phối tãc\nhat); Röi loạn chuyển hóa lipoprotein và tình trạng tăng lipid\ntang huyết áp vô căn (nguyên",
+  "block_count": 24,
+  "line_count": 32,
+  "x_offset": 1034.0,
+  "y_offset": 601.0,
+  "lines": [
+    {
+      "text": "Le",
+      "bbox": {
+        "left": 1129.0,
+        "top": 2057.0,
+        "right": 1169.0,
+        "bottom": 2114.0
+      },
+      "local_bbox": {
+        "left": 95.0,
+        "top": 1456.0,
+        "right": 135.0,
+        "bottom": 1513.0
+      },
+      "confidence": 0.43359375,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 1234.0,
+        "top": 2050.0,
+        "right": 1280.0,
+        "bottom": 2144.0
+      },
+      "local_bbox": {
+        "left": 200.0,
+        "top": 1449.0,
+        "right": 246.0,
+        "bottom": 1543.0
+      },
+      "confidence": 0.623046875,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "30",
+      "bbox": {
+        "left": 1276.0,
+        "top": 1874.0,
+        "right": 1310.0,
+        "bottom": 1923.0
+      },
+      "local_bbox": {
+        "left": 242.0,
+        "top": 1273.0,
+        "right": 276.0,
+        "bottom": 1322.0
+      },
+      "confidence": 0.65234375,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Aruticsal Teas (Refresh 15nl) 15nl",
+      "bbox": {
+        "left": 1235.0,
+        "top": 999.0,
+        "right": 1381.0,
+        "bottom": 1645.0
+      },
+      "local_bbox": {
+        "left": 201.0,
+        "top": 398.0,
+        "right": 347.0,
+        "bottom": 1044.0
+      },
+      "confidence": 0.528515636920929,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Trua uống 1 viên sau ãn",
+      "bbox": {
+        "left": 1328.0,
+        "top": 1006.0,
+        "right": 1426.0,
+        "bottom": 1380.0
+      },
+      "local_bbox": {
+        "left": 294.0,
+        "top": 405.0,
+        "right": 392.0,
+        "bottom": 779.0
+      },
+      "confidence": 0.4676649272441864,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "10",
+      "bbox": {
+        "left": 1387.0,
+        "top": 1884.0,
+        "right": 1419.0,
+        "bottom": 1931.0
+      },
+      "local_bbox": {
+        "left": 353.0,
+        "top": 1283.0,
+        "right": 385.0,
+        "bottom": 1330.0
+      },
+      "confidence": 0.6796875,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Viên sủi",
+      "bbox": {
+        "left": 1336.0,
+        "top": 2029.0,
+        "right": 1398.0,
+        "bottom": 2195.0
+      },
+      "local_bbox": {
+        "left": 302.0,
+        "top": 1428.0,
+        "right": 364.0,
+        "bottom": 1594.0
+      },
+      "confidence": 0.6875,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Tab",
+      "bbox": {
+        "left": 1427.0,
+        "top": 984.0,
+        "right": 1466.0,
+        "bottom": 1056.0
+      },
+      "local_bbox": {
+        "left": 393.0,
+        "top": 383.0,
+        "right": 432.0,
+        "bottom": 455.0
+      },
+      "confidence": 0.4453125,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Magnesium B6 (Magne-B6 Corbiere Tatb)",
+      "bbox": {
+        "left": 1340.0,
+        "top": 979.0,
+        "right": 1505.0,
+        "bottom": 1762.0
+      },
+      "local_bbox": {
+        "left": 306.0,
+        "top": 378.0,
+        "right": 471.0,
+        "bottom": 1161.0
+      },
+      "confidence": 0.7614820003509521,
+      "block_index": 7,
+      "line_index": 1
+    },
+    {
+      "text": "30",
+      "bbox": {
+        "left": 1502.0,
+        "top": 1888.0,
+        "right": 1534.0,
+        "bottom": 1939.0
+      },
+      "local_bbox": {
+        "left": 468.0,
+        "top": 1287.0,
+        "right": 500.0,
+        "bottom": 1338.0
+      },
+      "confidence": 0.763671875,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Öng",
+      "bbox": {
+        "left": 1453.0,
+        "top": 2078.0,
+        "right": 1514.0,
+        "bottom": 2173.0
+      },
+      "local_bbox": {
+        "left": 419.0,
+        "top": 1477.0,
+        "right": 480.0,
+        "bottom": 1572.0
+      },
+      "confidence": 0.5924479365348816,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "13",
+      "bbox": {
+        "left": 1556.0,
+        "top": 867.0,
+        "right": 1588.0,
+        "bottom": 909.0
+      },
+      "local_bbox": {
+        "left": 522.0,
+        "top": 266.0,
+        "right": 554.0,
+        "bottom": 308.0
+      },
+      "confidence": 0.44140625,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng uong 1 viên (hàa tan trong nước)",
+      "bbox": {
+        "left": 1417.0,
+        "top": 974.0,
+        "right": 1553.0,
+        "bottom": 1608.0
+      },
+      "local_bbox": {
+        "left": 383.0,
+        "top": 373.0,
+        "right": 519.0,
+        "bottom": 1007.0
+      },
+      "confidence": 0.6817708611488342,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Vitamin C(Upsa C 1000mg) 1000mg",
+      "bbox": {
+        "left": 1444.0,
+        "top": 989.0,
+        "right": 1590.0,
+        "bottom": 1662.0
+      },
+      "local_bbox": {
+        "left": 410.0,
+        "top": 388.0,
+        "right": 556.0,
+        "bottom": 1061.0
+      },
+      "confidence": 0.6828703880310059,
+      "block_index": 11,
+      "line_index": 1
+    },
+    {
+      "text": "Sáng uồng 1 ông sau än",
+      "bbox": {
+        "left": 1547.0,
+        "top": 960.0,
+        "right": 1646.0,
+        "bottom": 1359.0
+      },
+      "local_bbox": {
+        "left": 513.0,
+        "top": 359.0,
+        "right": 612.0,
+        "bottom": 758.0
+      },
+      "confidence": 0.6594669222831726,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "60",
+      "bbox": {
+        "left": 1622.0,
+        "top": 1895.0,
+        "right": 1658.0,
+        "bottom": 1949.0
+      },
+      "local_bbox": {
+        "left": 588.0,
+        "top": 1294.0,
+        "right": 624.0,
+        "bottom": 1348.0
+      },
+      "confidence": 0.8984375,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 1580.0,
+        "top": 2088.0,
+        "right": 1632.0,
+        "bottom": 2192.0
+      },
+      "local_bbox": {
+        "left": 546.0,
+        "top": 1487.0,
+        "right": 598.0,
+        "bottom": 1591.0
+      },
+      "confidence": 0.6640625,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "12",
+      "bbox": {
+        "left": 1668.0,
+        "top": 849.0,
+        "right": 1704.0,
+        "bottom": 896.0
+      },
+      "local_bbox": {
+        "left": 634.0,
+        "top": 248.0,
+        "right": 670.0,
+        "bottom": 295.0
+      },
+      "confidence": 0.779296875,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "10ml",
+      "bbox": {
+        "left": 1642.0,
+        "top": 957.0,
+        "right": 1684.0,
+        "bottom": 1051.0
+      },
+      "local_bbox": {
+        "left": 608.0,
+        "top": 356.0,
+        "right": 650.0,
+        "bottom": 450.0
+      },
+      "confidence": 0.501953125,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Calcium D3 (Calcium Corbiere 10ml)",
+      "bbox": {
+        "left": 1580.0,
+        "top": 947.0,
+        "right": 1732.0,
+        "bottom": 1685.0
+      },
+      "local_bbox": {
+        "left": 546.0,
+        "top": 346.0,
+        "right": 698.0,
+        "bottom": 1084.0
+      },
+      "confidence": 0.8147135376930237,
+      "block_index": 16,
+      "line_index": 1
+    },
+    {
+      "text": "11",
+      "bbox": {
+        "left": 1789.0,
+        "top": 830.0,
+        "right": 1824.0,
+        "bottom": 873.0
+      },
+      "local_bbox": {
+        "left": 755.0,
+        "top": 229.0,
+        "right": 790.0,
+        "bottom": 272.0
+      },
+      "confidence": 0.52734375,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uong 2 làn, mỗi làn 1 viên",
+      "bbox": {
+        "left": 1671.0,
+        "top": 942.0,
+        "right": 1786.0,
+        "bottom": 1487.0
+      },
+      "local_bbox": {
+        "left": 637.0,
+        "top": 341.0,
+        "right": 752.0,
+        "bottom": 886.0
+      },
+      "confidence": 0.7234700322151184,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "Ginkgo Biloba (Tanakan 40mg) 40mg",
+      "bbox": {
+        "left": 1675.0,
+        "top": 934.0,
+        "right": 1835.0,
+        "bottom": 1685.0
+      },
+      "local_bbox": {
+        "left": 641.0,
+        "top": 333.0,
+        "right": 801.0,
+        "bottom": 1084.0
+      },
+      "confidence": 0.8444234728813171,
+      "block_index": 18,
+      "line_index": 1
+    },
+    {
+      "text": "LE ThiKim Đài",
+      "bbox": {
+        "left": 1850.0,
+        "top": 813.0,
+        "right": 1925.0,
+        "bottom": 1077.0
+      },
+      "local_bbox": {
+        "left": 816.0,
+        "top": 212.0,
+        "right": 891.0,
+        "bottom": 476.0
+      },
+      "confidence": 0.6115056872367859,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Thuốc điều trị",
+      "bbox": {
+        "left": 1815.0,
+        "top": 1409.0,
+        "right": 1899.0,
+        "bottom": 1697.0
+      },
+      "local_bbox": {
+        "left": 781.0,
+        "top": 808.0,
+        "right": 865.0,
+        "bottom": 1096.0
+      },
+      "confidence": 0.7132161259651184,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "STT",
+      "bbox": {
+        "left": 1944.0,
+        "top": 791.0,
+        "right": 1984.0,
+        "bottom": 873.0
+      },
+      "local_bbox": {
+        "left": 910.0,
+        "top": 190.0,
+        "right": 950.0,
+        "bottom": 272.0
+      },
+      "confidence": 0.7161458134651184,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "Thuốc dieu trị :",
+      "bbox": {
+        "left": 1972.0,
+        "top": 753.0,
+        "right": 2055.0,
+        "bottom": 1041.0
+      },
+      "local_bbox": {
+        "left": 938.0,
+        "top": 152.0,
+        "right": 1021.0,
+        "bottom": 440.0
+      },
+      "confidence": 0.7181490659713745,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "VAN CƠ HỌC",
+      "bbox": {
+        "left": 2019.0,
+        "top": 1052.0,
+        "right": 2099.0,
+        "bottom": 1333.0
+      },
+      "local_bbox": {
+        "left": 985.0,
+        "top": 451.0,
+        "right": 1065.0,
+        "bottom": 732.0
+      },
+      "confidence": 0.78564453125,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "nghen mān tính khác; Bệnh trào ngược dạ dày - thực quản;",
+      "bbox": {
+        "left": 1957.0,
+        "top": 1050.0,
+        "right": 2159.0,
+        "bottom": 2188.0
+      },
+      "local_bbox": {
+        "left": 923.0,
+        "top": 449.0,
+        "right": 1125.0,
+        "bottom": 1587.0
+      },
+      "confidence": 0.7861111164093018,
+      "block_index": 23,
+      "line_index": 1
+    },
+    {
+      "text": "máu khác; Bệnh tim thiểu mấu cục bộ mạn; Các bệnh phối tãc",
+      "bbox": {
+        "left": 2010.0,
+        "top": 1046.0,
+        "right": 2214.0,
+        "bottom": 2269.0
+      },
+      "local_bbox": {
+        "left": 976.0,
+        "top": 445.0,
+        "right": 1180.0,
+        "bottom": 1668.0
+      },
+      "confidence": 0.7855808138847351,
+      "block_index": 23,
+      "line_index": 2
+    },
+    {
+      "text": "hat); Röi loạn chuyển hóa lipoprotein và tình trạng tăng lipid",
+      "bbox": {
+        "left": 2068.0,
+        "top": 1043.0,
+        "right": 2270.0,
+        "bottom": 2276.0
+      },
+      "local_bbox": {
+        "left": 1034.0,
+        "top": 442.0,
+        "right": 1236.0,
+        "bottom": 1675.0
+      },
+      "confidence": 0.7844050526618958,
+      "block_index": 23,
+      "line_index": 3
+    },
+    {
+      "text": "tang huyết áp vô căn (nguyên",
+      "bbox": {
+        "left": 2144.0,
+        "top": 1579.0,
+        "right": 2261.0,
+        "bottom": 2193.0
+      },
+      "local_bbox": {
+        "left": 1110.0,
+        "top": 978.0,
+        "right": 1227.0,
+        "bottom": 1592.0
+      },
+      "confidence": 0.80638587474823,
+      "block_index": 23,
+      "line_index": 4
+    }
+  ]
+}

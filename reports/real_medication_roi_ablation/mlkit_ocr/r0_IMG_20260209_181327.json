@@ -1,0 +1,625 @@
+{
+  "condition": "r0",
+  "image_id": "IMG_20260209_181327",
+  "prescription_id": "RX_023",
+  "file_name": "r0_IMG_20260209_181327.jpg",
+  "text": "-Tên bố/ mẹ của trê hoặc người đưa trẻ đến khám bệnh, chữa bệnh:\n- Khám lạí xin mang theo đơn này.\n000000000060\nBS.CKI.Hoàng Thị E\nLới dặn:\n(Khám lại ngày : 06/02/2026)\n(Ký, ghi rõ họ tên)\nBác sĩ khám bệnh\nNgày ngày 09 tháng 01 năm 2026\n2\nNgay uống 1 viến tối\nCetirizine (Zyrtec) 10mg\n28\nNgày uống 1 viên sáng\nFexofenadine (Telfast) 180mng\nViên\n28\nHoàng Thị E\nViên\nSTT\nThuốc điêu trị\nThuốc điều trị :\nChân Đoán: L20.9: Viêm da cơ dịa\nDịa chi liên hệ: 358 Dưởng Nguyễn Hue, Đà Năng\nMà số thé báo hiếm y tế (nếu cỐ; DNS113086912\nHọ tên: TRÀN ĐỨC PHÚC\nGih túnb Nam\n024.3823.3075\nDIỆN THOA:\nPÖN\nSỞ Y TẾ HÀ NỘI\nBỆNH VIỆN XANH\nĐƠN THUỐC\n2547)945",
+  "block_count": 27,
+  "line_count": 34,
+  "x_offset": 0.0,
+  "y_offset": 0.0,
+  "lines": [
+    {
+      "text": "-Tên bố/ mẹ của trê hoặc người đưa trẻ đến khám bệnh, chữa bệnh:",
+      "bbox": {
+        "left": 954.0,
+        "top": 1405.0,
+        "right": 1075.0,
+        "bottom": 2399.0
+      },
+      "local_bbox": {
+        "left": 954.0,
+        "top": 1405.0,
+        "right": 1075.0,
+        "bottom": 2399.0
+      },
+      "confidence": 0.7723652124404907,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "- Khám lạí xin mang theo đơn này.",
+      "bbox": {
+        "left": 1003.0,
+        "top": 1409.0,
+        "right": 1080.0,
+        "bottom": 1920.0
+      },
+      "local_bbox": {
+        "left": 1003.0,
+        "top": 1409.0,
+        "right": 1080.0,
+        "bottom": 1920.0
+      },
+      "confidence": 0.784254789352417,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "000000000060",
+      "bbox": {
+        "left": 1061.0,
+        "top": 1398.0,
+        "right": 1118.0,
+        "bottom": 1652.0
+      },
+      "local_bbox": {
+        "left": 1061.0,
+        "top": 1398.0,
+        "right": 1118.0,
+        "bottom": 1652.0
+      },
+      "confidence": 0.7744140625,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "BS.CKI.Hoàng Thị E",
+      "bbox": {
+        "left": 1131.0,
+        "top": 2285.0,
+        "right": 1196.0,
+        "bottom": 2681.0
+      },
+      "local_bbox": {
+        "left": 1131.0,
+        "top": 2285.0,
+        "right": 1196.0,
+        "bottom": 2681.0
+      },
+      "confidence": 0.84619140625,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Lới dặn:",
+      "bbox": {
+        "left": 1417.0,
+        "top": 1377.0,
+        "right": 1464.0,
+        "bottom": 1520.0
+      },
+      "local_bbox": {
+        "left": 1417.0,
+        "top": 1377.0,
+        "right": 1464.0,
+        "bottom": 1520.0
+      },
+      "confidence": 0.5569196343421936,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "(Khám lại ngày : 06/02/2026)",
+      "bbox": {
+        "left": 1468.0,
+        "top": 1373.0,
+        "right": 1539.0,
+        "bottom": 1862.0
+      },
+      "local_bbox": {
+        "left": 1468.0,
+        "top": 1373.0,
+        "right": 1539.0,
+        "bottom": 1862.0
+      },
+      "confidence": 0.7916666865348816,
+      "block_index": 4,
+      "line_index": 1
+    },
+    {
+      "text": "(Ký, ghi rõ họ tên)",
+      "bbox": {
+        "left": 1421.0,
+        "top": 2321.0,
+        "right": 1481.0,
+        "bottom": 2607.0
+      },
+      "local_bbox": {
+        "left": 1421.0,
+        "top": 2321.0,
+        "right": 1481.0,
+        "bottom": 2607.0
+      },
+      "confidence": 0.7807291746139526,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Bác sĩ khám bệnh",
+      "bbox": {
+        "left": 1474.0,
+        "top": 2320.0,
+        "right": 1535.0,
+        "bottom": 2606.0
+      },
+      "local_bbox": {
+        "left": 1474.0,
+        "top": 2320.0,
+        "right": 1535.0,
+        "bottom": 2606.0
+      },
+      "confidence": 0.8176081776618958,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày ngày 09 tháng 01 năm 2026",
+      "bbox": {
+        "left": 1516.0,
+        "top": 2189.0,
+        "right": 1595.0,
+        "bottom": 2725.0
+      },
+      "local_bbox": {
+        "left": 1516.0,
+        "top": 2189.0,
+        "right": 1595.0,
+        "bottom": 2725.0
+      },
+      "confidence": 0.80712890625,
+      "block_index": 6,
+      "line_index": 1
+    },
+    {
+      "text": "2",
+      "bbox": {
+        "left": 1586.0,
+        "top": 1414.0,
+        "right": 1615.0,
+        "bottom": 1435.0
+      },
+      "local_bbox": {
+        "left": 1586.0,
+        "top": 1414.0,
+        "right": 1615.0,
+        "bottom": 1435.0
+      },
+      "confidence": 0.52734375,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Ngay uống 1 viến tối",
+      "bbox": {
+        "left": 1551.0,
+        "top": 1525.0,
+        "right": 1616.0,
+        "bottom": 1900.0
+      },
+      "local_bbox": {
+        "left": 1551.0,
+        "top": 1525.0,
+        "right": 1616.0,
+        "bottom": 1900.0
+      },
+      "confidence": 0.68798828125,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Cetirizine (Zyrtec) 10mg",
+      "bbox": {
+        "left": 1602.0,
+        "top": 1524.0,
+        "right": 1669.0,
+        "bottom": 2018.0
+      },
+      "local_bbox": {
+        "left": 1602.0,
+        "top": 1524.0,
+        "right": 1669.0,
+        "bottom": 2018.0
+      },
+      "confidence": 0.8291903138160706,
+      "block_index": 8,
+      "line_index": 1
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 1645.0,
+        "top": 2490.0,
+        "right": 1680.0,
+        "bottom": 2533.0
+      },
+      "local_bbox": {
+        "left": 1645.0,
+        "top": 2490.0,
+        "right": 1680.0,
+        "bottom": 2533.0
+      },
+      "confidence": 0.798828125,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên sáng",
+      "bbox": {
+        "left": 1692.0,
+        "top": 1516.0,
+        "right": 1754.0,
+        "bottom": 1926.0
+      },
+      "local_bbox": {
+        "left": 1692.0,
+        "top": 1516.0,
+        "right": 1754.0,
+        "bottom": 1926.0
+      },
+      "confidence": 0.7886029481887817,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Fexofenadine (Telfast) 180mng",
+      "bbox": {
+        "left": 1747.0,
+        "top": 1516.0,
+        "right": 1811.0,
+        "bottom": 2111.0
+      },
+      "local_bbox": {
+        "left": 1747.0,
+        "top": 1516.0,
+        "right": 1811.0,
+        "bottom": 2111.0
+      },
+      "confidence": 0.8404224514961243,
+      "block_index": 10,
+      "line_index": 1
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 1654.0,
+        "top": 2670.0,
+        "right": 1694.0,
+        "bottom": 2758.0
+      },
+      "local_bbox": {
+        "left": 1654.0,
+        "top": 2670.0,
+        "right": 1694.0,
+        "bottom": 2758.0
+      },
+      "confidence": 0.544921875,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 1777.0,
+        "top": 2481.0,
+        "right": 1816.0,
+        "bottom": 2523.0
+      },
+      "local_bbox": {
+        "left": 1777.0,
+        "top": 2481.0,
+        "right": 1816.0,
+        "bottom": 2523.0
+      },
+      "confidence": 0.94140625,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Hoàng Thị E",
+      "bbox": {
+        "left": 1828.0,
+        "top": 1354.0,
+        "right": 1882.0,
+        "bottom": 1600.0
+      },
+      "local_bbox": {
+        "left": 1828.0,
+        "top": 1354.0,
+        "right": 1882.0,
+        "bottom": 1600.0
+      },
+      "confidence": 0.6731770634651184,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 1794.0,
+        "top": 2665.0,
+        "right": 1832.0,
+        "bottom": 2750.0
+      },
+      "local_bbox": {
+        "left": 1794.0,
+        "top": 2665.0,
+        "right": 1832.0,
+        "bottom": 2750.0
+      },
+      "confidence": 0.5556640625,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "STT",
+      "bbox": {
+        "left": 1912.0,
+        "top": 1357.0,
+        "right": 1951.0,
+        "bottom": 1441.0
+      },
+      "local_bbox": {
+        "left": 1912.0,
+        "top": 1357.0,
+        "right": 1951.0,
+        "bottom": 1441.0
+      },
+      "confidence": 0.71875,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "Thuốc điêu trị",
+      "bbox": {
+        "left": 1925.0,
+        "top": 2006.0,
+        "right": 1975.0,
+        "bottom": 2270.0
+      },
+      "local_bbox": {
+        "left": 1925.0,
+        "top": 2006.0,
+        "right": 1975.0,
+        "bottom": 2270.0
+      },
+      "confidence": 0.7369791865348816,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Thuốc điều trị :",
+      "bbox": {
+        "left": 1975.0,
+        "top": 1339.0,
+        "right": 2023.0,
+        "bottom": 1629.0
+      },
+      "local_bbox": {
+        "left": 1975.0,
+        "top": 1339.0,
+        "right": 2023.0,
+        "bottom": 1629.0
+      },
+      "confidence": 0.6286057829856873,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Chân Đoán: L20.9: Viêm da cơ dịa",
+      "bbox": {
+        "left": 2039.0,
+        "top": 1313.0,
+        "right": 2084.0,
+        "bottom": 1987.0
+      },
+      "local_bbox": {
+        "left": 2039.0,
+        "top": 1313.0,
+        "right": 2084.0,
+        "bottom": 1987.0
+      },
+      "confidence": 0.682692289352417,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "Dịa chi liên hệ: 358 Dưởng Nguyễn Hue, Đà Năng",
+      "bbox": {
+        "left": 2094.0,
+        "top": 1340.0,
+        "right": 2151.0,
+        "bottom": 2263.0
+      },
+      "local_bbox": {
+        "left": 2094.0,
+        "top": 1340.0,
+        "right": 2151.0,
+        "bottom": 2263.0
+      },
+      "confidence": 0.6423141956329346,
+      "block_index": 18,
+      "line_index": 1
+    },
+    {
+      "text": "Mà số thé báo hiếm y tế (nếu cỐ; DNS113086912",
+      "bbox": {
+        "left": 2162.0,
+        "top": 1333.0,
+        "right": 2210.0,
+        "bottom": 2224.0
+      },
+      "local_bbox": {
+        "left": 2162.0,
+        "top": 1333.0,
+        "right": 2210.0,
+        "bottom": 2224.0
+      },
+      "confidence": 0.6322699785232544,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Họ tên: TRÀN ĐỨC PHÚC",
+      "bbox": {
+        "left": 2220.0,
+        "top": 1302.0,
+        "right": 2274.0,
+        "bottom": 1805.0
+      },
+      "local_bbox": {
+        "left": 2220.0,
+        "top": 1302.0,
+        "right": 2274.0,
+        "bottom": 1805.0
+      },
+      "confidence": 0.6376378536224365,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Gih túnb Nam",
+      "bbox": {
+        "left": 2264.0,
+        "top": 2521.0,
+        "right": 2333.0,
+        "bottom": 2777.0
+      },
+      "local_bbox": {
+        "left": 2264.0,
+        "top": 2521.0,
+        "right": 2333.0,
+        "bottom": 2777.0
+      },
+      "confidence": 0.5015624761581421,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "024.3823.3075",
+      "bbox": {
+        "left": 2356.0,
+        "top": 1315.0,
+        "right": 2397.0,
+        "bottom": 1548.0
+      },
+      "local_bbox": {
+        "left": 2356.0,
+        "top": 1315.0,
+        "right": 2397.0,
+        "bottom": 1548.0
+      },
+      "confidence": 0.5685096383094788,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "DIỆN THOA:",
+      "bbox": {
+        "left": 2402.0,
+        "top": 1310.0,
+        "right": 2457.0,
+        "bottom": 1539.0
+      },
+      "local_bbox": {
+        "left": 2402.0,
+        "top": 1310.0,
+        "right": 2457.0,
+        "bottom": 1539.0
+      },
+      "confidence": 0.4405381977558136,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "PÖN",
+      "bbox": {
+        "left": 2468.0,
+        "top": 1309.0,
+        "right": 2509.0,
+        "bottom": 1401.0
+      },
+      "local_bbox": {
+        "left": 2468.0,
+        "top": 1309.0,
+        "right": 2509.0,
+        "bottom": 1401.0
+      },
+      "confidence": 0.6263020634651184,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "SỞ Y TẾ HÀ NỘI",
+      "bbox": {
+        "left": 2551.0,
+        "top": 1301.0,
+        "right": 2623.0,
+        "bottom": 1632.0
+      },
+      "local_bbox": {
+        "left": 2551.0,
+        "top": 1301.0,
+        "right": 2623.0,
+        "bottom": 1632.0
+      },
+      "confidence": 0.6148437261581421,
+      "block_index": 24,
+      "line_index": 1
+    },
+    {
+      "text": "BỆNH VIỆN XANH",
+      "bbox": {
+        "left": 2499.0,
+        "top": 1306.0,
+        "right": 2564.0,
+        "bottom": 1678.0
+      },
+      "local_bbox": {
+        "left": 2499.0,
+        "top": 1306.0,
+        "right": 2564.0,
+        "bottom": 1678.0
+      },
+      "confidence": 0.7415364384651184,
+      "block_index": 24,
+      "line_index": 2
+    },
+    {
+      "text": "ĐƠN THUỐC",
+      "bbox": {
+        "left": 2434.0,
+        "top": 1858.0,
+        "right": 2505.0,
+        "bottom": 2216.0
+      },
+      "local_bbox": {
+        "left": 2434.0,
+        "top": 1858.0,
+        "right": 2505.0,
+        "bottom": 2216.0
+      },
+      "confidence": 0.751953125,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "2547)945",
+      "bbox": {
+        "left": 2553.0,
+        "top": 2584.0,
+        "right": 2618.0,
+        "bottom": 2738.0
+      },
+      "local_bbox": {
+        "left": 2553.0,
+        "top": 2584.0,
+        "right": 2618.0,
+        "bottom": 2738.0
+      },
+      "confidence": 0.52099609375,
+      "block_index": 26,
+      "line_index": 0
+    }
+  ]
+}

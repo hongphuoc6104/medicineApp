@@ -1,0 +1,877 @@
+{
+  "condition": "r0",
+  "image_id": "IMG_20260115_181922",
+  "prescription_id": "RX_002",
+  "file_name": "r0_IMG_20260115_181922.jpg",
+  "text": "sỞ Y TẾ TP.HCM\nBỆNH VIỆN NHÂN\nDÂN 115\nĐIỆN THOẠI:\n028.3865.2368\nHọ tên: DƯƠNG ĐỨC PHÚC\nMã số thẻ bảo hiểm y tế (nếu có): DN8584108914\nĐịa chỉ liên hệ: 628 Dường Lê Lợi, Hà Nội\nThuốc đieu trị:\nSTT\nPhạm Minh D\nChần Đoán: M17: Thoái hóa khớp gối; G47.0: Rői loạn giấc ngú; I10: Táng\nhuyết áp vô căn; E78.0: Tăng cholesterol máu thuần\n9\n10\n11\n12\nĐƠN THUỐC\nLosartan (Cozaar) 50mg\nNgày uống 1 viên buổi sáng\nRosuvastatin (Crestor) 10mg\nNgày uống 1 viên tối\nFenofibrate (Lipanthyl) 200mg\nNgày uống 1 viên sau ăn trưa\n(Khám lại ngày : 06/02/2026)\nLời dặn:\nAtorvastatin (Lipitor) 10mg\nNgày uống 1 viên buối tối\nTái khám nhớ mang theo đơn thuốc này.\n000000000051\nTuối: 76\nThuốc điều trị\n- Khám lại xin mang theo dơn này.\n28\n28\n- Tên bố / mẹ của trẻ hoặc người đưa trẻ đến khám bệnh, chữa bệnh:\n28\n28\n25338204\nGiới tính: Nữ\nTS.BS.Phạm Minh D\nViên\nViên\nViên\nNgày ngày 09 tháng 01 năm 2026\nBác sĩ khám bệnh\n(Ký, ghi rộ họ tên)\nViên",
+  "block_count": 36,
+  "line_count": 48,
+  "x_offset": 0.0,
+  "y_offset": 0.0,
+  "lines": [
+    {
+      "text": "sỞ Y TẾ TP.HCM",
+      "bbox": {
+        "left": 593.0,
+        "top": 182.0,
+        "right": 1078.0,
+        "bottom": 242.0
+      },
+      "local_bbox": {
+        "left": 593.0,
+        "top": 182.0,
+        "right": 1078.0,
+        "bottom": 242.0
+      },
+      "confidence": 0.75,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "BỆNH VIỆN NHÂN",
+      "bbox": {
+        "left": 568.0,
+        "top": 247.0,
+        "right": 1113.0,
+        "bottom": 319.0
+      },
+      "local_bbox": {
+        "left": 568.0,
+        "top": 247.0,
+        "right": 1113.0,
+        "bottom": 319.0
+      },
+      "confidence": 0.8548176884651184,
+      "block_index": 0,
+      "line_index": 1
+    },
+    {
+      "text": "DÂN 115",
+      "bbox": {
+        "left": 566.0,
+        "top": 325.0,
+        "right": 806.0,
+        "bottom": 385.0
+      },
+      "local_bbox": {
+        "left": 566.0,
+        "top": 325.0,
+        "right": 806.0,
+        "bottom": 385.0
+      },
+      "confidence": 0.7962239384651184,
+      "block_index": 0,
+      "line_index": 2
+    },
+    {
+      "text": "ĐIỆN THOẠI:",
+      "bbox": {
+        "left": 561.0,
+        "top": 400.0,
+        "right": 897.0,
+        "bottom": 461.0
+      },
+      "local_bbox": {
+        "left": 561.0,
+        "top": 400.0,
+        "right": 897.0,
+        "bottom": 461.0
+      },
+      "confidence": 0.828125,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "028.3865.2368",
+      "bbox": {
+        "left": 556.0,
+        "top": 474.0,
+        "right": 898.0,
+        "bottom": 528.0
+      },
+      "local_bbox": {
+        "left": 556.0,
+        "top": 474.0,
+        "right": 898.0,
+        "bottom": 528.0
+      },
+      "confidence": 0.8737980723381042,
+      "block_index": 1,
+      "line_index": 1
+    },
+    {
+      "text": "Họ tên: DƯƠNG ĐỨC PHÚC",
+      "bbox": {
+        "left": 543.0,
+        "top": 647.0,
+        "right": 1350.0,
+        "bottom": 717.0
+      },
+      "local_bbox": {
+        "left": 543.0,
+        "top": 647.0,
+        "right": 1350.0,
+        "bottom": 717.0
+      },
+      "confidence": 0.8522135615348816,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Mã số thẻ bảo hiểm y tế (nếu có): DN8584108914",
+      "bbox": {
+        "left": 548.0,
+        "top": 738.0,
+        "right": 1969.0,
+        "bottom": 830.0
+      },
+      "local_bbox": {
+        "left": 548.0,
+        "top": 738.0,
+        "right": 1969.0,
+        "bottom": 830.0
+      },
+      "confidence": 0.7825168967247009,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Địa chỉ liên hệ: 628 Dường Lê Lợi, Hà Nội",
+      "bbox": {
+        "left": 509.0,
+        "top": 829.0,
+        "right": 1797.0,
+        "bottom": 925.0
+      },
+      "local_bbox": {
+        "left": 509.0,
+        "top": 829.0,
+        "right": 1797.0,
+        "bottom": 925.0
+      },
+      "confidence": 0.848876953125,
+      "block_index": 3,
+      "line_index": 1
+    },
+    {
+      "text": "Thuốc đieu trị:",
+      "bbox": {
+        "left": 499.0,
+        "top": 1094.0,
+        "right": 969.0,
+        "bottom": 1181.0
+      },
+      "local_bbox": {
+        "left": 499.0,
+        "top": 1094.0,
+        "right": 969.0,
+        "bottom": 1181.0
+      },
+      "confidence": 0.7875601053237915,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "STT",
+      "bbox": {
+        "left": 552.0,
+        "top": 1210.0,
+        "right": 685.0,
+        "bottom": 1262.0
+      },
+      "local_bbox": {
+        "left": 552.0,
+        "top": 1210.0,
+        "right": 685.0,
+        "bottom": 1262.0
+      },
+      "confidence": 0.7486979365348816,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Phạm Minh D",
+      "bbox": {
+        "left": 533.0,
+        "top": 1323.0,
+        "right": 963.0,
+        "bottom": 1391.0
+      },
+      "local_bbox": {
+        "left": 533.0,
+        "top": 1323.0,
+        "right": 963.0,
+        "bottom": 1391.0
+      },
+      "confidence": 0.87890625,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Chần Đoán: M17: Thoái hóa khớp gối; G47.0: Rői loạn giấc ngú; I10: Táng",
+      "bbox": {
+        "left": 545.0,
+        "top": 924.0,
+        "right": 2716.0,
+        "bottom": 1030.0
+      },
+      "local_bbox": {
+        "left": 545.0,
+        "top": 924.0,
+        "right": 2716.0,
+        "bottom": 1030.0
+      },
+      "confidence": 0.7864359021186829,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "huyết áp vô căn; E78.0: Tăng cholesterol máu thuần",
+      "bbox": {
+        "left": 503.0,
+        "top": 1012.0,
+        "right": 1979.0,
+        "bottom": 1105.0
+      },
+      "local_bbox": {
+        "left": 503.0,
+        "top": 1012.0,
+        "right": 1979.0,
+        "bottom": 1105.0
+      },
+      "confidence": 0.814825177192688,
+      "block_index": 7,
+      "line_index": 1
+    },
+    {
+      "text": "9",
+      "bbox": {
+        "left": 605.0,
+        "top": 1509.0,
+        "right": 638.0,
+        "bottom": 1560.0
+      },
+      "local_bbox": {
+        "left": 605.0,
+        "top": 1509.0,
+        "right": 638.0,
+        "bottom": 1560.0
+      },
+      "confidence": 0.53515625,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "10",
+      "bbox": {
+        "left": 595.0,
+        "top": 1730.0,
+        "right": 655.0,
+        "bottom": 1779.0
+      },
+      "local_bbox": {
+        "left": 595.0,
+        "top": 1730.0,
+        "right": 655.0,
+        "bottom": 1779.0
+      },
+      "confidence": 0.869140625,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "11",
+      "bbox": {
+        "left": 596.0,
+        "top": 1949.0,
+        "right": 654.0,
+        "bottom": 1997.0
+      },
+      "local_bbox": {
+        "left": 596.0,
+        "top": 1949.0,
+        "right": 654.0,
+        "bottom": 1997.0
+      },
+      "confidence": 0.880859375,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "12",
+      "bbox": {
+        "left": 598.0,
+        "top": 2166.0,
+        "right": 658.0,
+        "bottom": 2213.0
+      },
+      "local_bbox": {
+        "left": 598.0,
+        "top": 2166.0,
+        "right": 658.0,
+        "bottom": 2213.0
+      },
+      "confidence": 0.8828125,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "ĐƠN THUỐC",
+      "bbox": {
+        "left": 1370.0,
+        "top": 291.0,
+        "right": 1986.0,
+        "bottom": 405.0
+      },
+      "local_bbox": {
+        "left": 1370.0,
+        "top": 291.0,
+        "right": 1986.0,
+        "bottom": 405.0
+      },
+      "confidence": 0.80126953125,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Losartan (Cozaar) 50mg",
+      "bbox": {
+        "left": 777.0,
+        "top": 1462.0,
+        "right": 1552.0,
+        "bottom": 1549.0
+      },
+      "local_bbox": {
+        "left": 777.0,
+        "top": 1462.0,
+        "right": 1552.0,
+        "bottom": 1549.0
+      },
+      "confidence": 0.8447265625,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên buổi sáng",
+      "bbox": {
+        "left": 776.0,
+        "top": 1543.0,
+        "right": 1563.0,
+        "bottom": 1629.0
+      },
+      "local_bbox": {
+        "left": 776.0,
+        "top": 1543.0,
+        "right": 1563.0,
+        "bottom": 1629.0
+      },
+      "confidence": 0.8052455186843872,
+      "block_index": 13,
+      "line_index": 1
+    },
+    {
+      "text": "Rosuvastatin (Crestor) 10mg",
+      "bbox": {
+        "left": 777.0,
+        "top": 1681.0,
+        "right": 1685.0,
+        "bottom": 1772.0
+      },
+      "local_bbox": {
+        "left": 777.0,
+        "top": 1681.0,
+        "right": 1685.0,
+        "bottom": 1772.0
+      },
+      "confidence": 0.9010937213897705,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên tối",
+      "bbox": {
+        "left": 775.0,
+        "top": 1770.0,
+        "right": 1364.0,
+        "bottom": 1838.0
+      },
+      "local_bbox": {
+        "left": 775.0,
+        "top": 1770.0,
+        "right": 1364.0,
+        "bottom": 1838.0
+      },
+      "confidence": 0.8173828125,
+      "block_index": 14,
+      "line_index": 1
+    },
+    {
+      "text": "Fenofibrate (Lipanthyl) 200mg",
+      "bbox": {
+        "left": 777.0,
+        "top": 1899.0,
+        "right": 1749.0,
+        "bottom": 1988.0
+      },
+      "local_bbox": {
+        "left": 777.0,
+        "top": 1899.0,
+        "right": 1749.0,
+        "bottom": 1988.0
+      },
+      "confidence": 0.87890625,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên sau ăn trưa",
+      "bbox": {
+        "left": 778.0,
+        "top": 1988.0,
+        "right": 1604.0,
+        "bottom": 2053.0
+      },
+      "local_bbox": {
+        "left": 778.0,
+        "top": 1988.0,
+        "right": 1604.0,
+        "bottom": 2053.0
+      },
+      "confidence": 0.8313210010528564,
+      "block_index": 15,
+      "line_index": 1
+    },
+    {
+      "text": "(Khám lại ngày : 06/02/2026)",
+      "bbox": {
+        "left": 545.0,
+        "top": 2319.0,
+        "right": 1299.0,
+        "bottom": 2376.0
+      },
+      "local_bbox": {
+        "left": 545.0,
+        "top": 2319.0,
+        "right": 1299.0,
+        "bottom": 2376.0
+      },
+      "confidence": 0.8616536259651184,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Lời dặn:",
+      "bbox": {
+        "left": 542.0,
+        "top": 2400.0,
+        "right": 748.0,
+        "bottom": 2459.0
+      },
+      "local_bbox": {
+        "left": 542.0,
+        "top": 2400.0,
+        "right": 748.0,
+        "bottom": 2459.0
+      },
+      "confidence": 0.7823660969734192,
+      "block_index": 16,
+      "line_index": 1
+    },
+    {
+      "text": "Atorvastatin (Lipitor) 10mg",
+      "bbox": {
+        "left": 785.0,
+        "top": 2118.0,
+        "right": 1645.0,
+        "bottom": 2196.0
+      },
+      "local_bbox": {
+        "left": 785.0,
+        "top": 2118.0,
+        "right": 1645.0,
+        "bottom": 2196.0
+      },
+      "confidence": 0.8887500166893005,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên buối tối",
+      "bbox": {
+        "left": 779.0,
+        "top": 2192.0,
+        "right": 1500.0,
+        "bottom": 2269.0
+      },
+      "local_bbox": {
+        "left": 779.0,
+        "top": 2192.0,
+        "right": 1500.0,
+        "bottom": 2269.0
+      },
+      "confidence": 0.7748047113418579,
+      "block_index": 17,
+      "line_index": 1
+    },
+    {
+      "text": "Tái khám nhớ mang theo đơn thuốc này.",
+      "bbox": {
+        "left": 543.0,
+        "top": 2486.0,
+        "right": 1563.0,
+        "bottom": 2547.0
+      },
+      "local_bbox": {
+        "left": 543.0,
+        "top": 2486.0,
+        "right": 1563.0,
+        "bottom": 2547.0
+      },
+      "confidence": 0.8380208611488342,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "000000000051",
+      "bbox": {
+        "left": 523.0,
+        "top": 2960.0,
+        "right": 910.0,
+        "bottom": 3009.0
+      },
+      "local_bbox": {
+        "left": 523.0,
+        "top": 2960.0,
+        "right": 910.0,
+        "bottom": 3009.0
+      },
+      "confidence": 0.8977864384651184,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Tuối: 76",
+      "bbox": {
+        "left": 1914.0,
+        "top": 671.0,
+        "right": 2132.0,
+        "bottom": 730.0
+      },
+      "local_bbox": {
+        "left": 1914.0,
+        "top": 671.0,
+        "right": 2132.0,
+        "bottom": 730.0
+      },
+      "confidence": 0.7795758843421936,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Thuốc điều trị",
+      "bbox": {
+        "left": 1577.0,
+        "top": 1221.0,
+        "right": 2008.0,
+        "bottom": 1295.0
+      },
+      "local_bbox": {
+        "left": 1577.0,
+        "top": 1221.0,
+        "right": 2008.0,
+        "bottom": 1295.0
+      },
+      "confidence": 0.810546875,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "- Khám lại xin mang theo dơn này.",
+      "bbox": {
+        "left": 511.0,
+        "top": 3046.0,
+        "right": 1331.0,
+        "bottom": 3106.0
+      },
+      "local_bbox": {
+        "left": 511.0,
+        "top": 3046.0,
+        "right": 1331.0,
+        "bottom": 3106.0
+      },
+      "confidence": 0.8327824473381042,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 2314.0,
+        "top": 1532.0,
+        "right": 2383.0,
+        "bottom": 1586.0
+      },
+      "local_bbox": {
+        "left": 2314.0,
+        "top": 1532.0,
+        "right": 2383.0,
+        "bottom": 1586.0
+      },
+      "confidence": 0.92578125,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 2305.0,
+        "top": 1748.0,
+        "right": 2374.0,
+        "bottom": 1803.0
+      },
+      "local_bbox": {
+        "left": 2305.0,
+        "top": 1748.0,
+        "right": 2374.0,
+        "bottom": 1803.0
+      },
+      "confidence": 0.953125,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "- Tên bố / mẹ của trẻ hoặc người đưa trẻ đến khám bệnh, chữa bệnh:",
+      "bbox": {
+        "left": 513.0,
+        "top": 3123.0,
+        "right": 2102.0,
+        "bottom": 3185.0
+      },
+      "local_bbox": {
+        "left": 513.0,
+        "top": 3123.0,
+        "right": 2102.0,
+        "bottom": 3185.0
+      },
+      "confidence": 0.80078125,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 2294.0,
+        "top": 1963.0,
+        "right": 2363.0,
+        "bottom": 2014.0
+      },
+      "local_bbox": {
+        "left": 2294.0,
+        "top": 1963.0,
+        "right": 2363.0,
+        "bottom": 2014.0
+      },
+      "confidence": 0.939453125,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 2282.0,
+        "top": 2168.0,
+        "right": 2351.0,
+        "bottom": 2221.0
+      },
+      "local_bbox": {
+        "left": 2282.0,
+        "top": 2168.0,
+        "right": 2351.0,
+        "bottom": 2221.0
+      },
+      "confidence": 0.912109375,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "25338204",
+      "bbox": {
+        "left": 2581.0,
+        "top": 265.0,
+        "right": 2811.0,
+        "bottom": 321.0
+      },
+      "local_bbox": {
+        "left": 2581.0,
+        "top": 265.0,
+        "right": 2811.0,
+        "bottom": 321.0
+      },
+      "confidence": 0.927734375,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "Giới tính: Nữ",
+      "bbox": {
+        "left": 2490.0,
+        "top": 678.0,
+        "right": 2832.0,
+        "bottom": 744.0
+      },
+      "local_bbox": {
+        "left": 2490.0,
+        "top": 678.0,
+        "right": 2832.0,
+        "bottom": 744.0
+      },
+      "confidence": 0.7684659361839294,
+      "block_index": 29,
+      "line_index": 0
+    },
+    {
+      "text": "TS.BS.Phạm Minh D",
+      "bbox": {
+        "left": 1927.0,
+        "top": 2938.0,
+        "right": 2520.0,
+        "bottom": 3015.0
+      },
+      "local_bbox": {
+        "left": 1927.0,
+        "top": 2938.0,
+        "right": 2520.0,
+        "bottom": 3015.0
+      },
+      "confidence": 0.8369791507720947,
+      "block_index": 30,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2598.0,
+        "top": 1537.0,
+        "right": 2730.0,
+        "bottom": 1593.0
+      },
+      "local_bbox": {
+        "left": 2598.0,
+        "top": 1537.0,
+        "right": 2730.0,
+        "bottom": 1593.0
+      },
+      "confidence": 0.7568359375,
+      "block_index": 31,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2582.0,
+        "top": 1748.0,
+        "right": 2712.0,
+        "bottom": 1811.0
+      },
+      "local_bbox": {
+        "left": 2582.0,
+        "top": 1748.0,
+        "right": 2712.0,
+        "bottom": 1811.0
+      },
+      "confidence": 0.7294921875,
+      "block_index": 32,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2565.0,
+        "top": 1965.0,
+        "right": 2690.0,
+        "bottom": 2016.0
+      },
+      "local_bbox": {
+        "left": 2565.0,
+        "top": 1965.0,
+        "right": 2690.0,
+        "bottom": 2016.0
+      },
+      "confidence": 0.708984375,
+      "block_index": 33,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày ngày 09 tháng 01 năm 2026",
+      "bbox": {
+        "left": 1802.0,
+        "top": 2324.0,
+        "right": 2630.0,
+        "bottom": 2384.0
+      },
+      "local_bbox": {
+        "left": 1802.0,
+        "top": 2324.0,
+        "right": 2630.0,
+        "bottom": 2384.0
+      },
+      "confidence": 0.880859375,
+      "block_index": 34,
+      "line_index": 0
+    },
+    {
+      "text": "Bác sĩ khám bệnh",
+      "bbox": {
+        "left": 1992.0,
+        "top": 2406.0,
+        "right": 2448.0,
+        "bottom": 2462.0
+      },
+      "local_bbox": {
+        "left": 1992.0,
+        "top": 2406.0,
+        "right": 2448.0,
+        "bottom": 2462.0
+      },
+      "confidence": 0.8542668223381042,
+      "block_index": 34,
+      "line_index": 1
+    },
+    {
+      "text": "(Ký, ghi rộ họ tên)",
+      "bbox": {
+        "left": 2001.0,
+        "top": 2483.0,
+        "right": 2441.0,
+        "bottom": 2553.0
+      },
+      "local_bbox": {
+        "left": 2001.0,
+        "top": 2483.0,
+        "right": 2441.0,
+        "bottom": 2553.0
+      },
+      "confidence": 0.7822916507720947,
+      "block_index": 34,
+      "line_index": 2
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2555.0,
+        "top": 2175.0,
+        "right": 2683.0,
+        "bottom": 2226.0
+      },
+      "local_bbox": {
+        "left": 2555.0,
+        "top": 2175.0,
+        "right": 2683.0,
+        "bottom": 2226.0
+      },
+      "confidence": 0.7314453125,
+      "block_index": 35,
+      "line_index": 0
+    }
+  ]
+}

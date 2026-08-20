@@ -1,0 +1,715 @@
+{
+  "condition": "r0",
+  "image_id": "IMG_20260209_180502",
+  "prescription_id": "RX_001",
+  "file_name": "r0_IMG_20260209_180502.jpg",
+  "text": "BỘ Y TẾ\nBYDK TW CAN TIHO\nDILN THiOAI 0292. 82(X)7i\nitp tên LE VÁN TRÁN Tuối: 58\nMå số thé 3HYT: ST2939321351869-93002\nDja chi liên hệ:\nChấn Đoáni\nThuốc diều trị i\nĐƠN THUỐC\nGiớm únh Nam\nấp 3, Xã Vị húy, Thành phố Cần Thơ\nLê Thị Kim Dài\nZ954: Sự có mặt của van tim thay thể khác;\n110,76;125;J44; K21: Bệnh tắng huyết áp vô cẫn (nguyên\nphá), Rối loạn chuyến hóa lipoprotein và tình rang täng lipid\nmấu khấc; Bệnh tim hiểu mấu cục bộ man, Các bệnh phối tác\nnghến mẫn tính khác; Bệnh trào ngưỰc dạ dày thực quấn;\nVAN COHỌC\nThuốc đieu r\nCelecoxib (Celetbrex 200xmg) 200mg\nNgày uống 1 viên sau dn no (khi dau)\nEperisone (Myonal Somg) 5Omg\nNgày uớng 2 làn, mỗi lànI viên sau ăn\nMecobalamin (Methycobal 500rmeg)\nNgiy sing2 n, mdi lnI viền\nLosstadine (Carityne 10mg) 1Omg\nNgy uing i vin bdi tô (khi rạs màI)\nParacetamol (Panadol S00mg) S00mg\n15\n60\n60\n20\nViên\nViền\nViên\nViền\nViền\n(Xem t trang s\n25109414",
+  "block_count": 24,
+  "line_count": 39,
+  "x_offset": 0.0,
+  "y_offset": 0.0,
+  "lines": [
+    {
+      "text": "BỘ Y TẾ",
+      "bbox": {
+        "left": 1089.0,
+        "top": 1200.0,
+        "right": 1267.0,
+        "bottom": 1260.0
+      },
+      "local_bbox": {
+        "left": 1089.0,
+        "top": 1200.0,
+        "right": 1267.0,
+        "bottom": 1260.0
+      },
+      "confidence": 0.4945312440395355,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "BYDK TW CAN TIHO",
+      "bbox": {
+        "left": 939.0,
+        "top": 1261.0,
+        "right": 1417.0,
+        "bottom": 1323.0
+      },
+      "local_bbox": {
+        "left": 939.0,
+        "top": 1261.0,
+        "right": 1417.0,
+        "bottom": 1323.0
+      },
+      "confidence": 0.5489783883094788,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "DILN THiOAI 0292. 82(X)7i",
+      "bbox": {
+        "left": 940.0,
+        "top": 1313.0,
+        "right": 1427.0,
+        "bottom": 1367.0
+      },
+      "local_bbox": {
+        "left": 940.0,
+        "top": 1313.0,
+        "right": 1427.0,
+        "bottom": 1367.0
+      },
+      "confidence": 0.31747159361839294,
+      "block_index": 1,
+      "line_index": 1
+    },
+    {
+      "text": "itp tên LE VÁN TRÁN Tuối: 58",
+      "bbox": {
+        "left": 899.0,
+        "top": 1443.0,
+        "right": 1688.0,
+        "bottom": 1524.0
+      },
+      "local_bbox": {
+        "left": 899.0,
+        "top": 1443.0,
+        "right": 1688.0,
+        "bottom": 1524.0
+      },
+      "confidence": 0.4197443127632141,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Må số thé 3HYT: ST2939321351869-93002",
+      "bbox": {
+        "left": 902.0,
+        "top": 1535.0,
+        "right": 1865.0,
+        "bottom": 1624.0
+      },
+      "local_bbox": {
+        "left": 902.0,
+        "top": 1535.0,
+        "right": 1865.0,
+        "bottom": 1624.0
+      },
+      "confidence": 0.5234375,
+      "block_index": 2,
+      "line_index": 1
+    },
+    {
+      "text": "Dja chi liên hệ:",
+      "bbox": {
+        "left": 892.0,
+        "top": 1632.0,
+        "right": 1195.0,
+        "bottom": 1684.0
+      },
+      "local_bbox": {
+        "left": 892.0,
+        "top": 1632.0,
+        "right": 1195.0,
+        "bottom": 1684.0
+      },
+      "confidence": 0.5588942170143127,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Chấn Đoáni",
+      "bbox": {
+        "left": 900.0,
+        "top": 1722.0,
+        "right": 1154.0,
+        "bottom": 1765.0
+      },
+      "local_bbox": {
+        "left": 900.0,
+        "top": 1722.0,
+        "right": 1154.0,
+        "bottom": 1765.0
+      },
+      "confidence": 0.5460069179534912,
+      "block_index": 3,
+      "line_index": 1
+    },
+    {
+      "text": "Thuốc diều trị i",
+      "bbox": {
+        "left": 984.0,
+        "top": 2097.0,
+        "right": 1270.0,
+        "bottom": 2147.0
+      },
+      "local_bbox": {
+        "left": 984.0,
+        "top": 2097.0,
+        "right": 1270.0,
+        "bottom": 2147.0
+      },
+      "confidence": 0.5285456776618958,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "ĐƠN THUỐC",
+      "bbox": {
+        "left": 1540.0,
+        "top": 1250.0,
+        "right": 2028.0,
+        "bottom": 1330.0
+      },
+      "local_bbox": {
+        "left": 1540.0,
+        "top": 1250.0,
+        "right": 2028.0,
+        "bottom": 1330.0
+      },
+      "confidence": 0.7890625,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Giớm únh Nam",
+      "bbox": {
+        "left": 1839.0,
+        "top": 1484.0,
+        "right": 2117.0,
+        "bottom": 1539.0
+      },
+      "local_bbox": {
+        "left": 1839.0,
+        "top": 1484.0,
+        "right": 2117.0,
+        "bottom": 1539.0
+      },
+      "confidence": 0.470703125,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "ấp 3, Xã Vị húy, Thành phố Cần Thơ",
+      "bbox": {
+        "left": 1285.0,
+        "top": 1643.0,
+        "right": 2079.0,
+        "bottom": 1730.0
+      },
+      "local_bbox": {
+        "left": 1285.0,
+        "top": 1643.0,
+        "right": 2079.0,
+        "bottom": 1730.0
+      },
+      "confidence": 0.6472355723381042,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Lê Thị Kim Dài",
+      "bbox": {
+        "left": 1008.0,
+        "top": 2232.0,
+        "right": 1303.0,
+        "bottom": 2270.0
+      },
+      "local_bbox": {
+        "left": 1008.0,
+        "top": 2232.0,
+        "right": 1303.0,
+        "bottom": 2270.0
+      },
+      "confidence": 0.5358664989471436,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Z954: Sự có mặt của van tim thay thể khác;",
+      "bbox": {
+        "left": 1309.0,
+        "top": 1734.0,
+        "right": 2196.0,
+        "bottom": 1820.0
+      },
+      "local_bbox": {
+        "left": 1309.0,
+        "top": 1734.0,
+        "right": 2196.0,
+        "bottom": 1820.0
+      },
+      "confidence": 0.681699812412262,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "110,76;125;J44; K21: Bệnh tắng huyết áp vô cẫn (nguyên",
+      "bbox": {
+        "left": 1304.0,
+        "top": 1794.0,
+        "right": 2478.0,
+        "bottom": 1895.0
+      },
+      "local_bbox": {
+        "left": 1304.0,
+        "top": 1794.0,
+        "right": 2478.0,
+        "bottom": 1895.0
+      },
+      "confidence": 0.600713312625885,
+      "block_index": 9,
+      "line_index": 1
+    },
+    {
+      "text": "phá), Rối loạn chuyến hóa lipoprotein và tình rang täng lipid",
+      "bbox": {
+        "left": 1292.0,
+        "top": 1856.0,
+        "right": 2554.0,
+        "bottom": 1958.0
+      },
+      "local_bbox": {
+        "left": 1292.0,
+        "top": 1856.0,
+        "right": 2554.0,
+        "bottom": 1958.0
+      },
+      "confidence": 0.6970741152763367,
+      "block_index": 9,
+      "line_index": 2
+    },
+    {
+      "text": "mấu khấc; Bệnh tim hiểu mấu cục bộ man, Các bệnh phối tác",
+      "bbox": {
+        "left": 1295.0,
+        "top": 1913.0,
+        "right": 2551.0,
+        "bottom": 2010.0
+      },
+      "local_bbox": {
+        "left": 1295.0,
+        "top": 1913.0,
+        "right": 2551.0,
+        "bottom": 2010.0
+      },
+      "confidence": 0.628819465637207,
+      "block_index": 9,
+      "line_index": 3
+    },
+    {
+      "text": "nghến mẫn tính khác; Bệnh trào ngưỰc dạ dày thực quấn;",
+      "bbox": {
+        "left": 1296.0,
+        "top": 1962.0,
+        "right": 2461.0,
+        "bottom": 2071.0
+      },
+      "local_bbox": {
+        "left": 1296.0,
+        "top": 1962.0,
+        "right": 2461.0,
+        "bottom": 2071.0
+      },
+      "confidence": 0.6110618114471436,
+      "block_index": 9,
+      "line_index": 4
+    },
+    {
+      "text": "VAN COHỌC",
+      "bbox": {
+        "left": 1301.0,
+        "top": 2022.0,
+        "right": 1591.0,
+        "bottom": 2073.0
+      },
+      "local_bbox": {
+        "left": 1301.0,
+        "top": 2022.0,
+        "right": 1591.0,
+        "bottom": 2073.0
+      },
+      "confidence": 0.5908203125,
+      "block_index": 9,
+      "line_index": 5
+    },
+    {
+      "text": "Thuốc đieu r",
+      "bbox": {
+        "left": 1675.0,
+        "top": 2194.0,
+        "right": 1948.0,
+        "bottom": 2254.0
+      },
+      "local_bbox": {
+        "left": 1675.0,
+        "top": 2194.0,
+        "right": 1948.0,
+        "bottom": 2254.0
+      },
+      "confidence": 0.47265625,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Celecoxib (Celetbrex 200xmg) 200mg",
+      "bbox": {
+        "left": 1152.0,
+        "top": 2298.0,
+        "right": 1894.0,
+        "bottom": 2397.0
+      },
+      "local_bbox": {
+        "left": 1152.0,
+        "top": 2298.0,
+        "right": 1894.0,
+        "bottom": 2397.0
+      },
+      "confidence": 0.7521421313285828,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên sau dn no (khi dau)",
+      "bbox": {
+        "left": 1155.0,
+        "top": 2348.0,
+        "right": 1836.0,
+        "bottom": 2431.0
+      },
+      "local_bbox": {
+        "left": 1155.0,
+        "top": 2348.0,
+        "right": 1836.0,
+        "bottom": 2431.0
+      },
+      "confidence": 0.6283482313156128,
+      "block_index": 11,
+      "line_index": 1
+    },
+    {
+      "text": "Eperisone (Myonal Somg) 5Omg",
+      "bbox": {
+        "left": 1161.0,
+        "top": 2417.0,
+        "right": 1806.0,
+        "bottom": 2502.0
+      },
+      "local_bbox": {
+        "left": 1161.0,
+        "top": 2417.0,
+        "right": 1806.0,
+        "bottom": 2502.0
+      },
+      "confidence": 0.7142187356948853,
+      "block_index": 11,
+      "line_index": 2
+    },
+    {
+      "text": "Ngày uớng 2 làn, mỗi lànI viên sau ăn",
+      "bbox": {
+        "left": 1160.0,
+        "top": 2461.0,
+        "right": 1861.0,
+        "bottom": 2552.0
+      },
+      "local_bbox": {
+        "left": 1160.0,
+        "top": 2461.0,
+        "right": 1861.0,
+        "bottom": 2552.0
+      },
+      "confidence": 0.5277478694915771,
+      "block_index": 11,
+      "line_index": 3
+    },
+    {
+      "text": "Mecobalamin (Methycobal 500rmeg)",
+      "bbox": {
+        "left": 1166.0,
+        "top": 2516.0,
+        "right": 1881.0,
+        "bottom": 2616.0
+      },
+      "local_bbox": {
+        "left": 1166.0,
+        "top": 2516.0,
+        "right": 1881.0,
+        "bottom": 2616.0
+      },
+      "confidence": 0.686328113079071,
+      "block_index": 11,
+      "line_index": 4
+    },
+    {
+      "text": "Ngiy sing2 n, mdi lnI viền",
+      "bbox": {
+        "left": 1187.0,
+        "top": 2609.0,
+        "right": 1725.0,
+        "bottom": 2686.0
+      },
+      "local_bbox": {
+        "left": 1187.0,
+        "top": 2609.0,
+        "right": 1725.0,
+        "bottom": 2686.0
+      },
+      "confidence": 0.4350818395614624,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Losstadine (Carityne 10mg) 1Omg",
+      "bbox": {
+        "left": 1173.0,
+        "top": 2657.0,
+        "right": 1844.0,
+        "bottom": 2758.0
+      },
+      "local_bbox": {
+        "left": 1173.0,
+        "top": 2657.0,
+        "right": 1844.0,
+        "bottom": 2758.0
+      },
+      "confidence": 0.5797991156578064,
+      "block_index": 12,
+      "line_index": 1
+    },
+    {
+      "text": "Ngy uing i vin bdi tô (khi rạs màI)",
+      "bbox": {
+        "left": 1173.0,
+        "top": 2698.0,
+        "right": 1880.0,
+        "bottom": 2803.0
+      },
+      "local_bbox": {
+        "left": 1173.0,
+        "top": 2698.0,
+        "right": 1880.0,
+        "bottom": 2803.0
+      },
+      "confidence": 0.3802083432674408,
+      "block_index": 12,
+      "line_index": 2
+    },
+    {
+      "text": "Paracetamol (Panadol S00mg) S00mg",
+      "bbox": {
+        "left": 1177.0,
+        "top": 2755.0,
+        "right": 1886.0,
+        "bottom": 2879.0
+      },
+      "local_bbox": {
+        "left": 1177.0,
+        "top": 2755.0,
+        "right": 1886.0,
+        "bottom": 2879.0
+      },
+      "confidence": 0.4873698055744171,
+      "block_index": 12,
+      "line_index": 3
+    },
+    {
+      "text": "15",
+      "bbox": {
+        "left": 2166.0,
+        "top": 2408.0,
+        "right": 2210.0,
+        "bottom": 2441.0
+      },
+      "local_bbox": {
+        "left": 2166.0,
+        "top": 2408.0,
+        "right": 2210.0,
+        "bottom": 2441.0
+      },
+      "confidence": 0.42578125,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "60",
+      "bbox": {
+        "left": 2146.0,
+        "top": 2534.0,
+        "right": 2193.0,
+        "bottom": 2562.0
+      },
+      "local_bbox": {
+        "left": 2146.0,
+        "top": 2534.0,
+        "right": 2193.0,
+        "bottom": 2562.0
+      },
+      "confidence": 0.53125,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "60",
+      "bbox": {
+        "left": 2126.0,
+        "top": 2664.0,
+        "right": 2180.0,
+        "bottom": 2704.0
+      },
+      "local_bbox": {
+        "left": 2126.0,
+        "top": 2664.0,
+        "right": 2180.0,
+        "bottom": 2704.0
+      },
+      "confidence": 0.83203125,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "20",
+      "bbox": {
+        "left": 2099.0,
+        "top": 2926.0,
+        "right": 2152.0,
+        "bottom": 2969.0
+      },
+      "local_bbox": {
+        "left": 2099.0,
+        "top": 2926.0,
+        "right": 2152.0,
+        "bottom": 2969.0
+      },
+      "confidence": 0.75390625,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2355.0,
+        "top": 2422.0,
+        "right": 2455.0,
+        "bottom": 2474.0
+      },
+      "local_bbox": {
+        "left": 2355.0,
+        "top": 2422.0,
+        "right": 2455.0,
+        "bottom": 2474.0
+      },
+      "confidence": 0.521484375,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Viền",
+      "bbox": {
+        "left": 2336.0,
+        "top": 2551.0,
+        "right": 2435.0,
+        "bottom": 2602.0
+      },
+      "local_bbox": {
+        "left": 2336.0,
+        "top": 2551.0,
+        "right": 2435.0,
+        "bottom": 2602.0
+      },
+      "confidence": 0.6240234375,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2318.0,
+        "top": 2694.0,
+        "right": 2417.0,
+        "bottom": 2746.0
+      },
+      "local_bbox": {
+        "left": 2318.0,
+        "top": 2694.0,
+        "right": 2417.0,
+        "bottom": 2746.0
+      },
+      "confidence": 0.6162109375,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Viền",
+      "bbox": {
+        "left": 2298.0,
+        "top": 2839.0,
+        "right": 2397.0,
+        "bottom": 2894.0
+      },
+      "local_bbox": {
+        "left": 2298.0,
+        "top": 2839.0,
+        "right": 2397.0,
+        "bottom": 2894.0
+      },
+      "confidence": 0.541015625,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Viền",
+      "bbox": {
+        "left": 2281.0,
+        "top": 2969.0,
+        "right": 2381.0,
+        "bottom": 3025.0
+      },
+      "local_bbox": {
+        "left": 2281.0,
+        "top": 2969.0,
+        "right": 2381.0,
+        "bottom": 3025.0
+      },
+      "confidence": 0.5361328125,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "(Xem t trang s",
+      "bbox": {
+        "left": 2063.0,
+        "top": 3009.0,
+        "right": 2343.0,
+        "bottom": 3119.0
+      },
+      "local_bbox": {
+        "left": 2063.0,
+        "top": 3009.0,
+        "right": 2343.0,
+        "bottom": 3119.0
+      },
+      "confidence": 0.4399857819080353,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "25109414",
+      "bbox": {
+        "left": 2515.0,
+        "top": 1323.0,
+        "right": 2694.0,
+        "bottom": 1359.0
+      },
+      "local_bbox": {
+        "left": 2515.0,
+        "top": 1323.0,
+        "right": 2694.0,
+        "bottom": 1359.0
+      },
+      "confidence": 0.33349609375,
+      "block_index": 23,
+      "line_index": 0
+    }
+  ]
+}

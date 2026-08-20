@@ -1,0 +1,877 @@
+{
+  "condition": "r1",
+  "image_id": "IMG_20260122_010316",
+  "prescription_id": "RX_019",
+  "file_name": "r1_IMG_20260122_010316.jpg",
+  "text": "028.38SS2368\nHo tên: DƯƠNG HỨC PHÜC\nMã số thể bào hiến v tể (nều cô)\nĐịa chi liên hê: 628 Đường Lê Lợi, Hà\nChân Đoảnt MI7: Thoả hỏa khớp gối; GAT\nhuyết áp vô căn: E73.0:Tăng cholesterol máu tha\nThuốc điều trị :\nSTT\nPhạm Minh D\n1\n2\nParacetamol (Panadol) 500mg\nUông 1 viên khi đawsốt, cách mồi 4-6h\nDiclofenac Gel (Voltaren Emulgel) 20g\nBôi vùng đạu 2 lân/ngày\n3\n4\nCelecoxib (Celebrex) 200mg\nNgày uống1 viên sau ăn no\n5\nThuc diệu tri\nRotunda (Rotunda) 30mg\nNgày uống 1-2 viên trước khì ngủ\n6\n7\nMagnesium_ B6 (Magne-B6) Tab\nNgày uống 2 viên (sáng, tối)\n28\n8\nTelmisartan (Micardis) 40mg\nNgày uống 1 viên buôổi sáng\n28\nNgày uống 1 viên sáng\nTuýp\n14\nVIên\nAmlodipine (Amlor) 5mg\nNgày uống 1 viên buối sáng\n14\nVIen\nHydrochlorothiazide (Hypothiazid) 25mg\n28\n28\nViền\nViên\n28\nViền\n(Xem tiëp trang sau.",
+  "block_count": 38,
+  "line_count": 48,
+  "x_offset": 0.0,
+  "y_offset": 1154.0,
+  "lines": [
+    {
+      "text": "028.38SS2368",
+      "bbox": {
+        "left": 2.0,
+        "top": 1185.0,
+        "right": 271.0,
+        "bottom": 1292.0
+      },
+      "local_bbox": {
+        "left": 2.0,
+        "top": 31.0,
+        "right": 271.0,
+        "bottom": 138.0
+      },
+      "confidence": 0.3463541567325592,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "Ho tên: DƯƠNG HỨC PHÜC",
+      "bbox": {
+        "left": 11.0,
+        "top": 1154.0,
+        "right": 651.0,
+        "bottom": 1397.0
+      },
+      "local_bbox": {
+        "left": 11.0,
+        "top": 0.0,
+        "right": 651.0,
+        "bottom": 243.0
+      },
+      "confidence": 0.4440104067325592,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "Mã số thể bào hiến v tể (nều cô)",
+      "bbox": {
+        "left": 35.0,
+        "top": 1165.0,
+        "right": 761.0,
+        "bottom": 1443.0
+      },
+      "local_bbox": {
+        "left": 35.0,
+        "top": 11.0,
+        "right": 761.0,
+        "bottom": 289.0
+      },
+      "confidence": 0.4182942807674408,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Địa chi liên hê: 628 Đường Lê Lợi, Hà",
+      "bbox": {
+        "left": 58.0,
+        "top": 1147.0,
+        "right": 938.0,
+        "bottom": 1496.0
+      },
+      "local_bbox": {
+        "left": 58.0,
+        "top": -7.0,
+        "right": 938.0,
+        "bottom": 342.0
+      },
+      "confidence": 0.58984375,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Chân Đoảnt MI7: Thoả hỏa khớp gối; GAT",
+      "bbox": {
+        "left": 83.0,
+        "top": 1154.0,
+        "right": 1052.0,
+        "bottom": 1543.0
+      },
+      "local_bbox": {
+        "left": 83.0,
+        "top": 0.0,
+        "right": 1052.0,
+        "bottom": 389.0
+      },
+      "confidence": 0.5240675210952759,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "huyết áp vô căn: E73.0:Tăng cholesterol máu tha",
+      "bbox": {
+        "left": 108.0,
+        "top": 1146.0,
+        "right": 1185.0,
+        "bottom": 1590.0
+      },
+      "local_bbox": {
+        "left": 108.0,
+        "top": -8.0,
+        "right": 1185.0,
+        "bottom": 436.0
+      },
+      "confidence": 0.592968761920929,
+      "block_index": 4,
+      "line_index": 1
+    },
+    {
+      "text": "Thuốc điều trị :",
+      "bbox": {
+        "left": 132.0,
+        "top": 1460.0,
+        "right": 526.0,
+        "bottom": 1632.0
+      },
+      "local_bbox": {
+        "left": 132.0,
+        "top": 306.0,
+        "right": 526.0,
+        "bottom": 478.0
+      },
+      "confidence": 0.6138821840286255,
+      "block_index": 4,
+      "line_index": 2
+    },
+    {
+      "text": "STT",
+      "bbox": {
+        "left": 202.0,
+        "top": 1592.0,
+        "right": 322.0,
+        "bottom": 1669.0
+      },
+      "local_bbox": {
+        "left": 202.0,
+        "top": 438.0,
+        "right": 322.0,
+        "bottom": 515.0
+      },
+      "confidence": 0.67578125,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Phạm Minh D",
+      "bbox": {
+        "left": 222.0,
+        "top": 1568.0,
+        "right": 585.0,
+        "bottom": 1745.0
+      },
+      "local_bbox": {
+        "left": 222.0,
+        "top": 414.0,
+        "right": 585.0,
+        "bottom": 591.0
+      },
+      "confidence": 0.8159722089767456,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "1",
+      "bbox": {
+        "left": 336.0,
+        "top": 1778.0,
+        "right": 363.0,
+        "bottom": 1811.0
+      },
+      "local_bbox": {
+        "left": 336.0,
+        "top": 624.0,
+        "right": 363.0,
+        "bottom": 657.0
+      },
+      "confidence": 0.453125,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "2",
+      "bbox": {
+        "left": 401.0,
+        "top": 1899.0,
+        "right": 438.0,
+        "bottom": 1937.0
+      },
+      "local_bbox": {
+        "left": 401.0,
+        "top": 745.0,
+        "right": 438.0,
+        "bottom": 783.0
+      },
+      "confidence": 0.4453125,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Paracetamol (Panadol) 500mg",
+      "bbox": {
+        "left": 468.0,
+        "top": 1376.0,
+        "right": 1207.0,
+        "bottom": 1742.0
+      },
+      "local_bbox": {
+        "left": 468.0,
+        "top": 222.0,
+        "right": 1207.0,
+        "bottom": 588.0
+      },
+      "confidence": 0.7925000190734863,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "Uông 1 viên khi đawsốt, cách mồi 4-6h",
+      "bbox": {
+        "left": 497.0,
+        "top": 1355.0,
+        "right": 1347.0,
+        "bottom": 1784.0
+      },
+      "local_bbox": {
+        "left": 497.0,
+        "top": 201.0,
+        "right": 1347.0,
+        "bottom": 630.0
+      },
+      "confidence": 0.692187488079071,
+      "block_index": 9,
+      "line_index": 1
+    },
+    {
+      "text": "Diclofenac Gel (Voltaren Emulgel) 20g",
+      "bbox": {
+        "left": 536.0,
+        "top": 1357.0,
+        "right": 1523.0,
+        "bottom": 1859.0
+      },
+      "local_bbox": {
+        "left": 536.0,
+        "top": 203.0,
+        "right": 1523.0,
+        "bottom": 705.0
+      },
+      "confidence": 0.7846827507019043,
+      "block_index": 9,
+      "line_index": 2
+    },
+    {
+      "text": "Bôi vùng đạu 2 lân/ngày",
+      "bbox": {
+        "left": 592.0,
+        "top": 1608.0,
+        "right": 1133.0,
+        "bottom": 1884.0
+      },
+      "local_bbox": {
+        "left": 592.0,
+        "top": 454.0,
+        "right": 1133.0,
+        "bottom": 730.0
+      },
+      "confidence": 0.7228618264198303,
+      "block_index": 9,
+      "line_index": 3
+    },
+    {
+      "text": "3",
+      "bbox": {
+        "left": 469.0,
+        "top": 2020.0,
+        "right": 507.0,
+        "bottom": 2062.0
+      },
+      "local_bbox": {
+        "left": 469.0,
+        "top": 866.0,
+        "right": 507.0,
+        "bottom": 908.0
+      },
+      "confidence": 0.796875,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "4",
+      "bbox": {
+        "left": 544.0,
+        "top": 2153.0,
+        "right": 576.0,
+        "bottom": 2190.0
+      },
+      "local_bbox": {
+        "left": 544.0,
+        "top": 999.0,
+        "right": 576.0,
+        "bottom": 1036.0
+      },
+      "confidence": 0.46484375,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Celecoxib (Celebrex) 200mg",
+      "bbox": {
+        "left": 609.0,
+        "top": 1594.0,
+        "right": 1361.0,
+        "bottom": 1975.0
+      },
+      "local_bbox": {
+        "left": 609.0,
+        "top": 440.0,
+        "right": 1361.0,
+        "bottom": 821.0
+      },
+      "confidence": 0.8196614384651184,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống1 viên sau ăn no",
+      "bbox": {
+        "left": 633.0,
+        "top": 1682.0,
+        "right": 1299.0,
+        "bottom": 2020.0
+      },
+      "local_bbox": {
+        "left": 633.0,
+        "top": 528.0,
+        "right": 1299.0,
+        "bottom": 866.0
+      },
+      "confidence": 0.728710949420929,
+      "block_index": 12,
+      "line_index": 1
+    },
+    {
+      "text": "5",
+      "bbox": {
+        "left": 615.0,
+        "top": 2286.0,
+        "right": 660.0,
+        "bottom": 2335.0
+      },
+      "local_bbox": {
+        "left": 615.0,
+        "top": 1132.0,
+        "right": 660.0,
+        "bottom": 1181.0
+      },
+      "confidence": 0.76953125,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Thuc diệu tri",
+      "bbox": {
+        "left": 992.0,
+        "top": 1191.0,
+        "right": 1293.0,
+        "bottom": 1348.0
+      },
+      "local_bbox": {
+        "left": 992.0,
+        "top": 37.0,
+        "right": 1293.0,
+        "bottom": 194.0
+      },
+      "confidence": 0.3863636255264282,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "Rotunda (Rotunda) 30mg",
+      "bbox": {
+        "left": 678.0,
+        "top": 1745.0,
+        "right": 1379.0,
+        "bottom": 2099.0
+      },
+      "local_bbox": {
+        "left": 678.0,
+        "top": 591.0,
+        "right": 1379.0,
+        "bottom": 945.0
+      },
+      "confidence": 0.852734386920929,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1-2 viên trước khì ngủ",
+      "bbox": {
+        "left": 710.0,
+        "top": 1737.0,
+        "right": 1523.0,
+        "bottom": 2142.0
+      },
+      "local_bbox": {
+        "left": 710.0,
+        "top": 583.0,
+        "right": 1523.0,
+        "bottom": 988.0
+      },
+      "confidence": 0.7844050526618958,
+      "block_index": 15,
+      "line_index": 1
+    },
+    {
+      "text": "6",
+      "bbox": {
+        "left": 697.0,
+        "top": 2437.0,
+        "right": 746.0,
+        "bottom": 2488.0
+      },
+      "local_bbox": {
+        "left": 697.0,
+        "top": 1283.0,
+        "right": 746.0,
+        "bottom": 1334.0
+      },
+      "confidence": 0.76171875,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "7",
+      "bbox": {
+        "left": 790.0,
+        "top": 2612.0,
+        "right": 836.0,
+        "bottom": 2667.0
+      },
+      "local_bbox": {
+        "left": 790.0,
+        "top": 1458.0,
+        "right": 836.0,
+        "bottom": 1513.0
+      },
+      "confidence": 0.546875,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Magnesium_ B6 (Magne-B6) Tab",
+      "bbox": {
+        "left": 804.0,
+        "top": 1777.0,
+        "right": 1658.0,
+        "bottom": 2215.0
+      },
+      "local_bbox": {
+        "left": 804.0,
+        "top": 623.0,
+        "right": 1658.0,
+        "bottom": 1061.0
+      },
+      "confidence": 0.8098437786102295,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 2 viên (sáng, tối)",
+      "bbox": {
+        "left": 793.0,
+        "top": 1912.0,
+        "right": 1512.0,
+        "bottom": 2285.0
+      },
+      "local_bbox": {
+        "left": 793.0,
+        "top": 758.0,
+        "right": 1512.0,
+        "bottom": 1131.0
+      },
+      "confidence": 0.803838312625885,
+      "block_index": 18,
+      "line_index": 1
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 1598.0,
+        "top": 1184.0,
+        "right": 1666.0,
+        "bottom": 1243.0
+      },
+      "local_bbox": {
+        "left": 1598.0,
+        "top": 30.0,
+        "right": 1666.0,
+        "bottom": 89.0
+      },
+      "confidence": 0.66015625,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "8",
+      "bbox": {
+        "left": 892.0,
+        "top": 2807.0,
+        "right": 958.0,
+        "bottom": 2881.0
+      },
+      "local_bbox": {
+        "left": 892.0,
+        "top": 1653.0,
+        "right": 958.0,
+        "bottom": 1727.0
+      },
+      "confidence": 0.78125,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Telmisartan (Micardis) 40mg",
+      "bbox": {
+        "left": 844.0,
+        "top": 1940.0,
+        "right": 1691.0,
+        "bottom": 2383.0
+      },
+      "local_bbox": {
+        "left": 844.0,
+        "top": 786.0,
+        "right": 1691.0,
+        "bottom": 1229.0
+      },
+      "confidence": 0.8648437261581421,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên buôổi sáng",
+      "bbox": {
+        "left": 884.0,
+        "top": 2043.0,
+        "right": 1612.0,
+        "bottom": 2440.0
+      },
+      "local_bbox": {
+        "left": 884.0,
+        "top": 889.0,
+        "right": 1612.0,
+        "bottom": 1286.0
+      },
+      "confidence": 0.7549715638160706,
+      "block_index": 21,
+      "line_index": 1
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 1799.0,
+        "top": 1372.0,
+        "right": 1865.0,
+        "bottom": 1423.0
+      },
+      "local_bbox": {
+        "left": 1799.0,
+        "top": 218.0,
+        "right": 1865.0,
+        "bottom": 269.0
+      },
+      "confidence": 0.66796875,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên sáng",
+      "bbox": {
+        "left": 980.0,
+        "top": 2243.0,
+        "right": 1619.0,
+        "bottom": 2627.0
+      },
+      "local_bbox": {
+        "left": 980.0,
+        "top": 1089.0,
+        "right": 1619.0,
+        "bottom": 1473.0
+      },
+      "confidence": 0.8253676295280457,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Tuýp",
+      "bbox": {
+        "left": 1876.0,
+        "top": 1168.0,
+        "right": 1991.0,
+        "bottom": 1251.0
+      },
+      "local_bbox": {
+        "left": 1876.0,
+        "top": 14.0,
+        "right": 1991.0,
+        "bottom": 97.0
+      },
+      "confidence": 0.3974609375,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "14",
+      "bbox": {
+        "left": 1912.0,
+        "top": 1460.0,
+        "right": 1979.0,
+        "bottom": 1520.0
+      },
+      "local_bbox": {
+        "left": 1912.0,
+        "top": 306.0,
+        "right": 1979.0,
+        "bottom": 366.0
+      },
+      "confidence": 0.708984375,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "VIên",
+      "bbox": {
+        "left": 1988.0,
+        "top": 1263.0,
+        "right": 2097.0,
+        "bottom": 1341.0
+      },
+      "local_bbox": {
+        "left": 1988.0,
+        "top": 109.0,
+        "right": 2097.0,
+        "bottom": 187.0
+      },
+      "confidence": 0.318359375,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "Amlodipine (Amlor) 5mg",
+      "bbox": {
+        "left": 1059.0,
+        "top": 2266.0,
+        "right": 1852.0,
+        "bottom": 2747.0
+      },
+      "local_bbox": {
+        "left": 1059.0,
+        "top": 1112.0,
+        "right": 1852.0,
+        "bottom": 1593.0
+      },
+      "confidence": 0.8529297113418579,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên buối sáng",
+      "bbox": {
+        "left": 1090.0,
+        "top": 2332.0,
+        "right": 1876.0,
+        "bottom": 2828.0
+      },
+      "local_bbox": {
+        "left": 1090.0,
+        "top": 1178.0,
+        "right": 1876.0,
+        "bottom": 1674.0
+      },
+      "confidence": 0.800967276096344,
+      "block_index": 27,
+      "line_index": 1
+    },
+    {
+      "text": "14",
+      "bbox": {
+        "left": 2028.0,
+        "top": 1569.0,
+        "right": 2097.0,
+        "bottom": 1636.0
+      },
+      "local_bbox": {
+        "left": 2028.0,
+        "top": 415.0,
+        "right": 2097.0,
+        "bottom": 482.0
+      },
+      "confidence": 0.84765625,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "VIen",
+      "bbox": {
+        "left": 2127.0,
+        "top": 1354.0,
+        "right": 2219.0,
+        "bottom": 1426.0
+      },
+      "local_bbox": {
+        "left": 2127.0,
+        "top": 200.0,
+        "right": 2219.0,
+        "bottom": 272.0
+      },
+      "confidence": 0.318359375,
+      "block_index": 29,
+      "line_index": 0
+    },
+    {
+      "text": "Hydrochlorothiazide (Hypothiazid) 25mg",
+      "bbox": {
+        "left": 943.0,
+        "top": 1902.0,
+        "right": 2122.0,
+        "bottom": 2556.0
+      },
+      "local_bbox": {
+        "left": 943.0,
+        "top": 748.0,
+        "right": 2122.0,
+        "bottom": 1402.0
+      },
+      "confidence": 0.8663194179534912,
+      "block_index": 30,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 2146.0,
+        "top": 1676.0,
+        "right": 2224.0,
+        "bottom": 1746.0
+      },
+      "local_bbox": {
+        "left": 2146.0,
+        "top": 522.0,
+        "right": 2224.0,
+        "bottom": 592.0
+      },
+      "confidence": 0.916015625,
+      "block_index": 31,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 2280.0,
+        "top": 1796.0,
+        "right": 2361.0,
+        "bottom": 1870.0
+      },
+      "local_bbox": {
+        "left": 2280.0,
+        "top": 642.0,
+        "right": 2361.0,
+        "bottom": 716.0
+      },
+      "confidence": 0.876953125,
+      "block_index": 32,
+      "line_index": 0
+    },
+    {
+      "text": "Viền",
+      "bbox": {
+        "left": 2351.0,
+        "top": 1537.0,
+        "right": 2470.0,
+        "bottom": 1625.0
+      },
+      "local_bbox": {
+        "left": 2351.0,
+        "top": 383.0,
+        "right": 2470.0,
+        "bottom": 471.0
+      },
+      "confidence": 0.3837890625,
+      "block_index": 33,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2487.0,
+        "top": 1644.0,
+        "right": 2613.0,
+        "bottom": 1743.0
+      },
+      "local_bbox": {
+        "left": 2487.0,
+        "top": 490.0,
+        "right": 2613.0,
+        "bottom": 589.0
+      },
+      "confidence": 0.392578125,
+      "block_index": 34,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 2426.0,
+        "top": 1923.0,
+        "right": 2512.0,
+        "bottom": 2004.0
+      },
+      "local_bbox": {
+        "left": 2426.0,
+        "top": 769.0,
+        "right": 2512.0,
+        "bottom": 850.0
+      },
+      "confidence": 0.9140625,
+      "block_index": 35,
+      "line_index": 0
+    },
+    {
+      "text": "Viền",
+      "bbox": {
+        "left": 2639.0,
+        "top": 1762.0,
+        "right": 2771.0,
+        "bottom": 1872.0
+      },
+      "local_bbox": {
+        "left": 2639.0,
+        "top": 608.0,
+        "right": 2771.0,
+        "bottom": 718.0
+      },
+      "confidence": 0.5517578125,
+      "block_index": 36,
+      "line_index": 0
+    },
+    {
+      "text": "(Xem tiëp trang sau.",
+      "bbox": {
+        "left": 2498.0,
+        "top": 1847.0,
+        "right": 2916.0,
+        "bottom": 2138.0
+      },
+      "local_bbox": {
+        "left": 2498.0,
+        "top": 693.0,
+        "right": 2916.0,
+        "bottom": 984.0
+      },
+      "confidence": 0.7394301295280457,
+      "block_index": 37,
+      "line_index": 0
+    }
+  ]
+}

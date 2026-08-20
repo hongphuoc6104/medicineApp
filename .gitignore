@@ -42,9 +42,10 @@ data/output/**  # ignore generated output files and intermediate results
 !data/input/.gitkeep
 !data/output/.gitkeep
 
-# ============================================
-# Archives & large binary files
-# ============================================
+# Sample image assets for on-device testing (binary files)
+mobile/assets/**/*.jpg
+mobile/assets/**/*.png
+!mobile/assets/**/*.json
 *.zip
 *.tar.gz
 *.tar.bz2

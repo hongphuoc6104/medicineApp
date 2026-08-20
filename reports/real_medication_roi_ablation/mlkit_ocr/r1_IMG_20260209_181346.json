@@ -1,0 +1,607 @@
+{
+  "condition": "r1",
+  "image_id": "IMG_20260209_181346",
+  "prescription_id": "RX_016",
+  "file_name": "r1_IMG_20260209_181346.jpg",
+  "text": "sỞY TỂ HÀ NỘI\nBỆNH VỆN NANH\nPÒN\nĐIỆN THOAI\n024.3823.3075\nHọ tên: TRẰN ĐỨC PHỦC\nThuốc diều trị :\nMâ số thẻ bảo hiểm y tế (nếu có): DNS113086912\nĐịa chỉ liên hệ: 358 Đường Nguyễn Huệ, Đà Nẵng\nChấn Đoán: L20.9: Viêm da cơ dia\nSTT\nHoàng Thị E\n1\n2\nĐƠN THUỐC\nFexofenadine (Telfast) 180mg\nNgày uống 1 viên sáng\nCetirizine (Zyrtec) 10mg\nNgày uống 1 viên tối\n(Khám lại ngày : 06/02/2026)\nLời dặn:\nTuối: 1\nThuốc điệu tri\nII!\nGiới tính: Nam\n28\n25479045\n28\nViên\n(Ký, ghi rõ họ tên)\nViên\nNgây ngày 09 tháng 01 năm 2026\nBác sĩ khám bệnh",
+  "block_count": 24,
+  "line_count": 33,
+  "x_offset": 600.0,
+  "y_offset": 791.0,
+  "lines": [
+    {
+      "text": "sỞY TỂ HÀ NỘI",
+      "bbox": {
+        "left": 802.0,
+        "top": 967.0,
+        "right": 1095.0,
+        "bottom": 1015.0
+      },
+      "local_bbox": {
+        "left": 202.0,
+        "top": 176.0,
+        "right": 495.0,
+        "bottom": 224.0
+      },
+      "confidence": 0.59375,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "BỆNH VỆN NANH",
+      "bbox": {
+        "left": 800.0,
+        "top": 1006.0,
+        "right": 1133.0,
+        "bottom": 1056.0
+      },
+      "local_bbox": {
+        "left": 200.0,
+        "top": 215.0,
+        "right": 533.0,
+        "bottom": 265.0
+      },
+      "confidence": 0.6793323755264282,
+      "block_index": 0,
+      "line_index": 1
+    },
+    {
+      "text": "PÒN",
+      "bbox": {
+        "left": 797.0,
+        "top": 1054.0,
+        "right": 873.0,
+        "bottom": 1088.0
+      },
+      "local_bbox": {
+        "left": 197.0,
+        "top": 263.0,
+        "right": 273.0,
+        "bottom": 297.0
+      },
+      "confidence": 0.4466145932674408,
+      "block_index": 0,
+      "line_index": 2
+    },
+    {
+      "text": "ĐIỆN THOAI",
+      "bbox": {
+        "left": 792.0,
+        "top": 1092.0,
+        "right": 996.0,
+        "bottom": 1130.0
+      },
+      "local_bbox": {
+        "left": 192.0,
+        "top": 301.0,
+        "right": 396.0,
+        "bottom": 339.0
+      },
+      "confidence": 0.5551215410232544,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "024.3823.3075",
+      "bbox": {
+        "left": 789.0,
+        "top": 1134.0,
+        "right": 998.0,
+        "bottom": 1169.0
+      },
+      "local_bbox": {
+        "left": 189.0,
+        "top": 343.0,
+        "right": 398.0,
+        "bottom": 378.0
+      },
+      "confidence": 0.684495210647583,
+      "block_index": 1,
+      "line_index": 1
+    },
+    {
+      "text": "Họ tên: TRẰN ĐỨC PHỦC",
+      "bbox": {
+        "left": 763.0,
+        "top": 1215.0,
+        "right": 1237.0,
+        "bottom": 1278.0
+      },
+      "local_bbox": {
+        "left": 163.0,
+        "top": 424.0,
+        "right": 637.0,
+        "bottom": 487.0
+      },
+      "confidence": 0.7097886204719543,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Thuốc diều trị :",
+      "bbox": {
+        "left": 764.0,
+        "top": 1441.0,
+        "right": 1040.0,
+        "bottom": 1487.0
+      },
+      "local_bbox": {
+        "left": 164.0,
+        "top": 650.0,
+        "right": 440.0,
+        "bottom": 696.0
+      },
+      "confidence": 0.7518028616905212,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Mâ số thẻ bảo hiểm y tế (nếu có): DNS113086912",
+      "bbox": {
+        "left": 782.0,
+        "top": 1249.0,
+        "right": 1667.0,
+        "bottom": 1327.0
+      },
+      "local_bbox": {
+        "left": 182.0,
+        "top": 458.0,
+        "right": 1067.0,
+        "bottom": 536.0
+      },
+      "confidence": 0.7232896685600281,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "Địa chỉ liên hệ: 358 Đường Nguyễn Huệ, Đà Nẵng",
+      "bbox": {
+        "left": 772.0,
+        "top": 1298.0,
+        "right": 1702.0,
+        "bottom": 1382.0
+      },
+      "local_bbox": {
+        "left": 172.0,
+        "top": 507.0,
+        "right": 1102.0,
+        "bottom": 591.0
+      },
+      "confidence": 0.7824113368988037,
+      "block_index": 4,
+      "line_index": 1
+    },
+    {
+      "text": "Chấn Đoán: L20.9: Viêm da cơ dia",
+      "bbox": {
+        "left": 750.0,
+        "top": 1366.0,
+        "right": 1411.0,
+        "bottom": 1436.0
+      },
+      "local_bbox": {
+        "left": 150.0,
+        "top": 575.0,
+        "right": 811.0,
+        "bottom": 645.0
+      },
+      "confidence": 0.7746394276618958,
+      "block_index": 4,
+      "line_index": 2
+    },
+    {
+      "text": "STT",
+      "bbox": {
+        "left": 777.0,
+        "top": 1508.0,
+        "right": 858.0,
+        "bottom": 1541.0
+      },
+      "local_bbox": {
+        "left": 177.0,
+        "top": 717.0,
+        "right": 258.0,
+        "bottom": 750.0
+      },
+      "confidence": 0.7981770634651184,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Hoàng Thị E",
+      "bbox": {
+        "left": 764.0,
+        "top": 1567.0,
+        "right": 1007.0,
+        "bottom": 1616.0
+      },
+      "local_bbox": {
+        "left": 164.0,
+        "top": 776.0,
+        "right": 407.0,
+        "bottom": 825.0
+      },
+      "confidence": 0.8537326455116272,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "1",
+      "bbox": {
+        "left": 803.0,
+        "top": 1685.0,
+        "right": 818.0,
+        "bottom": 1712.0
+      },
+      "local_bbox": {
+        "left": 203.0,
+        "top": 894.0,
+        "right": 218.0,
+        "bottom": 921.0
+      },
+      "confidence": 0.67578125,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "2",
+      "bbox": {
+        "left": 794.0,
+        "top": 1817.0,
+        "right": 814.0,
+        "bottom": 1847.0
+      },
+      "local_bbox": {
+        "left": 194.0,
+        "top": 1026.0,
+        "right": 214.0,
+        "bottom": 1056.0
+      },
+      "confidence": 0.86328125,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "ĐƠN THUỐC",
+      "bbox": {
+        "left": 1290.0,
+        "top": 991.0,
+        "right": 1667.0,
+        "bottom": 1076.0
+      },
+      "local_bbox": {
+        "left": 690.0,
+        "top": 200.0,
+        "right": 1067.0,
+        "bottom": 285.0
+      },
+      "confidence": 0.77880859375,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "Fexofenadine (Telfast) 180mg",
+      "bbox": {
+        "left": 915.0,
+        "top": 1635.0,
+        "right": 1524.0,
+        "bottom": 1695.0
+      },
+      "local_bbox": {
+        "left": 315.0,
+        "top": 844.0,
+        "right": 924.0,
+        "bottom": 904.0
+      },
+      "confidence": 0.8871694803237915,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên sáng",
+      "bbox": {
+        "left": 908.0,
+        "top": 1689.0,
+        "right": 1328.0,
+        "bottom": 1746.0
+      },
+      "local_bbox": {
+        "left": 308.0,
+        "top": 898.0,
+        "right": 728.0,
+        "bottom": 955.0
+      },
+      "confidence": 0.8175551295280457,
+      "block_index": 10,
+      "line_index": 1
+    },
+    {
+      "text": "Cetirizine (Zyrtec) 10mg",
+      "bbox": {
+        "left": 908.0,
+        "top": 1774.0,
+        "right": 1420.0,
+        "bottom": 1829.0
+      },
+      "local_bbox": {
+        "left": 308.0,
+        "top": 983.0,
+        "right": 820.0,
+        "bottom": 1038.0
+      },
+      "confidence": 0.8258167505264282,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày uống 1 viên tối",
+      "bbox": {
+        "left": 906.0,
+        "top": 1826.0,
+        "right": 1291.0,
+        "bottom": 1878.0
+      },
+      "local_bbox": {
+        "left": 306.0,
+        "top": 1035.0,
+        "right": 691.0,
+        "bottom": 1087.0
+      },
+      "confidence": 0.782470703125,
+      "block_index": 11,
+      "line_index": 1
+    },
+    {
+      "text": "(Khám lại ngày : 06/02/2026)",
+      "bbox": {
+        "left": 746.0,
+        "top": 1905.0,
+        "right": 1248.0,
+        "bottom": 1955.0
+      },
+      "local_bbox": {
+        "left": 146.0,
+        "top": 1114.0,
+        "right": 648.0,
+        "bottom": 1164.0
+      },
+      "confidence": 0.90185546875,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Lời dặn:",
+      "bbox": {
+        "left": 746.0,
+        "top": 1971.0,
+        "right": 886.0,
+        "bottom": 2007.0
+      },
+      "local_bbox": {
+        "left": 146.0,
+        "top": 1180.0,
+        "right": 286.0,
+        "bottom": 1216.0
+      },
+      "confidence": 0.7734375,
+      "block_index": 12,
+      "line_index": 1
+    },
+    {
+      "text": "Tuối: 1",
+      "bbox": {
+        "left": 1630.0,
+        "top": 1196.0,
+        "right": 1742.0,
+        "bottom": 1231.0
+      },
+      "local_bbox": {
+        "left": 1030.0,
+        "top": 405.0,
+        "right": 1142.0,
+        "bottom": 440.0
+      },
+      "confidence": 0.67578125,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Thuốc điệu tri",
+      "bbox": {
+        "left": 1424.0,
+        "top": 1472.0,
+        "right": 1702.0,
+        "bottom": 1518.0
+      },
+      "local_bbox": {
+        "left": 824.0,
+        "top": 681.0,
+        "right": 1102.0,
+        "bottom": 727.0
+      },
+      "confidence": 0.7529296875,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "II!",
+      "bbox": {
+        "left": 1858.0,
+        "top": 849.0,
+        "right": 2187.0,
+        "bottom": 975.0
+      },
+      "local_bbox": {
+        "left": 1258.0,
+        "top": 58.0,
+        "right": 1587.0,
+        "bottom": 184.0
+      },
+      "confidence": 0.3489583432674408,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "Giới tính: Nam",
+      "bbox": {
+        "left": 1966.0,
+        "top": 1138.0,
+        "right": 2228.0,
+        "bottom": 1213.0
+      },
+      "local_bbox": {
+        "left": 1366.0,
+        "top": 347.0,
+        "right": 1628.0,
+        "bottom": 422.0
+      },
+      "confidence": 0.6614583134651184,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 1920.0,
+        "top": 1633.0,
+        "right": 1968.0,
+        "bottom": 1667.0
+      },
+      "local_bbox": {
+        "left": 1320.0,
+        "top": 842.0,
+        "right": 1368.0,
+        "bottom": 876.0
+      },
+      "confidence": 0.904296875,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "25479045",
+      "bbox": {
+        "left": 2033.0,
+        "top": 908.0,
+        "right": 2182.0,
+        "bottom": 966.0
+      },
+      "local_bbox": {
+        "left": 1433.0,
+        "top": 117.0,
+        "right": 1582.0,
+        "bottom": 175.0
+      },
+      "confidence": 0.70166015625,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "28",
+      "bbox": {
+        "left": 1928.0,
+        "top": 1765.0,
+        "right": 1976.0,
+        "bottom": 1799.0
+      },
+      "local_bbox": {
+        "left": 1328.0,
+        "top": 974.0,
+        "right": 1376.0,
+        "bottom": 1008.0
+      },
+      "confidence": 0.859375,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2109.0,
+        "top": 1587.0,
+        "right": 2200.0,
+        "bottom": 1631.0
+      },
+      "local_bbox": {
+        "left": 1509.0,
+        "top": 796.0,
+        "right": 1600.0,
+        "bottom": 840.0
+      },
+      "confidence": 0.7080078125,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "(Ký, ghi rõ họ tên)",
+      "bbox": {
+        "left": 1727.0,
+        "top": 1961.0,
+        "right": 2054.0,
+        "bottom": 2033.0
+      },
+      "local_bbox": {
+        "left": 1127.0,
+        "top": 1170.0,
+        "right": 1454.0,
+        "bottom": 1242.0
+      },
+      "confidence": 0.7736979126930237,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "Viên",
+      "bbox": {
+        "left": 2121.0,
+        "top": 1720.0,
+        "right": 2214.0,
+        "bottom": 1771.0
+      },
+      "local_bbox": {
+        "left": 1521.0,
+        "top": 929.0,
+        "right": 1614.0,
+        "bottom": 980.0
+      },
+      "confidence": 0.6787109375,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "Ngây ngày 09 tháng 01 năm 2026",
+      "bbox": {
+        "left": 1589.0,
+        "top": 1835.0,
+        "right": 2187.0,
+        "bottom": 1935.0
+      },
+      "local_bbox": {
+        "left": 989.0,
+        "top": 1044.0,
+        "right": 1587.0,
+        "bottom": 1144.0
+      },
+      "confidence": 0.7888997197151184,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Bác sĩ khám bệnh",
+      "bbox": {
+        "left": 1721.0,
+        "top": 1908.0,
+        "right": 2056.0,
+        "bottom": 1974.0
+      },
+      "local_bbox": {
+        "left": 1121.0,
+        "top": 1117.0,
+        "right": 1456.0,
+        "bottom": 1183.0
+      },
+      "confidence": 0.8158053159713745,
+      "block_index": 23,
+      "line_index": 1
+    }
+  ]
+}

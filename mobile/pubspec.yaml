@@ -85,6 +85,8 @@ flutter:
 
   assets:
     - .env
+    - assets/roi_samples/
+    - assets/real_roi_samples/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
