@@ -1,0 +1,173 @@
+[
+  {
+    "prescription_id": "RX_001",
+    "image_id": "IMG_20260209_180408",
+    "p0_extracted": [
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Vitamin C 1000 mg",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab"
+    ],
+    "p3_extracted": [
+      "Tanakan",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Vitamin C ( Upsa C 1000 mg",
+      "Tab Magnesium B6 ( Magne-B6 Corbiere Tab"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ]
+  },
+  {
+    "prescription_id": "RX_001",
+    "image_id": "IMG_20260209_180428",
+    "p0_extracted": [
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Vitamin C 1000 mg",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Artificial Tears ( Refresh ml 15"
+    ],
+    "p3_extracted": [
+      "mõi làn 1 viên Ginkgo Biloba ( Tanakan 40O mg )",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Vitamin C ( Upsa C 1000 mg",
+      "Tab Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Artificial Tears ( Refresh ml 15"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ]
+  },
+  {
+    "prescription_id": "RX_001",
+    "image_id": "IMG_20260209_180840",
+    "p0_extracted": [
+      "Ginkgo Biloba ( Tanakan 40 mg",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Vitamin C 1000 mg",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Artificial Tears ( Refresh 1 ml 5"
+    ],
+    "p3_extracted": [
+      "Tanakan",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Vitamin C ( Upsa C 1000 mg",
+      "Tab Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Artificial Tears ( Refresh 1 ml 5 15"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ]
+  },
+  {
+    "prescription_id": "RX_001",
+    "image_id": "IMG_20260209_180849",
+    "p0_extracted": [
+      "Ginkgo Biloba ( Tanakan 40 mg",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "Vitamin C 1000 mg",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Artificial Tears ( Refresh ml 15"
+    ],
+    "p3_extracted": [
+      "Tanakan",
+      "Calcium D3 ( Calcium Corbiere ml 10",
+      "Vitamin C ( Upsa C 1000 mg ) mg",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "Artificial Tears ( Refresh 15 ml"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ]
+  },
+  {
+    "prescription_id": "RX_001",
+    "image_id": "IMG_20260209_180851",
+    "p0_extracted": [
+      "Ginkgo Biloba ( Tanakan 4O mg 40",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "VitaminC ( Upsa C 1000 mg )",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab"
+    ],
+    "p3_extracted": [
+      "lân viên Ginkgo Biloba ( Tanakan 4O mg ) 40 mg 60",
+      "Calcium D3 ( Calcium Corbiere 10",
+      "10 ml 30 Öng",
+      "VitaminC ( Upsa C 1000 mg ) mg sui 1000 10",
+      "Magnesium B6 ( Magne-B6 Corbiere Tab",
+      "ãn Artificial Tears ( Refresh 15"
+    ],
+    "gt_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor",
+      "Nexium",
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol",
+      "Tanakan",
+      "Calcium Corbiere",
+      "Upsa C",
+      "Magne-B6 Corbiere",
+      "Refresh"
+    ]
+  }
+]
