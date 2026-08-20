@@ -13,15 +13,13 @@
       "Fenofibrate ( Lipanthyl ) 200",
       "Atorvastatin ( Lipitor ) 10"
     ],
-    "gt_drugs": [
-      "Nitromint",
-      "Aspirin Cardio",
-      "Plavix",
-      "Coversyl",
-      "Amlor",
+    "visible_drugs": [
+      "Lipitor",
+      "Lipanthyl",
+      "Crestor",
       "Cozaar"
     ],
-    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+    "gain": "R1 recovered +2 drug(s) missed in full page photo."
   },
   {
     "image_id": "IMG_20260209_002456",
@@ -40,17 +38,7 @@
       "Calcium D3 ( Calcium Corbiere 10",
       "Ginkgo Biloba ( Tanakan 40 mg"
     ],
-    "gt_drugs": [
-      "Amlor",
-      "Glucophage XR",
-      "Lipitor",
-      "Concor",
-      "Nexium",
-      "Celebrex",
-      "Myonal",
-      "Methycobal",
-      "Clarityne",
-      "Panadol",
+    "visible_drugs": [
       "Tanakan",
       "Calcium Corbiere",
       "Upsa C",
@@ -76,24 +64,14 @@
       "Calcium D3 ( Calium Corbiere 1O ml",
       "Ginkgo Biloba ( Tanakan 40 mg"
     ],
-    "gt_drugs": [
-      "Amlor",
-      "Glucophage XR",
-      "Lipitor",
-      "Concor",
-      "Nexium",
-      "Celebrex",
-      "Myonal",
-      "Methycobal",
-      "Clarityne",
-      "Panadol",
+    "visible_drugs": [
       "Tanakan",
       "Calcium Corbiere",
       "Upsa C",
       "Magne-B6 Corbiere",
       "Refresh"
     ],
-    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+    "gain": "R1 recovered +2 drug(s) missed in full page photo."
   },
   {
     "image_id": "IMG_20260209_002819",
@@ -111,22 +89,12 @@
       "Eperisone ( Myonal mg 50",
       "Celecoxib ( Celebrex 200 mg )"
     ],
-    "gt_drugs": [
-      "Amlor",
-      "Glucophage XR",
-      "Lipitor",
-      "Concor",
-      "Nexium",
+    "visible_drugs": [
       "Celebrex",
       "Myonal",
       "Methycobal",
       "Clarityne",
-      "Panadol",
-      "Tanakan",
-      "Calcium Corbiere",
-      "Upsa C",
-      "Magne-B6 Corbiere",
-      "Refresh"
+      "Panadol"
     ],
     "gain": "R1 recovered +1 drug(s) missed in full page photo."
   },
@@ -147,17 +115,7 @@
       "Magnesium B6 ( Magne-B6 Corbiere Tab",
       "Artificial Tears ( Refresh ml 15"
     ],
-    "gt_drugs": [
-      "Amlor",
-      "Glucophage XR",
-      "Lipitor",
-      "Concor",
-      "Nexium",
-      "Celebrex",
-      "Myonal",
-      "Methycobal",
-      "Clarityne",
-      "Panadol",
+    "visible_drugs": [
       "Tanakan",
       "Calcium Corbiere",
       "Upsa C",
@@ -182,17 +140,7 @@
       "Magnesium B6 ( Magne-B6 Corbiere Tab",
       "Artificial Tears ( Refresh ml 15"
     ],
-    "gt_drugs": [
-      "Amlor",
-      "Glucophage XR",
-      "Lipitor",
-      "Concor",
-      "Nexium",
-      "Celebrex",
-      "Myonal",
-      "Methycobal",
-      "Clarityne",
-      "Panadol",
+    "visible_drugs": [
       "Tanakan",
       "Calcium Corbiere",
       "Upsa C",
@@ -200,6 +148,55 @@
       "Refresh"
     ],
     "gain": "R1 recovered +1 drug(s) missed in full page photo."
+  },
+  {
+    "image_id": "IMG_20260209_180502",
+    "prescription_id": "RX_001",
+    "r0_extracted": [
+      "Bệnh huyết áp",
+      "Celecoxib ( Celetbrex 200 xmg )",
+      "Eperisone ( Myonal Somg ) 5O",
+      "Paracetamol ( Panadol S00mg )"
+    ],
+    "r1_extracted": [
+      "Celecox ib ( Celebrex mg ) 200 20O",
+      "Eperisone ( Myonal Somg ) 5O",
+      "Mecobalamin ( Methycobal 500",
+      "Ngiy ing2 mdi lần I viên"
+    ],
+    "visible_drugs": [
+      "Celebrex",
+      "Myonal",
+      "Methycobal",
+      "Clarityne",
+      "Panadol"
+    ],
+    "gain": "R1 recovered +1 drug(s) missed in full page photo."
+  },
+  {
+    "image_id": "IMG_20260209_180708",
+    "prescription_id": "RX_001",
+    "r0_extracted": [
+      "Amlodipine ( Amler Smg )",
+      "Metformin ( Glacophage XR mg 750",
+      "Atorvastatin ( Lpitor mg 20 20",
+      "Bisoprolal ( Cancor 2.5 mg",
+      "Kem tiep trang"
+    ],
+    "r1_extracted": [
+      "Amlodipine ( Amlor Smg )",
+      "Atorvastatin ( Lpitor mg 20 20",
+      "Bisoprolal ( Concor 2.5 mg",
+      "Esomrzanle ( Necium 40 mg",
+      "Kem tiep trang sou"
+    ],
+    "visible_drugs": [
+      "Amlor",
+      "Glucophage XR",
+      "Lipitor",
+      "Concor"
+    ],
+    "gain": "R1 recovered +2 drug(s) missed in full page photo."
   },
   {
     "image_id": "IMG_20260209_181415",
@@ -218,22 +215,12 @@
       "Paracetamol ( Panadol mg 500",
       "1 viên khí đau đâu"
     ],
-    "gt_drugs": [
-      "Amlor",
-      "Glucophage XR",
-      "Lipitor",
-      "Concor",
-      "Nexium",
+    "visible_drugs": [
       "Celebrex",
       "Myonal",
       "Methycobal",
       "Clarityne",
-      "Panadol",
-      "Tanakan",
-      "Calcium Corbiere",
-      "Upsa C",
-      "Magne-B6 Corbiere",
-      "Refresh"
+      "Panadol"
     ],
     "gain": "R1 recovered +1 drug(s) missed in full page photo."
   }

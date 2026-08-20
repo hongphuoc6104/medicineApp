@@ -1,3 +1,3 @@
-condition,description,ocr_drug_coverage,precision,recall,f1_score,lookup_confirmed_recall,tp,fp,fn,total_gold
-r0,R0: Full-Page Smartphone Capture,0.3257,0.7164,0.2743,0.3967,0.0,96,38,254,350
-r1,R1: Medication Table ROI Re-OCR,0.3229,0.7111,0.2743,0.3959,0.0,96,39,254,350
+condition,description,visible_ocr_coverage,precision,recall,f1_score,lookup_confirmed_recall,tp,fp,fn,total_visible_gold
+r0,R0: Full-Page Smartphone Capture,0.9051,0.7761,0.7591,0.7675,0.0,104,30,33,137
+r1,R1: Medication Table ROI Re-OCR,0.927,0.8074,0.7956,0.8015,0.0,109,26,28,137

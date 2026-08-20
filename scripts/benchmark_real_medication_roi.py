@@ -1,16 +1,14 @@
 """
 scripts/benchmark_real_medication_roi.py — Real-World Hard Camera Capture Medication ROI Re-OCR Benchmark (R0 vs R1).
 
-Evaluates the real impact of user-guided medication table ROI cropping and pass-2 re-OCR
-on hard real-world camera captures (where full-page OCR suffered low recall):
-- R0: Full-Page Smartphone Camera Capture
-- R1: Medication Table ROI Crop + Pass-2 Re-OCR on Cropped Bitmap
+Evaluates R0 (Full-Page Smartphone Camera Capture) vs R1 (Medication Table ROI Crop + Pass-2 Re-OCR)
+against Visible-in-frame Ground Truth on 30 hard real camera captures.
 
 Uses:
 - Production PhoBERT NER model (models/phobert_ner_model)
 - Production DrugLookup (data/drug_db_vn_full.json)
 - Real ML Kit OCR outputs from Android phone hardware (reports/real_medication_roi_ablation/mlkit_ocr/)
-- Canonical Ground Truth (../medicineApp-rxie/data/canonical_ground_truth/)
+- Visible-in-Frame Ground Truth (data/visible_in_frame_gt.json)
 """
 
 from __future__ import annotations
@@ -41,41 +39,41 @@ def normalize_text(text: Optional[str]) -> str:
     return " ".join(text.split())
 
 
-def match_drug(
+def check_drug_match_visible(
     candidate_name: str,
     matched_drug_name: Optional[str],
-    gt_med: dict[str, Any],
+    gold_drug_str: str,
 ) -> bool:
-    """Check if candidate drug matches canonical ground truth."""
+    """Check if candidate drug matches visible gold drug."""
     norm_cand = normalize_text(candidate_name)
     norm_matched = normalize_text(matched_drug_name)
+    norm_gold = normalize_text(gold_drug_str)
 
-    targets = [
-        normalize_text(gt_med.get("brand_normalized")),
-        normalize_text(gt_med.get("drug_normalized")),
-        normalize_text(gt_med.get("brand_raw")),
-        normalize_text(gt_med.get("drug_raw")),
-    ]
-    targets = [t for t in targets if t and len(t) >= 3]
+    if norm_cand == norm_gold or norm_matched == norm_gold:
+        return True
 
-    for t in targets:
-        if norm_cand == t or norm_matched == t:
+    gold_tokens = [t for t in norm_gold.split() if len(t) >= 3]
+    if gold_tokens:
+        primary_tok = gold_tokens[0]
+        if primary_tok in norm_cand.split() or primary_tok in norm_matched.split():
             return True
-        if len(t) >= 4 and (t in norm_cand.split() or t in norm_matched.split()):
-            return True
-        if len(t) >= 4 and (t in norm_cand or norm_cand in t or t in norm_matched):
-            return True
+
+    if len(norm_gold) >= 4 and (norm_gold in norm_cand or norm_cand in norm_gold or norm_gold in norm_matched):
+        return True
 
     return False
 
 
 def run_real_roi_evaluation(
     ocr_dir: Path,
-    gt_dir: Path,
+    visible_gt_path: Path,
     output_dir: Path,
 ):
-    """Evaluate R0 vs R1 on real hard captures."""
+    """Evaluate R0 vs R1 against Visible-in-frame Ground Truth."""
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    with open(visible_gt_path, "r", encoding="utf-8") as f:
+        visible_gt_map = json.load(f)
 
     conditions = ["r0", "r1"]
     cond_labels = {
@@ -91,7 +89,11 @@ def run_real_roi_evaluation(
     jsonl_writers = {c: open(output_dir / f"{c}_predictions.jsonl", "w", encoding="utf-8") for c in conditions}
     recovered_drugs = []
 
-    # Map files by image_id
+    # Paired transitions tracking
+    # Key: (image_id, gold_drug) -> {"r0_correct": bool, "r1_correct": bool}
+    paired_item_results = defaultdict(lambda: {"r0_correct": False, "r1_correct": False})
+
+    # Group OCR files by image_id
     ocr_files = sorted(list(ocr_dir.glob("*.json")))
     capture_map = defaultdict(dict)
     for f in ocr_files:
@@ -101,28 +103,19 @@ def run_real_roi_evaluation(
                 img_id = name[len(c) + 1 :]
                 capture_map[img_id][c] = f
 
-    logger.info(f"Evaluating {len(capture_map)} hard real camera captures for R0 vs R1...")
+    logger.info(f"Evaluating {len(capture_map)} hard real captures with Visible-in-Frame Ground Truth...")
 
     for img_id, c_dict in sorted(capture_map.items()):
-        # Determine prescription ID from payload
-        sample_ocr = c_dict.get("r0") or c_dict.get("r1")
-        with open(sample_ocr, "r", encoding="utf-8") as f:
-            meta = json.load(f)
-        pid = meta.get("prescription_id", "RX_001")
-
-        gt_file = gt_dir / f"{pid}.json"
-        if not gt_file.exists():
+        if img_id not in visible_gt_map:
+            logger.warning(f"No visible GT for {img_id}, skipping.")
             continue
 
-        with open(gt_file, "r", encoding="utf-8") as f:
-            gt_data = json.load(f)
+        gt_info = visible_gt_map[img_id]
+        pid = gt_info["prescription_id"]
+        visible_drugs = gt_info["visible_drugs"]
+        num_gold = len(visible_drugs)
 
-        gt_meds = gt_data.get("medications", [])
-        num_gold = len(gt_meds)
-        if num_gold == 0:
-            continue
-
-        cap_row = {"image_id": img_id, "prescription_id": pid, "gold_count": num_gold}
+        cap_row = {"image_id": img_id, "prescription_id": pid, "visible_gold_count": num_gold}
         cond_extracted_meds = {}
 
         for cond in conditions:
@@ -138,19 +131,15 @@ def run_real_roi_evaluation(
             norm_raw = normalize_text(raw_text)
             lines = ocr_payload.get("lines", [])
 
-            # 1. OCR Drug Coverage
+            # 1. OCR Drug Coverage on Visible Drugs
             ocr_hits = 0
             gold_ocr_map = {}
-            for g in gt_meds:
-                targets = [
-                    normalize_text(g.get("brand_normalized")),
-                    normalize_text(g.get("drug_normalized")),
-                    normalize_text(g.get("brand_raw")),
-                ]
-                targets = [t for t in targets if t and len(t) >= 3]
-                found = any(t in norm_raw for t in targets)
-                gid = g.get("medication_id", id(g))
-                gold_ocr_map[gid] = found
+            for g_drug in visible_drugs:
+                norm_g = normalize_text(g_drug)
+                g_tokens = [tok for tok in norm_g.split() if len(tok) >= 3]
+                prim = g_tokens[0] if g_tokens else norm_g
+                found = norm_g in norm_raw or prim in norm_raw
+                gold_ocr_map[g_drug] = found
                 if found:
                     ocr_hits += 1
 
@@ -166,8 +155,8 @@ def run_real_roi_evaluation(
             extracted = res.get("medications", [])
             cond_extracted_meds[cond] = extracted
 
-            # 3. Match against GT
-            matched_gold_ids = set()
+            # 3. Match against visible drugs
+            matched_gold_set = set()
             tp = 0
             fp = 0
             confirmed = 0
@@ -177,23 +166,22 @@ def run_real_roi_evaluation(
                 mname = m.get("matched_drug_name")
                 status = m.get("mapping_status")
 
-                matched_gt = None
-                for g in gt_meds:
-                    if match_drug(cname, mname, g):
-                        matched_gt = g
+                matched_g = None
+                for g_drug in visible_drugs:
+                    if check_drug_match_visible(cname, mname, g_drug):
+                        matched_g = g_drug
                         break
 
-                if matched_gt:
-                    gid = matched_gt.get("medication_id", id(matched_gt))
-                    if gid not in matched_gold_ids:
-                        matched_gold_ids.add(gid)
+                if matched_g:
+                    if matched_g not in matched_gold_set:
+                        matched_gold_set.add(matched_g)
                         tp += 1
                         if status == "confirmed":
                             confirmed += 1
                 else:
                     fp += 1
 
-            fn = max(0, num_gold - len(matched_gold_ids))
+            fn = max(0, num_gold - len(matched_gold_set))
             prec = tp / (tp + fp) if (tp + fp) > 0 else 0.0
             rec = tp / num_gold if num_gold > 0 else 0.0
             f1 = (2 * prec * rec) / (prec + rec) if (prec + rec) > 0 else 0.0
@@ -204,12 +192,14 @@ def run_real_roi_evaluation(
             cond_stats[cond]["fn"] += fn
             cond_stats[cond]["confirmed"] += confirmed
 
-            # Failure taxonomy
-            for g in gt_meds:
-                gid = g.get("medication_id", id(g))
-                if gid in matched_gold_ids:
+            # Record paired item transitions
+            for g_drug in visible_drugs:
+                is_correct = g_drug in matched_gold_set
+                paired_item_results[(img_id, g_drug)][f"{cond}_correct"] = is_correct
+
+                if is_correct:
                     cond_taxonomy[cond]["SUCCESS"] += 1
-                elif not gold_ocr_map.get(gid, False):
+                elif not gold_ocr_map.get(g_drug, False):
                     cond_taxonomy[cond]["OCR_MISS"] += 1
                 else:
                     cond_taxonomy[cond]["NER_MISS"] += 1
@@ -221,14 +211,14 @@ def run_real_roi_evaluation(
             cap_row[f"{cond}_rec"] = round(rec, 4)
             cap_row[f"{cond}_f1"] = round(f1, 4)
 
-            # JSONL prediction
+            # Write JSONL prediction
             jsonl_writers[cond].write(
                 json.dumps(
                     {
                         "image_id": img_id,
                         "prescription_id": pid,
                         "condition": cond,
-                        "ocr_coverage": cov,
+                        "visible_ocr_coverage": cov,
                         "tp": tp,
                         "fp": fp,
                         "fn": fn,
@@ -236,6 +226,7 @@ def run_real_roi_evaluation(
                         "recall": rec,
                         "f1": f1,
                         "extracted_medications": extracted,
+                        "visible_drugs": visible_drugs,
                     },
                     ensure_ascii=False,
                 )
@@ -251,7 +242,7 @@ def run_real_roi_evaluation(
                 "prescription_id": pid,
                 "r0_extracted": [m.get("drug_name") for m in cond_extracted_meds.get("r0", [])],
                 "r1_extracted": [m.get("drug_name") for m in cond_extracted_meds.get("r1", [])],
-                "gt_drugs": [g.get("brand_raw") or g.get("drug_raw") for g in gt_meds],
+                "visible_drugs": visible_drugs,
                 "gain": f"R1 recovered +{r1_tp - r0_tp} drug(s) missed in full page photo.",
             })
 
@@ -260,7 +251,7 @@ def run_real_roi_evaluation(
     for w in jsonl_writers.values():
         w.close()
 
-    # ── 1. Summary CSV ──────────────────────────────────────────────────────
+    # ── 1. Summary CSV (Visible Metrics) ────────────────────────────────────
     summary_rows = []
     for cond in conditions:
         tp = cond_stats[cond]["tp"]
@@ -279,7 +270,7 @@ def run_real_roi_evaluation(
         summary_rows.append({
             "condition": cond,
             "description": cond_labels[cond],
-            "ocr_drug_coverage": round(cov, 4),
+            "visible_ocr_coverage": round(cov, 4),
             "precision": round(p, 4),
             "recall": round(r, 4),
             "f1_score": round(f1, 4),
@@ -287,7 +278,7 @@ def run_real_roi_evaluation(
             "tp": tp,
             "fp": fp,
             "fn": fn,
-            "total_gold": tot_gold,
+            "total_visible_gold": tot_gold,
         })
 
     with open(output_dir / "summary.csv", "w", newline="", encoding="utf-8") as f:
@@ -314,7 +305,7 @@ def run_real_roi_evaluation(
             "OCR_MISS": ocr_miss,
             "NER_MISS": ner_miss,
             "SUCCESS": success,
-            "total_gold": tot_gold,
+            "total_visible_gold": tot_gold,
         })
 
     with open(output_dir / "failure_taxonomy.csv", "w", newline="", encoding="utf-8") as f:
@@ -322,53 +313,79 @@ def run_real_roi_evaluation(
         writer.writeheader()
         writer.writerows(tax_rows)
 
-    # ── 4. Recovered Drugs JSON ─────────────────────────────────────────────
+    # ── 4. Paired Transition Matrix CSV ─────────────────────────────────────
+    trans_counts = {
+        "r0_correct_r1_correct": 0,
+        "r0_wrong_r1_correct": 0, # Gain
+        "r0_correct_r1_wrong": 0, # Loss
+        "r0_wrong_r1_wrong": 0,
+    }
+    for (img_id, drug), p_res in paired_item_results.items():
+        r0_c = p_res["r0_correct"]
+        r1_c = p_res["r1_correct"]
+        if r0_c and r1_c:
+            trans_counts["r0_correct_r1_correct"] += 1
+        elif (not r0_c) and r1_c:
+            trans_counts["r0_wrong_r1_correct"] += 1
+        elif r0_c and (not r1_c):
+            trans_counts["r0_correct_r1_wrong"] += 1
+        else:
+            trans_counts["r0_wrong_r1_wrong"] += 1
+
+    trans_rows = [
+        {"transition": "R0 Correct ──▶ R1 Correct (Both Success)", "count": trans_counts["r0_correct_r1_correct"]},
+        {"transition": "R0 Wrong   ──▶ R1 Correct (R1 Recovery Gain ★)", "count": trans_counts["r0_wrong_r1_correct"]},
+        {"transition": "R0 Correct ──▶ R1 Wrong   (R1 Regression Loss)", "count": trans_counts["r0_correct_r1_wrong"]},
+        {"transition": "R0 Wrong   ──▶ R1 Wrong   (Both Missed)", "count": trans_counts["r0_wrong_r1_wrong"]},
+        {"transition": "TOTAL VISIBLE DRUG INSTANCES", "count": len(paired_item_results)},
+    ]
+
+    with open(output_dir / "paired_transition_matrix.csv", "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=["transition", "count"])
+        writer.writeheader()
+        writer.writerows(trans_rows)
+
+    # ── 5. Recovered Drugs JSON ─────────────────────────────────────────────
     with open(output_dir / "r1_recovered_drugs.json", "w", encoding="utf-8") as f:
         json.dump(recovered_drugs, f, ensure_ascii=False, indent=2)
 
-    # ── 5. Terminal Display ─────────────────────────────────────────────────
-    print("\n" + "=" * 96)
-    print("      REAL-WORLD CAMERA CAPTURE MEDICATION ROI RE-OCR BENCHMARK (R0 vs R1)")
-    print("=" * 96)
-    print(f"{'Condition':<35} | {'OCR Coverage':<13} | {'Precision':<10} | {'Recall':<10} | {'F1 Score':<10}")
-    print("-" * 96)
+    # ── 6. Terminal Display ─────────────────────────────────────────────────
+    print("\n" + "=" * 98)
+    print("   REAL-WORLD HARD CAMERA CAPTURES: R0 vs R1 EVALUATION (VISIBLE-IN-FRAME GROUND TRUTH)")
+    print("=" * 98)
+    print(f"{'Condition':<35} | {'Visible OCR Cov':<16} | {'Precision':<10} | {'Recall':<10} | {'F1 Score':<10}")
+    print("-" * 98)
     for s in summary_rows:
-        print(f"{s['description']:<35} | {s['ocr_drug_coverage']*100:<12.2f}% | {s['precision']*100:<9.2f}% | {s['recall']*100:<9.2f}% | {s['f1_score']*100:<9.2f}%")
-    print("=" * 96)
+        print(f"{s['description']:<35} | {s['visible_ocr_coverage']*100:<15.2f}% | {s['precision']*100:<9.2f}% | {s['recall']*100:<9.2f}% | {s['f1_score']*100:<9.2f}%")
+    print("=" * 98)
 
-    # Compute Delta
-    r0_cov = summary_rows[0]["ocr_drug_coverage"] * 100
-    r1_cov = summary_rows[1]["ocr_drug_coverage"] * 100
-    r0_rec = summary_rows[0]["recall"] * 100
-    r1_rec = summary_rows[1]["recall"] * 100
-    r0_f1 = summary_rows[0]["f1_score"] * 100
-    r1_f1 = summary_rows[1]["f1_score"] * 100
+    print("\n--- Paired Drug-Level Transition Matrix ---")
+    for t in trans_rows:
+        print(f"  * {t['transition']:<52}: {t['count']:3d}")
 
-    print(f"\n★ DELTA GAIN (R1 vs R0):")
-    print(f"  - OCR Drug Coverage : {r0_cov:5.2f}% ──▶ {r1_cov:5.2f}%  (+{r1_cov - r0_cov:5.2f}%)")
-    print(f"  - End-to-End Recall : {r0_rec:5.2f}% ──▶ {r1_rec:5.2f}%  (+{r1_rec - r0_rec:5.2f}%)")
-    print(f"  - End-to-End F1     : {r0_f1:5.2f}% ──▶ {r1_f1:5.2f}%  (+{r1_f1 - r0_f1:5.2f}%)")
+    net_gain = trans_counts["r0_wrong_r1_correct"] - trans_counts["r0_correct_r1_wrong"]
+    print(f"  * NET RECOVERY GAIN (R1 Gain - R1 Loss): {'+' if net_gain >= 0 else ''}{net_gain} drugs")
 
-    print("\n--- Failure Taxonomy Breakdown ---")
-    print(f"{'Condition':<10} | {'OCR_MISS':<12} | {'NER_MISS':<12} | {'SUCCESS':<12} | {'Total Gold':<12}")
-    print("-" * 65)
+    print("\n--- Failure Taxonomy on Physically Visible Drugs ---")
+    print(f"{'Condition':<10} | {'OCR_MISS':<12} | {'NER_MISS':<12} | {'SUCCESS':<12} | {'Total Visible':<14}")
+    print("-" * 68)
     for t in tax_rows:
-        print(f"{t['condition']:<10} | {t['OCR_MISS']:<12} | {t['NER_MISS']:<12} | {t['SUCCESS']:<12} | {t['total_gold']:<12}")
-    print("-" * 65)
+        print(f"{t['condition']:<10} | {t['OCR_MISS']:<12} | {t['NER_MISS']:<12} | {t['SUCCESS']:<12} | {t['total_visible_gold']:<14}")
+    print("-" * 68)
 
-    print(f"\nDiscovered {len(recovered_drugs)} concrete hard camera captures where R1 Medication Table Re-OCR recovered missed drugs!")
-    logger.info(f"Real ROI Benchmark completed! All reports saved to: {output_dir.resolve()}")
+    print(f"\nDiscovered {len(recovered_drugs)} hard camera captures with qualitative drug recoveries.")
+    logger.info(f"Visible Evaluation completed! All reports saved to: {output_dir.resolve()}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Real Camera Medication ROI Ablation Benchmark")
+    parser = argparse.ArgumentParser(description="Visible-in-frame Real Camera ROI Benchmark")
     parser.add_argument("--ocr-dir", type=str, default="reports/real_medication_roi_ablation/mlkit_ocr", help="Directory of ML Kit OCR JSONs")
-    parser.add_argument("--gt-dir", type=str, default="../medicineApp-rxie/data/canonical_ground_truth", help="Canonical GT directory")
+    parser.add_argument("--visible-gt", type=str, default="data/visible_in_frame_gt.json", help="Visible GT JSON file")
     parser.add_argument("--output-dir", type=str, default="reports/real_medication_roi_ablation", help="Output directory")
     args = parser.parse_args()
 
     run_real_roi_evaluation(
         ocr_dir=Path(args.ocr_dir),
-        gt_dir=Path(args.gt_dir),
+        visible_gt_path=Path(args.visible_gt),
         output_dir=Path(args.output_dir),
     )
