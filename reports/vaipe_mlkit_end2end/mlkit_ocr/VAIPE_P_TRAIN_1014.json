@@ -1,0 +1,333 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1014",
+  "file_name": "VAIPE_P_TRAIN_1014.png",
+  "text": "1/1\nPK SỐ 2 NỘI]\nThe bảo hiểmy tể GB| 4 35 35\nlần/phút Huyết áp:\nMạch:\nCận lâm sàng: Chụp Xquang ngực thẫng\n1) MYPARA 500 500mg\nGhi chú Uông\nSố phiếu 52057/2019\nTOA THUỐC BHYT\nChẩn đoán: S43 - Sai khóp, bong gân và giân khóp và dây chẳng của vòng ngực\nCộng khoản: 1 khoản\nLời dặn đon thuốc:\nNgày hẹn tái khám:\nBệnh nhân ký nhận\nSáng 2 Viên\n208\nTái khám xin mang theo đơn, xét nghiệm, phim (nêu có)\nmmHg Thân nhiệt:\nMă số người bệnh\nChiều 2 Viên\nSL: 20 Viên\nNgày 19/ 08 / 2019\nY, Bác sĩ điều trị\nNam NN\nYS. Trần Thị Hoa\n30/05/2021 10:05:09",
+  "block_count": 25,
+  "line_count": 27,
+  "lines": [
+    {
+      "text": "1/1",
+      "bbox": {
+        "left": 59.0,
+        "top": 28.0,
+        "right": 110.0,
+        "bottom": 58.0
+      },
+      "confidence": 0.7916666865348816,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "PK SỐ 2 NỘI]",
+      "bbox": {
+        "left": 28.0,
+        "top": 90.0,
+        "right": 125.0,
+        "bottom": 112.0
+      },
+      "confidence": 0.5794270634651184,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "The bảo hiểmy tể GB| 4 35 35",
+      "bbox": {
+        "left": 30.0,
+        "top": 203.0,
+        "right": 387.0,
+        "bottom": 227.0
+      },
+      "confidence": 0.69140625,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "lần/phút Huyết áp:",
+      "bbox": {
+        "left": 171.0,
+        "top": 232.0,
+        "right": 302.0,
+        "bottom": 252.0
+      },
+      "confidence": 0.775390625,
+      "block_index": 2,
+      "line_index": 1
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 30.0,
+        "top": 237.0,
+        "right": 71.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.805468738079071,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Cận lâm sàng: Chụp Xquang ngực thẫng",
+      "bbox": {
+        "left": 30.0,
+        "top": 258.0,
+        "right": 299.0,
+        "bottom": 275.0
+      },
+      "confidence": 0.8355468511581421,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "1) MYPARA 500 500mg",
+      "bbox": {
+        "left": 48.0,
+        "top": 386.0,
+        "right": 285.0,
+        "bottom": 411.0
+      },
+      "confidence": 0.819580078125,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uông",
+      "bbox": {
+        "left": 36.0,
+        "top": 415.0,
+        "right": 148.0,
+        "bottom": 433.0
+      },
+      "confidence": 0.800000011920929,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Số phiếu 52057/2019",
+      "bbox": {
+        "left": 375.0,
+        "top": 92.0,
+        "right": 542.0,
+        "bottom": 120.0
+      },
+      "confidence": 0.7931985259056091,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỐC BHYT",
+      "bbox": {
+        "left": 262.0,
+        "top": 124.0,
+        "right": 505.0,
+        "bottom": 150.0
+      },
+      "confidence": 0.7955729365348816,
+      "block_index": 7,
+      "line_index": 1
+    },
+    {
+      "text": "Chẩn đoán: S43 - Sai khóp, bong gân và giân khóp và dây chẳng của vòng ngực",
+      "bbox": {
+        "left": 30.0,
+        "top": 273.0,
+        "right": 565.0,
+        "bottom": 292.0
+      },
+      "confidence": 0.8009136915206909,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Cộng khoản: 1 khoản",
+      "bbox": {
+        "left": 35.0,
+        "top": 445.0,
+        "right": 195.0,
+        "bottom": 461.0
+      },
+      "confidence": 0.829345703125,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "Lời dặn đon thuốc:",
+      "bbox": {
+        "left": 36.0,
+        "top": 467.0,
+        "right": 160.0,
+        "bottom": 487.0
+      },
+      "confidence": 0.7528645992279053,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày hẹn tái khám:",
+      "bbox": {
+        "left": 35.0,
+        "top": 497.0,
+        "right": 165.0,
+        "bottom": 512.0
+      },
+      "confidence": 0.8520833253860474,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 66.0,
+        "top": 547.0,
+        "right": 196.0,
+        "bottom": 566.0
+      },
+      "confidence": 0.8094307780265808,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 2 Viên",
+      "bbox": {
+        "left": 293.0,
+        "top": 419.0,
+        "right": 374.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.8068576455116272,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "208",
+      "bbox": {
+        "left": 438.0,
+        "top": 209.0,
+        "right": 465.0,
+        "bottom": 224.0
+      },
+      "confidence": 0.8971354365348816,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nêu có)",
+      "bbox": {
+        "left": 35.0,
+        "top": 687.0,
+        "right": 413.0,
+        "bottom": 704.0
+      },
+      "confidence": 0.8372092843055725,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "mmHg Thân nhiệt:",
+      "bbox": {
+        "left": 454.0,
+        "top": 233.0,
+        "right": 590.0,
+        "bottom": 252.0
+      },
+      "confidence": 0.8155692219734192,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Mă số người bệnh",
+      "bbox": {
+        "left": 604.0,
+        "top": 24.0,
+        "right": 712.0,
+        "bottom": 41.0
+      },
+      "confidence": 0.6790865659713745,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Chiều 2 Viên",
+      "bbox": {
+        "left": 515.0,
+        "top": 414.0,
+        "right": 601.0,
+        "bottom": 431.0
+      },
+      "confidence": 0.8089843988418579,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 20 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 389.0,
+        "right": 705.0,
+        "bottom": 406.0
+      },
+      "confidence": 0.8090277910232544,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày 19/ 08 / 2019",
+      "bbox": {
+        "left": 487.0,
+        "top": 529.0,
+        "right": 618.0,
+        "bottom": 547.0
+      },
+      "confidence": 0.8674665093421936,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 497.0,
+        "top": 557.0,
+        "right": 610.0,
+        "bottom": 574.0
+      },
+      "confidence": 0.79296875,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "Nam NN",
+      "bbox": {
+        "left": 622.0,
+        "top": 151.0,
+        "right": 733.0,
+        "bottom": 180.0
+      },
+      "confidence": 0.671875,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "YS. Trần Thị Hoa",
+      "bbox": {
+        "left": 480.0,
+        "top": 630.0,
+        "right": 615.0,
+        "bottom": 650.0
+      },
+      "confidence": 0.8043870329856873,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "30/05/2021 10:05:09",
+      "bbox": {
+        "left": 590.0,
+        "top": 729.0,
+        "right": 728.0,
+        "bottom": 741.0
+      },
+      "confidence": 0.8289930820465088,
+      "block_index": 24,
+      "line_index": 0
+    }
+  ]
+}

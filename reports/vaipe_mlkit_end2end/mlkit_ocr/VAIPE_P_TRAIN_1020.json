@@ -1,0 +1,429 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1020",
+  "file_name": "VAIPE_P_TRAIN_1020.png",
+  "text": "1/1\nThẻ bảo hiểm y tế GB\nMạch:\nCân lâm sàng:\nsÌNH NGHĨA\nGhi chú Uông\n1) FABAMOX 500 500mg\nGhi chú\nChẩn đoán: J02 - Viêm họng cấp : (H81) Rổi loạn chức năng tiền đình\nUổng:\nlần/phút Huyết áp:\nCộng khoản: 2 khoản\nLời dặn đơn thuốc:\nTOA THUỐC BHYT\nNgày hẹn tái khám:\n2) HOẠTHUYẾT DƯỚNG NÃO 150mg+20mg\nSáng 2 viên\nSố phiếu 4623/2021\nBệnh nhân ký nhận\n35 208\nSáng 2 Viên\nmmHg\nTái khám xin mang theo đơn, xét nghiệm, phim (nếu có)\n42368\nThân nhiệt:\nMã số nguời bệnh\nSL: 20 Viên\nTổi 2 Viên\nSL: 20 viến\nTối 2 viên\nNgày 16 /12 / 2021\nY, Bác sĩ điều trị\nNam N\nBS. Trần Thị Tính\n29/12/2021 23:33:46",
+  "block_count": 30,
+  "line_count": 35,
+  "lines": [
+    {
+      "text": "1/1",
+      "bbox": {
+        "left": 59.0,
+        "top": 46.0,
+        "right": 109.0,
+        "bottom": 76.0
+      },
+      "confidence": 0.7408854365348816,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "Thẻ bảo hiểm y tế GB",
+      "bbox": {
+        "left": 29.0,
+        "top": 225.0,
+        "right": 215.0,
+        "bottom": 245.0
+      },
+      "confidence": 0.7393229007720947,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 30.0,
+        "top": 255.0,
+        "right": 69.0,
+        "bottom": 269.0
+      },
+      "confidence": 0.8500000238418579,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Cân lâm sàng:",
+      "bbox": {
+        "left": 29.0,
+        "top": 274.0,
+        "right": 122.0,
+        "bottom": 288.0
+      },
+      "confidence": 0.7979403138160706,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "sÌNH NGHĨA",
+      "bbox": {
+        "left": 153.0,
+        "top": 77.0,
+        "right": 251.0,
+        "bottom": 93.0
+      },
+      "confidence": 0.6501736044883728,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uông",
+      "bbox": {
+        "left": 36.0,
+        "top": 434.0,
+        "right": 148.0,
+        "bottom": 451.0
+      },
+      "confidence": 0.807812511920929,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "1) FABAMOX 500 500mg",
+      "bbox": {
+        "left": 49.0,
+        "top": 405.0,
+        "right": 302.0,
+        "bottom": 429.0
+      },
+      "confidence": 0.814338207244873,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú",
+      "bbox": {
+        "left": 37.0,
+        "top": 486.0,
+        "right": 90.0,
+        "bottom": 505.0
+      },
+      "confidence": 0.8561198115348816,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Chẩn đoán: J02 - Viêm họng cấp : (H81) Rổi loạn chức năng tiền đình",
+      "bbox": {
+        "left": 30.0,
+        "top": 291.0,
+        "right": 500.0,
+        "bottom": 310.0
+      },
+      "confidence": 0.778744101524353,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Uổng:",
+      "bbox": {
+        "left": 123.0,
+        "top": 486.0,
+        "right": 156.0,
+        "bottom": 505.0
+      },
+      "confidence": 0.7124999761581421,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "lần/phút Huyết áp:",
+      "bbox": {
+        "left": 171.0,
+        "top": 248.0,
+        "right": 302.0,
+        "bottom": 270.0
+      },
+      "confidence": 0.798583984375,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Cộng khoản: 2 khoản",
+      "bbox": {
+        "left": 35.0,
+        "top": 514.0,
+        "right": 193.0,
+        "bottom": 532.0
+      },
+      "confidence": 0.831298828125,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Lời dặn đơn thuốc:",
+      "bbox": {
+        "left": 36.0,
+        "top": 538.0,
+        "right": 161.0,
+        "bottom": 556.0
+      },
+      "confidence": 0.8244791626930237,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỐC BHYT",
+      "bbox": {
+        "left": 262.0,
+        "top": 142.0,
+        "right": 505.0,
+        "bottom": 168.0
+      },
+      "confidence": 0.8151041865348816,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày hẹn tái khám:",
+      "bbox": {
+        "left": 36.0,
+        "top": 563.0,
+        "right": 163.0,
+        "bottom": 582.0
+      },
+      "confidence": 0.897656261920929,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "2) HOẠTHUYẾT DƯỚNG NÃO 150mg+20mg",
+      "bbox": {
+        "left": 46.0,
+        "top": 456.0,
+        "right": 500.0,
+        "bottom": 481.0
+      },
+      "confidence": 0.7745150923728943,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 2 viên",
+      "bbox": {
+        "left": 292.0,
+        "top": 484.0,
+        "right": 369.0,
+        "bottom": 504.0
+      },
+      "confidence": 0.8563368320465088,
+      "block_index": 15,
+      "line_index": 1
+    },
+    {
+      "text": "Số phiếu 4623/2021",
+      "bbox": {
+        "left": 375.0,
+        "top": 111.0,
+        "right": 528.0,
+        "bottom": 138.0
+      },
+      "confidence": 0.83544921875,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 67.0,
+        "top": 620.0,
+        "right": 197.0,
+        "bottom": 636.0
+      },
+      "confidence": 0.8334263563156128,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "35 208",
+      "bbox": {
+        "left": 371.0,
+        "top": 226.0,
+        "right": 466.0,
+        "bottom": 245.0
+      },
+      "confidence": 0.87109375,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 2 Viên",
+      "bbox": {
+        "left": 292.0,
+        "top": 436.0,
+        "right": 374.0,
+        "bottom": 451.0
+      },
+      "confidence": 0.8424479365348816,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "mmHg",
+      "bbox": {
+        "left": 454.0,
+        "top": 255.0,
+        "right": 500.0,
+        "bottom": 270.0
+      },
+      "confidence": 0.8154296875,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nếu có)",
+      "bbox": {
+        "left": 35.0,
+        "top": 756.0,
+        "right": 414.0,
+        "bottom": 775.0
+      },
+      "confidence": 0.8151344656944275,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "42368",
+      "bbox": {
+        "left": 512.0,
+        "top": 227.0,
+        "right": 559.0,
+        "bottom": 242.0
+      },
+      "confidence": 0.9140625,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "Thân nhiệt:",
+      "bbox": {
+        "left": 517.0,
+        "top": 255.0,
+        "right": 592.0,
+        "bottom": 270.0
+      },
+      "confidence": 0.8238281011581421,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Mã số nguời bệnh",
+      "bbox": {
+        "left": 603.0,
+        "top": 41.0,
+        "right": 712.0,
+        "bottom": 58.0
+      },
+      "confidence": 0.6613581776618958,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 20 Viên",
+      "bbox": {
+        "left": 597.0,
+        "top": 407.0,
+        "right": 705.0,
+        "bottom": 424.0
+      },
+      "confidence": 0.7986111044883728,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "Tổi 2 Viên",
+      "bbox": {
+        "left": 627.0,
+        "top": 431.0,
+        "right": 699.0,
+        "bottom": 450.0
+      },
+      "confidence": 0.7529296875,
+      "block_index": 25,
+      "line_index": 1
+    },
+    {
+      "text": "SL: 20 viến",
+      "bbox": {
+        "left": 596.0,
+        "top": 457.0,
+        "right": 699.0,
+        "bottom": 478.0
+      },
+      "confidence": 0.7747395634651184,
+      "block_index": 25,
+      "line_index": 2
+    },
+    {
+      "text": "Tối 2 viên",
+      "bbox": {
+        "left": 627.0,
+        "top": 485.0,
+        "right": 697.0,
+        "bottom": 501.0
+      },
+      "confidence": 0.77197265625,
+      "block_index": 25,
+      "line_index": 3
+    },
+    {
+      "text": "Ngày 16 /12 / 2021",
+      "bbox": {
+        "left": 487.0,
+        "top": 600.0,
+        "right": 619.0,
+        "bottom": 617.0
+      },
+      "confidence": 0.8618861436843872,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 497.0,
+        "top": 627.0,
+        "right": 610.0,
+        "bottom": 644.0
+      },
+      "confidence": 0.783203125,
+      "block_index": 26,
+      "line_index": 1
+    },
+    {
+      "text": "Nam N",
+      "bbox": {
+        "left": 625.0,
+        "top": 171.0,
+        "right": 700.0,
+        "bottom": 200.0
+      },
+      "confidence": 0.6689453125,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "BS. Trần Thị Tính",
+      "bbox": {
+        "left": 478.0,
+        "top": 700.0,
+        "right": 616.0,
+        "bottom": 719.0
+      },
+      "confidence": 0.8208705186843872,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "29/12/2021 23:33:46",
+      "bbox": {
+        "left": 589.0,
+        "top": 795.0,
+        "right": 729.0,
+        "bottom": 811.0
+      },
+      "confidence": 0.8869357705116272,
+      "block_index": 29,
+      "line_index": 0
+    }
+  ]
+}

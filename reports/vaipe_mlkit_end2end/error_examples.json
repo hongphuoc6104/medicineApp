@@ -1,0 +1,92 @@
+[
+  {
+    "image_id": "VAIPE_P_TRAIN_1",
+    "gold_drug": "GLUCOFAST 850 850mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_100",
+    "gold_drug": "TROYSAR AM 5mg +50mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_100",
+    "gold_drug": "LENINARTO 10 10mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_101",
+    "gold_drug": "TROYSAR AM 5mg +50mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_101",
+    "gold_drug": "LENINARTO 10 10mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1011",
+    "gold_drug": "COSYNDO B 175mg+175mg+125mcg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1012",
+    "gold_drug": "GOLDDICRON 30mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1012",
+    "gold_drug": "HANGITOR PLUS 40mg+12,5mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1012",
+    "gold_drug": "KAGASDINE 20mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1019",
+    "gold_drug": "FABAMOX 500 500mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_102",
+    "gold_drug": "TROYSAR AM 5mg +50mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_102",
+    "gold_drug": "LENINARTO 10 10mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1020",
+    "gold_drug": "FABAMOX 500 500mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1022",
+    "gold_drug": "CARDILOPIN 5mg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  },
+  {
+    "image_id": "VAIPE_P_TRAIN_1022",
+    "gold_drug": "COSYNDO B 175mg+175mg+125mcg",
+    "failure_stage": "NER_MISS",
+    "reason": "Present in OCR but PhoBERT NER did not classify as drugname"
+  }
+]

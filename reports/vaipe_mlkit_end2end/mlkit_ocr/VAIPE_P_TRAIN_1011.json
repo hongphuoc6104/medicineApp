@@ -1,0 +1,453 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1011",
+  "file_name": "VAIPE_P_TRAIN_1011.png",
+  "text": "1/1\nĐịa chi\nThe bảo hiễm y tể\nMạch:\nCận lâm sàng:\nChẩn đoán: H60 - Viêm tai ngoài\nGhi chú\nUống:\n1) CEFADROXIL S00MG 500ng\nGhi chú Uông\n2) VACO LORATADINE 10Omg\nHT2|\nlần/phút Huyết áp:\nGhi chú Uông:\n3) PANACTOL S00mg\nSố phiếu 1410/2018\nTOA THUỐC BHYT\nGhi chú Uổng:\n4) COSYNDO B 175mg +175mg+ 125mcg\nCộng khoản: 4 khoản\nLời dặn đơn thuốc:\nNgày hẹn tái khám:\n35 207\nBệnh nhân ký nhận\nTái khám xin mang theo đơn, xét nghiệm, phim (nếu có)\n39232\nmmHg Thân nhiệt:\nMã số người bệnh\nSL: 20 Viên\nNam NoI\nSL: 10 Viên\nSL: 10 Viên\nSL: 10 Viên\nNgày 25/07/2018\nY, Bác sĩ điều trị\nBS. Duơng Xuân Dũng\n08/05/2021 13:24:54",
+  "block_count": 34,
+  "line_count": 37,
+  "lines": [
+    {
+      "text": "1/1",
+      "bbox": {
+        "left": 59.0,
+        "top": 28.0,
+        "right": 109.0,
+        "bottom": 58.0
+      },
+      "confidence": 0.7643229365348816,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "Địa chi",
+      "bbox": {
+        "left": 30.0,
+        "top": 186.0,
+        "right": 77.0,
+        "bottom": 202.0
+      },
+      "confidence": 0.7916666865348816,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "The bảo hiễm y tể",
+      "bbox": {
+        "left": 28.0,
+        "top": 206.0,
+        "right": 146.0,
+        "bottom": 225.0
+      },
+      "confidence": 0.713942289352417,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 30.0,
+        "top": 237.0,
+        "right": 71.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.80859375,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Cận lâm sàng:",
+      "bbox": {
+        "left": 30.0,
+        "top": 258.0,
+        "right": 123.0,
+        "bottom": 273.0
+      },
+      "confidence": 0.7911931872367859,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "Chẩn đoán: H60 - Viêm tai ngoài",
+      "bbox": {
+        "left": 30.0,
+        "top": 273.0,
+        "right": 252.0,
+        "bottom": 292.0
+      },
+      "confidence": 0.7678124904632568,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú",
+      "bbox": {
+        "left": 37.0,
+        "top": 415.0,
+        "right": 90.0,
+        "bottom": 433.0
+      },
+      "confidence": 0.8580729365348816,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Uống:",
+      "bbox": {
+        "left": 120.0,
+        "top": 415.0,
+        "right": 157.0,
+        "bottom": 433.0
+      },
+      "confidence": 0.78125,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "1) CEFADROXIL S00MG 500ng",
+      "bbox": {
+        "left": 49.0,
+        "top": 386.0,
+        "right": 373.0,
+        "bottom": 411.0
+      },
+      "confidence": 0.7581676244735718,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uông",
+      "bbox": {
+        "left": 37.0,
+        "top": 469.0,
+        "right": 150.0,
+        "bottom": 485.0
+      },
+      "confidence": 0.7835937738418579,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "2) VACO LORATADINE 10Omg",
+      "bbox": {
+        "left": 46.0,
+        "top": 442.0,
+        "right": 355.0,
+        "bottom": 462.0
+      },
+      "confidence": 0.7752976417541504,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "HT2|",
+      "bbox": {
+        "left": 177.0,
+        "top": 204.0,
+        "right": 301.0,
+        "bottom": 228.0
+      },
+      "confidence": 0.6240234375,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "lần/phút Huyết áp:",
+      "bbox": {
+        "left": 172.0,
+        "top": 233.0,
+        "right": 304.0,
+        "bottom": 252.0
+      },
+      "confidence": 0.80859375,
+      "block_index": 11,
+      "line_index": 1
+    },
+    {
+      "text": "Ghi chú Uông:",
+      "bbox": {
+        "left": 36.0,
+        "top": 517.0,
+        "right": 159.0,
+        "bottom": 538.0
+      },
+      "confidence": 0.7453835010528564,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "3) PANACTOL S00mg",
+      "bbox": {
+        "left": 47.0,
+        "top": 494.0,
+        "right": 272.0,
+        "bottom": 515.0
+      },
+      "confidence": 0.7523437738418579,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Số phiếu 1410/2018",
+      "bbox": {
+        "left": 375.0,
+        "top": 94.0,
+        "right": 530.0,
+        "bottom": 119.0
+      },
+      "confidence": 0.76904296875,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỐC BHYT",
+      "bbox": {
+        "left": 262.0,
+        "top": 124.0,
+        "right": 505.0,
+        "bottom": 150.0
+      },
+      "confidence": 0.8151041865348816,
+      "block_index": 14,
+      "line_index": 1
+    },
+    {
+      "text": "Ghi chú Uổng:",
+      "bbox": {
+        "left": 44.0,
+        "top": 572.0,
+        "right": 157.0,
+        "bottom": 590.0
+      },
+      "confidence": 0.7453835010528564,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "4) COSYNDO B 175mg +175mg+ 125mcg",
+      "bbox": {
+        "left": 47.0,
+        "top": 546.0,
+        "right": 452.0,
+        "bottom": 568.0
+      },
+      "confidence": 0.7659040093421936,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Cộng khoản: 4 khoản",
+      "bbox": {
+        "left": 35.0,
+        "top": 602.0,
+        "right": 195.0,
+        "bottom": 617.0
+      },
+      "confidence": 0.844970703125,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Lời dặn đơn thuốc:",
+      "bbox": {
+        "left": 36.0,
+        "top": 622.0,
+        "right": 159.0,
+        "bottom": 642.0
+      },
+      "confidence": 0.8072916865348816,
+      "block_index": 17,
+      "line_index": 1
+    },
+    {
+      "text": "Ngày hẹn tái khám:",
+      "bbox": {
+        "left": 35.0,
+        "top": 650.0,
+        "right": 163.0,
+        "bottom": 668.0
+      },
+      "confidence": 0.8489583134651184,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "35 207",
+      "bbox": {
+        "left": 369.0,
+        "top": 206.0,
+        "right": 470.0,
+        "bottom": 225.0
+      },
+      "confidence": 0.8695312738418579,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 67.0,
+        "top": 706.0,
+        "right": 197.0,
+        "bottom": 722.0
+      },
+      "confidence": 0.8342633843421936,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nếu có)",
+      "bbox": {
+        "left": 35.0,
+        "top": 842.0,
+        "right": 414.0,
+        "bottom": 859.0
+      },
+      "confidence": 0.8419331312179565,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "39232",
+      "bbox": {
+        "left": 513.0,
+        "top": 209.0,
+        "right": 559.0,
+        "bottom": 224.0
+      },
+      "confidence": 0.9234374761581421,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "mmHg Thân nhiệt:",
+      "bbox": {
+        "left": 454.0,
+        "top": 234.0,
+        "right": 590.0,
+        "bottom": 250.0
+      },
+      "confidence": 0.8272879719734192,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Mã số người bệnh",
+      "bbox": {
+        "left": 604.0,
+        "top": 24.0,
+        "right": 712.0,
+        "bottom": 42.0
+      },
+      "confidence": 0.6890023946762085,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 20 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 389.0,
+        "right": 705.0,
+        "bottom": 406.0
+      },
+      "confidence": 0.7743055820465088,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "Nam NoI",
+      "bbox": {
+        "left": 622.0,
+        "top": 152.0,
+        "right": 733.0,
+        "bottom": 182.0
+      },
+      "confidence": 0.5579426884651184,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 10 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 439.0,
+        "right": 703.0,
+        "bottom": 459.0
+      },
+      "confidence": 0.78515625,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 10 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 494.0,
+        "right": 705.0,
+        "bottom": 511.0
+      },
+      "confidence": 0.7877604365348816,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 10 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 546.0,
+        "right": 705.0,
+        "bottom": 563.0
+      },
+      "confidence": 0.7938368320465088,
+      "block_index": 29,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày 25/07/2018",
+      "bbox": {
+        "left": 487.0,
+        "top": 685.0,
+        "right": 617.0,
+        "bottom": 702.0
+      },
+      "confidence": 0.88671875,
+      "block_index": 30,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 497.0,
+        "top": 713.0,
+        "right": 610.0,
+        "bottom": 731.0
+      },
+      "confidence": 0.7633928656578064,
+      "block_index": 31,
+      "line_index": 0
+    },
+    {
+      "text": "BS. Duơng Xuân Dũng",
+      "bbox": {
+        "left": 459.0,
+        "top": 789.0,
+        "right": 635.0,
+        "bottom": 808.0
+      },
+      "confidence": 0.761474609375,
+      "block_index": 32,
+      "line_index": 0
+    },
+    {
+      "text": "08/05/2021 13:24:54",
+      "bbox": {
+        "left": 590.0,
+        "top": 885.0,
+        "right": 729.0,
+        "bottom": 897.0
+      },
+      "confidence": 0.8550347089767456,
+      "block_index": 33,
+      "line_index": 0
+    }
+  ]
+}

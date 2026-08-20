@@ -1,0 +1,489 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1017",
+  "file_name": "VAIPE_P_TRAIN_1017.png",
+  "text": "1/1\nPK SỐ 12 Ngoài giờ]\nThe bảo hiểm y tế\nMạch:\nCận lâm sàng:\n1)\nGhi chú Uổng\nCEFADROXIL 0,5g\nChẩn đoán: JO1 - Viêm xoang cấp; (L20) Viêm da cơ địa dị ứng\nGhi chú Uông:\n2) MYPARA 500 500mg\nCK\nlần/phút Huyết áp:\nGhi chú Uống :\nSố phiếu 24019/2018\nTOA THUỘC BHYT\nCộng khoản: 3 khoản\nLời dặn đơn thuốc:\nNgày hẹn tái khám:\n3) MENISON 16MG 16mg\n35 35 208\nBệnh nhân ký nhận\nSáng 2 Viên\nSáng 2 Viên\nSáng 2 Viên\nmmHg\nTái khám xin mang theo đơn, xét nghiệm, phim (nếu có)\n13814\nThân nhiệt:\nChiều 2 Viên\nMã số người bệnh\nSL: 20 Viên\nChiều 2 Viên\nSL: 20 Viên\nNam NoI\nSL: 10 Viên\nNgày 20/04/ 2018\nY, Bác sĩ điều trị\nBS. Đào Tiến Trung\n14/05/2021 15:35:31",
+  "block_count": 36,
+  "line_count": 40,
+  "lines": [
+    {
+      "text": "1/1",
+      "bbox": {
+        "left": 59.0,
+        "top": 28.0,
+        "right": 110.0,
+        "bottom": 58.0
+      },
+      "confidence": 0.8020833134651184,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "PK SỐ 12 Ngoài giờ]",
+      "bbox": {
+        "left": 28.0,
+        "top": 88.0,
+        "right": 175.0,
+        "bottom": 112.0
+      },
+      "confidence": 0.7627604007720947,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "The bảo hiểm y tế",
+      "bbox": {
+        "left": 30.0,
+        "top": 207.0,
+        "right": 148.0,
+        "bottom": 226.0
+      },
+      "confidence": 0.7584134340286255,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 30.0,
+        "top": 237.0,
+        "right": 71.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.80859375,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Cận lâm sàng:",
+      "bbox": {
+        "left": 30.0,
+        "top": 258.0,
+        "right": 123.0,
+        "bottom": 273.0
+      },
+      "confidence": 0.8252840638160706,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "1)",
+      "bbox": {
+        "left": 48.0,
+        "top": 385.0,
+        "right": 71.0,
+        "bottom": 406.0
+      },
+      "confidence": 0.80078125,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uổng",
+      "bbox": {
+        "left": 37.0,
+        "top": 416.0,
+        "right": 150.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.7855468988418579,
+      "block_index": 5,
+      "line_index": 1
+    },
+    {
+      "text": "CEFADROXIL 0,5g",
+      "bbox": {
+        "left": 98.0,
+        "top": 385.0,
+        "right": 273.0,
+        "bottom": 408.0
+      },
+      "confidence": 0.7335379719734192,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Chẩn đoán: JO1 - Viêm xoang cấp; (L20) Viêm da cơ địa dị ứng",
+      "bbox": {
+        "left": 30.0,
+        "top": 274.0,
+        "right": 462.0,
+        "bottom": 293.0
+      },
+      "confidence": 0.777759313583374,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uông:",
+      "bbox": {
+        "left": 37.0,
+        "top": 469.0,
+        "right": 156.0,
+        "bottom": 485.0
+      },
+      "confidence": 0.7780539989471436,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "2) MYPARA 500 500mg",
+      "bbox": {
+        "left": 45.0,
+        "top": 438.0,
+        "right": 286.0,
+        "bottom": 462.0
+      },
+      "confidence": 0.80126953125,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "CK",
+      "bbox": {
+        "left": 174.0,
+        "top": 209.0,
+        "right": 225.0,
+        "bottom": 228.0
+      },
+      "confidence": 0.87109375,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "lần/phút Huyết áp:",
+      "bbox": {
+        "left": 172.0,
+        "top": 233.0,
+        "right": 304.0,
+        "bottom": 253.0
+      },
+      "confidence": 0.811767578125,
+      "block_index": 10,
+      "line_index": 1
+    },
+    {
+      "text": "Ghi chú Uống :",
+      "bbox": {
+        "left": 37.0,
+        "top": 520.0,
+        "right": 158.0,
+        "bottom": 538.0
+      },
+      "confidence": 0.7776988744735718,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Số phiếu 24019/2018",
+      "bbox": {
+        "left": 375.0,
+        "top": 94.0,
+        "right": 541.0,
+        "bottom": 119.0
+      },
+      "confidence": 0.8177849054336548,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỘC BHYT",
+      "bbox": {
+        "left": 262.0,
+        "top": 125.0,
+        "right": 505.0,
+        "bottom": 150.0
+      },
+      "confidence": 0.7864583134651184,
+      "block_index": 12,
+      "line_index": 1
+    },
+    {
+      "text": "Cộng khoản: 3 khoản",
+      "bbox": {
+        "left": 35.0,
+        "top": 547.0,
+        "right": 193.0,
+        "bottom": 565.0
+      },
+      "confidence": 0.821044921875,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Lời dặn đơn thuốc:",
+      "bbox": {
+        "left": 36.0,
+        "top": 573.0,
+        "right": 161.0,
+        "bottom": 590.0
+      },
+      "confidence": 0.7861979007720947,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày hẹn tái khám:",
+      "bbox": {
+        "left": 36.0,
+        "top": 601.0,
+        "right": 165.0,
+        "bottom": 616.0
+      },
+      "confidence": 0.8531249761581421,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "3) MENISON 16MG 16mg",
+      "bbox": {
+        "left": 47.0,
+        "top": 494.0,
+        "right": 308.0,
+        "bottom": 515.0
+      },
+      "confidence": 0.8129595518112183,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "35 35 208",
+      "bbox": {
+        "left": 305.0,
+        "top": 205.0,
+        "right": 467.0,
+        "bottom": 227.0
+      },
+      "confidence": 0.8649553656578064,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 67.0,
+        "top": 654.0,
+        "right": 197.0,
+        "bottom": 671.0
+      },
+      "confidence": 0.8376116156578064,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 2 Viên",
+      "bbox": {
+        "left": 292.0,
+        "top": 415.0,
+        "right": 372.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.8302951455116272,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 2 Viên",
+      "bbox": {
+        "left": 292.0,
+        "top": 469.0,
+        "right": 372.0,
+        "bottom": 485.0
+      },
+      "confidence": 0.8420138955116272,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 2 Viên",
+      "bbox": {
+        "left": 293.0,
+        "top": 523.0,
+        "right": 374.0,
+        "bottom": 538.0
+      },
+      "confidence": 0.8211805820465088,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "mmHg",
+      "bbox": {
+        "left": 454.0,
+        "top": 234.0,
+        "right": 498.0,
+        "bottom": 252.0
+      },
+      "confidence": 0.7861328125,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nếu có)",
+      "bbox": {
+        "left": 35.0,
+        "top": 790.0,
+        "right": 413.0,
+        "bottom": 807.0
+      },
+      "confidence": 0.8444767594337463,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "13814",
+      "bbox": {
+        "left": 514.0,
+        "top": 209.0,
+        "right": 559.0,
+        "bottom": 224.0
+      },
+      "confidence": 0.9515625238418579,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "Thân nhiệt:",
+      "bbox": {
+        "left": 516.0,
+        "top": 232.0,
+        "right": 591.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.860156238079071,
+      "block_index": 24,
+      "line_index": 1
+    },
+    {
+      "text": "Chiều 2 Viên",
+      "bbox": {
+        "left": 516.0,
+        "top": 416.0,
+        "right": 603.0,
+        "bottom": 431.0
+      },
+      "confidence": 0.8414062261581421,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "Mã số người bệnh",
+      "bbox": {
+        "left": 604.0,
+        "top": 24.0,
+        "right": 712.0,
+        "bottom": 42.0
+      },
+      "confidence": 0.6890023946762085,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 20 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 389.0,
+        "right": 705.0,
+        "bottom": 406.0
+      },
+      "confidence": 0.8090277910232544,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "Chiều 2 Viên",
+      "bbox": {
+        "left": 515.0,
+        "top": 465.0,
+        "right": 602.0,
+        "bottom": 483.0
+      },
+      "confidence": 0.8082031011581421,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 20 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 441.0,
+        "right": 705.0,
+        "bottom": 459.0
+      },
+      "confidence": 0.7825520634651184,
+      "block_index": 29,
+      "line_index": 0
+    },
+    {
+      "text": "Nam NoI",
+      "bbox": {
+        "left": 622.0,
+        "top": 152.0,
+        "right": 733.0,
+        "bottom": 182.0
+      },
+      "confidence": 0.5579426884651184,
+      "block_index": 30,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 10 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 494.0,
+        "right": 705.0,
+        "bottom": 511.0
+      },
+      "confidence": 0.7877604365348816,
+      "block_index": 31,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày 20/04/ 2018",
+      "bbox": {
+        "left": 495.0,
+        "top": 630.0,
+        "right": 617.0,
+        "bottom": 650.0
+      },
+      "confidence": 0.896484375,
+      "block_index": 32,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 497.0,
+        "top": 661.0,
+        "right": 608.0,
+        "bottom": 678.0
+      },
+      "confidence": 0.8013392686843872,
+      "block_index": 33,
+      "line_index": 0
+    },
+    {
+      "text": "BS. Đào Tiến Trung",
+      "bbox": {
+        "left": 470.0,
+        "top": 733.0,
+        "right": 621.0,
+        "bottom": 755.0
+      },
+      "confidence": 0.742968738079071,
+      "block_index": 34,
+      "line_index": 0
+    },
+    {
+      "text": "14/05/2021 15:35:31",
+      "bbox": {
+        "left": 591.0,
+        "top": 830.0,
+        "right": 726.0,
+        "bottom": 846.0
+      },
+      "confidence": 0.8361545205116272,
+      "block_index": 35,
+      "line_index": 0
+    }
+  ]
+}

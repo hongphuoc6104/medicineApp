@@ -1,0 +1,5 @@
+stage,precision,recall,f1,tp,fp,fn,total_gold
+1. ML Kit OCR Coverage,-,100.00%,-,71,0,0,71
+2. Old PhoBERT NER after ML Kit,98.25%,78.87%,87.50%,56,1,15,71
+3. + DrugLookup Resolution,98.25%,78.87%,87.50%,56,1,15,71
+4. Final End-to-End Pipeline,98.25%,78.87%,87.50%,56,1,15,71

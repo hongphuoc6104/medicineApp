@@ -1,0 +1,669 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1012",
+  "file_name": "VAIPE_P_TRAIN_1012.png",
+  "text": "Khoa Khám bệnh\nBốc khám Tiểu đường 1\nThė bảo hiếm y tế\nGhi chú\nGhi chú\nGB\nUống:\n1) MEGLUCON 1000 1000 mg\n2) GOLDDICRON 30mg\nGhi chú\nlần/phút Huyết áp:\nUống trước khi ăn :\nTOA THUỘC BHYT\nMạch:\nCận lâm sàng: Tổng phân tích tể bào máu ngoại vi (bằng máy đếm laser), Định lượng Acid Uric [Máu],\nĐịnh lượng Cholesterol toàn phân (máu), Định lượng Glucose [Máu], Định lượng HbAlc [mául, Định\nlượng HDL-C (High density lipoprotein Cholesterol) [Máu], Định lượng Triglycerid (máu) [Máu], Đo\nhoạt độ ALT (GPT) [Máu], Đo hoạt độ AST (GOT) [Máu], Định lượng Creatinin (máu), Điện giải đô\n(Na, K, CI) [Máu], Tổng phân tích nước tiểu (Bằng máy tự động); Điện tim thường\nChấn đoán: Ell - Bệnh đái tháo đường không phụ thuộc insuline ; (I10) Bệnh lý tăng huyết áp; (K21)\nBệnh trào ngược dạ dày - thực quản; (L50) Mày đay\n4) KAGASDINE 20mg\nUông trước khi ăn :\n35\nCộng khoản: 5 khoản\nNgày hẹn tái khám:\n3) HANGITOR PLUS 40mg+12,5mg\nGhi chú Uống:\nSáng 1 viên\nSố phiếu 471/2022\nBệnh nhân ký nhận\n35\nLời dặn đơn thuốc: HẸN KHÁM 9/2/2022\nSáng 1 Viên\n130 / 80 mmHg Thân nhiệt:\n5) CHORLATCYN 125mg+5Ong+50mg+25mg\nGhi chú Uống:\nSáng 1 viên\n208\n41019\nTái khám xin mang theo đơn, xét nghiệm, phim (nều có)\nMã số người bệnh\nSL: 34 Viên\nTối 1 Viên\nSL: 34 Viên\nNamN\nSL: 34 viên\nSL: 34 Viên\nChiều l viên\nTối 1 Viên\nSL: 20 viện\nNgày 05/01 / 2022\nY, Bác sĩ điều trị\nBS. Bùi Mạnh Hà\n05/01/2022 23:04:53",
+  "block_count": 40,
+  "line_count": 55,
+  "lines": [
+    {
+      "text": "Khoa Khám bệnh",
+      "bbox": {
+        "left": 39.0,
+        "top": 105.0,
+        "right": 217.0,
+        "bottom": 128.0
+      },
+      "confidence": 0.8264973759651184,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "Bốc khám Tiểu đường 1",
+      "bbox": {
+        "left": 38.0,
+        "top": 147.0,
+        "right": 281.0,
+        "bottom": 180.0
+      },
+      "confidence": 0.81640625,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "Thė bảo hiếm y tế",
+      "bbox": {
+        "left": 39.0,
+        "top": 324.0,
+        "right": 220.0,
+        "bottom": 350.0
+      },
+      "confidence": 0.7199519276618958,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú",
+      "bbox": {
+        "left": 51.0,
+        "top": 754.0,
+        "right": 130.0,
+        "bottom": 772.0
+      },
+      "confidence": 0.8138020634651184,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú",
+      "bbox": {
+        "left": 50.0,
+        "top": 829.0,
+        "right": 129.0,
+        "bottom": 850.0
+      },
+      "confidence": 0.849609375,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "GB",
+      "bbox": {
+        "left": 277.0,
+        "top": 326.0,
+        "right": 315.0,
+        "bottom": 347.0
+      },
+      "confidence": 0.908203125,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Uống:",
+      "bbox": {
+        "left": 165.0,
+        "top": 747.0,
+        "right": 231.0,
+        "bottom": 775.0
+      },
+      "confidence": 0.7484375238418579,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "1) MEGLUCON 1000 1000 mg",
+      "bbox": {
+        "left": 78.0,
+        "top": 706.0,
+        "right": 515.0,
+        "bottom": 740.0
+      },
+      "confidence": 0.846484363079071,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "2) GOLDDICRON 30mg",
+      "bbox": {
+        "left": 64.0,
+        "top": 785.0,
+        "right": 435.0,
+        "bottom": 819.0
+      },
+      "confidence": 0.840576171875,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú",
+      "bbox": {
+        "left": 51.0,
+        "top": 984.0,
+        "right": 128.0,
+        "bottom": 1006.0
+      },
+      "confidence": 0.859375,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "lần/phút Huyết áp:",
+      "bbox": {
+        "left": 253.0,
+        "top": 362.0,
+        "right": 451.0,
+        "bottom": 390.0
+      },
+      "confidence": 0.813232421875,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Uống trước khi ăn :",
+      "bbox": {
+        "left": 164.0,
+        "top": 826.0,
+        "right": 359.0,
+        "bottom": 853.0
+      },
+      "confidence": 0.8236979246139526,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỘC BHYT",
+      "bbox": {
+        "left": 388.0,
+        "top": 201.0,
+        "right": 753.0,
+        "bottom": 237.0
+      },
+      "confidence": 0.7666015625,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 40.0,
+        "top": 367.0,
+        "right": 102.0,
+        "bottom": 388.0
+      },
+      "confidence": 0.78125,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Cận lâm sàng: Tổng phân tích tể bào máu ngoại vi (bằng máy đếm laser), Định lượng Acid Uric [Máu],",
+      "bbox": {
+        "left": 40.0,
+        "top": 395.0,
+        "right": 1078.0,
+        "bottom": 421.0
+      },
+      "confidence": 0.832624614238739,
+      "block_index": 13,
+      "line_index": 1
+    },
+    {
+      "text": "Định lượng Cholesterol toàn phân (máu), Định lượng Glucose [Máu], Định lượng HbAlc [mául, Định",
+      "bbox": {
+        "left": 39.0,
+        "top": 428.0,
+        "right": 1068.0,
+        "bottom": 451.0
+      },
+      "confidence": 0.8189452886581421,
+      "block_index": 13,
+      "line_index": 2
+    },
+    {
+      "text": "lượng HDL-C (High density lipoprotein Cholesterol) [Máu], Định lượng Triglycerid (máu) [Máu], Đo",
+      "bbox": {
+        "left": 40.0,
+        "top": 457.0,
+        "right": 1065.0,
+        "bottom": 480.0
+      },
+      "confidence": 0.8410528302192688,
+      "block_index": 13,
+      "line_index": 3
+    },
+    {
+      "text": "hoạt độ ALT (GPT) [Máu], Đo hoạt độ AST (GOT) [Máu], Định lượng Creatinin (máu), Điện giải đô",
+      "bbox": {
+        "left": 40.0,
+        "top": 483.0,
+        "right": 1059.0,
+        "bottom": 510.0
+      },
+      "confidence": 0.8238589763641357,
+      "block_index": 13,
+      "line_index": 4
+    },
+    {
+      "text": "(Na, K, CI) [Máu], Tổng phân tích nước tiểu (Bằng máy tự động); Điện tim thường",
+      "bbox": {
+        "left": 40.0,
+        "top": 510.0,
+        "right": 875.0,
+        "bottom": 538.0
+      },
+      "confidence": 0.76885986328125,
+      "block_index": 13,
+      "line_index": 5
+    },
+    {
+      "text": "Chấn đoán: Ell - Bệnh đái tháo đường không phụ thuộc insuline ; (I10) Bệnh lý tăng huyết áp; (K21)",
+      "bbox": {
+        "left": 40.0,
+        "top": 539.0,
+        "right": 1062.0,
+        "bottom": 566.0
+      },
+      "confidence": 0.8044402599334717,
+      "block_index": 13,
+      "line_index": 6
+    },
+    {
+      "text": "Bệnh trào ngược dạ dày - thực quản; (L50) Mày đay",
+      "bbox": {
+        "left": 40.0,
+        "top": 571.0,
+        "right": 564.0,
+        "bottom": 594.0
+      },
+      "confidence": 0.8230168223381042,
+      "block_index": 13,
+      "line_index": 7
+    },
+    {
+      "text": "4) KAGASDINE 20mg",
+      "bbox": {
+        "left": 76.0,
+        "top": 942.0,
+        "right": 404.0,
+        "bottom": 977.0
+      },
+      "confidence": 0.7914062738418579,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "Uông trước khi ăn :",
+      "bbox": {
+        "left": 166.0,
+        "top": 985.0,
+        "right": 360.0,
+        "bottom": 1010.0
+      },
+      "confidence": 0.7627604007720947,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "35",
+      "bbox": {
+        "left": 450.0,
+        "top": 326.0,
+        "right": 476.0,
+        "bottom": 347.0
+      },
+      "confidence": 0.83984375,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Cộng khoản: 5 khoản",
+      "bbox": {
+        "left": 48.0,
+        "top": 1108.0,
+        "right": 288.0,
+        "bottom": 1130.0
+      },
+      "confidence": 0.87451171875,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày hẹn tái khám:",
+      "bbox": {
+        "left": 48.0,
+        "top": 1181.0,
+        "right": 241.0,
+        "bottom": 1206.0
+      },
+      "confidence": 0.8656250238418579,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "3) HANGITOR PLUS 40mg+12,5mg",
+      "bbox": {
+        "left": 65.0,
+        "top": 867.0,
+        "right": 593.0,
+        "bottom": 898.0
+      },
+      "confidence": 0.7715625166893005,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uống:",
+      "bbox": {
+        "left": 50.0,
+        "top": 901.0,
+        "right": 232.0,
+        "bottom": 931.0
+      },
+      "confidence": 0.8227983117103577,
+      "block_index": 19,
+      "line_index": 1
+    },
+    {
+      "text": "Sáng 1 viên",
+      "bbox": {
+        "left": 434.0,
+        "top": 905.0,
+        "right": 549.0,
+        "bottom": 931.0
+      },
+      "confidence": 0.7912326455116272,
+      "block_index": 19,
+      "line_index": 2
+    },
+    {
+      "text": "Số phiếu 471/2022",
+      "bbox": {
+        "left": 562.0,
+        "top": 154.0,
+        "right": 775.0,
+        "bottom": 189.0
+      },
+      "confidence": 0.8658854365348816,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 95.0,
+        "top": 1263.0,
+        "right": 291.0,
+        "bottom": 1287.0
+      },
+      "confidence": 0.8270089030265808,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "35",
+      "bbox": {
+        "left": 548.0,
+        "top": 326.0,
+        "right": 574.0,
+        "bottom": 347.0
+      },
+      "confidence": 0.9140625,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "Lời dặn đơn thuốc: HẸN KHÁM 9/2/2022",
+      "bbox": {
+        "left": 48.0,
+        "top": 1140.0,
+        "right": 489.0,
+        "bottom": 1167.0
+      },
+      "confidence": 0.8528645634651184,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 1 Viên",
+      "bbox": {
+        "left": 434.0,
+        "top": 828.0,
+        "right": 554.0,
+        "bottom": 853.0
+      },
+      "confidence": 0.7677951455116272,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "130 / 80 mmHg Thân nhiệt:",
+      "bbox": {
+        "left": 501.0,
+        "top": 364.0,
+        "right": 883.0,
+        "bottom": 391.0
+      },
+      "confidence": 0.8384765386581421,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "5) CHORLATCYN 125mg+5Ong+50mg+25mg",
+      "bbox": {
+        "left": 76.0,
+        "top": 1020.0,
+        "right": 738.0,
+        "bottom": 1056.0
+      },
+      "confidence": 0.71337890625,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uống:",
+      "bbox": {
+        "left": 60.0,
+        "top": 1059.0,
+        "right": 231.0,
+        "bottom": 1089.0
+      },
+      "confidence": 0.8103693127632141,
+      "block_index": 26,
+      "line_index": 1
+    },
+    {
+      "text": "Sáng 1 viên",
+      "bbox": {
+        "left": 434.0,
+        "top": 1061.0,
+        "right": 549.0,
+        "bottom": 1089.0
+      },
+      "confidence": 0.7760416865348816,
+      "block_index": 26,
+      "line_index": 2
+    },
+    {
+      "text": "208",
+      "bbox": {
+        "left": 652.0,
+        "top": 326.0,
+        "right": 693.0,
+        "bottom": 347.0
+      },
+      "confidence": 0.921875,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "41019",
+      "bbox": {
+        "left": 764.0,
+        "top": 326.0,
+        "right": 834.0,
+        "bottom": 347.0
+      },
+      "confidence": 0.9156249761581421,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nều có)",
+      "bbox": {
+        "left": 48.0,
+        "top": 1468.0,
+        "right": 615.0,
+        "bottom": 1494.0
+      },
+      "confidence": 0.8517441749572754,
+      "block_index": 29,
+      "line_index": 0
+    },
+    {
+      "text": "Mã số người bệnh",
+      "bbox": {
+        "left": 900.0,
+        "top": 45.0,
+        "right": 1061.0,
+        "bottom": 75.0
+      },
+      "confidence": 0.7935696840286255,
+      "block_index": 30,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 34 Viên",
+      "bbox": {
+        "left": 890.0,
+        "top": 710.0,
+        "right": 1052.0,
+        "bottom": 736.0
+      },
+      "confidence": 0.7552083134651184,
+      "block_index": 31,
+      "line_index": 0
+    },
+    {
+      "text": "Tối 1 Viên",
+      "bbox": {
+        "left": 936.0,
+        "top": 747.0,
+        "right": 1042.0,
+        "bottom": 774.0
+      },
+      "confidence": 0.697265625,
+      "block_index": 31,
+      "line_index": 1
+    },
+    {
+      "text": "SL: 34 Viên",
+      "bbox": {
+        "left": 890.0,
+        "top": 788.0,
+        "right": 1053.0,
+        "bottom": 814.0
+      },
+      "confidence": 0.7504340410232544,
+      "block_index": 31,
+      "line_index": 2
+    },
+    {
+      "text": "NamN",
+      "bbox": {
+        "left": 937.0,
+        "top": 241.0,
+        "right": 1056.0,
+        "bottom": 281.0
+      },
+      "confidence": 0.83984375,
+      "block_index": 32,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 34 viên",
+      "bbox": {
+        "left": 890.0,
+        "top": 867.0,
+        "right": 1045.0,
+        "bottom": 892.0
+      },
+      "confidence": 0.7361111044883728,
+      "block_index": 33,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 34 Viên",
+      "bbox": {
+        "left": 889.0,
+        "top": 942.0,
+        "right": 1051.0,
+        "bottom": 971.0
+      },
+      "confidence": 0.8038194179534912,
+      "block_index": 34,
+      "line_index": 0
+    },
+    {
+      "text": "Chiều l viên",
+      "bbox": {
+        "left": 768.0,
+        "top": 1058.0,
+        "right": 896.0,
+        "bottom": 1085.0
+      },
+      "confidence": 0.7582031488418579,
+      "block_index": 35,
+      "line_index": 0
+    },
+    {
+      "text": "Tối 1 Viên",
+      "bbox": {
+        "left": 933.0,
+        "top": 980.0,
+        "right": 1041.0,
+        "bottom": 1010.0
+      },
+      "confidence": 0.7470703125,
+      "block_index": 36,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 20 viện",
+      "bbox": {
+        "left": 889.0,
+        "top": 1021.0,
+        "right": 1043.0,
+        "bottom": 1049.0
+      },
+      "confidence": 0.7473958134651184,
+      "block_index": 36,
+      "line_index": 1
+    },
+    {
+      "text": "Ngày 05/01 / 2022",
+      "bbox": {
+        "left": 726.0,
+        "top": 1232.0,
+        "right": 922.0,
+        "bottom": 1259.0
+      },
+      "confidence": 0.8811383843421936,
+      "block_index": 37,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 741.0,
+        "top": 1275.0,
+        "right": 910.0,
+        "bottom": 1300.0
+      },
+      "confidence": 0.84765625,
+      "block_index": 37,
+      "line_index": 1
+    },
+    {
+      "text": "BS. Bùi Mạnh Hà",
+      "bbox": {
+        "left": 716.0,
+        "top": 1388.0,
+        "right": 915.0,
+        "bottom": 1413.0
+      },
+      "confidence": 0.8369140625,
+      "block_index": 38,
+      "line_index": 0
+    },
+    {
+      "text": "05/01/2022 23:04:53",
+      "bbox": {
+        "left": 880.0,
+        "top": 1531.0,
+        "right": 1087.0,
+        "bottom": 1549.0
+      },
+      "confidence": 0.8335503339767456,
+      "block_index": 39,
+      "line_index": 0
+    }
+  ]
+}

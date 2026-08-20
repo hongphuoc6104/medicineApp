@@ -1,0 +1,489 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1",
+  "file_name": "VAIPE_P_TRAIN_1.png",
+  "text": "Khoa Khám bệnh\nPK SỐ 5.1 [TÐ)\nĐịa chi\nThẻ bảo hiểm y tế\nMạch:\nCận lâm sàng:\nCK\nlần/phút Huyết áp:\nGhi chú Uống sau khi ăn :\nSố phiếu 58661/2019\nTOA THUỐC BHYT\n1) GLUCOFAST 850 850mg\n35 35208\nGhi chú Uổng trước khi ăn :\n3) ENALAPRIL Smg\nGhi chú Uổng trước khi ăn :\nCộng khoản: 3 khoản\nLời dặn đơn thuốc:\nChẩn đoán: Ell - Bệnh đái tháo đường không phụ thuộc insulin ; (I10) Tăng huyết áp vô căn (nguyên\nphát)\n2) DIAMICRON MR TAB 30MG 60'S 30mg\nBệnh nhân ký nhận\nSáng 1 Viên\nSáng I Viên\nSáng I Viên\nNgày hẹn tái khám: Thú sáu, 18/10/2019\nmmHg\nTái khám xin mang theo đơn, xét nghiệm, phim (nếu có)\n08643\nThân nhiệt:\nMã số nguời bệnh\nSL: 60 Viên\nChiều l Viên\nNam NoI\nSL: 30 Viên\nSL: 30 Viên\nNgày 18 /09/ 2019\nY, Bác sĩ điều trị\nBS. Hoàng Thị Huờng\n13/05/2021 15:39:38",
+  "block_count": 34,
+  "line_count": 40,
+  "lines": [
+    {
+      "text": "Khoa Khám bệnh",
+      "bbox": {
+        "left": 28.0,
+        "top": 59.0,
+        "right": 147.0,
+        "bottom": 76.0
+      },
+      "confidence": 0.7054036259651184,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "PK SỐ 5.1 [TÐ)",
+      "bbox": {
+        "left": 29.0,
+        "top": 89.0,
+        "right": 136.0,
+        "bottom": 110.0
+      },
+      "confidence": 0.5955255627632141,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "Địa chi",
+      "bbox": {
+        "left": 30.0,
+        "top": 186.0,
+        "right": 77.0,
+        "bottom": 202.0
+      },
+      "confidence": 0.7916666865348816,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Thẻ bảo hiểm y tế",
+      "bbox": {
+        "left": 28.0,
+        "top": 206.0,
+        "right": 145.0,
+        "bottom": 225.0
+      },
+      "confidence": 0.7349759340286255,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 30.0,
+        "top": 237.0,
+        "right": 71.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.82421875,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "Cận lâm sàng:",
+      "bbox": {
+        "left": 30.0,
+        "top": 257.0,
+        "right": 123.0,
+        "bottom": 273.0
+      },
+      "confidence": 0.8188920617103577,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "CK",
+      "bbox": {
+        "left": 174.0,
+        "top": 209.0,
+        "right": 226.0,
+        "bottom": 227.0
+      },
+      "confidence": 0.869140625,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "lần/phút Huyết áp:",
+      "bbox": {
+        "left": 172.0,
+        "top": 234.0,
+        "right": 304.0,
+        "bottom": 253.0
+      },
+      "confidence": 0.775634765625,
+      "block_index": 6,
+      "line_index": 1
+    },
+    {
+      "text": "Ghi chú Uống sau khi ăn :",
+      "bbox": {
+        "left": 37.0,
+        "top": 416.0,
+        "right": 230.0,
+        "bottom": 433.0
+      },
+      "confidence": 0.7835115194320679,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Số phiếu 58661/2019",
+      "bbox": {
+        "left": 375.0,
+        "top": 93.0,
+        "right": 542.0,
+        "bottom": 119.0
+      },
+      "confidence": 0.7966452240943909,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỐC BHYT",
+      "bbox": {
+        "left": 262.0,
+        "top": 125.0,
+        "right": 505.0,
+        "bottom": 150.0
+      },
+      "confidence": 0.7705078125,
+      "block_index": 8,
+      "line_index": 1
+    },
+    {
+      "text": "1) GLUCOFAST 850 850mg",
+      "bbox": {
+        "left": 48.0,
+        "top": 385.0,
+        "right": 323.0,
+        "bottom": 410.0
+      },
+      "confidence": 0.8069490194320679,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "35 35208",
+      "bbox": {
+        "left": 274.0,
+        "top": 206.0,
+        "right": 464.0,
+        "bottom": 227.0
+      },
+      "confidence": 0.875,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uổng trước khi ăn :",
+      "bbox": {
+        "left": 37.0,
+        "top": 468.0,
+        "right": 244.0,
+        "bottom": 485.0
+      },
+      "confidence": 0.7952008843421936,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "3) ENALAPRIL Smg",
+      "bbox": {
+        "left": 47.0,
+        "top": 494.0,
+        "right": 255.0,
+        "bottom": 515.0
+      },
+      "confidence": 0.8141741156578064,
+      "block_index": 11,
+      "line_index": 1
+    },
+    {
+      "text": "Ghi chú Uổng trước khi ăn :",
+      "bbox": {
+        "left": 37.0,
+        "top": 520.0,
+        "right": 244.0,
+        "bottom": 538.0
+      },
+      "confidence": 0.769903302192688,
+      "block_index": 11,
+      "line_index": 2
+    },
+    {
+      "text": "Cộng khoản: 3 khoản",
+      "bbox": {
+        "left": 35.0,
+        "top": 547.0,
+        "right": 193.0,
+        "bottom": 565.0
+      },
+      "confidence": 0.828857421875,
+      "block_index": 11,
+      "line_index": 3
+    },
+    {
+      "text": "Lời dặn đơn thuốc:",
+      "bbox": {
+        "left": 36.0,
+        "top": 572.0,
+        "right": 162.0,
+        "bottom": 590.0
+      },
+      "confidence": 0.81640625,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Chẩn đoán: Ell - Bệnh đái tháo đường không phụ thuộc insulin ; (I10) Tăng huyết áp vô căn (nguyên",
+      "bbox": {
+        "left": 30.0,
+        "top": 274.0,
+        "right": 712.0,
+        "bottom": 293.0
+      },
+      "confidence": 0.7957231402397156,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "phát)",
+      "bbox": {
+        "left": 30.0,
+        "top": 297.0,
+        "right": 61.0,
+        "bottom": 312.0
+      },
+      "confidence": 0.766406238079071,
+      "block_index": 13,
+      "line_index": 1
+    },
+    {
+      "text": "2) DIAMICRON MR TAB 30MG 60'S 30mg",
+      "bbox": {
+        "left": 46.0,
+        "top": 439.0,
+        "right": 469.0,
+        "bottom": 461.0
+      },
+      "confidence": 0.7942243218421936,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 67.0,
+        "top": 654.0,
+        "right": 197.0,
+        "bottom": 670.0
+      },
+      "confidence": 0.8482142686843872,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 1 Viên",
+      "bbox": {
+        "left": 292.0,
+        "top": 417.0,
+        "right": 372.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.7747395634651184,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng I Viên",
+      "bbox": {
+        "left": 291.0,
+        "top": 470.0,
+        "right": 374.0,
+        "bottom": 484.0
+      },
+      "confidence": 0.7612847089767456,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng I Viên",
+      "bbox": {
+        "left": 293.0,
+        "top": 523.0,
+        "right": 374.0,
+        "bottom": 537.0
+      },
+      "confidence": 0.7821180820465088,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày hẹn tái khám: Thú sáu, 18/10/2019",
+      "bbox": {
+        "left": 36.0,
+        "top": 600.0,
+        "right": 315.0,
+        "bottom": 615.0
+      },
+      "confidence": 0.8480224609375,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "mmHg",
+      "bbox": {
+        "left": 454.0,
+        "top": 235.0,
+        "right": 499.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.7802734375,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nếu có)",
+      "bbox": {
+        "left": 35.0,
+        "top": 790.0,
+        "right": 413.0,
+        "bottom": 807.0
+      },
+      "confidence": 0.8444767594337463,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "08643",
+      "bbox": {
+        "left": 513.0,
+        "top": 209.0,
+        "right": 558.0,
+        "bottom": 224.0
+      },
+      "confidence": 0.874218761920929,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "Thân nhiệt:",
+      "bbox": {
+        "left": 517.0,
+        "top": 234.0,
+        "right": 591.0,
+        "bottom": 250.0
+      },
+      "confidence": 0.8285156488418579,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Mã số nguời bệnh",
+      "bbox": {
+        "left": 603.0,
+        "top": 23.0,
+        "right": 711.0,
+        "bottom": 41.0
+      },
+      "confidence": 0.6580528616905212,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 60 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 389.0,
+        "right": 705.0,
+        "bottom": 406.0
+      },
+      "confidence": 0.7825520634651184,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "Chiều l Viên",
+      "bbox": {
+        "left": 516.0,
+        "top": 415.0,
+        "right": 604.0,
+        "bottom": 431.0
+      },
+      "confidence": 0.7789062261581421,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "Nam NoI",
+      "bbox": {
+        "left": 622.0,
+        "top": 152.0,
+        "right": 733.0,
+        "bottom": 182.0
+      },
+      "confidence": 0.5579426884651184,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 30 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 442.0,
+        "right": 705.0,
+        "bottom": 459.0
+      },
+      "confidence": 0.8029513955116272,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 30 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 494.0,
+        "right": 705.0,
+        "bottom": 511.0
+      },
+      "confidence": 0.8003472089767456,
+      "block_index": 29,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày 18 /09/ 2019",
+      "bbox": {
+        "left": 487.0,
+        "top": 630.0,
+        "right": 618.0,
+        "bottom": 651.0
+      },
+      "confidence": 0.8909040093421936,
+      "block_index": 30,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 497.0,
+        "top": 661.0,
+        "right": 608.0,
+        "bottom": 678.0
+      },
+      "confidence": 0.8013392686843872,
+      "block_index": 31,
+      "line_index": 0
+    },
+    {
+      "text": "BS. Hoàng Thị Huờng",
+      "bbox": {
+        "left": 462.0,
+        "top": 735.0,
+        "right": 631.0,
+        "bottom": 755.0
+      },
+      "confidence": 0.772216796875,
+      "block_index": 32,
+      "line_index": 0
+    },
+    {
+      "text": "13/05/2021 15:39:38",
+      "bbox": {
+        "left": 591.0,
+        "top": 830.0,
+        "right": 728.0,
+        "bottom": 846.0
+      },
+      "confidence": 0.8832465410232544,
+      "block_index": 33,
+      "line_index": 0
+    }
+  ]
+}

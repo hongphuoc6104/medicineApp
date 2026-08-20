@@ -1,0 +1,441 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1007",
+  "file_name": "VAIPE_P_TRAIN_1007.png",
+  "text": "Khoa Khám bệnh\nPK SỐ 1 [Ngoqi]\nĐịa chỉ\nThe bảo hiểm y tế\nMạch:\nCận lâm sàng:\nGhi chú Uống :\nDN\nChẩn đoán: L02 - Áp xe da, nhọt, nhọt cụm\n1) CEFADROXIL 500MG 0,5g\nGhi chú Uống:\nCộng khoản: 2 khoản\nLời dặn đơn thuốc:\nSố phiếu 19908/2021\nTOA THUỐC BHYT\nlần phút Huyết áp:\nNgày hẹn tái khám:\n4 79\n2) PARTAMOL TAB. 500mg\nBệnh nhân ký nhận\n79\nSáng 2 Viên\nSáng I Viên\nTái khám xin mang theo đơn, xét nghiệm, phim (nêu có)\n162\nmmHg Thân nhiệt:\nMi số nguời bệnh\nSL: 20 Viên\nTổi 2 Viên\nSL: 10 Viên\nTối I Viên\nNgày 05 / 04/ 2021\nNam N\nY, Bác sĩ điều trị\nBS. Dương Đức Hùng\n15/05/2021 08:26:08",
+  "block_count": 32,
+  "line_count": 36,
+  "lines": [
+    {
+      "text": "Khoa Khám bệnh",
+      "bbox": {
+        "left": 29.0,
+        "top": 61.0,
+        "right": 146.0,
+        "bottom": 76.0
+      },
+      "confidence": 0.7252604365348816,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "PK SỐ 1 [Ngoqi]",
+      "bbox": {
+        "left": 29.0,
+        "top": 89.0,
+        "right": 141.0,
+        "bottom": 113.0
+      },
+      "confidence": 0.58984375,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "Địa chỉ",
+      "bbox": {
+        "left": 30.0,
+        "top": 184.0,
+        "right": 75.0,
+        "bottom": 200.0
+      },
+      "confidence": 0.8138020634651184,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "The bảo hiểm y tế",
+      "bbox": {
+        "left": 30.0,
+        "top": 207.0,
+        "right": 146.0,
+        "bottom": 226.0
+      },
+      "confidence": 0.7515023946762085,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 30.0,
+        "top": 237.0,
+        "right": 71.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.82421875,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "Cận lâm sàng:",
+      "bbox": {
+        "left": 30.0,
+        "top": 257.0,
+        "right": 123.0,
+        "bottom": 273.0
+      },
+      "confidence": 0.7663352489471436,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uống :",
+      "bbox": {
+        "left": 49.0,
+        "top": 416.0,
+        "right": 159.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.7855113744735718,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "DN",
+      "bbox": {
+        "left": 195.0,
+        "top": 202.0,
+        "right": 218.0,
+        "bottom": 226.0
+      },
+      "confidence": 0.86328125,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Chẩn đoán: L02 - Áp xe da, nhọt, nhọt cụm",
+      "bbox": {
+        "left": 30.0,
+        "top": 274.0,
+        "right": 320.0,
+        "bottom": 293.0
+      },
+      "confidence": 0.818115234375,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "1) CEFADROXIL 500MG 0,5g",
+      "bbox": {
+        "left": 48.0,
+        "top": 385.0,
+        "right": 346.0,
+        "bottom": 410.0
+      },
+      "confidence": 0.7866443395614624,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uống:",
+      "bbox": {
+        "left": 37.0,
+        "top": 469.0,
+        "right": 157.0,
+        "bottom": 486.0
+      },
+      "confidence": 0.7620738744735718,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Cộng khoản: 2 khoản",
+      "bbox": {
+        "left": 35.0,
+        "top": 495.0,
+        "right": 193.0,
+        "bottom": 513.0
+      },
+      "confidence": 0.841064453125,
+      "block_index": 10,
+      "line_index": 1
+    },
+    {
+      "text": "Lời dặn đơn thuốc:",
+      "bbox": {
+        "left": 36.0,
+        "top": 520.0,
+        "right": 161.0,
+        "bottom": 538.0
+      },
+      "confidence": 0.8356770873069763,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Số phiếu 19908/2021",
+      "bbox": {
+        "left": 375.0,
+        "top": 93.0,
+        "right": 539.0,
+        "bottom": 119.0
+      },
+      "confidence": 0.7849264740943909,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỐC BHYT",
+      "bbox": {
+        "left": 262.0,
+        "top": 125.0,
+        "right": 505.0,
+        "bottom": 150.0
+      },
+      "confidence": 0.7705078125,
+      "block_index": 12,
+      "line_index": 1
+    },
+    {
+      "text": "lần phút Huyết áp:",
+      "bbox": {
+        "left": 172.0,
+        "top": 233.0,
+        "right": 303.0,
+        "bottom": 255.0
+      },
+      "confidence": 0.8023437261581421,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày hẹn tái khám:",
+      "bbox": {
+        "left": 35.0,
+        "top": 545.0,
+        "right": 163.0,
+        "bottom": 564.0
+      },
+      "confidence": 0.8838541507720947,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "4 79",
+      "bbox": {
+        "left": 256.0,
+        "top": 202.0,
+        "right": 318.0,
+        "bottom": 225.0
+      },
+      "confidence": 0.6119791865348816,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "2) PARTAMOL TAB. 500mg",
+      "bbox": {
+        "left": 46.0,
+        "top": 442.0,
+        "right": 332.0,
+        "bottom": 463.0
+      },
+      "confidence": 0.8332648277282715,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 67.0,
+        "top": 602.0,
+        "right": 197.0,
+        "bottom": 618.0
+      },
+      "confidence": 0.8074776530265808,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "79",
+      "bbox": {
+        "left": 369.0,
+        "top": 209.0,
+        "right": 387.0,
+        "bottom": 223.0
+      },
+      "confidence": 0.728515625,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 2 Viên",
+      "bbox": {
+        "left": 292.0,
+        "top": 416.0,
+        "right": 372.0,
+        "bottom": 433.0
+      },
+      "confidence": 0.7977430820465088,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng I Viên",
+      "bbox": {
+        "left": 292.0,
+        "top": 467.0,
+        "right": 371.0,
+        "bottom": 484.0
+      },
+      "confidence": 0.7486979365348816,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nêu có)",
+      "bbox": {
+        "left": 35.0,
+        "top": 739.0,
+        "right": 413.0,
+        "bottom": 756.0
+      },
+      "confidence": 0.8379360437393188,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "162",
+      "bbox": {
+        "left": 440.0,
+        "top": 209.0,
+        "right": 465.0,
+        "bottom": 224.0
+      },
+      "confidence": 0.8255208134651184,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "mmHg Thân nhiệt:",
+      "bbox": {
+        "left": 454.0,
+        "top": 233.0,
+        "right": 590.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.8470982313156128,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Mi số nguời bệnh",
+      "bbox": {
+        "left": 604.0,
+        "top": 24.0,
+        "right": 712.0,
+        "bottom": 41.0
+      },
+      "confidence": 0.6694711446762085,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 20 Viên",
+      "bbox": {
+        "left": 597.0,
+        "top": 389.0,
+        "right": 705.0,
+        "bottom": 406.0
+      },
+      "confidence": 0.7556423544883728,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "Tổi 2 Viên",
+      "bbox": {
+        "left": 627.0,
+        "top": 416.0,
+        "right": 699.0,
+        "bottom": 431.0
+      },
+      "confidence": 0.7470703125,
+      "block_index": 25,
+      "line_index": 1
+    },
+    {
+      "text": "SL: 10 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 441.0,
+        "right": 705.0,
+        "bottom": 459.0
+      },
+      "confidence": 0.7638888955116272,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "Tối I Viên",
+      "bbox": {
+        "left": 626.0,
+        "top": 466.0,
+        "right": 699.0,
+        "bottom": 483.0
+      },
+      "confidence": 0.7626953125,
+      "block_index": 26,
+      "line_index": 1
+    },
+    {
+      "text": "Ngày 05 / 04/ 2021",
+      "bbox": {
+        "left": 487.0,
+        "top": 580.0,
+        "right": 618.0,
+        "bottom": 599.0
+      },
+      "confidence": 0.8797432780265808,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "Nam N",
+      "bbox": {
+        "left": 632.0,
+        "top": 153.0,
+        "right": 700.0,
+        "bottom": 182.0
+      },
+      "confidence": 0.6572265625,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 497.0,
+        "top": 606.0,
+        "right": 607.0,
+        "bottom": 626.0
+      },
+      "confidence": 0.7639508843421936,
+      "block_index": 29,
+      "line_index": 0
+    },
+    {
+      "text": "BS. Dương Đức Hùng",
+      "bbox": {
+        "left": 464.0,
+        "top": 685.0,
+        "right": 631.0,
+        "bottom": 701.0
+      },
+      "confidence": 0.8088541626930237,
+      "block_index": 30,
+      "line_index": 0
+    },
+    {
+      "text": "15/05/2021 08:26:08",
+      "bbox": {
+        "left": 592.0,
+        "top": 781.0,
+        "right": 729.0,
+        "bottom": 793.0
+      },
+      "confidence": 0.7912326455116272,
+      "block_index": 31,
+      "line_index": 0
+    }
+  ]
+}

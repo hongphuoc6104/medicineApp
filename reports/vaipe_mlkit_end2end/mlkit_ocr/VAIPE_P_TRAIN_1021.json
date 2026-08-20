@@ -1,0 +1,405 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1021",
+  "file_name": "VAIPE_P_TRAIN_1021.png",
+  "text": "1/1\nĐịa chi\nThe bảo hiểm y tể\nMạch:\nCận lâm sàng:\nHANG\nGhi chú Uổng :\n1) PANACTOL 500mg\nGhi chú\nGB 435\nlần/phút Huyt áp:\nSố phiếu 1234/2018\nTOA THUỘC BHYT\nChẩn đoán: M54.2 - Đau vùng cổ gáy : (G45) Cơn thiểu máu não thoáng qua và hội chứng liên quan\n2) VITAMIN C STADA 1G 1g\nUống :\nCộng khoản: 2 khoản\nLời dẫn đơn thuốc: o\nNgày hẹn tái khám:\nBệnh nhân ký nhận\n35209\nSáng 1 Viên\nmmHg Thân nhiệt:\nTái khám xin mang theo đơn, xét nghiệm, phim (nêu có)\nMã số nguời bệnh\nNam NN\nSL: 10 Viên\nTổi I Viên\nSL:5 Viên\nNgày 24/04/2018\nY, Bác sĩ điều trị\nBS. Nguyễn Phúc Hải\n23/05/2021 08:40:52",
+  "block_count": 27,
+  "line_count": 33,
+  "lines": [
+    {
+      "text": "1/1",
+      "bbox": {
+        "left": 59.0,
+        "top": 28.0,
+        "right": 110.0,
+        "bottom": 58.0
+      },
+      "confidence": 0.7890625,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "Địa chi",
+      "bbox": {
+        "left": 30.0,
+        "top": 184.0,
+        "right": 75.0,
+        "bottom": 200.0
+      },
+      "confidence": 0.8001301884651184,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "The bảo hiểm y tể",
+      "bbox": {
+        "left": 30.0,
+        "top": 207.0,
+        "right": 148.0,
+        "bottom": 226.0
+      },
+      "confidence": 0.7512019276618958,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 30.0,
+        "top": 237.0,
+        "right": 71.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.82421875,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Cận lâm sàng:",
+      "bbox": {
+        "left": 30.0,
+        "top": 258.0,
+        "right": 123.0,
+        "bottom": 273.0
+      },
+      "confidence": 0.7911931872367859,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "HANG",
+      "bbox": {
+        "left": 155.0,
+        "top": 63.0,
+        "right": 206.0,
+        "bottom": 75.0
+      },
+      "confidence": 0.8671875,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uổng :",
+      "bbox": {
+        "left": 48.0,
+        "top": 415.0,
+        "right": 158.0,
+        "bottom": 433.0
+      },
+      "confidence": 0.7578125,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "1) PANACTOL 500mg",
+      "bbox": {
+        "left": 48.0,
+        "top": 385.0,
+        "right": 268.0,
+        "bottom": 411.0
+      },
+      "confidence": 0.7614583373069763,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú",
+      "bbox": {
+        "left": 37.0,
+        "top": 467.0,
+        "right": 90.0,
+        "bottom": 485.0
+      },
+      "confidence": 0.8619791865348816,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "GB 435",
+      "bbox": {
+        "left": 198.0,
+        "top": 205.0,
+        "right": 326.0,
+        "bottom": 227.0
+      },
+      "confidence": 0.846875011920929,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "lần/phút Huyt áp:",
+      "bbox": {
+        "left": 172.0,
+        "top": 234.0,
+        "right": 304.0,
+        "bottom": 253.0
+      },
+      "confidence": 0.7526041865348816,
+      "block_index": 9,
+      "line_index": 1
+    },
+    {
+      "text": "Số phiếu 1234/2018",
+      "bbox": {
+        "left": 375.0,
+        "top": 93.0,
+        "right": 530.0,
+        "bottom": 119.0
+      },
+      "confidence": 0.810546875,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỘC BHYT",
+      "bbox": {
+        "left": 262.0,
+        "top": 125.0,
+        "right": 504.0,
+        "bottom": 150.0
+      },
+      "confidence": 0.7838541865348816,
+      "block_index": 10,
+      "line_index": 1
+    },
+    {
+      "text": "Chẩn đoán: M54.2 - Đau vùng cổ gáy : (G45) Cơn thiểu máu não thoáng qua và hội chứng liên quan",
+      "bbox": {
+        "left": 30.0,
+        "top": 274.0,
+        "right": 702.0,
+        "bottom": 292.0
+      },
+      "confidence": 0.8348817825317383,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "2) VITAMIN C STADA 1G 1g",
+      "bbox": {
+        "left": 46.0,
+        "top": 442.0,
+        "right": 343.0,
+        "bottom": 463.0
+      },
+      "confidence": 0.8022204041481018,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "Uống :",
+      "bbox": {
+        "left": 126.0,
+        "top": 467.0,
+        "right": 159.0,
+        "bottom": 485.0
+      },
+      "confidence": 0.828906238079071,
+      "block_index": 12,
+      "line_index": 1
+    },
+    {
+      "text": "Cộng khoản: 2 khoản",
+      "bbox": {
+        "left": 35.0,
+        "top": 498.0,
+        "right": 195.0,
+        "bottom": 514.0
+      },
+      "confidence": 0.85205078125,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Lời dẫn đơn thuốc: o",
+      "bbox": {
+        "left": 36.0,
+        "top": 520.0,
+        "right": 184.0,
+        "bottom": 537.0
+      },
+      "confidence": 0.745361328125,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày hẹn tái khám:",
+      "bbox": {
+        "left": 35.0,
+        "top": 545.0,
+        "right": 163.0,
+        "bottom": 564.0
+      },
+      "confidence": 0.8695312738418579,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 67.0,
+        "top": 602.0,
+        "right": 197.0,
+        "bottom": 618.0
+      },
+      "confidence": 0.8074776530265808,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "35209",
+      "bbox": {
+        "left": 372.0,
+        "top": 205.0,
+        "right": 466.0,
+        "bottom": 227.0
+      },
+      "confidence": 0.890625,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 1 Viên",
+      "bbox": {
+        "left": 293.0,
+        "top": 419.0,
+        "right": 374.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.7565104365348816,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "mmHg Thân nhiệt:",
+      "bbox": {
+        "left": 454.0,
+        "top": 233.0,
+        "right": 590.0,
+        "bottom": 252.0
+      },
+      "confidence": 0.8253348469734192,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nêu có)",
+      "bbox": {
+        "left": 35.0,
+        "top": 739.0,
+        "right": 413.0,
+        "bottom": 756.0
+      },
+      "confidence": 0.8379360437393188,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Mã số nguời bệnh",
+      "bbox": {
+        "left": 604.0,
+        "top": 24.0,
+        "right": 712.0,
+        "bottom": 42.0
+      },
+      "confidence": 0.6989182829856873,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "Nam NN",
+      "bbox": {
+        "left": 629.0,
+        "top": 150.0,
+        "right": 732.0,
+        "bottom": 180.0
+      },
+      "confidence": 0.68359375,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 10 Viên",
+      "bbox": {
+        "left": 597.0,
+        "top": 387.0,
+        "right": 705.0,
+        "bottom": 409.0
+      },
+      "confidence": 0.7799479365348816,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Tổi I Viên",
+      "bbox": {
+        "left": 627.0,
+        "top": 416.0,
+        "right": 699.0,
+        "bottom": 431.0
+      },
+      "confidence": 0.70068359375,
+      "block_index": 23,
+      "line_index": 1
+    },
+    {
+      "text": "SL:5 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 440.0,
+        "right": 693.0,
+        "bottom": 458.0
+      },
+      "confidence": 0.66845703125,
+      "block_index": 23,
+      "line_index": 2
+    },
+    {
+      "text": "Ngày 24/04/2018",
+      "bbox": {
+        "left": 487.0,
+        "top": 580.0,
+        "right": 618.0,
+        "bottom": 597.0
+      },
+      "confidence": 0.892578125,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 497.0,
+        "top": 608.0,
+        "right": 610.0,
+        "bottom": 626.0
+      },
+      "confidence": 0.7940848469734192,
+      "block_index": 24,
+      "line_index": 1
+    },
+    {
+      "text": "BS. Nguyễn Phúc Hải",
+      "bbox": {
+        "left": 465.0,
+        "top": 679.0,
+        "right": 626.0,
+        "bottom": 702.0
+      },
+      "confidence": 0.825927734375,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "23/05/2021 08:40:52",
+      "bbox": {
+        "left": 590.0,
+        "top": 781.0,
+        "right": 729.0,
+        "bottom": 793.0
+      },
+      "confidence": 0.8506944179534912,
+      "block_index": 26,
+      "line_index": 0
+    }
+  ]
+}

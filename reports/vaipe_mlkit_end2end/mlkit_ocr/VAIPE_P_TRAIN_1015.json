@@ -1,0 +1,381 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1015",
+  "file_name": "VAIPE_P_TRAIN_1015.png",
+  "text": "1/1\nPK SỐ 3 NH)\nThe bảo hiểm y tế\nMạch:\nCận lâm sàng:\nCK\nlần/phút\nGhi chú Uông sau khi n :\nChẩn đoán: M47 - Hu cột sống (thoái hoá cột sống)\n1) MYPARA 500 500mg\nCộng khoản: 1 khoản\nLời dặn đơn thuốc:\nNgày hẹn tái khám:\nSố phiếu 69267/2019\nTOA THUỐC BHYT\nBệnh nhân ký nhận\nT 35 35 208\nHuyế áp:\nSáng I Viên\nTái khám xin mang theo đơn, xét nghiệm, phim (nêu có)\nmmHg\n13814\nThân nhiệt:\nMã số người bệnh\nChiều I Viên\nSL: 14 Viên\nNgày 04 /11 /2019\nY, Bác sĩ điều trị\nNam NoI\nBS. Trần Mạnh Hà\n14/05/2021 15:39:49",
+  "block_count": 27,
+  "line_count": 31,
+  "lines": [
+    {
+      "text": "1/1",
+      "bbox": {
+        "left": 59.0,
+        "top": 28.0,
+        "right": 110.0,
+        "bottom": 58.0
+      },
+      "confidence": 0.7708333134651184,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "PK SỐ 3 NH)",
+      "bbox": {
+        "left": 28.0,
+        "top": 89.0,
+        "right": 129.0,
+        "bottom": 110.0
+      },
+      "confidence": 0.7080078125,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "The bảo hiểm y tế",
+      "bbox": {
+        "left": 30.0,
+        "top": 207.0,
+        "right": 148.0,
+        "bottom": 226.0
+      },
+      "confidence": 0.7584134340286255,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 30.0,
+        "top": 237.0,
+        "right": 71.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.80859375,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Cận lâm sàng:",
+      "bbox": {
+        "left": 30.0,
+        "top": 258.0,
+        "right": 123.0,
+        "bottom": 273.0
+      },
+      "confidence": 0.7911931872367859,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "CK",
+      "bbox": {
+        "left": 174.0,
+        "top": 209.0,
+        "right": 224.0,
+        "bottom": 227.0
+      },
+      "confidence": 0.84765625,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "lần/phút",
+      "bbox": {
+        "left": 171.0,
+        "top": 232.0,
+        "right": 224.0,
+        "bottom": 252.0
+      },
+      "confidence": 0.77685546875,
+      "block_index": 5,
+      "line_index": 1
+    },
+    {
+      "text": "Ghi chú Uông sau khi n :",
+      "bbox": {
+        "left": 37.0,
+        "top": 417.0,
+        "right": 231.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.7721354365348816,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Chẩn đoán: M47 - Hu cột sống (thoái hoá cột sống)",
+      "bbox": {
+        "left": 30.0,
+        "top": 274.0,
+        "right": 375.0,
+        "bottom": 292.0
+      },
+      "confidence": 0.7994791865348816,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "1) MYPARA 500 500mg",
+      "bbox": {
+        "left": 49.0,
+        "top": 387.0,
+        "right": 287.0,
+        "bottom": 411.0
+      },
+      "confidence": 0.79638671875,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Cộng khoản: 1 khoản",
+      "bbox": {
+        "left": 35.0,
+        "top": 445.0,
+        "right": 195.0,
+        "bottom": 462.0
+      },
+      "confidence": 0.831298828125,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "Lời dặn đơn thuốc:",
+      "bbox": {
+        "left": 36.0,
+        "top": 466.0,
+        "right": 160.0,
+        "bottom": 486.0
+      },
+      "confidence": 0.8119791746139526,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày hẹn tái khám:",
+      "bbox": {
+        "left": 35.0,
+        "top": 497.0,
+        "right": 165.0,
+        "bottom": 512.0
+      },
+      "confidence": 0.858593761920929,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Số phiếu 69267/2019",
+      "bbox": {
+        "left": 375.0,
+        "top": 93.0,
+        "right": 542.0,
+        "bottom": 119.0
+      },
+      "confidence": 0.7778033018112183,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỐC BHYT",
+      "bbox": {
+        "left": 262.0,
+        "top": 125.0,
+        "right": 505.0,
+        "bottom": 150.0
+      },
+      "confidence": 0.7766926884651184,
+      "block_index": 12,
+      "line_index": 1
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 66.0,
+        "top": 547.0,
+        "right": 195.0,
+        "bottom": 565.0
+      },
+      "confidence": 0.8094307780265808,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "T 35 35 208",
+      "bbox": {
+        "left": 294.0,
+        "top": 204.0,
+        "right": 468.0,
+        "bottom": 226.0
+      },
+      "confidence": 0.701171875,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "Huyế áp:",
+      "bbox": {
+        "left": 240.0,
+        "top": 233.0,
+        "right": 303.0,
+        "bottom": 253.0
+      },
+      "confidence": 0.7706473469734192,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng I Viên",
+      "bbox": {
+        "left": 292.0,
+        "top": 416.0,
+        "right": 372.0,
+        "bottom": 433.0
+      },
+      "confidence": 0.7599826455116272,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nêu có)",
+      "bbox": {
+        "left": 35.0,
+        "top": 687.0,
+        "right": 413.0,
+        "bottom": 704.0
+      },
+      "confidence": 0.8372092843055725,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "mmHg",
+      "bbox": {
+        "left": 454.0,
+        "top": 235.0,
+        "right": 498.0,
+        "bottom": 252.0
+      },
+      "confidence": 0.7724609375,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "13814",
+      "bbox": {
+        "left": 513.0,
+        "top": 209.0,
+        "right": 562.0,
+        "bottom": 227.0
+      },
+      "confidence": 0.940625011920929,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Thân nhiệt:",
+      "bbox": {
+        "left": 517.0,
+        "top": 234.0,
+        "right": 590.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.7875000238418579,
+      "block_index": 19,
+      "line_index": 1
+    },
+    {
+      "text": "Mã số người bệnh",
+      "bbox": {
+        "left": 604.0,
+        "top": 24.0,
+        "right": 712.0,
+        "bottom": 42.0
+      },
+      "confidence": 0.6890023946762085,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Chiều I Viên",
+      "bbox": {
+        "left": 516.0,
+        "top": 416.0,
+        "right": 603.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.7621093988418579,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 14 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 389.0,
+        "right": 705.0,
+        "bottom": 406.0
+      },
+      "confidence": 0.8003472089767456,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày 04 /11 /2019",
+      "bbox": {
+        "left": 488.0,
+        "top": 526.0,
+        "right": 618.0,
+        "bottom": 547.0
+      },
+      "confidence": 0.81640625,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 496.0,
+        "top": 555.0,
+        "right": 609.0,
+        "bottom": 573.0
+      },
+      "confidence": 0.771484375,
+      "block_index": 23,
+      "line_index": 1
+    },
+    {
+      "text": "Nam NoI",
+      "bbox": {
+        "left": 622.0,
+        "top": 152.0,
+        "right": 733.0,
+        "bottom": 182.0
+      },
+      "confidence": 0.5579426884651184,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "BS. Trần Mạnh Hà",
+      "bbox": {
+        "left": 475.0,
+        "top": 629.0,
+        "right": 618.0,
+        "bottom": 649.0
+      },
+      "confidence": 0.8359375,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "14/05/2021 15:39:49",
+      "bbox": {
+        "left": 592.0,
+        "top": 729.0,
+        "right": 729.0,
+        "bottom": 741.0
+      },
+      "confidence": 0.82421875,
+      "block_index": 26,
+      "line_index": 0
+    }
+  ]
+}

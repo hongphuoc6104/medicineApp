@@ -1,0 +1,237 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1016",
+  "file_name": "VAIPE_P_TRAIN_1016.png",
+  "text": "Điện thoại:\nĐƠN THUỐC BHYT\nCân năng kg NamNữ x\nChân đoán: El1 - Bệnh đái tháo đường không phụ thuộc insuline; (E78.2)\nTăng lipid máu hốn hợp; (170) Xơ vừa động mạch\nThuốc điều trị:\n1 ) Metformin (Metformin 500) 500mg\nSL: 62 Viên\nUống sau khi ăn : SÁNG 1 Viên TÔI 1 Viên\n2 )Atorvastatin (Atoris 20mg) 20mg\nUông sau khi ăn : TRỰA 1 Viên\nSL: 30 Viên\nLòi dặn: KHÁM LẠI 25/1/2022\nKhám lại xin mang theo đơn này.\nNgày 23 tháng 12 năm 2021\nBác sỹ/Y sỹ khám bệnh\n(Ký, ghi rõ họ tên)\nBS. Nguyễn Đức Thái\nTên bổ hoặc mẹ của trẻ hoặc người đưa trẻ đền khám bệnh, chữa bệnh",
+  "block_count": 13,
+  "line_count": 19,
+  "lines": [
+    {
+      "text": "Điện thoại:",
+      "bbox": {
+        "left": 45.0,
+        "top": 108.0,
+        "right": 191.0,
+        "bottom": 137.0
+      },
+      "confidence": 0.8515625,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "ĐƠN THUỐC BHYT",
+      "bbox": {
+        "left": 401.0,
+        "top": 153.0,
+        "right": 747.0,
+        "bottom": 188.0
+      },
+      "confidence": 0.7945963740348816,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "Cân năng kg NamNữ x",
+      "bbox": {
+        "left": 714.0,
+        "top": 205.0,
+        "right": 1096.0,
+        "bottom": 252.0
+      },
+      "confidence": 0.7554687261581421,
+      "block_index": 1,
+      "line_index": 1
+    },
+    {
+      "text": "Chân đoán: El1 - Bệnh đái tháo đường không phụ thuộc insuline; (E78.2)",
+      "bbox": {
+        "left": 39.0,
+        "top": 353.0,
+        "right": 1037.0,
+        "bottom": 388.0
+      },
+      "confidence": 0.8335129022598267,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Tăng lipid máu hốn hợp; (170) Xơ vừa động mạch",
+      "bbox": {
+        "left": 39.0,
+        "top": 394.0,
+        "right": 711.0,
+        "bottom": 426.0
+      },
+      "confidence": 0.7930743098258972,
+      "block_index": 2,
+      "line_index": 1
+    },
+    {
+      "text": "Thuốc điều trị:",
+      "bbox": {
+        "left": 38.0,
+        "top": 430.0,
+        "right": 236.0,
+        "bottom": 466.0
+      },
+      "confidence": 0.8683894276618958,
+      "block_index": 2,
+      "line_index": 2
+    },
+    {
+      "text": "1 ) Metformin (Metformin 500) 500mg",
+      "bbox": {
+        "left": 55.0,
+        "top": 479.0,
+        "right": 573.0,
+        "bottom": 514.0
+      },
+      "confidence": 0.8255208134651184,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 62 Viên",
+      "bbox": {
+        "left": 46.0,
+        "top": 553.0,
+        "right": 195.0,
+        "bottom": 576.0
+      },
+      "confidence": 0.8046875,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "Uống sau khi ăn : SÁNG 1 Viên TÔI 1 Viên",
+      "bbox": {
+        "left": 283.0,
+        "top": 550.0,
+        "right": 845.0,
+        "bottom": 580.0
+      },
+      "confidence": 0.760546863079071,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "2 )Atorvastatin (Atoris 20mg) 20mg",
+      "bbox": {
+        "left": 37.0,
+        "top": 610.0,
+        "right": 542.0,
+        "bottom": 644.0
+      },
+      "confidence": 0.8727864623069763,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Uông sau khi ăn : TRỰA 1 Viên",
+      "bbox": {
+        "left": 283.0,
+        "top": 680.0,
+        "right": 689.0,
+        "bottom": 708.0
+      },
+      "confidence": 0.7565696239471436,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 30 Viên",
+      "bbox": {
+        "left": 46.0,
+        "top": 681.0,
+        "right": 196.0,
+        "bottom": 704.0
+      },
+      "confidence": 0.7981770634651184,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Lòi dặn: KHÁM LẠI 25/1/2022",
+      "bbox": {
+        "left": 43.0,
+        "top": 739.0,
+        "right": 476.0,
+        "bottom": 772.0
+      },
+      "confidence": 0.8213315010070801,
+      "block_index": 8,
+      "line_index": 1
+    },
+    {
+      "text": "Khám lại xin mang theo đơn này.",
+      "bbox": {
+        "left": 63.0,
+        "top": 1071.0,
+        "right": 508.0,
+        "bottom": 1101.0
+      },
+      "confidence": 0.8270312547683716,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày 23 tháng 12 năm 2021",
+      "bbox": {
+        "left": 648.0,
+        "top": 789.0,
+        "right": 1024.0,
+        "bottom": 819.0
+      },
+      "confidence": 0.8896484375,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Bác sỹ/Y sỹ khám bệnh",
+      "bbox": {
+        "left": 681.0,
+        "top": 836.0,
+        "right": 998.0,
+        "bottom": 866.0
+      },
+      "confidence": 0.8191636204719543,
+      "block_index": 10,
+      "line_index": 1
+    },
+    {
+      "text": "(Ký, ghi rõ họ tên)",
+      "bbox": {
+        "left": 716.0,
+        "top": 874.0,
+        "right": 961.0,
+        "bottom": 913.0
+      },
+      "confidence": 0.7940104007720947,
+      "block_index": 10,
+      "line_index": 2
+    },
+    {
+      "text": "BS. Nguyễn Đức Thái",
+      "bbox": {
+        "left": 691.0,
+        "top": 1021.0,
+        "right": 988.0,
+        "bottom": 1055.0
+      },
+      "confidence": 0.831787109375,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Tên bổ hoặc mẹ của trẻ hoặc người đưa trẻ đền khám bệnh, chữa bệnh",
+      "bbox": {
+        "left": 66.0,
+        "top": 1118.0,
+        "right": 1003.0,
+        "bottom": 1150.0
+      },
+      "confidence": 0.8089693784713745,
+      "block_index": 12,
+      "line_index": 0
+    }
+  ]
+}

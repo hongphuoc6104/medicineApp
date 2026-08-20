@@ -1,0 +1,489 @@
+{
+  "image_id": "VAIPE_P_TRAIN_102",
+  "file_name": "VAIPE_P_TRAIN_102.png",
+  "text": "1/1\nPK Số 2 [NỘi]\nThe bảo hiểm y tế\nMạch:\nCận lâm sàng:\nGhi chú Uổng :\n1) TROYSAR AM Smg +50mg\nGhi chú Uống\nHT\nlần phút Huyết áp:\n2) LENINARTO 10 10mg\nGhi chú\nSố phiếu 73396/2018\nTOA THUỐC BHYT\nChẩn đoán: I10 - Tăng huyết áp vô căn (nguyên phát) : (E78) Rối loạn chuyển hoá lipoprotein và tỉnh\ntrạng tảng lipid máu khác\nUông:\nCộng khoản: 3 khoản\nLời dặn đơn thuốc:\n35\n3) STACETAM 80OMG 800mg\nNgày hẹn tái khám:\nBệnh nhân ký nhận\n35 206 87166\nSáng 1 Viên\nSáng I Viên\nmmHg Thân nhiệt:\nTái khám xin mang theo đơn, xét nghiệm, phim (nếu có)\nMã số nguời bệnh\nSL: 62 Viên\nChiều l Viên\nNam NoI\nSL: 31 Viên\nTối I Viên\nSL: 20 Viên\nChiều 1 Viên\nNgày 23/11/ 2018\nY, Bác sĩ điều trị\nBS. Trần Mạnh Hà\n18/05/2021 15:29:06",
+  "block_count": 34,
+  "line_count": 40,
+  "lines": [
+    {
+      "text": "1/1",
+      "bbox": {
+        "left": 59.0,
+        "top": 28.0,
+        "right": 110.0,
+        "bottom": 58.0
+      },
+      "confidence": 0.7916666865348816,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "PK Số 2 [NỘi]",
+      "bbox": {
+        "left": 28.0,
+        "top": 90.0,
+        "right": 125.0,
+        "bottom": 111.0
+      },
+      "confidence": 0.551562488079071,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "The bảo hiểm y tế",
+      "bbox": {
+        "left": 30.0,
+        "top": 207.0,
+        "right": 149.0,
+        "bottom": 226.0
+      },
+      "confidence": 0.7524038553237915,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "Mạch:",
+      "bbox": {
+        "left": 30.0,
+        "top": 237.0,
+        "right": 71.0,
+        "bottom": 251.0
+      },
+      "confidence": 0.82421875,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "Cận lâm sàng:",
+      "bbox": {
+        "left": 30.0,
+        "top": 258.0,
+        "right": 123.0,
+        "bottom": 273.0
+      },
+      "confidence": 0.7911931872367859,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uổng :",
+      "bbox": {
+        "left": 49.0,
+        "top": 416.0,
+        "right": 160.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.7745028138160706,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "1) TROYSAR AM Smg +50mg",
+      "bbox": {
+        "left": 48.0,
+        "top": 386.0,
+        "right": 344.0,
+        "bottom": 410.0
+      },
+      "confidence": 0.7574012875556946,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú Uống",
+      "bbox": {
+        "left": 37.0,
+        "top": 469.0,
+        "right": 150.0,
+        "bottom": 484.0
+      },
+      "confidence": 0.7925781011581421,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "HT",
+      "bbox": {
+        "left": 178.0,
+        "top": 209.0,
+        "right": 220.0,
+        "bottom": 227.0
+      },
+      "confidence": 0.751953125,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "lần phút Huyết áp:",
+      "bbox": {
+        "left": 171.0,
+        "top": 233.0,
+        "right": 304.0,
+        "bottom": 254.0
+      },
+      "confidence": 0.7973958253860474,
+      "block_index": 8,
+      "line_index": 1
+    },
+    {
+      "text": "2) LENINARTO 10 10mg",
+      "bbox": {
+        "left": 45.0,
+        "top": 439.0,
+        "right": 295.0,
+        "bottom": 461.0
+      },
+      "confidence": 0.7973345518112183,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "Ghi chú",
+      "bbox": {
+        "left": 36.0,
+        "top": 520.0,
+        "right": 89.0,
+        "bottom": 536.0
+      },
+      "confidence": 0.8548176884651184,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Số phiếu 73396/2018",
+      "bbox": {
+        "left": 375.0,
+        "top": 94.0,
+        "right": 540.0,
+        "bottom": 119.0
+      },
+      "confidence": 0.7980238795280457,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "TOA THUỐC BHYT",
+      "bbox": {
+        "left": 262.0,
+        "top": 125.0,
+        "right": 505.0,
+        "bottom": 150.0
+      },
+      "confidence": 0.7705078125,
+      "block_index": 11,
+      "line_index": 1
+    },
+    {
+      "text": "Chẩn đoán: I10 - Tăng huyết áp vô căn (nguyên phát) : (E78) Rối loạn chuyển hoá lipoprotein và tỉnh",
+      "bbox": {
+        "left": 30.0,
+        "top": 274.0,
+        "right": 709.0,
+        "bottom": 292.0
+      },
+      "confidence": 0.80908203125,
+      "block_index": 12,
+      "line_index": 0
+    },
+    {
+      "text": "trạng tảng lipid máu khác",
+      "bbox": {
+        "left": 30.0,
+        "top": 293.0,
+        "right": 197.0,
+        "bottom": 314.0
+      },
+      "confidence": 0.8647693395614624,
+      "block_index": 12,
+      "line_index": 1
+    },
+    {
+      "text": "Uông:",
+      "bbox": {
+        "left": 123.0,
+        "top": 521.0,
+        "right": 156.0,
+        "bottom": 537.0
+      },
+      "confidence": 0.6695312261581421,
+      "block_index": 13,
+      "line_index": 0
+    },
+    {
+      "text": "Cộng khoản: 3 khoản",
+      "bbox": {
+        "left": 35.0,
+        "top": 546.0,
+        "right": 193.0,
+        "bottom": 565.0
+      },
+      "confidence": 0.83056640625,
+      "block_index": 13,
+      "line_index": 1
+    },
+    {
+      "text": "Lời dặn đơn thuốc:",
+      "bbox": {
+        "left": 36.0,
+        "top": 573.0,
+        "right": 161.0,
+        "bottom": 590.0
+      },
+      "confidence": 0.8072916865348816,
+      "block_index": 14,
+      "line_index": 0
+    },
+    {
+      "text": "35",
+      "bbox": {
+        "left": 303.0,
+        "top": 209.0,
+        "right": 321.0,
+        "bottom": 224.0
+      },
+      "confidence": 0.744140625,
+      "block_index": 15,
+      "line_index": 0
+    },
+    {
+      "text": "3) STACETAM 80OMG 800mg",
+      "bbox": {
+        "left": 47.0,
+        "top": 494.0,
+        "right": 349.0,
+        "bottom": 514.0
+      },
+      "confidence": 0.831835925579071,
+      "block_index": 16,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày hẹn tái khám:",
+      "bbox": {
+        "left": 36.0,
+        "top": 601.0,
+        "right": 165.0,
+        "bottom": 616.0
+      },
+      "confidence": 0.8531249761581421,
+      "block_index": 17,
+      "line_index": 0
+    },
+    {
+      "text": "Bệnh nhân ký nhận",
+      "bbox": {
+        "left": 67.0,
+        "top": 654.0,
+        "right": 197.0,
+        "bottom": 671.0
+      },
+      "confidence": 0.8376116156578064,
+      "block_index": 18,
+      "line_index": 0
+    },
+    {
+      "text": "35 206 87166",
+      "bbox": {
+        "left": 368.0,
+        "top": 204.0,
+        "right": 558.0,
+        "bottom": 226.0
+      },
+      "confidence": 0.867968738079071,
+      "block_index": 19,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng 1 Viên",
+      "bbox": {
+        "left": 293.0,
+        "top": 419.0,
+        "right": 374.0,
+        "bottom": 434.0
+      },
+      "confidence": 0.7222222089767456,
+      "block_index": 20,
+      "line_index": 0
+    },
+    {
+      "text": "Sáng I Viên",
+      "bbox": {
+        "left": 292.0,
+        "top": 520.0,
+        "right": 372.0,
+        "bottom": 537.0
+      },
+      "confidence": 0.7760416865348816,
+      "block_index": 21,
+      "line_index": 0
+    },
+    {
+      "text": "mmHg Thân nhiệt:",
+      "bbox": {
+        "left": 454.0,
+        "top": 232.0,
+        "right": 589.0,
+        "bottom": 253.0
+      },
+      "confidence": 0.7974330186843872,
+      "block_index": 22,
+      "line_index": 0
+    },
+    {
+      "text": "Tái khám xin mang theo đơn, xét nghiệm, phim (nếu có)",
+      "bbox": {
+        "left": 35.0,
+        "top": 790.0,
+        "right": 413.0,
+        "bottom": 808.0
+      },
+      "confidence": 0.8449309468269348,
+      "block_index": 23,
+      "line_index": 0
+    },
+    {
+      "text": "Mã số nguời bệnh",
+      "bbox": {
+        "left": 604.0,
+        "top": 24.0,
+        "right": 712.0,
+        "bottom": 42.0
+      },
+      "confidence": 0.6929086446762085,
+      "block_index": 24,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 62 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 389.0,
+        "right": 706.0,
+        "bottom": 406.0
+      },
+      "confidence": 0.7296006679534912,
+      "block_index": 25,
+      "line_index": 0
+    },
+    {
+      "text": "Chiều l Viên",
+      "bbox": {
+        "left": 516.0,
+        "top": 415.0,
+        "right": 604.0,
+        "bottom": 431.0
+      },
+      "confidence": 0.7789062261581421,
+      "block_index": 26,
+      "line_index": 0
+    },
+    {
+      "text": "Nam NoI",
+      "bbox": {
+        "left": 622.0,
+        "top": 151.0,
+        "right": 733.0,
+        "bottom": 181.0
+      },
+      "confidence": 0.5559895634651184,
+      "block_index": 27,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 31 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 441.0,
+        "right": 705.0,
+        "bottom": 459.0
+      },
+      "confidence": 0.7690972089767456,
+      "block_index": 28,
+      "line_index": 0
+    },
+    {
+      "text": "Tối I Viên",
+      "bbox": {
+        "left": 627.0,
+        "top": 468.0,
+        "right": 699.0,
+        "bottom": 483.0
+      },
+      "confidence": 0.72802734375,
+      "block_index": 28,
+      "line_index": 1
+    },
+    {
+      "text": "SL: 20 Viên",
+      "bbox": {
+        "left": 596.0,
+        "top": 494.0,
+        "right": 706.0,
+        "bottom": 511.0
+      },
+      "confidence": 0.7955729365348816,
+      "block_index": 28,
+      "line_index": 2
+    },
+    {
+      "text": "Chiều 1 Viên",
+      "bbox": {
+        "left": 516.0,
+        "top": 519.0,
+        "right": 604.0,
+        "bottom": 535.0
+      },
+      "confidence": 0.7757812738418579,
+      "block_index": 29,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày 23/11/ 2018",
+      "bbox": {
+        "left": 496.0,
+        "top": 630.0,
+        "right": 621.0,
+        "bottom": 650.0
+      },
+      "confidence": 0.8225446343421936,
+      "block_index": 30,
+      "line_index": 0
+    },
+    {
+      "text": "Y, Bác sĩ điều trị",
+      "bbox": {
+        "left": 497.0,
+        "top": 661.0,
+        "right": 608.0,
+        "bottom": 678.0
+      },
+      "confidence": 0.8013392686843872,
+      "block_index": 31,
+      "line_index": 0
+    },
+    {
+      "text": "BS. Trần Mạnh Hà",
+      "bbox": {
+        "left": 476.0,
+        "top": 734.0,
+        "right": 618.0,
+        "bottom": 755.0
+      },
+      "confidence": 0.8362379670143127,
+      "block_index": 32,
+      "line_index": 0
+    },
+    {
+      "text": "18/05/2021 15:29:06",
+      "bbox": {
+        "left": 592.0,
+        "top": 833.0,
+        "right": 729.0,
+        "bottom": 845.0
+      },
+      "confidence": 0.7690972089767456,
+      "block_index": 33,
+      "line_index": 0
+    }
+  ]
+}

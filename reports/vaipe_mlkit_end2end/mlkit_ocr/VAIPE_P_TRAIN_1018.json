@@ -1,0 +1,237 @@
+{
+  "image_id": "VAIPE_P_TRAIN_1018",
+  "file_name": "VAIPE_P_TRAIN_1018.png",
+  "text": "Điện thoạ:\nChân đoán: LO8 - Nhiễm khuấn khu trú khác của da và mộ dưới da căng chân\ntrái ; (G46*) Hội chứng mạch máu não trong bệnh mạch não (I60-167t)\nThuốc điều trị:\n1 ) Amoxicilin (Fabamox 500) 500mg\nSL: 20 Viên\nĐƠN THUỐC BHYT\nCân nặng kg Nam x Nữ\nSL: 20 viên\n2 ) Đinh lăng, bạch quả (Hoạt huyết dưỡng não) 150mg+20mg\nUống: SÁNG 2 viên CHIỀU 2 viên\nLời dặn:\nUống : SÁNG 2 Viên CHIỀU 2 Viên\nKhám lại xin mang theo đơn này.\nNgày 31 tháng 12 năm 2021\nBác sỹ/Y sỹ khám bệnh\n(Ký, ghi rỗ họ tên)\nBSCKI. Lưu Minh Tân\nTên bố hoặc mẹ của trẻ hoặc người đưa trẻ đên khám bệnh, chữa bệnh",
+  "block_count": 13,
+  "line_count": 19,
+  "lines": [
+    {
+      "text": "Điện thoạ:",
+      "bbox": {
+        "left": 45.0,
+        "top": 108.0,
+        "right": 191.0,
+        "bottom": 137.0
+      },
+      "confidence": 0.8619791865348816,
+      "block_index": 0,
+      "line_index": 0
+    },
+    {
+      "text": "Chân đoán: LO8 - Nhiễm khuấn khu trú khác của da và mộ dưới da căng chân",
+      "bbox": {
+        "left": 40.0,
+        "top": 353.0,
+        "right": 1076.0,
+        "bottom": 386.0
+      },
+      "confidence": 0.8175223469734192,
+      "block_index": 1,
+      "line_index": 0
+    },
+    {
+      "text": "trái ; (G46*) Hội chứng mạch máu não trong bệnh mạch não (I60-167t)",
+      "bbox": {
+        "left": 39.0,
+        "top": 395.0,
+        "right": 996.0,
+        "bottom": 427.0
+      },
+      "confidence": 0.8288352489471436,
+      "block_index": 1,
+      "line_index": 1
+    },
+    {
+      "text": "Thuốc điều trị:",
+      "bbox": {
+        "left": 38.0,
+        "top": 427.0,
+        "right": 236.0,
+        "bottom": 466.0
+      },
+      "confidence": 0.8587740659713745,
+      "block_index": 1,
+      "line_index": 2
+    },
+    {
+      "text": "1 ) Amoxicilin (Fabamox 500) 500mg",
+      "bbox": {
+        "left": 42.0,
+        "top": 480.0,
+        "right": 560.0,
+        "bottom": 515.0
+      },
+      "confidence": 0.8244881629943848,
+      "block_index": 2,
+      "line_index": 0
+    },
+    {
+      "text": "SL: 20 Viên",
+      "bbox": {
+        "left": 46.0,
+        "top": 553.0,
+        "right": 196.0,
+        "bottom": 576.0
+      },
+      "confidence": 0.7899305820465088,
+      "block_index": 3,
+      "line_index": 0
+    },
+    {
+      "text": "ĐƠN THUỐC BHYT",
+      "bbox": {
+        "left": 401.0,
+        "top": 153.0,
+        "right": 747.0,
+        "bottom": 188.0
+      },
+      "confidence": 0.7945963740348816,
+      "block_index": 4,
+      "line_index": 0
+    },
+    {
+      "text": "Cân nặng kg Nam x Nữ",
+      "bbox": {
+        "left": 716.0,
+        "top": 205.0,
+        "right": 1051.0,
+        "bottom": 253.0
+      },
+      "confidence": 0.7640625238418579,
+      "block_index": 4,
+      "line_index": 1
+    },
+    {
+      "text": "SL: 20 viên",
+      "bbox": {
+        "left": 46.0,
+        "top": 681.0,
+        "right": 189.0,
+        "bottom": 704.0
+      },
+      "confidence": 0.8077256679534912,
+      "block_index": 5,
+      "line_index": 0
+    },
+    {
+      "text": "2 ) Đinh lăng, bạch quả (Hoạt huyết dưỡng não) 150mg+20mg",
+      "bbox": {
+        "left": 37.0,
+        "top": 606.0,
+        "right": 889.0,
+        "bottom": 644.0
+      },
+      "confidence": 0.7715259194374084,
+      "block_index": 6,
+      "line_index": 0
+    },
+    {
+      "text": "Uống: SÁNG 2 viên CHIỀU 2 viên",
+      "bbox": {
+        "left": 283.0,
+        "top": 675.0,
+        "right": 734.0,
+        "bottom": 710.0
+      },
+      "confidence": 0.80517578125,
+      "block_index": 6,
+      "line_index": 1
+    },
+    {
+      "text": "Lời dặn:",
+      "bbox": {
+        "left": 43.0,
+        "top": 741.0,
+        "right": 154.0,
+        "bottom": 772.0
+      },
+      "confidence": 0.7957589030265808,
+      "block_index": 7,
+      "line_index": 0
+    },
+    {
+      "text": "Uống : SÁNG 2 Viên CHIỀU 2 Viên",
+      "bbox": {
+        "left": 283.0,
+        "top": 548.0,
+        "right": 747.0,
+        "bottom": 582.0
+      },
+      "confidence": 0.8107096552848816,
+      "block_index": 8,
+      "line_index": 0
+    },
+    {
+      "text": "Khám lại xin mang theo đơn này.",
+      "bbox": {
+        "left": 63.0,
+        "top": 1071.0,
+        "right": 508.0,
+        "bottom": 1101.0
+      },
+      "confidence": 0.8270312547683716,
+      "block_index": 9,
+      "line_index": 0
+    },
+    {
+      "text": "Ngày 31 tháng 12 năm 2021",
+      "bbox": {
+        "left": 649.0,
+        "top": 789.0,
+        "right": 1024.0,
+        "bottom": 819.0
+      },
+      "confidence": 0.8638671636581421,
+      "block_index": 10,
+      "line_index": 0
+    },
+    {
+      "text": "Bác sỹ/Y sỹ khám bệnh",
+      "bbox": {
+        "left": 682.0,
+        "top": 836.0,
+        "right": 998.0,
+        "bottom": 865.0
+      },
+      "confidence": 0.8131893277168274,
+      "block_index": 10,
+      "line_index": 1
+    },
+    {
+      "text": "(Ký, ghi rỗ họ tên)",
+      "bbox": {
+        "left": 716.0,
+        "top": 876.0,
+        "right": 961.0,
+        "bottom": 913.0
+      },
+      "confidence": 0.7419270873069763,
+      "block_index": 10,
+      "line_index": 2
+    },
+    {
+      "text": "BSCKI. Lưu Minh Tân",
+      "bbox": {
+        "left": 684.0,
+        "top": 1026.0,
+        "right": 995.0,
+        "bottom": 1050.0
+      },
+      "confidence": 0.79638671875,
+      "block_index": 11,
+      "line_index": 0
+    },
+    {
+      "text": "Tên bố hoặc mẹ của trẻ hoặc người đưa trẻ đên khám bệnh, chữa bệnh",
+      "bbox": {
+        "left": 66.0,
+        "top": 1118.0,
+        "right": 1003.0,
+        "bottom": 1151.0
+      },
+      "confidence": 0.8179086446762085,
+      "block_index": 12,
+      "line_index": 0
+    }
+  ]
+}

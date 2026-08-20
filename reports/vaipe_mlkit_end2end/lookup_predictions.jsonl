@@ -1,0 +1,57 @@
+{"image_id": "VAIPE_P_TRAIN_0", "drug_name": "RENAPRIL SMG 5", "matched_drug_name": "Renapril 10mg", "mapping_status": "unmapped_candidate", "score": 0.8}
+{"image_id": "VAIPE_P_TRAIN_0", "drug_name": "NOVOXIM-500 0,5", "matched_drug_name": "Novoxim-500", "mapping_status": "unmapped_candidate", "score": 0.846}
+{"image_id": "VAIPE_P_TRAIN_0", "drug_name": "HOẠTHUYẾT DƯỚNG NÃO mg 150 20", "matched_drug_name": "Hoạt huyết dưỡng não", "mapping_status": "unmapped_candidate", "score": 0.783}
+{"image_id": "VAIPE_P_TRAIN_1", "drug_name": "ENALAPRIL Smg", "matched_drug_name": "SP Enalapril", "mapping_status": "unmapped_candidate", "score": 0.88}
+{"image_id": "VAIPE_P_TRAIN_1", "drug_name": "DIAMICRON MR TAB 30MG 60 ' S", "matched_drug_name": "Diamicron MR", "mapping_status": "unmapped_candidate", "score": 0.727}
+{"image_id": "VAIPE_P_TRAIN_10", "drug_name": "MEGLUCON 1000", "matched_drug_name": "Meglucon 1000", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_100", "drug_name": "STACETAM 80OMG 800", "matched_drug_name": "Stacetam 3g", "mapping_status": "unmapped_candidate", "score": 0.727}
+{"image_id": "VAIPE_P_TRAIN_1000", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1000", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1001", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1001", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1002", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1002", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1003", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1003", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1004", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1004", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1005", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1005", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1006", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1006", "drug_name": "thần kinh", "matched_drug_name": "Thần kinh D3", "mapping_status": "unmapped_candidate", "score": 0.857}
+{"image_id": "VAIPE_P_TRAIN_1006", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1007", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1007", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1008", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1008", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1009", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1009", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_101", "drug_name": "STACETAM 80OMG 800", "matched_drug_name": "Stacetam 3g", "mapping_status": "unmapped_candidate", "score": 0.727}
+{"image_id": "VAIPE_P_TRAIN_1010", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1010", "drug_name": "PARTAMOL TAB. 500", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1011", "drug_name": "CEFADROXIL S00MG 500", "matched_drug_name": "pms-Cefadroxil 250 mg", "mapping_status": "unmapped_candidate", "score": 0.923}
+{"image_id": "VAIPE_P_TRAIN_1011", "drug_name": "VACO LORATADINE 10O mg", "matched_drug_name": "Vaco Loratadine S", "mapping_status": "unmapped_candidate", "score": 0.821}
+{"image_id": "VAIPE_P_TRAIN_1011", "drug_name": "PANACTOL S00mg", "matched_drug_name": "Panactol", "mapping_status": "unmapped_candidate", "score": 0.889}
+{"image_id": "VAIPE_P_TRAIN_1012", "drug_name": "MEGLUCON 1000", "matched_drug_name": "Meglucon 1000", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1012", "drug_name": "CHORLATCYN mg 125", "matched_drug_name": "Chorlatcyn", "mapping_status": "unmapped_candidate", "score": 0.87}
+{"image_id": "VAIPE_P_TRAIN_1013", "drug_name": "KAVASDIN 5", "matched_drug_name": "Kavasdin 10", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1013", "drug_name": "DICLOFENAC 50", "matched_drug_name": "Diclofenac 50", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1013", "drug_name": "MYPARA 500", "matched_drug_name": "Mypara 500", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1014", "drug_name": "MYPARA 500", "matched_drug_name": "Mypara 500", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1015", "drug_name": "MYPARA 500", "matched_drug_name": "Mypara 500", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1016", "drug_name": "Metformin ( Metformin 500 )", "matched_drug_name": "Metformin 1000mg", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1016", "drug_name": "Atorvastatin ( Atoris mg 20 20", "matched_drug_name": "Atorvastatin TP", "mapping_status": "unmapped_candidate", "score": 0.65}
+{"image_id": "VAIPE_P_TRAIN_1017", "drug_name": "CEFADROXIL 0,5", "matched_drug_name": "Aticef 250", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1017", "drug_name": "MYPARA 500", "matched_drug_name": "Mypara 500", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1017", "drug_name": "Menison 16mg", "matched_drug_name": "Menison 16mg", "mapping_status": "confirmed", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1018", "drug_name": "Amoxicilin ( Fabamox 500 )", "matched_drug_name": "Amoxicilin 250 mg", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1018", "drug_name": "Đinh lăng , bạch quả ( Hoạt huyết dưỡng não ) 150", "matched_drug_name": "Hoạt huyết dưỡng não", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1019", "drug_name": "HOẠT HUYẾT DƯỚNG NĂO 150", "matched_drug_name": "Hoạt huyết dưỡng não", "mapping_status": "unmapped_candidate", "score": 0.9}
+{"image_id": "VAIPE_P_TRAIN_102", "drug_name": "STACETAM 80OMG 800", "matched_drug_name": "Stacetam 3g", "mapping_status": "unmapped_candidate", "score": 0.727}
+{"image_id": "VAIPE_P_TRAIN_1020", "drug_name": "HOẠTHUYẾT DƯỚNG NÃO mg 150", "matched_drug_name": "Hoạt huyết dưỡng não", "mapping_status": "unmapped_candidate", "score": 0.857}
+{"image_id": "VAIPE_P_TRAIN_1021", "drug_name": "PANACTOL 500", "matched_drug_name": "Panactol", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1021", "drug_name": "VITAMIN C STADA 1G", "matched_drug_name": "Vitamin C Stada 1g", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1022", "drug_name": "HOẠTHUYẾT DUỚNG NÃO mg 150", "matched_drug_name": "Hoạt huyết dưỡng não", "mapping_status": "unmapped_candidate", "score": 0.81}
+{"image_id": "VAIPE_P_TRAIN_1023", "drug_name": "CEFADROXIL 500MG 0,5", "matched_drug_name": "Aticef 500", "mapping_status": "unmapped_candidate", "score": 0.833}
+{"image_id": "VAIPE_P_TRAIN_1023", "drug_name": "DIXIREIN 375", "matched_drug_name": "Dixirein", "mapping_status": "unmapped_candidate", "score": 1.0}
+{"image_id": "VAIPE_P_TRAIN_1023", "drug_name": "PARTAMOL TAB. S00mg", "matched_drug_name": "Partamol Tab.", "mapping_status": "unmapped_candidate", "score": 0.923}
