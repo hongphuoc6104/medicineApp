@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,7 @@ class ScanRepository {
     required String filename,
     String mimeType = 'image/jpeg',
     String? ocrText,
+    List<Map<String, dynamic>>? ocrLines,
   }) async {
     final formData = FormData.fromMap({
       'file': MultipartFile.fromBytes(
@@ -26,6 +28,7 @@ class ScanRepository {
         contentType: MediaType.parse(mimeType),
       ),
       if (ocrText != null && ocrText.isNotEmpty) 'ocr_text': ocrText,
+      if (ocrLines != null && ocrLines.isNotEmpty) 'ocr_lines': jsonEncode(ocrLines),
     });
 
     final response = await _dio.post(

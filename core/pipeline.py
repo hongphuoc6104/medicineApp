@@ -17,7 +17,7 @@ import logging
 from datetime import datetime
 from pathlib import Path
 import re
-from typing import Optional
+from typing import Optional, Union, List, Dict, Any
 
 import cv2
 import numpy as np
@@ -105,117 +105,42 @@ class MedicinePipeline:
 
     def scan_prescription_app(
         self,
-        ocr_text: str,
+        ocr_text: Optional[str] = None,
+        ocr_lines: Optional[Union[list, str]] = None,
+        layout_strategy: str = "p3_medication_bands",
     ):
         """
-        API scan path with adaptive STT grouping using client OCR text.
+        API scan path with geometry-aware MLKitLayoutAdapter and PhoBERT NER extraction.
+        Accepts structured ocr_lines (with bounding boxes) and/or fallback ocr_text string.
         """
-        if not ocr_text or not ocr_text.strip():
-            return {"error": "ocr_text is required. Image processing on the server is deprecated."}
+        has_lines = bool(ocr_lines and (isinstance(ocr_lines, list) and len(ocr_lines) > 0 or isinstance(ocr_lines, str) and len(ocr_lines.strip()) > 2))
+        has_text = bool(ocr_text and ocr_text.strip())
 
-        from core.classify.stt_grouping import TextBlock, group_by_stt_with_meta
+        if not has_lines and not has_text:
+            return {"error": "ocr_text or ocr_lines is required."}
 
-        logger.info("Processing scan using client OCR text")
-        raw_lines = [l.strip() for l in ocr_text.split("\n") if l.strip()]
-        raw_lines = [l for l in raw_lines if not l.startswith("---")]
+        from core.classify.mlkit_layout_adapter import MLKitLayoutAdapter
 
-        # Smart line grouping by STT / bullet items to avoid line-break fragmentation
-        stt_pattern = re.compile(
-            r"^(\d+([\.\/\),]|\s+[A-Za-zÀ-ỹ])|STT\s*\d+|[①-⑩]|\d+\s*[-:])",
-            re.IGNORECASE,
+        logger.info(f"Processing prescription scan with layout_strategy='{layout_strategy}' (structured lines: {has_lines})")
+        adapter = MLKitLayoutAdapter()
+        layout_blocks, layout_meta = adapter.process(
+            ocr_lines_data=ocr_lines,
+            fallback_text=ocr_text,
+            strategy=layout_strategy,
         )
 
-        def is_continuation_line(line_str: str) -> bool:
-            lowered = line_str.strip().lower()
-            if not lowered:
-                return False
-            # Usage instructions or dosage notes
-            if any(lowered.startswith(kw) for kw in [
-                "ngày", "uống", "mỗi", "sau ăn", "trước ăn", "khi", "buổi", "chia", "sáng", "trưa", "chiều", "tối", "x "
-            ]):
-                return True
-            # Unit / dosage quantity
-            if re.match(r"^\d+\s*(viên|gói|ống|chai|lọ|vỉ|hộp|ml|mg|gam)", lowered):
-                return True
-            return False
-
-        grouped_lines = []
-        current_group = []
-
-        for line in raw_lines:
-            if stt_pattern.match(line):
-                if current_group:
-                    grouped_lines.append(" ".join(current_group))
-                    current_group = []
-                current_group.append(line)
-            else:
-                if current_group and is_continuation_line(line):
-                    current_group.append(line)
-                else:
-                    if current_group:
-                        grouped_lines.append(" ".join(current_group))
-                        current_group = []
-                    grouped_lines.append(line)
-
-        if current_group:
-            grouped_lines.append(" ".join(current_group))
-
-        effective_lines = grouped_lines if grouped_lines else raw_lines
-        text_blocks = [
-            TextBlock(
-                text=l,
-                confidence=0.95,
-                bbox=[[0, 0], [100, 0], [100, 20], [0, 20]],
-            )
-            for l in effective_lines
-        ]
-
-        raw_ner_input = self._build_ner_input_from_text_blocks(text_blocks)
-        if not raw_ner_input:
+        ner_input = self._build_ner_input_from_text_blocks(layout_blocks)
+        if not ner_input:
             return {"error": "OCR produced only empty blocks", "image_size": (1000, 1000)}
 
-        raw_ner_results = self._classify_blocks(raw_ner_input)
-        raw_meds, raw_candidates = self._extract_medications(raw_ner_results)
-
-        grouped_blocks_obj, grouping_meta = group_by_stt_with_meta(text_blocks)
-        grouped_ner_input = self._build_ner_input_from_text_blocks(grouped_blocks_obj)
-
-        if grouped_ner_input:
-            grouped_ner_results = self._classify_blocks(grouped_ner_input)
-            grouped_meds, grouped_candidates = self._extract_medications(grouped_ner_results)
-        else:
-            grouped_ner_results = []
-            grouped_meds = []
-            grouped_candidates = []
-
-        raw_summary = self._summarize_scan_branch(raw_ner_input, raw_ner_results, raw_meds)
-        grouped_summary = self._summarize_scan_branch(
-            grouped_ner_input,
-            grouped_ner_results,
-            grouped_meds,
-        )
-        selection_strategy, selection_reason = self._select_app_scan_branch(
-            raw_summary,
-            grouped_summary,
-            grouping_meta,
-        )
-
-        if selection_strategy == "stt_grouped":
-            filtered_meds = grouped_meds
-            medication_candidates = grouped_candidates
-            ner_results = grouped_ner_results
-            ner_input = grouped_ner_input
-        else:
-            filtered_meds = raw_meds
-            medication_candidates = raw_candidates
-            ner_results = raw_ner_results
-            ner_input = raw_ner_input
+        ner_results = self._classify_blocks(ner_input)
+        raw_meds, raw_candidates = self._extract_medications(ner_results)
 
         # Lọc bỏ rác tiêu đề bệnh viện / thông tin hành chính bị PhoBERT đoán nhầm qua AI Semantic Filter
         from core.classify.post_filter import NerPostFilter
 
         filtered_meds = [
-            m for m in filtered_meds
+            m for m in raw_meds
             if NerPostFilter.is_likely_drug(
                 text=m.get("drug_name", "") or m.get("ocr_text", ""),
                 ocr_text=m.get("ocr_text", ""),
@@ -225,7 +150,7 @@ class MedicinePipeline:
         ]
 
         medication_candidates = [
-            c for c in (medication_candidates or [])
+            c for c in (raw_candidates or [])
             if NerPostFilter.is_likely_drug(
                 text=c.get("drug_name", "") or c.get("ocr_text", ""),
                 ocr_text=c.get("ocr_text", ""),
@@ -238,17 +163,15 @@ class MedicinePipeline:
             "total_blocks": len(ner_input),
             "drugnames": len(filtered_meds),
             "others": len(ner_input) - len(filtered_meds),
-            "selection_strategy": selection_strategy,
-            "selection_reason": selection_reason,
-            "raw_branch": raw_summary,
-            "grouped_branch": grouped_summary,
-            "grouping_meta": grouping_meta,
+            "selection_strategy": layout_meta.get("strategy", layout_strategy),
+            "layout_meta": layout_meta,
+            "candidate_count": len(filtered_meds),
         }
 
         # Lưu thông tin debug phục vụ kiểm tra (KHÔNG tạo bảng DB mới)
         _save_debug_artifacts(
             img=None,
-            ocr_text=ocr_text,
+            ocr_text=ocr_text or "\n".join(b.get("text", "") for b in layout_blocks),
             ner_results=ner_results,
             medications=filtered_meds,
             candidates=medication_candidates,
@@ -267,10 +190,14 @@ class MedicinePipeline:
     def _build_ner_input_from_text_blocks(blocks):
         ner_input = []
         for block in blocks or []:
-            text = getattr(block, "text", "").strip()
+            if isinstance(block, dict):
+                text = block.get("text", "").strip()
+                bbox = block.get("bbox") or block.get("box", [[0, 0], [100, 0], [100, 20], [0, 20]])
+            else:
+                text = getattr(block, "text", "").strip()
+                bbox = getattr(block, "bbox", [[0, 0], [100, 0], [100, 20], [0, 20]])
             if not text:
                 continue
-            bbox = getattr(block, "bbox", [0, 0, 0, 0])
             ner_input.append(
                 {
                     "text": text,

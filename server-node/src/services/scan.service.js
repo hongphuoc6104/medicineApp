@@ -365,7 +365,8 @@ export async function scanPrescription(
   originalName,
   detectedMime = 'image/jpeg',
   sessionId = null,
-  ocrText = null
+  ocrText = null,
+  ocrLines = null
 ) {
   let result;
   let timeout;
@@ -378,6 +379,12 @@ export async function scanPrescription(
     formData.append('file', blob, originalName || 'prescription.jpg');
     if (ocrText) {
       formData.append('ocr_text', ocrText);
+    }
+    if (ocrLines) {
+      const ocrLinesPayload = typeof ocrLines === 'string'
+        ? ocrLines
+        : JSON.stringify(ocrLines);
+      formData.append('ocr_lines', ocrLinesPayload);
     }
 
     const ctrl = new AbortController();

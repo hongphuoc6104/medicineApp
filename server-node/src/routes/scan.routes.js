@@ -47,6 +47,7 @@ router.post(
     }
 
     const ocrText = req.body?.ocr_text || req.body?.ocrText || null;
+    const ocrLines = req.body?.ocr_lines || req.body?.ocrLines || null;
 
     const result = await scanService.scanPrescription(
       req.file.buffer,
@@ -54,7 +55,8 @@ router.post(
       req.file.originalname,
       detected.mime, // pass verified MIME type
       null,
-      ocrText
+      ocrText,
+      ocrLines
     );
 
     success(res, result);

@@ -323,14 +323,25 @@ async def drug_interactions(ingredient: str):
 
 @app.post("/api/scan-prescription")
 async def scan_prescription(
-    ocr_text: str = Form(...),
+    ocr_text: Optional[str] = Form(None),
+    ocr_lines: Optional[str] = Form(None),
+    layout_strategy: str = Form("p3_medication_bands"),
 ):
     """
-    Scan prescription text → extract drug list.
+    Scan prescription text/lines → extract drug list.
 
-    Receive OCR text from client and get back
+    Receive structured OCR lines or OCR text from client and get back
     a list of detected medications.
     """
+    if not ocr_text and not ocr_lines:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "code": "MISSING_OCR_PAYLOAD",
+                "message": "Either ocr_text or ocr_lines must be provided.",
+            },
+        )
+
     pipeline = _get_pipeline()
     if pipeline is None:
         raise HTTPException(
@@ -344,6 +355,8 @@ async def scan_prescription(
     try:
         result = pipeline.scan_prescription_app(
             ocr_text=ocr_text,
+            ocr_lines=ocr_lines,
+            layout_strategy=layout_strategy,
         )
     except Exception as exc:
         logger.exception("Prescription pipeline execution failed")

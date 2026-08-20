@@ -34,6 +34,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen> {
   _ScanStage _stage = _ScanStage.idle;
   List<String> _scannedImages = [];
   String? _extractedText;
+  List<Map<String, dynamic>>? _extractedLines;
   String? _statusText;
   String? _errorText;
 
@@ -91,6 +92,8 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen> {
       });
 
       StringBuffer ocrBuffer = StringBuffer();
+      List<Map<String, dynamic>> extractedLines = [];
+
       for (int i = 0; i < images.length; i++) {
         final imagePath = images[i];
         final inputImage = InputImage.fromFilePath(imagePath);
@@ -101,10 +104,32 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen> {
           ocrBuffer.writeln("--- TRANG ${i + 1} ---");
           ocrBuffer.writeln(recognizedText.text);
           ocrBuffer.writeln();
+
+          for (int bIdx = 0; bIdx < recognizedText.blocks.length; bIdx++) {
+            final block = recognizedText.blocks[bIdx];
+            for (int lIdx = 0; lIdx < block.lines.length; lIdx++) {
+              final line = block.lines[lIdx];
+              final rect = line.boundingBox;
+              extractedLines.add({
+                'text': line.text,
+                'bbox': {
+                  'left': rect.left,
+                  'top': rect.top,
+                  'right': rect.right,
+                  'bottom': rect.bottom,
+                },
+                'confidence': line.confidence ?? 0.95,
+                'block_index': bIdx,
+                'line_index': lIdx,
+                'page': i + 1,
+              });
+            }
+          }
         }
       }
 
       _extractedText = ocrBuffer.toString().trim();
+      _extractedLines = extractedLines;
 
       // 3. Tự động đọc dữ liệu ảnh đã nắn góc và gửi thông tin về máy chủ xử lý như cũ
       final firstImageFile = File(images.first);
@@ -156,6 +181,7 @@ class _ScanCameraScreenState extends ConsumerState<ScanCameraScreen> {
         imageBytes: bytes,
         filename: filename,
         ocrText: _extractedText,
+        ocrLines: _extractedLines,
       );
 
       if (!mounted) return;
