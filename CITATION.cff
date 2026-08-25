@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use MedicineApp in your research, please cite it as below."
+authors:
+  - family-names: "Nguyen"
+    given-names: "Hong Phuoc"
+    affiliation: "Department of Computer Science, Can Tho University"
+title: "MedicineApp: On-Device Document Intelligence and Edge-Cloud Biomedical Named Entity Recognition for Clinical Prescription Digitization"
+version: 1.0.0
+date-released: 2026-08-24
+url: "https://github.com/hongphuoc6104/medicineApp"
+license: "MIT"
+keywords:
+  - "Prescription Digitization"
+  - "Document Intelligence"
+  - "Optical Character Recognition"
+  - "PhoBERT NER"
+  - "Clinical NLP"
+  - "Mobile Health"

@@ -7,9 +7,23 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pool, query } from './database.js';
 
-const DRUG_DB_PATH = path.resolve(
-  import.meta.dirname, '..', '..', '..', 'data', 'drug_db_vn_full.json'
-);
+function resolveDrugDbPath() {
+  const candidates = [
+    process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR, 'drug_db_vn_full.json') : null,
+    path.resolve(import.meta.dirname, '..', '..', 'data', 'drug_db_vn_full.json'),
+    path.resolve(import.meta.dirname, '..', '..', '..', 'data', 'drug_db_vn_full.json'),
+    '/app/data/drug_db_vn_full.json',
+  ].filter(Boolean);
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+  return candidates[0] || '/app/data/drug_db_vn_full.json';
+}
+
+const DRUG_DB_PATH = resolveDrugDbPath();
 
 async function seed() {
   console.log('🌱 Seeding drug_cache from crawled data...');
@@ -19,8 +33,21 @@ async function seed() {
     process.exit(1);
   }
 
+  // Fast check: skip if already seeded
+  try {
+    const countRes = await query(`SELECT COUNT(*) FROM drug_cache WHERE source = 'local'`);
+    const existingCount = parseInt(countRes.rows[0].count, 10);
+    if (existingCount >= 9000) {
+      console.log(`  ℹ️ drug_cache already contains ${existingCount} drugs. Seed is up-to-date.`);
+      await pool.end();
+      return;
+    }
+  } catch (err) {
+    console.log(`  ℹ️ Unable to check existing count (${err.message}), proceeding with seed.`);
+  }
+
   const raw = JSON.parse(fs.readFileSync(DRUG_DB_PATH, 'utf-8'));
-  const sourceDrugs = raw.drugs;
+  const sourceDrugs = raw.drugs || [];
   const uniqueDrugs = new Map();
   for (const drug of sourceDrugs) {
     const key = String(drug?.tenThuoc || '').trim().toLowerCase();

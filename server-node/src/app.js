@@ -46,6 +46,7 @@ app.use('/api', generalLimiter);
 app.use('/api/auth', authLimiter);
 
 // ── Routes ──
+app.use('/health', healthRoutes);
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/drugs', drugRoutes);

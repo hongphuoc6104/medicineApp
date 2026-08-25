@@ -1249,7 +1249,7 @@ class _ProfileHeaderSelector extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: relation,
+              initialValue: relation,
               items: const [
                 DropdownMenuItem(value: 'Bố', child: Text('Bố')),
                 DropdownMenuItem(value: 'Mẹ', child: Text('Mẹ')),

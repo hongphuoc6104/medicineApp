@@ -1,102 +1,18 @@
-# ============================================
-# Virtual environments
-# ============================================
+# ==============================================================================
+# Git Ignore Configuration for MedicineApp
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Python Environments, Caches & Bytecode
+# ------------------------------------------------------------------------------
 venv/
 .venv/
+env/
 ENV/
+env.bak/
+venv.bak/
 createPrescription/prescription_generator/venv/
 
-# ============================================
-# Model weights (very large files)
-# ============================================
-*.pt
-*.pth
-*.onnx
-*.h5
-*.pb
-*.tflite
-models/weights/
-models/phobert_ner_model/
-models/zero_pima/
-best/
-
-# ============================================
-# Datasets & large data directories
-# ============================================
-VAIPE_Full/
-data/pills/
-data/pres/
-data/synthetic_train/
-data/createPrescription/
-
-# Data output (generated)
-data/output/
-# Data input (images - large files)
-data/input/
-data/input/**  # ignore all prescription input images
-
-data/output/
-data/output/**  # ignore generated output files and intermediate results
-
-# Nhưng giữ lại .gitkeep
-!data/input/.gitkeep
-!data/output/.gitkeep
-
-# Sample image assets for on-device testing (binary files)
-mobile/assets/**/*.jpg
-mobile/assets/**/*.png
-!mobile/assets/**/*.json
-*.zip
-*.tar.gz
-*.tar.bz2
-*.rar
-*.7z
-
-# ============================================
-# Research papers & PDFs
-# ============================================
-*.pdf
-
-# ============================================
-# Jupyter Notebooks (contain large output cells)
-# ============================================
-*.ipynb
-
-# ============================================
-# Sub-projects with their own repos
-# ============================================
-Zero-PIMA/
-YOLO11-Seg-Label-Detector-main/
-archive/*
-!archive/README.md
-!archive/plan_bin/
-!archive/plan_bin/**
-
-# ============================================
-# Generated output & debug
-# ============================================
-output/
-debug/
-createPrescription/prescription_generator/output/
-
-# ============================================
-# XML schema (not needed in repo)
-# ============================================
-drugbank.xsd
-
-# ============================================
-# IDE & Editor configs
-# ============================================
-.idea/
-.vscode/
-.gemini/
-*.swp
-*.swo
-*~
-
-# ============================================
-# Python
-# ============================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -108,10 +24,10 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+/lib/
+/lib64/
 !mobile/lib/
 !mobile/lib/**
-lib64/
 parts/
 sdist/
 var/
@@ -119,54 +35,209 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.ipynb_checkpoints/
+*.ipynb
 
-# ============================================
+# ------------------------------------------------------------------------------
+# 2. Testing, Code Coverage & Profiling
+# ------------------------------------------------------------------------------
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+runs/
+
+# ------------------------------------------------------------------------------
+# 3. Node.js & Server-Side Artifacts
+# ------------------------------------------------------------------------------
+node_modules/
+server-node/node_modules/
+server-node/coverage/
+server-node/storage/
+docs/thesis_report/diagram_tools/node_modules/
+docs/thesis_report/mcp_tools/node_modules/
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ------------------------------------------------------------------------------
+# 4. Mobile / Flutter / Android / iOS / Linux / Windows Artifacts
+# ------------------------------------------------------------------------------
+# Flutter / Dart
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.flutter-plugins*
+mobile/.pub-cache/
+mobile/.pub/
+mobile/build/
+mobile/coverage/
+mobile/doc/api/
+mobile/flutter_*.log
+mobile/*.log
+mobile/app.*.symbols
+mobile/app.*.map.json
+mobile/.history/
+mobile/.build/
+mobile/.buildlog/
+mobile/migrate_working_dir/
+
+# Golden Test Failure Artifacts (Do not commit regression diffs)
+**/failures/
+**/failures/*.png
+mobile/test/**/failures/
+
+# Android
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/gradle-wrapper.jar
+mobile/android/.cxx/
+mobile/android/captures/
+mobile/android/app/debug/
+mobile/android/app/profile/
+mobile/android/app/release/
+mobile/android/key.properties
+**/*.keystore
+**/*.jks
+**/GeneratedPluginRegistrant.java
+
+# iOS
+mobile/ios/Flutter/
+mobile/ios/Flutter/.last_build_id
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Flutter/flutter_export_environment.sh
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+mobile/ios/**/DerivedData/
+
+# Linux Desktop
+mobile/linux/flutter/ephemeral/
+
+# Windows Desktop
+mobile/windows/flutter/ephemeral/
+
+# Mobile Assets (Ignore large local test images, preserve manifest JSONs)
+mobile/assets/**/*.jpg
+mobile/assets/**/*.png
+!mobile/assets/**/*.json
+
+# ------------------------------------------------------------------------------
+# 5. Datasets, Model Weights & Generated Data Outputs
+# ------------------------------------------------------------------------------
+# AI Model Weights & Checkpoints (Large binaries stored externally)
+*.pt
+*.pth
+*.onnx
+*.h5
+*.pb
+*.tflite
+*.safetensors
+models/weights/
+models/phobert_ner_model
+models/phobert_ner_model/
+models/zero_pima
+models/zero_pima/
+models/yolo
+models/yolo/
+best/
+
+# Legacy / Large Raw Datasets
+VAIPE_Full/
+archive/VAIPE_Full/
+data/pills/
+data/pres/
+data/synthetic_train/
+data/ner_dataset/
+data/newDATA/
+data/createPrescription/
+data/drug_interactions_vn.json
+
+# Generated Output Directories & Debug Scans
+data/output/*
+data/input/*
+/output/
+debug/
+createPrescription/prescription_generator/output/
+
+# Explicit Preservation Rules: KEEP core databases and ground truths
+!data/input/.gitkeep
+!data/output/.gitkeep
+!data/drug_db_vn_full.json
+!data/drug_db_vn.csv
+!data/vaipe_drugs_kb.json
+!data/visible_in_frame_gt.json
+!data/human_verification_provenance_log.json
+!data/README.md
+
+# ------------------------------------------------------------------------------
+# 6. Archives, Sub-Projects & Deprecated Code
+# ------------------------------------------------------------------------------
+Zero-PIMA/
+YOLO11-Seg-Label-Detector-main/
+archive/*
+!archive/README.md
+!archive/plan_bin/
+!archive/plan_bin/**
+
+# Archive files
+*.zip
+*.tar
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+
+# ------------------------------------------------------------------------------
+# 7. IDE, OS, Documents & Temporary Files
+# ------------------------------------------------------------------------------
 # OS files
-# ============================================
 .DS_Store
 Thumbs.db
 
-# ============================================
-# Environment variables
-# ============================================
+# IDE & Editor configs
+.idea/
+.vscode/
+.gemini/
+.agents/
+.agent/
+*.swp
+*.swo
+*~
+*.iml
+*.ipr
+*.iws
+
+# Sensitive Environment Configurations
 .env
 .env.local
-
-# ============================================
-# Logs
-# ============================================
-*.log
-logs/
-/local/wp01/
-
-# ============================================
-# Testing
-# ============================================
-.coverage
-htmlcov/
-.tox/
-.pytest_cache/
-runs/
-server-node/node_modules/
+.env.*.local
 server-node/.env
-server-node/storage/
-# Ignore large data files and generated datasets
-data/drug_interactions_vn.json
-data/synthetic_train/
-data/ner_dataset/
-# Ignore large model directories (exclude any required README or metadata if needed)
-models/phobert_ner_model/
-models/zero_pima/
-models/yolo/
-mobile/.dart_tool/
-# Large drug database JSON
-data/drug_db_vn_full.json
-docs/thesis_report/diagram_tools/node_modules/
-docs/thesis_report/mcp_tools/node_modules/
+!mobile/.env.example
+!server-node/.env.example
+!server/.env.example
 
-# ============================================
-# Thesis report generated and backup files
-# ============================================
+# Unwanted Office & Diagram source files
+*.docx
+*.doc
+*.mdj
+*.bak
+*.tmp
+*.pdf
+drugbank.xsd
+
+# ------------------------------------------------------------------------------
+# 8. Thesis Report Build Artifacts & Reference Material
+# ------------------------------------------------------------------------------
 docs/thesis_report/*.aux
 docs/thesis_report/*.lof
 docs/thesis_report/*.lot
@@ -179,6 +250,4 @@ docs/thesis_report/*.xdv
 docs/thesis_report/*.bak*
 docs/thesis_report/backup/
 docs/thesis_report/image/images*/
-
-# Large reference materials used only for local comparison
 docs/mẫu bài luận/

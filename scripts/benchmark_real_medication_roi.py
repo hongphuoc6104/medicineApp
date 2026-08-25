@@ -22,9 +22,14 @@ import math
 import random
 import re
 import unicodedata
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 import numpy as np
 
@@ -388,6 +393,8 @@ def run_real_roi_evaluation(
 
     # ── 3. Clustered Bootstrap Confidence Intervals ─────────────────────────
     # A. Capture-Level Bootstrap (Resampling 30 captures)
+    np.random.seed(42)
+    random.seed(42)
     n_caps = len(capture_eval_list)
     bs_delta_f1_cap = []
     bs_delta_cov_cap = []

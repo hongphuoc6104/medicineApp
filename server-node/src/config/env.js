@@ -13,7 +13,8 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('15m'),
   JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 
-  PYTHON_API_URL: z.string().url().default('http://localhost:8000'),
+  PYTHON_API_URL: z.string().url().default(process.env.AI_SERVICE_URL || 'http://localhost:8000'),
+  DATA_DIR: z.string().optional(),
 
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(900_000),
   RATE_LIMIT_MAX: z.coerce.number().default(300),
